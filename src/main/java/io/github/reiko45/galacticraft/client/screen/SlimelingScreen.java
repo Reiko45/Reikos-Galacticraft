@@ -105,11 +105,12 @@ public class SlimelingScreen extends Screen {
 
     /**
      * 1.12.2 drawSlimelingOnGui at scale 70 (35 pixels a block), its head turned towards the mouse, on black, behind
-     * the panel (which has a window for it).
+     * the panel (which has a window for it). {@code z} is where the black goes: below what the screen draws later.
      */
-    static void drawSlimeling(GuiGraphics graphics, SlimelingEntity slimeling, int left, int top, int width, int height, int mouseX, int mouseY) {
+    static void drawSlimeling(GuiGraphics graphics, SlimelingEntity slimeling, int left, int top, int width, int height, int mouseX, int mouseY,
+                              float z) {
         graphics.pose().pushPose();
-        graphics.pose().translate(0.0F, 0.0F, -150.0F);
+        graphics.pose().translate(0.0F, 0.0F, z);
         graphics.fill(left, top, left + width, top + height, 0xFF000000);
         SlimelingRenderer.renderingOnGui = true;
         try {
@@ -134,7 +135,7 @@ public class SlimelingScreen extends Screen {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
         renderBackground(graphics, mouseX, mouseY, partialTick);
-        drawSlimeling(graphics, this.slimeling, this.left, this.top, WIDTH, HEIGHT - 20, mouseX, mouseY);
+        drawSlimeling(graphics, this.slimeling, this.left, this.top, WIDTH, HEIGHT - 20, mouseX, mouseY, -150.0F);
         graphics.blit(PANEL, this.left, this.top, 0, 0, WIDTH, HEIGHT);
         drawColors(graphics, this.font, PANEL, this.slimeling, this.left, this.top);
         graphics.blit(PANEL, this.left + 151, this.top + 76, 176, 9, 18, 18);

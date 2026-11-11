@@ -55,10 +55,14 @@ public class SlimelingInventoryScreen extends AbstractContainerScreen<SlimelingM
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
+        // The darkened background is already drawn (and in the depth buffer) at z 0: the slimeling goes in front of it,
+        // the panel in front of the slimeling, and the slots' items (at +150) in front of the panel.
         final SlimelingEntity slimeling = this.menu.slimeling();
         if (slimeling != null) {
-            SlimelingScreen.drawSlimeling(graphics, slimeling, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, mouseX, mouseY);
+            SlimelingScreen.drawSlimeling(graphics, slimeling, this.leftPos, this.topPos, this.imageWidth, this.imageHeight, mouseX, mouseY, 1.0F);
         }
+        graphics.pose().pushPose();
+        graphics.pose().translate(0.0F, 0.0F, 100.0F);
         graphics.blit(PANEL, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
         if (slimeling != null) {
             SlimelingScreen.drawColors(graphics, this.font, PANEL, slimeling, this.leftPos, this.topPos);
@@ -73,6 +77,7 @@ public class SlimelingInventoryScreen extends AbstractContainerScreen<SlimelingM
                 }
             }
         }
+        graphics.pose().popPose();
     }
 
     /** 1.12.2 drew no titles here. */
