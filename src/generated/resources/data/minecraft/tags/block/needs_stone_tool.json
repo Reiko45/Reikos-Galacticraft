@@ -1,5 +1,9 @@
 {
   "values": [
+    "galacticraftcore:mars_copper_ore",
+    "galacticraftcore:mars_tin_ore",
+    "galacticraftcore:mars_iron_ore",
+    "galacticraftcore:mars_stone",
     "galacticraftcore:tin_ore",
     "galacticraftcore:aluminum_ore",
     "galacticraftcore:moon_copper_ore",

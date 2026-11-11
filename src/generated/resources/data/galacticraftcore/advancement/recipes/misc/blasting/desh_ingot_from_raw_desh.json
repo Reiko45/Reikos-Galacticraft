@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_raw_desh": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:raw_desh"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:blasting/desh_ingot_from_raw_desh"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_raw_desh"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:blasting/desh_ingot_from_raw_desh"
+    ]
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/inner_stairs",
+  "textures": {
+    "bottom": "galacticraftcore:block/mars_dungeon_brick",
+    "side": "galacticraftcore:block/mars_dungeon_brick",
+    "top": "galacticraftcore:block/mars_dungeon_brick"
+  }
+}

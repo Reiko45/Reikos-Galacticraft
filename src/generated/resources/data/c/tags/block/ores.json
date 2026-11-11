@@ -5,6 +5,9 @@
     "#c:ores/silicon",
     "#c:ores/sapphire",
     "#c:ores/cheese",
-    "galacticraftcore:moon_copper_ore"
+    "#c:ores/desh",
+    "galacticraftcore:moon_copper_ore",
+    "galacticraftcore:mars_copper_ore",
+    "galacticraftcore:mars_iron_ore"
   ]
 }

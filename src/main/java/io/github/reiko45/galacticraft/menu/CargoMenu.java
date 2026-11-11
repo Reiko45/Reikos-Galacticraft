@@ -1,7 +1,7 @@
 package io.github.reiko45.galacticraft.menu;
 
 import io.github.reiko45.galacticraft.entity.LanderEntity;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.registry.GCMenus;
 import java.util.function.IntSupplier;
 import java.util.function.Predicate;
@@ -124,8 +124,8 @@ public class CargoMenu extends AbstractContainerMenu {
     }
 
     /** The inventory key while riding a rocket (1.12.2 GuiRocketInventory). */
-    public static void openRocket(ServerPlayer player, Tier1RocketEntity rocket) {
-        open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, Tier1RocketEntity.FUEL_CAPACITY,
+    public static void openRocket(ServerPlayer player, RocketEntity rocket) {
+        open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, rocket.fuelCapacity(),
                 p -> rocket.isAlive() && p.getVehicle() == rocket);
     }
 

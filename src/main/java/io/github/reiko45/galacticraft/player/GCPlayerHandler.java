@@ -2,7 +2,7 @@ package io.github.reiko45.galacticraft.player;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.travel.SpaceTravel;
 import io.github.reiko45.galacticraft.world.MeteorShowers;
 import io.github.reiko45.galacticraft.footprint.Footprints;
@@ -72,7 +72,7 @@ public final class GCPlayerHandler {
      */
     private static boolean needsOxygen(ServerPlayer player, GCPlayerData data) {
         if (player.isCreative() || player.isSpectator() || data.inSpace
-                || player.getVehicle() instanceof Tier1RocketEntity || player.getVehicle() instanceof LanderEntity) {
+                || player.getVehicle() instanceof RocketEntity || player.getVehicle() instanceof LanderEntity) {
             return false;
         }
         return CelestialPhysics.isAirless(player.level()) || player.level().dimension() == net.minecraft.world.level.Level.OVERWORLD && player.getY() > 450.0D;
@@ -178,6 +178,18 @@ public final class GCPlayerHandler {
         }
     }
 
+    /**
+     * 1.12.2 WorldProviderMars#canRespawnHere only said yes while a bed was being used, so beds on Mars could be slept
+     * in without exploding but never became a spawn point (respawning there without oxygen gear would be fatal).
+     */
+    @SubscribeEvent
+    public static void onSetSpawn(net.neoforged.neoforge.event.entity.player.PlayerSetSpawnEvent event) {
+        if (!event.isForced() && event.getNewSpawn() != null
+                && event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.MARS)) {
+            event.setCanceled(true);
+        }
+    }
+
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         GCPlayerData.get(event.getEntity()).markGearChanged();
@@ -187,7 +199,7 @@ public final class GCPlayerHandler {
     @SubscribeEvent
     public static void onMount(net.neoforged.neoforge.event.entity.EntityMountEvent event) {
         if (event.isDismounting() && event.getEntityMounting() instanceof net.minecraft.world.entity.player.Player
-                && (event.getEntityBeingMounted() instanceof Tier1RocketEntity rocket && rocket.keepsRider()
+                && (event.getEntityBeingMounted() instanceof RocketEntity rocket && rocket.keepsRider()
                 || event.getEntityBeingMounted() instanceof LanderEntity lander && lander.keepsRider())
                 && !event.getEntityBeingMounted().isRemoved()) {
             event.setCanceled(true);

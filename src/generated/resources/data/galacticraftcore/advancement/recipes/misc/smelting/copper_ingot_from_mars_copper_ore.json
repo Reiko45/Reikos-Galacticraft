@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_mars_copper_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:mars_copper_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:smelting/copper_ingot_from_mars_copper_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mars_copper_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:smelting/copper_ingot_from_mars_copper_ore"
+    ]
+  }
+}

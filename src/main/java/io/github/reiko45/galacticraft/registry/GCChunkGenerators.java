@@ -14,6 +14,9 @@ public final class GCChunkGenerators {
 
     public static final Supplier<MapCodec<MoonChunkGenerator>> MOON = CHUNK_GENERATORS.register("moon", () -> MoonChunkGenerator.CODEC);
 
+    public static final Supplier<MapCodec<io.github.reiko45.galacticraft.world.MarsChunkGenerator>> MARS = CHUNK_GENERATORS.register("mars",
+            () -> io.github.reiko45.galacticraft.world.MarsChunkGenerator.CODEC);
+
     private GCChunkGenerators() {
     }
 }

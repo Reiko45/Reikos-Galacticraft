@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraftcore:mars_cobblestone"
+  },
+  "result": {
+    "count": 2,
+    "id": "galacticraftcore:mars_cobblestone_slab"
+  }
+}

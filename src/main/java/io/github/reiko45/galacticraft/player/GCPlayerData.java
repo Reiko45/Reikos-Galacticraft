@@ -48,6 +48,8 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public NonNullList<ItemStack> rocketCargo = NonNullList.create();
     public int rocketFuel;
     public int rocketStorage;
+    /** The tier of the rocket being travelled in (1.12.2 GCPlayerStats rocketItem): picks destinations and the rocket item. */
+    public int rocketTier = 1;
     public int launchpadCount;
     public double launchedFromX;
     public double launchedFromZ;
@@ -199,6 +201,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
         travel.putInt("Fuel", this.rocketFuel);
         travel.putInt("Storage", this.rocketStorage);
+        travel.putInt("Tier", this.rocketTier);
         travel.putInt("Launchpads", this.launchpadCount);
         travel.putDouble("FromX", this.launchedFromX);
         travel.putDouble("FromZ", this.launchedFromZ);
@@ -235,6 +238,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);
         this.rocketFuel = travel.getInt("Fuel");
         this.rocketStorage = travel.getInt("Storage");
+        this.rocketTier = Math.max(1, travel.getInt("Tier"));
         this.launchpadCount = travel.getInt("Launchpads");
         this.launchedFromX = travel.getDouble("FromX");
         this.launchedFromZ = travel.getDouble("FromZ");

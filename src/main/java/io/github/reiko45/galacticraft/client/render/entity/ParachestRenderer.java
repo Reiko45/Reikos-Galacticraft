@@ -59,6 +59,11 @@ public class ParachestRenderer extends EntityRenderer<ParachestEntity> {
 
     /** ModelParaChest parachute and strings (256x256 parachute texture). */
     public static LayerDefinition createChute() {
+        return LayerDefinition.create(chuteMesh(), 256, 256);
+    }
+
+    /** The canopy and strings (also ModelBalloonParachute's, which only differs in texture size). */
+    public static MeshDefinition chuteMesh() {
         final MeshDefinition mesh = new MeshDefinition();
         final PartDefinition root = mesh.getRoot();
         final float deg = Mth.DEG_TO_RAD;
@@ -73,7 +78,7 @@ public class ParachestRenderer extends EntityRenderer<ParachestEntity> {
             root.addOrReplaceChild("string_" + i, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1),
                     PartPose.offsetAndRotation(9.0F, 3.0F, 2.0F, strings[i][0] * deg, 0.0F, strings[i][1] * deg));
         }
-        return LayerDefinition.create(mesh, 256, 256);
+        return mesh;
     }
 
     @Override

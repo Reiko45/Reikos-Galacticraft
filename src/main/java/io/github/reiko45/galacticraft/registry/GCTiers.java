@@ -13,6 +13,14 @@ public final class GCTiers {
     public static final Tier HEAVY_DUTY = new SimpleTier(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 768, 5.0F, 2.0F, 8,
             () -> Ingredient.of(GCItems.COMPRESSED_STEEL.get()));
 
+    /**
+     * 1.12.2 TOOLDESH: 1024 uses, efficiency 5, +2.5 damage, enchantability 10. MarsItems#registerHarvestLevels raised
+     * the pickaxe, axe and shovel to harvest level 4, one above diamond, which is netherite's place since 1.16.
+     * 1.12.2 never set a repair item for the tools (only the armour took Desh Ingots); here both repair with them.
+     */
+    public static final Tier DESH = new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1024, 5.0F, 2.5F, 10,
+            () -> Ingredient.of(GCItems.DESH_INGOT.get()));
+
     private GCTiers() {
     }
 }

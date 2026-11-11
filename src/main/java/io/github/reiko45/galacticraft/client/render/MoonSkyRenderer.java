@@ -119,7 +119,7 @@ public final class MoonSkyRenderer {
     }
 
     /** 1.12.2 SkyProviderMoon#renderStars (without the "more stars" option). */
-    private static VertexBuffer buildStars() {
+    static VertexBuffer buildStars() {
         final Random random = new Random(10842L);
         final BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
         for (int i = 0; i < STAR_COUNT; ++i) {

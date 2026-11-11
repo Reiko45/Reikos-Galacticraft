@@ -38,7 +38,22 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
             }
         }
 
-        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(GCBlocks.MOON_TURF.get(), GCBlocks.MOON_DIRT.get());
+        tag(BlockTags.MINEABLE_WITH_SHOVEL).add(GCBlocks.MOON_TURF.get(), GCBlocks.MOON_DIRT.get(),
+                GCBlocks.MARS_FINE_REGOLITH.get(), GCBlocks.MARS_REGOLITH.get());
+        // Mars (1.12.2 MarsBlocks#setHarvestLevels: ores and stone need stone tools, desh ore and dungeon bricks diamond)
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.MARS_COPPER_ORE.get(), GCBlocks.MARS_TIN_ORE.get(), GCBlocks.MARS_IRON_ORE.get(),
+                GCBlocks.DESH_ORE.get(), GCBlocks.MARS_STONE.get(), GCBlocks.MARS_COBBLESTONE.get(), GCBlocks.DESH_BLOCK.get(),
+                GCBlocks.MARS_COBBLESTONE_STAIRS.get(), GCBlocks.MARS_COBBLESTONE_SLAB.get(), GCBlocks.MARS_COBBLESTONE_WALL.get(),
+                GCBlocks.MARS_DUNGEON_BRICK.get(), GCBlocks.MARS_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MARS_DUNGEON_BRICK_SLAB.get(),
+                GCBlocks.MARS_DUNGEON_BRICK_WALL.get());
+        tag(BlockTags.NEEDS_STONE_TOOL).add(GCBlocks.MARS_COPPER_ORE.get(), GCBlocks.MARS_TIN_ORE.get(), GCBlocks.MARS_IRON_ORE.get(),
+                GCBlocks.MARS_STONE.get());
+        tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.DESH_ORE.get(), GCBlocks.MARS_DUNGEON_BRICK.get(),
+                GCBlocks.MARS_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MARS_DUNGEON_BRICK_SLAB.get(), GCBlocks.MARS_DUNGEON_BRICK_WALL.get());
+        tag(BlockTags.CLIMBABLE).add(GCBlocks.CAVERNOUS_VINES.get());
+        tag(GCTags.block("ores/desh")).add(GCBlocks.DESH_ORE.get());
+        tag(Tags.Blocks.ORES_IRON).add(GCBlocks.MARS_IRON_ORE.get());
+        tag(GCTags.block("storage_blocks/desh")).add(GCBlocks.DESH_BLOCK.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_1.get(),
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(), GCBlocks.SILICON_ORE.get(),
                 GCBlocks.TIN_BLOCK.get(), GCBlocks.ALUMINUM_BLOCK.get(), GCBlocks.METEORIC_IRON_BLOCK.get(), GCBlocks.SILICON_BLOCK.get(),
@@ -84,14 +99,15 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.MOON_DUNGEON_BRICK_SLAB.get(), GCBlocks.MOON_DUNGEON_BRICK_WALL.get());
 
         // Convention tags
-        tag(GCTags.block("ores/tin")).add(GCBlocks.TIN_ORE.get(), GCBlocks.MOON_TIN_ORE.get());
+        tag(GCTags.block("ores/tin")).add(GCBlocks.TIN_ORE.get(), GCBlocks.MOON_TIN_ORE.get(), GCBlocks.MARS_TIN_ORE.get());
         tag(GCTags.block("ores/aluminum")).add(GCBlocks.ALUMINUM_ORE.get());
         tag(GCTags.block("ores/silicon")).add(GCBlocks.SILICON_ORE.get());
         tag(GCTags.block("ores/sapphire")).add(GCBlocks.MOON_SAPPHIRE_ORE.get());
         tag(GCTags.block("ores/cheese")).add(GCBlocks.MOON_CHEESE_ORE.get());
-        tag(Tags.Blocks.ORES_COPPER).add(GCBlocks.MOON_COPPER_ORE.get());
+        tag(Tags.Blocks.ORES_COPPER).add(GCBlocks.MOON_COPPER_ORE.get(), GCBlocks.MARS_COPPER_ORE.get());
         tag(Tags.Blocks.ORES).addTags(GCTags.block("ores/tin"), GCTags.block("ores/aluminum"), GCTags.block("ores/silicon"),
-                GCTags.block("ores/sapphire"), GCTags.block("ores/cheese")).add(GCBlocks.MOON_COPPER_ORE.get());
+                GCTags.block("ores/sapphire"), GCTags.block("ores/cheese"), GCTags.block("ores/desh"))
+                .add(GCBlocks.MOON_COPPER_ORE.get(), GCBlocks.MARS_COPPER_ORE.get(), GCBlocks.MARS_IRON_ORE.get());
         tag(Tags.Blocks.ORES_IN_GROUND_STONE).add(GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(), GCBlocks.SILICON_ORE.get());
 
         tag(GCTags.block("storage_blocks/tin")).add(GCBlocks.TIN_BLOCK.get());
@@ -99,6 +115,6 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
         tag(GCTags.block("storage_blocks/meteoric_iron")).add(GCBlocks.METEORIC_IRON_BLOCK.get());
         tag(GCTags.block("storage_blocks/silicon")).add(GCBlocks.SILICON_BLOCK.get());
         tag(Tags.Blocks.STORAGE_BLOCKS).addTags(GCTags.block("storage_blocks/tin"), GCTags.block("storage_blocks/aluminum"),
-                GCTags.block("storage_blocks/meteoric_iron"), GCTags.block("storage_blocks/silicon"));
+                GCTags.block("storage_blocks/meteoric_iron"), GCTags.block("storage_blocks/silicon"), GCTags.block("storage_blocks/desh"));
     }
 }

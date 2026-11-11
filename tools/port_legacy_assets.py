@@ -33,6 +33,22 @@ class Unmapped(Exception):
     pass
 
 
+PLANETS = "planets:"
+PLANETS_ID = "galacticraftplanets"
+
+
+def asset_source(legacy_assets, old):
+    """Mapping values starting with "planets:" come from the Galacticraft Planets assets (Mars, asteroids, Venus)."""
+    if old.startswith(PLANETS):
+        return os.path.join(os.path.dirname(legacy_assets), PLANETS_ID), old[len(PLANETS):]
+    return legacy_assets, old
+
+
+def texture_ref(old):
+    """How 1.12 models and .mtl files refer to a mapped texture: galacticraftcore:blocks/x or galacticraftplanets:blocks/x."""
+    return f"{PLANETS_ID}:{old[len(PLANETS):]}" if old.startswith(PLANETS) else f"{MOD_ID}:{old}"
+
+
 def load_lang(path):
     entries = {}
     with open(path, encoding="utf-8-sig") as f:
@@ -55,7 +71,8 @@ def write_json(path, data):
 def port_textures(mapping, legacy_assets, out_assets):
     count = 0
     for new, old in mapping["textures"].items():
-        src = os.path.join(legacy_assets, "textures", old + ".png")
+        root, path = asset_source(legacy_assets, old)
+        src = os.path.join(root, "textures", path + ".png")
         if not os.path.isfile(src):
             raise SystemExit(f"missing legacy texture {src}")
         dst = os.path.join(out_assets, "textures", new + ".png")
@@ -70,7 +87,8 @@ def port_textures(mapping, legacy_assets, out_assets):
 def port_sounds(mapping, legacy_assets, out_assets):
     """Copy .ogg files; sounds.json itself is hand-written (event names follow 1.21 conventions)."""
     for new, old in mapping.get("sounds", {}).items():
-        src = os.path.join(legacy_assets, "sounds", old + ".ogg")
+        root, path = asset_source(legacy_assets, old)
+        src = os.path.join(root, "sounds", path + ".ogg")
         if not os.path.isfile(src):
             raise SystemExit(f"missing legacy sound {src}")
         dst = os.path.join(out_assets, "sounds", new + ".ogg")
@@ -80,11 +98,12 @@ def port_sounds(mapping, legacy_assets, out_assets):
 
 
 def port_models(mapping, legacy_assets, out_assets):
-    reverse = {f"{MOD_ID}:{old}": f"{MOD_ID}:{new}" for new, old in mapping["textures"].items()}
+    reverse = {texture_ref(old): f"{MOD_ID}:{new}" for new, old in mapping["textures"].items()}
     for new, spec in mapping["models"].items():
         # A plain string names the 1.12 model; an object can also set a 1.21 render_type (e.g. minecraft:cutout).
         old = spec if isinstance(spec, str) else spec["from"]
-        with open(os.path.join(legacy_assets, "models", old + ".json"), encoding="utf-8") as f:
+        root, path = asset_source(legacy_assets, old)
+        with open(os.path.join(root, "models", path + ".json"), encoding="utf-8") as f:
             model = json.load(f)
         if isinstance(spec, dict) and "render_type" in spec:
             model["render_type"] = spec["render_type"]
@@ -116,10 +135,11 @@ def port_models(mapping, legacy_assets, out_assets):
         # {"from": ..., "default_map": ...} also gives untextured materials (1.12.2 drew them white) a texture.
         old = spec if isinstance(spec, str) else spec["from"]
         default_map = None if isinstance(spec, str) else spec.get("default_map")
-        src = os.path.join(legacy_assets, "models", old)
+        root, path = asset_source(legacy_assets, old)
+        src = os.path.join(root, "models", path)
         dst = os.path.join(out_assets, "models", new)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
-        old_mtl, new_mtl = os.path.basename(old) + ".mtl", os.path.basename(new) + ".mtl"
+        old_mtl, new_mtl = os.path.basename(path) + ".mtl", os.path.basename(new) + ".mtl"
         with open(src + ".obj", encoding="utf-8") as f:
             obj = f.read().replace("mtllib " + old_mtl, "mtllib " + new_mtl)
         with open(dst + ".obj", "w", encoding="utf-8", newline="\n") as f:
@@ -153,8 +173,18 @@ def java_format(value):
 
 def port_lang(mapping, legacy_assets, out_assets):
     lang_dir = os.path.join(legacy_assets, "lang")
+    planets_dir = os.path.join(asset_source(legacy_assets, PLANETS)[0], "lang")
     keys = mapping["lang"]
-    english = load_lang(os.path.join(lang_dir, "en_us.lang"))
+
+    def load_both(name):
+        # Planets keys are looked up as "planets:<key>"
+        entries = load_lang(os.path.join(lang_dir, name)) if os.path.isfile(os.path.join(lang_dir, name)) else {}
+        planets = os.path.join(planets_dir, name)
+        if os.path.isfile(planets):
+            entries.update({PLANETS + k: v for k, v in load_lang(planets).items()})
+        return entries
+
+    english = load_both("en_us.lang")
     missing = [old for old in keys.values() if old not in english]
     if missing:
         raise SystemExit(f"en_us.lang lacks: {missing}")
@@ -162,8 +192,8 @@ def port_lang(mapping, legacy_assets, out_assets):
         if not name.endswith(".lang"):
             continue
         locale = name[:-5].lower()
-        source = load_lang(os.path.join(lang_dir, name))
-        out = {new: java_format(source[old]) for new, old in sorted(keys.items()) if old in source}
+        entries = load_both(name)
+        out = {new: java_format(entries[old]) for new, old in sorted(keys.items()) if old in entries}
         if locale == "en_us":
             out.update(mapping.get("lang_extra_en_us", {}))
         if out:
@@ -218,7 +248,7 @@ def convert_ingredient(rules, ing):
 
 def category_for(result_id):
     path = result_id.split(":", 1)[1]
-    if path.startswith("heavy_duty_"):
+    if path.endswith(("_pickaxe", "_axe", "_shovel", "_hoe", "_sword", "_helmet", "_chestplate", "_leggings", "_boots")):
         return "equipment"
     if any(part in path for part in ("stairs", "slab", "wall", "_block", "decoration", "torch", "ore")):
         return "building"
@@ -235,7 +265,7 @@ def convert_recipe(rules, recipe):
     if isinstance(result_id, list) or result_id.startswith("#"):
         raise Unmapped("ambiguous result " + result["item"])
     out_result = {"count": result.get("count", 1), "id": result_id}
-    if kind in ("minecraft:crafting_shaped", "forge:ore_shaped", f"{MOD_ID}:replacable"):
+    if kind in ("minecraft:crafting_shaped", "forge:ore_shaped", f"{MOD_ID}:replacable", f"{PLANETS_ID}:replacable"):
         return {
             "type": "minecraft:crafting_shaped",
             "category": category_for(result_id),
@@ -277,10 +307,14 @@ def port_recipes(mapping, legacy_assets, out_data):
             if name.endswith(".json"):
                 os.remove(os.path.join(out_dir, name))
     written, skipped, seen = [], {}, set()
-    for name in sorted(os.listdir(recipe_dir)):
+    planets_dir = os.path.join(asset_source(legacy_assets, PLANETS)[0], "recipes")
+    files = [(recipe_dir, n) for n in sorted(os.listdir(recipe_dir))]
+    if rules.get("planets") and os.path.isdir(planets_dir):
+        files += [(planets_dir, n) for n in sorted(os.listdir(planets_dir))]
+    for directory, name in files:
         if not name.endswith(".json") or name.startswith("_"):
             continue
-        with open(os.path.join(recipe_dir, name), encoding="utf-8") as f:
+        with open(os.path.join(directory, name), encoding="utf-8") as f:
             recipe = json.load(f)
         try:
             converted = convert_recipe(rules, recipe)

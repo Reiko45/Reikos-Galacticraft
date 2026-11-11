@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "X": {
+      "tag": "c:ingots/desh"
+    },
+    "Y": {
+      "item": "galacticraftcore:desh_stick"
+    }
+  },
+  "pattern": [
+    "XX",
+    "XY",
+    " Y"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:desh_axe"
+  }
+}

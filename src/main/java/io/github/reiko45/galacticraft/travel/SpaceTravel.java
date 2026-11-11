@@ -2,8 +2,10 @@ package io.github.reiko45.galacticraft.travel;
 
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.entity.ParachestEntity;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
+import io.github.reiko45.galacticraft.entity.LandingBalloonsEntity;
 import io.github.reiko45.galacticraft.item.Tier1RocketItem;
+import io.github.reiko45.galacticraft.registry.GCItems;
 import io.github.reiko45.galacticraft.item.gear.GearSlot;
 import io.github.reiko45.galacticraft.item.gear.ParachuteItem;
 import io.github.reiko45.galacticraft.network.GCNetwork;
@@ -29,9 +31,10 @@ import org.jetbrains.annotations.Nullable;
  * TeleportTypeOverworld and TeleportTypeMoon, and the travel parts of GCPlayerHandler).
  *
  * <p>A rocket that climbs above y 1200 hands its cargo, fuel, launch pads and itself to the rider, who stays in place
- * while choosing a destination. On the Moon the player arrives at y 900 in a Space Lander holding all of it. On Earth
- * the player arrives at y 250 (falling slowly under their parachute if they wear one), and a Parachest with the cargo
- * floats down from y 230 nearby 20 ticks later.
+ * while choosing a destination within the rocket's tier. On the Moon the player arrives at y 900 in a Space Lander
+ * holding all of it, on Mars in Landing Balloons (TeleportTypeMars). On Earth the player arrives at y 250 (falling
+ * slowly under their parachute if they wear one), and a Parachest with the cargo floats down from y 230 nearby 20
+ * ticks later.
  */
 public final class SpaceTravel {
     /** A world a rocket can fly to. */
@@ -41,7 +44,8 @@ public final class SpaceTravel {
     public static final List<Destination> DESTINATIONS = List.of(
             new Destination(Level.OVERWORLD, "planet.galacticraftcore.overworld", 1),
             new Destination(GCDimensions.MOON, "moon.galacticraftcore.moon", 1),
-            new Destination(GCDimensions.ORBIT, "satellite.galacticraftcore.overworld_station", 1));
+            new Destination(GCDimensions.ORBIT, "satellite.galacticraftcore.overworld_station", 1),
+            new Destination(GCDimensions.MARS, "planet.galacticraftcore.mars", 2));
 
     private SpaceTravel() {
     }
@@ -65,7 +69,7 @@ public final class SpaceTravel {
     }
 
     /** 1.12.2 EntityTier1Rocket#onTeleport + WorldUtil#toCelestialSelection. */
-    public static void reachSpace(ServerPlayer player, Tier1RocketEntity rocket) {
+    public static void reachSpace(ServerPlayer player, RocketEntity rocket) {
         final GCPlayerData data = GCPlayerData.get(player);
         data.rocketCargo = NonNullList.withSize(rocket.cargo().getContainerSize(), ItemStack.EMPTY);
         for (int i = 0; i < data.rocketCargo.size(); i++) {
@@ -74,6 +78,7 @@ public final class SpaceTravel {
         rocket.cargo().clearContent();
         data.rocketStorage = rocket.storage();
         data.rocketFuel = rocket.fuel();
+        data.rocketTier = rocket.tier();
         data.inSpace = true;
         data.spacePos = player.position();
         player.setNoGravity(true);
@@ -91,7 +96,7 @@ public final class SpaceTravel {
         for (SpaceStations.Station station : stations.visitableBy(player)) {
             visible.add(new GCNetwork.StationInfo(station.id(), station.name(), station.ownerName(), station.isOwner(player)));
         }
-        return new GCNetwork.OpenCelestialSelection(1, visible, canCreateStation(player, stations));
+        return new GCNetwork.OpenCelestialSelection(GCPlayerData.get(player).rocketTier, visible, canCreateStation(player, stations));
     }
 
     /** 1.12.2 GuiCelestialSelection#canCreateSpaceStation: one per player, from a rocket, unless the server forbids it. */
@@ -136,7 +141,7 @@ public final class SpaceTravel {
         final GCPlayerData data = GCPlayerData.get(player);
         final Destination destination = destination(dimension);
         final ServerLevel target = player.server.getLevel(dimension);
-        if (!data.inSpace || destination == null || destination.tier() > 1 || target == null) {
+        if (!data.inSpace || destination == null || destination.tier() > data.rocketTier || target == null) {
             return;
         }
         final SpaceStations.Station station = dimension.equals(GCDimensions.ORBIT) ? SpaceStations.get(player.server).byId(stationId) : null;
@@ -150,7 +155,7 @@ public final class SpaceTravel {
         if (data.launchpadCount > 0) {
             cargo.set(cargo.size() - 2, new ItemStack(GCBlocks.LANDING_PAD.get(), data.launchpadCount));
         }
-        cargo.set(cargo.size() - 1, Tier1RocketItem.create(data.rocketStorage, 0));
+        cargo.set(cargo.size() - 1, rocketItem(data.rocketTier, data.rocketStorage));
         final int fuel = data.rocketFuel;
         data.rocketCargo = NonNullList.create();
         data.rocketFuel = 0;
@@ -163,13 +168,15 @@ public final class SpaceTravel {
             data.rocketFuel = fuel;
             data.chestSpawnPos = Vec3.atLowerCornerOf(station.base()).add(-8.5D, 26.0D, -1.5D);
             data.chestSpawnCooldown = 200;
-        } else if (dimension.equals(GCDimensions.MOON)) {
-            // TeleportTypeMoon: arrive at y 900 in a lander (within the Moon's world border)
+        } else if (dimension.equals(GCDimensions.MOON) || dimension.equals(GCDimensions.MARS)) {
+            // TeleportTypeMoon / TeleportTypeMars: arrive at y 900 in a lander or landing balloons (within the world border)
             final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
             final double x = Math.max(-limit, Math.min(limit, data.launchedFromX));
             final double z = Math.max(-limit, Math.min(limit, data.launchedFromZ));
             player.teleportTo(target, x, 900.0D, z, player.getYRot(), player.getXRot());
-            final LanderEntity lander = LanderEntity.create(target, x, 900.0D, z, cargo, fuel);
+            final LanderEntity lander = dimension.equals(GCDimensions.MARS)
+                    ? LandingBalloonsEntity.create(target, x, 900.0D, z, cargo, fuel)
+                    : LanderEntity.create(target, x, 900.0D, z, cargo, fuel);
             target.addFreshEntity(lander);
             player.startRiding(lander, true);
         } else {
@@ -184,6 +191,11 @@ public final class SpaceTravel {
             data.chestSpawnCooldown = 200;
         }
         player.resetFallDistance();
+    }
+
+    /** The rocket a traveller gets back on arrival (1.12.2 GCPlayerStats rocketItem and rocketType). */
+    public static ItemStack rocketItem(int tier, int storage) {
+        return tier >= 2 ? GCItems.TIER_2_ROCKET.get().stack(storage, 0) : Tier1RocketItem.create(storage, 0);
     }
 
     /** Every server tick for every player. */
@@ -224,7 +236,7 @@ public final class SpaceTravel {
 
     /** 1.12.2 S_IGNITE_ROCKET: fuel needed; without a parachute the first press only warns. */
     public static void ignite(ServerPlayer player) {
-        if (!(player.getVehicle() instanceof Tier1RocketEntity rocket) || rocket.phase() != Tier1RocketEntity.Phase.UNIGNITED) {
+        if (!(player.getVehicle() instanceof RocketEntity rocket) || rocket.phase() != RocketEntity.Phase.UNIGNITED) {
             return;
         }
         final GCPlayerData data = GCPlayerData.get(player);

@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraftcore:block/mars_dungeon_brick_slab"
+    },
+    "type=double": {
+      "model": "galacticraftcore:block/mars_dungeon_brick"
+    },
+    "type=top": {
+      "model": "galacticraftcore:block/mars_dungeon_brick_slab_top"
+    }
+  }
+}

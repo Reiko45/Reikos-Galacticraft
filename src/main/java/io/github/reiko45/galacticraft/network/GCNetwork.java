@@ -3,7 +3,7 @@ package io.github.reiko45.galacticraft.network;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.footprint.Footprint;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.menu.CargoMenu;
 import io.github.reiko45.galacticraft.menu.ExtendedInventoryMenu;
 import io.github.reiko45.galacticraft.travel.SpaceTravel;
@@ -267,7 +267,7 @@ public final class GCNetwork {
             }
         }));
         registrar.playToServer(OpenRocketCargo.TYPE, OpenRocketCargo.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
-            if (context.player() instanceof ServerPlayer player && player.getVehicle() instanceof Tier1RocketEntity rocket) {
+            if (context.player() instanceof ServerPlayer player && player.getVehicle() instanceof RocketEntity rocket) {
                 CargoMenu.openRocket(player, rocket);
             } else if (context.player() instanceof ServerPlayer player && player.getVehicle() instanceof io.github.reiko45.galacticraft.entity.BuggyEntity buggy) {
                 CargoMenu.openBuggy(player, buggy);

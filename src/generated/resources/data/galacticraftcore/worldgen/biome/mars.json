@@ -1,0 +1,71 @@
+{
+  "carvers": {},
+  "creature_spawn_probability": 0.01,
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 13793339,
+    "sky_color": 10121794,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "galacticraftcore:mars_ice",
+      "galacticraftcore:mars_regolith_blob",
+      "galacticraftcore:mars_ore_desh",
+      "galacticraftcore:mars_ore_copper",
+      "galacticraftcore:mars_ore_tin",
+      "galacticraftcore:mars_ore_iron"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "galacticraftcore:evolved_zombie",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_spider",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_skeleton",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_creeper",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 0.5
+}

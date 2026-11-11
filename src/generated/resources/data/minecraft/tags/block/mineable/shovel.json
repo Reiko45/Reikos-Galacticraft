@@ -1,6 +1,8 @@
 {
   "values": [
     "galacticraftcore:moon_turf",
-    "galacticraftcore:moon_dirt"
+    "galacticraftcore:moon_dirt",
+    "galacticraftcore:mars_fine_regolith",
+    "galacticraftcore:mars_regolith"
   ]
 }

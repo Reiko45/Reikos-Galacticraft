@@ -39,9 +39,12 @@ public final class Schematics {
 
     public static final Page ROCKET_T1 = new Page("rocket_t1", 0, null, "schematic.galacticraftcore.rocket_t1", NasaWorkbenchMenu::new);
     public static final Page MOON_BUGGY = new Page("moon_buggy", 1, GCItems.BUGGY_SCHEMATIC, "schematic.galacticraftcore.moon_buggy", BuggyBenchMenu::new);
+    /** 1.12.2 SchematicTier2Rocket (planets config id 2). */
+    public static final Page ROCKET_T2 = new Page("rocket_t2", 2, GCItems.TIER_2_ROCKET_SCHEMATIC, "schematic.galacticraftcore.rocket_t2",
+            Tier2RocketBenchMenu::new);
     public static final Page ADD_SCHEMATIC = new Page("add_schematic", Integer.MAX_VALUE, null, "gui.galacticraftcore.add_new_schematic",
             SchematicInputMenu::new);
-    private static final List<Page> PAGES = List.of(ROCKET_T1, MOON_BUGGY, ADD_SCHEMATIC).stream()
+    private static final List<Page> PAGES = List.of(ROCKET_T1, MOON_BUGGY, ROCKET_T2, ADD_SCHEMATIC).stream()
             .sorted(Comparator.comparingInt(Page::order)).toList();
 
     public static final int ACTION_BACK = 0;

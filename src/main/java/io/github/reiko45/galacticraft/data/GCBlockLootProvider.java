@@ -43,6 +43,17 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
         add(GCBlocks.SILICON_ORE.get(), block -> createOreDrop(block, GCItems.RAW_SILICON.get()));
         add(GCBlocks.MOON_CHEESE_ORE.get(), block -> createOreDrop(block, GCItems.CHEESE_CURD.get()));
         add(GCBlocks.MOON_SAPPHIRE_ORE.get(), block -> createOreDrop(block, GCItems.LUNAR_SAPPHIRE.get()));
+        // Mars (1.12.2 BlockBasicMars): stone breaks to cobblestone; desh ore gives Raw Desh, and with Fortune a chance of
+        // a second one of (level x 0.29 - 0.25), i.e. 4% / 33% / 62% (quantityDropped).
+        add(GCBlocks.MARS_STONE.get(), block -> createSingleItemTableWithSilkTouch(block, GCBlocks.MARS_COBBLESTONE.get()));
+        final var fortune = this.registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+                .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
+        add(GCBlocks.DESH_ORE.get(), block -> createSilkTouchDispatchTable(block, applyExplosionDecay(block,
+                LootItem.lootTableItem(GCItems.RAW_DESH.get()).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1), true)
+                        .when(net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition.bonusLevelFlatChance(fortune,
+                                0.0F, 0.04F, 0.33F, 0.62F, 0.91F))))));
+        // 1.12.2 BlockCavernousVine dropped nothing unless sheared.
+        add(GCBlocks.CAVERNOUS_VINES.get(), createShearsOnlyDrop(GCBlocks.CAVERNOUS_VINES.get()));
         // 1.12.2 BlockFluidPipe#breakBlock: a dyed pipe also gives its dye back.
         add(GCBlocks.FLUID_PIPE.get(), block -> {
             final LootPool.Builder dye = LootPool.lootPool().setRolls(ConstantValue.exactly(1));

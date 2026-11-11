@@ -38,11 +38,11 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | Machine recipes (compressor, circuit fabricator, refinery...) | Custom `RecipeType` + `RecipeSerializer`, JSON recipes (`galacticraftcore:compressing_shaped/_shapeless`, `circuit_fabricating`) | compressor + fabricator done |
 | `EnumHelper.addToolMaterial/ArmorMaterial` | `SimpleTier`; `ArmorMaterial` registry entry | done |
 | `IWorldGenerator` ore generation | Configured/placed features + NeoForge biome modifier | done |
-| `WorldProvider` + `ChunkProvider` + numeric dimension IDs | Datapack `dimension_type` + `dimension`; custom `ChunkGenerator` with a `MapCodec` | Moon done |
+| `WorldProvider` + `ChunkProvider` + numeric dimension IDs | Datapack `dimension_type` + `dimension`; custom `ChunkGenerator` with a `MapCodec` | Moon, orbit, Mars done |
 | Gravity via ASM (`TransformerHooks.getGravityForEntity`, `getItemGravity`, `getArrowGravity`) | `generic.gravity` attribute modifier (vanilla since 1.20.5) for living entities; two Mixins on `ItemEntity`/`AbstractArrow#getDefaultGravity` | done |
 | `LivingFallEvent` distance scaling | Same event in NeoForge | done |
-| `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` + NeoForge `renderSky`/`renderClouds` overrides (`MoonSkyRenderer`) | Moon done |
-| `MapGenBaseMeta` / `MapGenCavesMoon` | `ChunkGenerator#applyCarvers` (AIR step) running the 1.12.2 worm carver (`MoonCaves`) | done |
+| `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` + NeoForge `renderSky`/`renderClouds` overrides (`MoonSkyRenderer`, `MarsSkyRenderer`) | Moon, orbit, Mars done |
+| `MapGenBaseMeta` / `MapGenCavesMoon` | `ChunkGenerator#applyCarvers` (AIR step) running the 1.12.2 worm carver (`WormCaves`, shared with Mars) | done |
 | `TileEntityAdvanced` networked fields (`@NetworkedField`) | Block entity update tag + `ClientboundBlockEntityDataPacket`, sent when needed | Fallen Meteor heat done |
 | `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` (`MachineBlockEntity`) | done |
 | `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` (`MachineMenu`/`MachineScreen`, 1.12.2 GUI sheets reused) | done |
@@ -69,7 +69,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `DamageSourceGC.oxygenSuffocation`, `.spaceshipCrash` | Data-driven damage types `galacticraftcore:oxygen_suffocation`, `galacticraftcore:spaceship_crash` + damage type tags | done |
 | Overlays drawn in `TickHandlerClient` | `RegisterGuiLayersEvent` GUI layers (`OxygenHud`) | oxygen done |
 | `LayerOxygenMask/Gear/Tanks/Parachute` on `RenderPlayer` | `RenderLayer` added in `EntityRenderersEvent.AddLayers` (`GearLayer`) | mask, tanks, tubes, parachute done |
-| `WorldUtil.transferEntityToDimension` + `ITeleportType` | `ServerPlayer#teleportTo(ServerLevel, ...)` in `SpaceTravel`, per destination | Overworld, Moon done |
+| `WorldUtil.transferEntityToDimension` + `ITeleportType` | `ServerPlayer#teleportTo(ServerLevel, ...)` in `SpaceTravel`, per destination | Overworld, Moon, orbit, Mars done |
 | `EntitySpaceshipBase`/`EntityTieredRocket`/`EntityLander` (`IControllableEntity`, key packets) | Plain `Entity` subclasses with `SynchedEntityData`; keys sent as payloads (`VehicleControls`); riders kept by cancelling `EntityMountEvent` | done |
 | `KeyHandlerClient` key bindings | `RegisterKeyMappingsEvent` (Spaceship Inventory, default F as in 1.12.2) | done |
 
@@ -192,8 +192,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] Fire needs oxygen: burning entities on the Moon outside breathable air are put out when the flames first hurt
       them (1.12.2 EventHandlerGC#onEntityDamaged, missed in Phase 3)
 - [ ] Deferred to Phase 5c: Moon villages and Alien Villagers (1.12.2 MapGenVillageMoon, its eleven building pieces
-      and EntityAlienVillager trading for lunar sapphires). The Tier 2 Rocket schematic can drop already; its page
-      comes with the Tier 2 Rocket in Phase 7.
+      and EntityAlienVillager trading for lunar sapphires). The Tier 2 Rocket schematic drops there; its page
+      came with the Tier 2 Rocket in Phase 7a.
 
 ### Phase 5c – Moon villages
 - [ ] Moon village structure and pieces, Alien Villager with its trades
@@ -220,8 +220,47 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] Circuit Fabricator zero-g bonus in orbit (5 basic wafers, 15 solar wafers, other wafers doubled)
 - [ ] Deferred to Phase 6b: Space Race teams (team GUI, the flag designer, invites, shared stats)
 
-### Phase 7 – Planets
-- [ ] Mars (desh, Tier 2 and cargo rockets, slimelings, Creeper Boss, gas liquefier/methane synthesizer/electrolyzer, launch controller)
+### Phase 7a – Mars ✅
+Ported from the Legacy repository's planets module (`micdoodle8.mods.galacticraft.planets.mars`); its assets come in
+through the porter's `planets:` prefix (`assets/galacticraftplanets`).
+- [x] Mars blocks (1.12.2 BlockBasicMars, Material.ROCK, hardness 2.2): copper, tin, iron and desh ores, Mars Fine
+      Regolith (surface), Mars Regolith, Mars Stone (breaks to Mars Cobblestone, which smelts back), Mars Cobblestone,
+      Mars Dungeon Brick (hardness 4, resistance 40), Block of Desh (resistance 60); cobblestone and dungeon brick stairs,
+      slabs and walls; ore and stone harvest levels as in 1.12.2 (desh ore and dungeon bricks need diamond)
+- [x] Cavernous Vines (1.12.2 BlockCavernousVine): grow down from a solid ceiling, the lowest vine glowing at 15 and
+      each above it 4 less, entangle and poison mobs (never fatally), climbable, collected only with shears
+- [x] Bacterial Sludge fluid, block and bucket (density 800, viscosity 1500, glowing)
+- [x] Desh: Unrefined Desh (from desh ore, Fortune as in 1.12.2: 4/33/62% for a second), Desh Ingot, Desh Stick,
+      Compressed Desh, Heavy-Duty Plate (compressor), Block of Desh; Desh pickaxe/axe/shovel/hoe/sword (harvest level 4 =
+      netherite's tier, 1024 uses) and the Sticky Desh Pickaxe; Desh armour (4/7/9/4, toughness 3, its three 1.12.2
+      texture sheets); smelting, compressing and crafting recipes from RecipeManagerMars and the planets JSON recipes
+- [x] The Mars dimension (`galacticraftcore:mars`): ChunkProviderSpace terrain with ChunkProviderMars's settings
+      (plains, hills, valleys and mountains around y 93, a few large craters), fine regolith over regolith over Mars
+      stone, MapGenCaveMars worm caves, MapGenCavernMars caverns (80 blocks across at y 17-33, vines from the ceiling,
+      sludge on the floor), BiomeDecoratorMars ores, regolith pockets and ice; the evolved mobs spawn there
+- [x] Mars physics (WorldProviderMars): gravity 0.058, fall distance x0.38, arrows 0.015, meteors 10, rockets burn
+      0.9x fuel, solar panels x0.512, no air; beds can be slept in but don't set a spawn point (1.12.2 canRespawnHere)
+- [x] The Mars sky (SkyProviderMars, WorldProviderMars): a butterscotch sky and orange fog that only dim to a quarter at
+      night, stars at night, a smaller sun in a pale pink haze, the Earth as a dot, no clouds
+- [x] Tier 2 Rocket (EntityTier2Rocket): 1,500 mB, climbs twice as fast as the Tier 1 and burns 1 mB every 2 ticks;
+      the OBJ model; 0-3 chests of cargo; reaches Mars (tier 2) as well as the Moon and orbit. The NASA Workbench's Tier 2
+      page (nose cone, 10 heavy-duty plates, 2 boosters, 4 fins, engine, chests) is unlocked by the Tier 2 Rocket
+      Schematic from Moon dungeons
+- [x] Landing Balloons (EntityLandingBalloons, TeleportTypeMars): arrival on Mars from y 900, falling a fiftieth of the
+      height each tick, under a parachute above y 500, then 14 bounces; afterwards they open as a chest with the cargo
+- [x] Mars on the destination screen, locked for Tier 1 rockets
+
+### Phase 7b – Mars mobs and dungeon
+- [ ] Slimelings (eggs, taming, the Slimeling inventory and its cargo item; making the Sticky Desh Pickaxe from an egg)
+- [ ] Sludgelings (spawned from bacterial sludge), Creeper Eggs
+- [ ] The Mars dungeon (MapGenDungeonMars, RoomBossMars/RoomTreasureMars), the Creeper Boss, the Tier 2 Treasure Chest
+      and Tier 2 Dungeon Key, the dungeon bricks' sludge drips
+
+### Phase 7c – Mars machines and the cargo rocket
+- [ ] Terraformer, Cryogenic Chamber, Launch Controller, Gas Liquefier, Methane Synthesizer, Water Electrolyzer
+- [ ] Cargo Rocket and its schematic, Fluid Manipulator, Fragmented Carbon
+
+### Phase 7d+ – More planets
 - [ ] Asteroids (Tier 3 rocket, Astro Miner, telepads, beam power, thermal gear)
 - [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
 
@@ -267,12 +306,12 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   is not ported.
 * Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
   made the Refinery's status flicker).
-* The destination screen is a simplified galaxy map: the Sun, Earth and the Moon on their orbits with the 1.12.2 icons,
+* The destination screen is a simplified galaxy map: the Sun, Earth, the Moon and Mars on their orbits with the 1.12.2 icons,
   frame and LAUNCH button. Zooming, the planet catalogue panels and the space station list come with later phases.
 * The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
   not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
   configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id). A
-  schematic whose page doesn't exist yet (Tier 2 Rocket) is not used up by Unlock Schematic.
+  schematic whose page doesn't exist yet (Cargo Rocket, Tier 3 Rocket, ...) is not used up by Unlock Schematic.
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
@@ -312,6 +351,24 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
   within the simulation distance rather than the view distance so that they actually move.
 * The Fallen Meteor's mining speed bonus for better pickaxes (1.12.2 divided by 30 instead of 100) is not ported.
+* Mars blocks have their own ids (`mars_fine_regolith`, `desh_ore`, ...) under the `galacticraftcore` namespace instead of
+  the planets mod's `galacticraftplanets:mars` metadata block; recipes from the planets JSON files are converted too.
+* Mars Fine Regolith and Mars Regolith keep 1.12.2's Material.ROCK: they need a shovel to drop, and sound like stone.
+* Desh tools are repaired with Desh Ingots like the armour (1.12.2 gave the tools no repair item).
+* The Sticky Desh Pickaxe exists, but making it (from a Slimeling Egg) and its use (Creeper Eggs) come with Phase 7b.
+* Mars's day is vanilla's length (1.12.2: 24,660 ticks). Mars's sky colour hooks `ClientLevel#getSkyColor` (a client
+  mixin) so the sky dome and vanilla's fog blending both get the 1.12.2 colours; 1.12.2's black square behind the sun
+  was drawn with additive blending and hid nothing, so it is left out.
+* MapGenCavernMars carved the same ellipsoid on each of its ~50 steps and kept only the last step's vines and sludge;
+  the port carves and decorates once (same caverns). Sludge pools are ticked once after generation so they settle.
+* ChunkProviderSpace re-tuned two noise generators between terrain passes; they are split into fixed-frequency copies
+  with the same seeds. Craters only dug down from y 127, so in taller columns they are hidden pockets, as in 1.12.2.
+* The Tier 2 Rocket's flames are vanilla flame, soul-fire flame and smoke particles. Its item is drawn with the OBJ
+  model at a fixed angle (1.12.2 slowly turned the icon in the inventory).
+* Landing balloons are simulated on the server (1.12.2 let the rider's client move them).
+* Cavernous Vines keep a `hanging` count (vines from here down, up to 5) in their block state, which sets their glow:
+  1.12.2 counted the strand on every light query, but a 1.21 light engine thread that reads other blocks can deadlock
+  chunk generation. Generated strands are recounted once all carvers have run.
 
 ## Workflow for porting more content
 

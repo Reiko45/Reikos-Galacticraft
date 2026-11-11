@@ -1,5 +1,7 @@
 {
   "values": [
-    "galacticraftcore:heavy_duty_pickaxe"
+    "galacticraftcore:heavy_duty_pickaxe",
+    "galacticraftcore:desh_pickaxe",
+    "galacticraftcore:sticky_desh_pickaxe"
   ]
 }

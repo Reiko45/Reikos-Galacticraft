@@ -1,7 +1,7 @@
 package io.github.reiko45.galacticraft.block.entity;
 
 import io.github.reiko45.galacticraft.block.LandingPadBlock;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.fluid.GCFluidTags;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.machine.EnergyAccess;
@@ -174,11 +174,11 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     /** The rocket standing on the attached launch pad. */
     @Nullable
-    public Tier1RocketEntity dockedRocket() {
+    public RocketEntity dockedRocket() {
         if (this.level == null || this.attachedPad == null || LandingPadBlock.findLaunchPadCentre(this.level, this.attachedPad) == null) {
             return null;
         }
-        final List<Tier1RocketEntity> rockets = this.level.getEntitiesOfClass(Tier1RocketEntity.class,
+        final List<RocketEntity> rockets = this.level.getEntitiesOfClass(RocketEntity.class,
                 new AABB(this.attachedPad).inflate(0.5D, 0.0D, 0.5D).expandTowards(0.0D, 2.0D, 0.0D),
                 rocket -> !rocket.launched() && rocket.isAlive());
         return rockets.isEmpty() ? null : rockets.get(0);

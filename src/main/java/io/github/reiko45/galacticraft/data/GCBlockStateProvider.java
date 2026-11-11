@@ -52,9 +52,20 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 GCBlocks.TIN_BLOCK, GCBlocks.ALUMINUM_BLOCK, GCBlocks.METEORIC_IRON_BLOCK, GCBlocks.SILICON_BLOCK,
                 GCBlocks.TIN_DECORATION_BLOCK_2,
                 GCBlocks.MOON_DIRT, GCBlocks.MOON_ROCK, GCBlocks.MOON_DUNGEON_BRICK,
-                GCBlocks.MOON_COPPER_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.MOON_CHEESE_ORE, GCBlocks.MOON_SAPPHIRE_ORE)) {
+                GCBlocks.MOON_COPPER_ORE, GCBlocks.MOON_TIN_ORE, GCBlocks.MOON_CHEESE_ORE, GCBlocks.MOON_SAPPHIRE_ORE,
+                GCBlocks.MARS_COPPER_ORE, GCBlocks.MARS_TIN_ORE, GCBlocks.MARS_IRON_ORE,
+                GCBlocks.MARS_FINE_REGOLITH, GCBlocks.MARS_REGOLITH, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE,
+                GCBlocks.MARS_DUNGEON_BRICK, GCBlocks.DESH_BLOCK)) {
             simpleBlockWithItem(block.get(), cubeAll(block.get()));
         }
+        simpleBlockWithItem(GCBlocks.DESH_ORE.get(), cubeAll(GCBlocks.DESH_ORE.get()));
+        // 1.12.2 vine_0..2 are cross models (vine_model); the item shows the first.
+        getVariantBuilder(GCBlocks.CAVERNOUS_VINES.get()).forAllStates(state -> {
+            final int type = state.getValue(io.github.reiko45.galacticraft.block.CavernousVinesBlock.TYPE);
+            return net.neoforged.neoforge.client.model.generators.ConfiguredModel.builder().modelFile(models()
+                    .cross("cavernous_vines_" + type, tex("cavernous_vines_" + type)).renderType("cutout")).build();
+        });
+        itemModels().withExistingParent("cavernous_vines", mcLoc("item/generated")).texture("layer0", tex("cavernous_vines_0"));
 
         final ResourceLocation tin1Side = tex("tin_decoration_block_1_side");
         final ResourceLocation tin1Bottom = tex("tin_decoration_block_1_bottom");
@@ -69,16 +80,22 @@ public class GCBlockStateProvider extends BlockStateProvider {
         stairs(GCBlocks.TIN_DECORATION_STAIRS_2, tex("tin_decoration_block_2"), tex("tin_decoration_block_2"), tex("tin_decoration_block_2"));
         stairs(GCBlocks.MOON_ROCK_STAIRS, tex("moon_rock"), tex("moon_rock"), tex("moon_rock"));
         stairs(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, tex("moon_dungeon_brick"), tex("moon_dungeon_brick"), tex("moon_dungeon_brick"));
+        stairs(GCBlocks.MARS_COBBLESTONE_STAIRS, tex("mars_cobblestone"), tex("mars_cobblestone"), tex("mars_cobblestone"));
+        stairs(GCBlocks.MARS_DUNGEON_BRICK_STAIRS, tex("mars_dungeon_brick"), tex("mars_dungeon_brick"), tex("mars_dungeon_brick"));
 
         slab(GCBlocks.TIN_DECORATION_SLAB_1, GCBlocks.TIN_DECORATION_BLOCK_1, tin1Side, tin1Bottom, tin1Top);
         slab(GCBlocks.TIN_DECORATION_SLAB_2, GCBlocks.TIN_DECORATION_BLOCK_2, tex("tin_decoration_block_2"), tex("tin_decoration_block_2"), tex("tin_decoration_block_2"));
         slab(GCBlocks.MOON_ROCK_SLAB, GCBlocks.MOON_ROCK, tex("moon_rock"), tex("moon_rock"), tex("moon_rock"));
         slab(GCBlocks.MOON_DUNGEON_BRICK_SLAB, GCBlocks.MOON_DUNGEON_BRICK, tex("moon_dungeon_brick"), tex("moon_dungeon_brick"), tex("moon_dungeon_brick"));
+        slab(GCBlocks.MARS_COBBLESTONE_SLAB, GCBlocks.MARS_COBBLESTONE, tex("mars_cobblestone"), tex("mars_cobblestone"), tex("mars_cobblestone"));
+        slab(GCBlocks.MARS_DUNGEON_BRICK_SLAB, GCBlocks.MARS_DUNGEON_BRICK, tex("mars_dungeon_brick"), tex("mars_dungeon_brick"), tex("mars_dungeon_brick"));
 
         wall(GCBlocks.TIN_DECORATION_WALL_1, tin1Side);
         wall(GCBlocks.TIN_DECORATION_WALL_2, tex("tin_decoration_block_2"));
         wall(GCBlocks.MOON_ROCK_WALL, tex("moon_rock"));
         wall(GCBlocks.MOON_DUNGEON_BRICK_WALL, tex("moon_dungeon_brick"));
+        wall(GCBlocks.MARS_COBBLESTONE_WALL, tex("mars_cobblestone"));
+        wall(GCBlocks.MARS_DUNGEON_BRICK_WALL, tex("mars_dungeon_brick"));
 
         cheese();
         // Machines: 1.12.2 models put the front on north and the energy port on east (the left side seen from the front).
@@ -101,6 +118,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         fluidPipe();
         liquid(GCFluids.OIL_BLOCK.get(), "oil");
         liquid(GCFluids.FUEL_BLOCK.get(), "fuel");
+        liquid(GCFluids.BACTERIAL_SLUDGE_BLOCK.get(), "bacterial_sludge");
         oxygenMachines();
         energyStorage(GCBlocks.ENERGY_STORAGE_MODULE.get(), "");
         energyStorage(GCBlocks.ENERGY_STORAGE_CLUSTER.get(), "advanced/");
@@ -183,6 +201,11 @@ public class GCBlockStateProvider extends BlockStateProvider {
             "CargoLeft", "CargoMid", "CargoRight"};
 
     private void buggy() {
+        // The Tier 2 Rocket and Landing Balloons are single-object OBJs (1.12.2 RenderTier2Rocket, RenderLandingBalloons).
+        for (String entity : new String[]{"tier_2_rocket", "landing_balloons"}) {
+            models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
+        }
         for (String part : BUGGY_PARTS) {
             final var loader = models().getBuilder("entity/buggy/" + part.toLowerCase(java.util.Locale.ROOT)).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/buggy.obj")).flipV(true);

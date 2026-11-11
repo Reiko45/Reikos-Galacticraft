@@ -51,7 +51,7 @@ public class LanderEntity extends Entity {
 
     private SimpleContainer cargo = new SimpleContainer(3);
     private int keys;
-    private int ticks;
+    protected int ticks;
     private double lastMotionY;
 
     public LanderEntity(EntityType<? extends LanderEntity> type, Level level) {
@@ -59,13 +59,18 @@ public class LanderEntity extends Entity {
     }
 
     public static LanderEntity create(Level level, double x, double y, double z, NonNullList<ItemStack> cargo, int fuel) {
-        final LanderEntity lander = new LanderEntity(GCEntities.LANDER.get(), level);
-        lander.setPos(x, y, z);
-        lander.cargo = new SimpleContainer(Math.max(3, cargo.size() + 1));
+        return load(new LanderEntity(GCEntities.LANDER.get(), level), x, y, z, cargo, fuel);
+    }
+
+    /** Position it and fill it with the rocket's cargo (plus a slot for a fuel canister) and fuel. */
+    protected static <L extends LanderEntity> L load(L lander, double x, double y, double z, NonNullList<ItemStack> cargo, int fuel) {
+        final LanderEntity base = lander;
+        base.setPos(x, y, z);
+        base.cargo = new SimpleContainer(Math.max(3, cargo.size() + 1));
         for (int i = 0; i < cargo.size(); i++) {
-            lander.cargo.setItem(i, cargo.get(i).copy());
+            base.cargo.setItem(i, cargo.get(i).copy());
         }
-        lander.entityData.set(FUEL, fuel);
+        base.entityData.set(FUEL, fuel);
         return lander;
     }
 
@@ -111,7 +116,7 @@ public class LanderEntity extends Entity {
         super.tick();
         this.ticks++;
         if (this.level().isClientSide) {
-            if (this.ticks > 40 && inAir()) {
+            if (this.ticks > 40 && inAir() && hasThrusters()) {
                 RocketEffects.spawnLanderFlames(this);
             }
             return;
@@ -120,6 +125,11 @@ public class LanderEntity extends Entity {
             passenger.resetFallDistance();
         }
         fillCanister();
+        fly();
+    }
+
+    /** One server tick of flight (1.12.2 EntityLander#tickInAir and getMotionVec). */
+    protected void fly() {
         Vec3 motion = getDeltaMovement();
         if (onGround()) {
             setXRot(0.0F);
@@ -189,16 +199,31 @@ public class LanderEntity extends Entity {
             if (onGround()) {
                 player.stopRiding();
             }
-        } else if (player instanceof ServerPlayer serverPlayer) {
+        } else if (player instanceof ServerPlayer serverPlayer && canOpen()) {
             CargoMenu.openLander(serverPlayer, this);
         }
         return InteractionResult.CONSUME;
     }
 
+    /** Whether it fires exhaust while falling. */
+    protected boolean hasThrusters() {
+        return true;
+    }
+
+    /** Whether a player may open it as a chest. */
+    protected boolean canOpen() {
+        return true;
+    }
+
+    /** Whether hitting it now breaks it. */
+    protected boolean canBreak() {
+        return !inAir();
+    }
+
     /** Hitting a landed lander breaks it and drops its cargo. */
     @Override
     public boolean hurt(DamageSource source, float amount) {
-        if (this.level().isClientSide || isRemoved() || inAir() || !(source.getEntity() instanceof Player)) {
+        if (this.level().isClientSide || isRemoved() || !canBreak() || !(source.getEntity() instanceof Player)) {
             return false;
         }
         for (int i = 0; i < this.cargo.getContainerSize(); i++) {

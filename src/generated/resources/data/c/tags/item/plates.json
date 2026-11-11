@@ -6,6 +6,7 @@
     "#c:plates/steel",
     "#c:plates/bronze",
     "#c:plates/iron",
-    "#c:plates/meteoric_iron"
+    "#c:plates/meteoric_iron",
+    "#c:plates/desh"
   ]
 }

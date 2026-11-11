@@ -2,7 +2,7 @@ package io.github.reiko45.galacticraft.client;
 
 import com.mojang.blaze3d.platform.InputConstants;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.network.GCNetwork;
 import net.minecraft.client.KeyMapping;
 import net.minecraft.client.Minecraft;
@@ -61,8 +61,8 @@ public final class VehicleControls {
         final Entity vehicle = minecraft.player.getVehicle();
         final Options options = minecraft.options;
         final boolean jumpDown = minecraft.screen == null && options.keyJump.isDown();
-        if (vehicle instanceof Tier1RocketEntity || vehicle instanceof io.github.reiko45.galacticraft.entity.BuggyEntity) {
-            if (vehicle instanceof Tier1RocketEntity && jumpDown && !jumpWasDown) {
+        if (vehicle instanceof RocketEntity || vehicle instanceof io.github.reiko45.galacticraft.entity.BuggyEntity) {
+            if (vehicle instanceof RocketEntity && jumpDown && !jumpWasDown) {
                 PacketDistributor.sendToServer(new GCNetwork.IgniteRocket());
             }
             while (SPACESHIP_INVENTORY.consumeClick()) {
@@ -74,7 +74,7 @@ public final class VehicleControls {
             }
         }
         jumpWasDown = jumpDown;
-        if (vehicle instanceof LanderEntity) {
+        if (vehicle instanceof LanderEntity && !(vehicle instanceof io.github.reiko45.galacticraft.entity.LandingBalloonsEntity)) {
             int keys = 0;
             if (minecraft.screen == null) {
                 keys |= options.keyUp.isDown() ? LanderEntity.KEY_PITCH_DOWN : 0;

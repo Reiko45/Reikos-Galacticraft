@@ -111,6 +111,8 @@ public final class GalacticraftClient {
                 io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::createLayer);
         event.registerLayerDefinition(ParachestRenderer.CHEST, ParachestRenderer::createChest);
         event.registerLayerDefinition(ParachestRenderer.CHUTE, ParachestRenderer::createChute);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer.CHUTE,
+                io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::createChute);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -120,6 +122,8 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_PIPE.get(), FluidPipeRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.OXYGEN_DISTRIBUTOR.get(), BubbleRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.TIER_2_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.LANDING_BALLOONS.get(), io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
         event.registerEntityRenderer(GCEntities.PARACHEST.get(), ParachestRenderer::new);
         event.registerEntityRenderer(GCEntities.METEOR.get(), MeteorRenderer::new);
@@ -155,6 +159,8 @@ public final class GalacticraftClient {
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
         event.register(FluidPipeRenderer.PULL_MODEL);
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer.registerModels(event);
     }
 
     private static void clientSetup(FMLClientSetupEvent event) {
@@ -169,7 +175,8 @@ public final class GalacticraftClient {
                     (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.BuggyItem.storage(stack));
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_TORCH.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_WALL_TORCH.get(), RenderType.cutout());
-            for (Fluid fluid : new Fluid[]{GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get(), GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get()}) {
+            for (Fluid fluid : new Fluid[]{GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get(), GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get(),
+                    GCFluids.BACTERIAL_SLUDGE.get(), GCFluids.FLOWING_BACTERIAL_SLUDGE.get()}) {
                 ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
             }
         });
@@ -182,11 +189,22 @@ public final class GalacticraftClient {
             @Override
             public BlockEntityWithoutLevelRenderer getCustomRenderer() {
                 if (this.renderer == null) {
-                    this.renderer = new RocketItemRenderer();
+                    this.renderer = new RocketItemRenderer(1);
                 }
                 return this.renderer;
             }
         }, GCItems.TIER_1_ROCKET.get());
+        event.registerItem(new IClientItemExtensions() {
+            private RocketItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new RocketItemRenderer(2);
+                }
+                return this.renderer;
+            }
+        }, GCItems.TIER_2_ROCKET.get());
         event.registerItem(new IClientItemExtensions() {
             private io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.Item renderer;
 
@@ -200,6 +218,7 @@ public final class GalacticraftClient {
         }, GCBlocks.TREASURE_CHEST_TIER_1.asItem());
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
+        event.registerFluidType(liquid("bacterial_sludge"), GCFluids.BACTERIAL_SLUDGE_TYPE.get());
         final ResourceLocation oxygen = GalacticraftCore.id("block/fluids/oxygen_gas");
         event.registerFluidType(new IClientFluidTypeExtensions() {
             @Override
@@ -259,6 +278,7 @@ public final class GalacticraftClient {
         event.register(GCMenus.CARGO.get(), CargoScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);
+        event.register(GCMenus.TIER_2_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.Tier2RocketBenchScreen::new);
         event.register(GCMenus.SCHEMATIC_INPUT.get(), io.github.reiko45.galacticraft.client.screen.SchematicInputScreen::new);
     }
 
@@ -279,6 +299,44 @@ public final class GalacticraftClient {
     private static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
         event.register(GCDimensions.MOON_EFFECTS, new MoonEffects());
         event.register(GCDimensions.ORBIT_EFFECTS, new OrbitEffects());
+        event.register(GCDimensions.MARS_EFFECTS, new MarsEffects());
+    }
+
+    /** Mars: no clouds or sunrise glow, the 1.12.2 Mars sky, and orange fog that dims to a quarter at night. */
+    static final class MarsEffects extends DimensionSpecialEffects {
+        private final io.github.reiko45.galacticraft.client.render.MarsSkyRenderer sky = new io.github.reiko45.galacticraft.client.render.MarsSkyRenderer();
+
+        MarsEffects() {
+            super(Float.NaN, true, SkyType.NORMAL, false, false);
+        }
+
+        @Override
+        public boolean renderSky(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, org.joml.Matrix4f modelViewMatrix,
+                                 net.minecraft.client.Camera camera, org.joml.Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+            return this.sky.render(level, partialTick, modelViewMatrix, camera, projectionMatrix, setupFog);
+        }
+
+        @Override
+        public boolean renderClouds(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack,
+                                    double camX, double camY, double camZ, org.joml.Matrix4f modelViewMatrix, org.joml.Matrix4f projectionMatrix) {
+            return true;
+        }
+
+        @Override
+        public Vec3 getBrightnessDependentFogColor(Vec3 fogColor, float brightness) {
+            final net.minecraft.client.multiplayer.ClientLevel level = Minecraft.getInstance().level;
+            return level == null ? fogColor : io.github.reiko45.galacticraft.client.render.MarsSkyRenderer.fogColor(level.getTimeOfDay(1.0F));
+        }
+
+        @Override
+        public boolean isFoggyAt(int x, int y) {
+            return false;
+        }
+
+        @Override
+        public float[] getSunriseColor(float timeOfDay, float partialTicks) {
+            return null; // 1.12.2 WorldProviderMars#hasSunset
+        }
     }
 
     /** Earth orbit: no clouds or fog, the 1.12.2 orbit sky with the Earth below. */

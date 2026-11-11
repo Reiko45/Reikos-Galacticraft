@@ -35,6 +35,25 @@ public final class GCArmorMaterials {
             1.0F,
             0.0F));
 
+    /**
+     * 1.12.2 ARMORDESH: durability factor 42, protection 4/7/9/4, enchantability 12, toughness 3, repaired with Desh
+     * Ingots. DeshArmorItem picks the three 1.12.2 texture sheets itself.
+     */
+    public static final Holder<ArmorMaterial> DESH = ARMOR_MATERIALS.register("desh", () -> new ArmorMaterial(
+            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                map.put(ArmorItem.Type.BOOTS, 4);
+                map.put(ArmorItem.Type.LEGGINGS, 7);
+                map.put(ArmorItem.Type.CHESTPLATE, 9);
+                map.put(ArmorItem.Type.HELMET, 4);
+                map.put(ArmorItem.Type.BODY, 9);
+            }),
+            12,
+            SoundEvents.ARMOR_EQUIP_IRON,
+            () -> Ingredient.of(GCItems.DESH_INGOT.get()),
+            List.of(new ArmorMaterial.Layer(GalacticraftCore.id("desh"))),
+            3.0F,
+            0.0F));
+
     private GCArmorMaterials() {
     }
 }

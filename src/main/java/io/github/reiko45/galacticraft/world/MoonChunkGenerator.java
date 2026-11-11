@@ -59,7 +59,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     private static final int GEN_DEPTH = 256;
     private static final int CRATER_PROB = 300;
     /** Crater size classes {min radius, max radius}, weighted 14:8:2:1 like EnumCraterSize. */
-    private static final int[][] CRATER_SIZES = buildCraterSizes();
+    static final int[][] CRATER_SIZES = buildCraterSizes();
 
     private final BlockState topBlock;
     private final BlockState fillerBlock;
@@ -169,7 +169,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     }
 
     /** Integer hash noise in [-1, 1] from 1.12.2, including its int overflow behaviour. */
-    private static double randFromPoint(int x, int z) {
+    static double randFromPoint(int x, int z) {
         int n = x + z * 57;
         n = n << 13 ^ n;
         return 1.0D - (n * (n * n * 15731 + 789221) + 1376312589 & 0x7fffffff) / 1073741824.0D;
@@ -269,7 +269,7 @@ public final class MoonChunkGenerator extends ChunkGenerator {
     public void applyCarvers(WorldGenRegion level, long seed, RandomState random, BiomeManager biomeManager,
                              StructureManager structureManager, ChunkAccess chunk, GenerationStep.Carving step) {
         if (step == GenerationStep.Carving.AIR) {
-            new MoonCaves(state -> state == this.topBlock || state == this.fillerBlock || state == this.stoneBlock).generate(seed, chunk);
+            new WormCaves((state, tunnelRandom) -> state == this.topBlock || state == this.fillerBlock || state == this.stoneBlock).generate(seed, chunk);
         }
     }
 

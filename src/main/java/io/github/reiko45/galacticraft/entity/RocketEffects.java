@@ -9,15 +9,32 @@ final class RocketEffects {
     private RocketEffects() {
     }
 
-    static void spawnFlames(Tier1RocketEntity rocket) {
+    /**
+     * A 3x3 jet under the rocket; the Tier 2 adds a wider ring of flames and four blue jets (1.12.2
+     * EntityTier2Rocket#spawnParticles), drawn lower the faster it climbs so the exhaust trails behind.
+     */
+    static void spawnFlames(RocketEntity rocket, int tier) {
         final RandomSource random = rocket.getRandom();
-        final double y = rocket.getY() - 0.4D;
+        final double y = rocket.launched() && tier >= 2 ? rocket.getY() - 1.9D - rocket.getDeltaMovement().y : rocket.getY() - 0.4D;
         if (rocket.launched()) {
             for (int i = 0; i < 9; i++) {
                 final double dx = (i % 3 - 1) * 0.4D + (random.nextDouble() - 0.5D) * 0.1D;
                 final double dz = (i / 3 - 1) * 0.4D + (random.nextDouble() - 0.5D) * 0.1D;
                 rocket.level().addParticle(ParticleTypes.FLAME, rocket.getX() + dx, y, rocket.getZ() + dz, dx * 0.1D, -0.6D, dz * 0.1D);
                 rocket.level().addParticle(ParticleTypes.LARGE_SMOKE, rocket.getX() + dx, y - 1.0D, rocket.getZ() + dz, dx * 0.2D, -0.3D, dz * 0.2D);
+            }
+            if (tier >= 2) {
+                for (int i = 0; i < 8; i++) {
+                    final double angle = i * Math.PI / 4.0D;
+                    final double dx = Math.cos(angle) * 0.7D + (random.nextDouble() - 0.5D) * 0.15D;
+                    final double dz = Math.sin(angle) * 0.7D + (random.nextDouble() - 0.5D) * 0.15D;
+                    rocket.level().addParticle(ParticleTypes.FLAME, rocket.getX() + dx, y - 0.5D, rocket.getZ() + dz, dx * 0.15D, -0.9D, dz * 0.15D);
+                }
+                for (int i = 0; i < 4; i++) {
+                    final double dx = i < 2 ? (i == 0 ? -0.8D : 0.8D) : 0.0D;
+                    final double dz = i >= 2 ? (i == 2 ? -0.8D : 0.8D) : 0.0D;
+                    rocket.level().addParticle(ParticleTypes.SOUL_FIRE_FLAME, rocket.getX() + dx, y, rocket.getZ() + dz, 0.0D, -0.6D, 0.0D);
+                }
             }
         } else if (rocket.tickCount % 2 == 0) {
             for (int i = 0; i < 4; i++) {

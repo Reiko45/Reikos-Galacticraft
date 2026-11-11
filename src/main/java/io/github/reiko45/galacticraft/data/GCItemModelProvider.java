@@ -31,7 +31,7 @@ public class GCItemModelProvider extends ItemModelProvider {
                 withExistingParent(holder.getId().getPath(), mcLoc("item/template_spawn_egg"));
             } else if (item instanceof io.github.reiko45.galacticraft.item.BuggyItem) {
                 buggy(holder.getId().getPath());
-            } else if (item instanceof io.github.reiko45.galacticraft.item.Tier1RocketItem) {
+            } else if (item instanceof io.github.reiko45.galacticraft.item.RocketItem) {
                 rocket(holder.getId().getPath());
             } else if (item instanceof LiquidCanisterItem) {
                 canister(holder.getId().getPath());

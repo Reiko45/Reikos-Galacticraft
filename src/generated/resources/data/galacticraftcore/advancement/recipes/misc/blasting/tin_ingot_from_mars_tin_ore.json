@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_mars_tin_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:mars_tin_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:blasting/tin_ingot_from_mars_tin_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_mars_tin_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:blasting/tin_ingot_from_mars_tin_ore"
+    ]
+  }
+}

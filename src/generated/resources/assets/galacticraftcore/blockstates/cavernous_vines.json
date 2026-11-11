@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "hanging=1,type=0": {
+      "model": "galacticraftcore:block/cavernous_vines_0"
+    },
+    "hanging=1,type=1": {
+      "model": "galacticraftcore:block/cavernous_vines_1"
+    },
+    "hanging=1,type=2": {
+      "model": "galacticraftcore:block/cavernous_vines_2"
+    },
+    "hanging=2,type=0": {
+      "model": "galacticraftcore:block/cavernous_vines_0"
+    },
+    "hanging=2,type=1": {
+      "model": "galacticraftcore:block/cavernous_vines_1"
+    },
+    "hanging=2,type=2": {
+      "model": "galacticraftcore:block/cavernous_vines_2"
+    },
+    "hanging=3,type=0": {
+      "model": "galacticraftcore:block/cavernous_vines_0"
+    },
+    "hanging=3,type=1": {
+      "model": "galacticraftcore:block/cavernous_vines_1"
+    },
+    "hanging=3,type=2": {
+      "model": "galacticraftcore:block/cavernous_vines_2"
+    },
+    "hanging=4,type=0": {
+      "model": "galacticraftcore:block/cavernous_vines_0"
+    },
+    "hanging=4,type=1": {
+      "model": "galacticraftcore:block/cavernous_vines_1"
+    },
+    "hanging=4,type=2": {
+      "model": "galacticraftcore:block/cavernous_vines_2"
+    },
+    "hanging=5,type=0": {
+      "model": "galacticraftcore:block/cavernous_vines_0"
+    },
+    "hanging=5,type=1": {
+      "model": "galacticraftcore:block/cavernous_vines_1"
+    },
+    "hanging=5,type=2": {
+      "model": "galacticraftcore:block/cavernous_vines_2"
+    }
+  }
+}

@@ -20,6 +20,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -1011,9 +1012,244 @@ public final class ScreenshotTour {
             }
         }));
         this.extras.add((minecraft, srv) -> shoot(minecraft, "orbit_earth_below"));
+        marsSteps();
     }
 
     private BlockPos stationBase;
+    private BlockPos marsScene;
+
+    /**
+     * Phase 7a: the Mars blocks and a Tier 2 Rocket on its pad; the Tier 2 workbench page; desh armour; Mars on the
+     * destination screen; the landing balloons coming down and bouncing; then Mars itself by day and night, and a cavern.
+     */
+    private void marsSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            final ServerLevel level = srv.overworld();
+            this.marsScene = this.rocketScene.offset(16, 0, 0);
+            buildMarsScene(level, this.marsScene);
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            p.teleportTo(level, this.marsScene.getX() + 0.5D, this.marsScene.getY() + 6.0D, this.marsScene.getZ() + 17.5D, 180.0F, 18.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks and the rocket arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_blocks_and_tier_2_rocket"));
+        // The Tier 2 page, unlocked with the schematic from the Moon dungeon, every part in place
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            GCPlayerData.get(p).unlockSchematic(io.github.reiko45.galacticraft.menu.Schematics.ROCKET_T2.id());
+            final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+            p.teleportTo(srv.overworld(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+            io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.ROCKET_T2, srv.overworld(), bench);
+            if (p.containerMenu instanceof io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu menu) {
+                for (int i = 1; i < io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu.MATRIX_SIZE; i++) {
+                    final int index = menu.getSlot(i).getContainerSlot();
+                    final Item part = switch (index) {
+                        case 1 -> GCItems.NOSE_CONE.get();
+                        case 12, 16 -> GCItems.TIER_1_BOOSTER.get();
+                        case 13, 14, 17, 18 -> GCItems.ROCKET_FINS.get();
+                        case 15 -> GCItems.TIER_1_ROCKET_ENGINE.get();
+                        case 19, 20, 21 -> Items.CHEST;
+                        default -> GCItems.HEAVY_DUTY_PLATE.get();
+                    };
+                    menu.getSlot(i).set(new ItemStack(part));
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_tier_2_rocket_bench"));
+        // Desh armour and a desh pickaxe
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(GCItems.DESH_HELMET.get()));
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.CHEST, new ItemStack(GCItems.DESH_CHESTPLATE.get()));
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.LEGS, new ItemStack(GCItems.DESH_LEGGINGS.get()));
+                p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.FEET, new ItemStack(GCItems.DESH_BOOTS.get()));
+                p.getInventory().selected = 0;
+                p.getInventory().setItem(0, new ItemStack(GCItems.DESH_PICKAXE.get()));
+                final GCPlayerData data = GCPlayerData.get(p);
+                data.setGear(GearSlot.MASK, ItemStack.EMPTY);
+                data.setGear(GearSlot.GEAR, ItemStack.EMPTY);
+                data.setGear(GearSlot.LEFT_TANK, ItemStack.EMPTY);
+                data.setGear(GearSlot.RIGHT_TANK, ItemStack.EMPTY);
+                p.teleportTo(srv.overworld(), this.marsScene.getX() - 4.5D, this.marsScene.getY(), this.marsScene.getZ() + 6.5D, 0.0F, 0.0F);
+            });
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "desh_armor"));
+        // Mars on the destination screen, reachable from a Tier 2 Rocket
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final GCPlayerData data = GCPlayerData.get(p);
+                // Back into oxygen gear for Mars
+                data.setGear(GearSlot.MASK, new ItemStack(GCItems.OXYGEN_MASK.get()));
+                data.setGear(GearSlot.GEAR, new ItemStack(GCItems.OXYGEN_GEAR.get()));
+                data.setGear(GearSlot.LEFT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+                data.setGear(GearSlot.RIGHT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+                data.inSpace = true;
+                data.spacePos = p.position();
+                data.rocketTier = 2;
+                data.rocketStorage = 1;
+                data.rocketFuel = 300;
+                data.rocketCargo = NonNullList.withSize(20, ItemStack.EMPTY);
+                data.launchedFromX = 8.5D;
+                data.launchedFromZ = 8.5D;
+                GCNetwork.sendToPlayer(p, SpaceTravel.selectionPayload(p));
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(GCDimensions.MARS);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_mars"));
+        // Landing balloons: a slow fall under a parachute from y 900, then a long run of bounces
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            srv.overworld().setDayTime(5000L);
+            srv.execute(() -> SpaceTravel.choose(tourPlayer(srv), GCDimensions.MARS));
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // 45 ticks waiting for the ground to load, then falling: still above y 500, under the parachute
+        this.extras.add((minecraft, srv) -> {
+            logBalloons(srv, "descent");
+            shoot(minecraft, "landing_balloons_descent");
+        });
+        for (int i = 0; i < 7; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // down, and through the first few bounces
+        }
+        this.extras.add((minecraft, srv) -> {
+            logBalloons(srv, "bouncing");
+            shoot(minecraft, "landing_balloons_bounce");
+        });
+        // Mars by day: the butterscotch sky and the dusty plains and hills
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+                final ServerPlayer p = tourPlayer(srv);
+                if (mars == null) {
+                    GalacticraftCore.LOGGER.warn("Screenshot tour: no Mars dimension");
+                    return;
+                }
+                if (p.getVehicle() != null) {
+                    final Entity vehicle = p.getVehicle();
+                    p.stopRiding();
+                    vehicle.discard();
+                }
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+                srv.overworld().setDayTime(4000L);
+                p.teleportTo(mars, 40.5D, surface(mars, 40, 40) + 6.0D, 40.5D, 135.0F, 8.0F);
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_surface"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars != null) {
+                srv.overworld().setDayTime(5000L);
+                tourPlayer(srv).teleportTo(mars, 40.5D, surface(mars, 40, 40) + 3.0D, 40.5D, -90.0F, -68.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_sky_day"));
+        this.extras.add((minecraft, srv) -> srv.overworld().setDayTime(17000L));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_sky_night"));
+        // A cavern: vines glowing from the ceiling, sludge on the floor
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null) {
+                return;
+            }
+            srv.overworld().setDayTime(6000L);
+            final List<BlockPos> centres = io.github.reiko45.galacticraft.world.MarsCaverns.centres(mars.getSeed(), 0, 0, 12);
+            if (centres.isEmpty()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Mars cavern near spawn");
+                return;
+            }
+            centres.sort(java.util.Comparator.comparingDouble(pos -> pos.distSqr(BlockPos.ZERO)));
+            final BlockPos centre = centres.get(0);
+            mars.getChunk(centre);
+            GalacticraftCore.LOGGER.info("Screenshot tour: Mars cavern centred at {}", centre);
+            final ServerPlayer p = tourPlayer(srv);
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 400, 0, false, false));
+            p.teleportTo(mars, centre.getX() - 18.5D, 24.0D, centre.getZ() + 0.5D, -90.0F, 8.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_cavern"));
+    }
+
+    private static void logBalloons(MinecraftServer server, String when) {
+        final ServerPlayer p = tourPlayer(server);
+        if (p.getVehicle() instanceof io.github.reiko45.galacticraft.entity.LandingBalloonsEntity balloons) {
+            GalacticraftCore.LOGGER.info("Screenshot tour ({}): balloons at y {} moving {}, {} bounces", when, balloons.getY(),
+                    balloons.getDeltaMovement().y, balloons.groundHits());
+        } else {
+            GalacticraftCore.LOGGER.warn("Screenshot tour ({}): not riding landing balloons but {}", when, p.getVehicle());
+        }
+    }
+
+    /** A row of every Mars block on a fine regolith floor, a vine strand, a sludge pool, and a Tier 2 Rocket on its pad. */
+    private void buildMarsScene(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-7, 0, -6), origin.offset(7, 10, 6))) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-7, -1, -6), origin.offset(7, -1, 6))) {
+            level.setBlockAndUpdate(pos, GCBlocks.MARS_FINE_REGOLITH.get().defaultBlockState());
+        }
+        final Block[] row = {GCBlocks.MARS_COPPER_ORE.get(), GCBlocks.MARS_TIN_ORE.get(), GCBlocks.MARS_IRON_ORE.get(), GCBlocks.DESH_ORE.get(),
+                GCBlocks.DESH_BLOCK.get(), GCBlocks.MARS_FINE_REGOLITH.get(), GCBlocks.MARS_REGOLITH.get(), GCBlocks.MARS_STONE.get(),
+                GCBlocks.MARS_COBBLESTONE.get(), GCBlocks.MARS_DUNGEON_BRICK.get(), GCBlocks.MARS_COBBLESTONE_STAIRS.get(),
+                GCBlocks.MARS_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MARS_COBBLESTONE_SLAB.get(), GCBlocks.MARS_DUNGEON_BRICK_SLAB.get(),
+                GCBlocks.MARS_COBBLESTONE_WALL.get()};
+        for (int i = 0; i < row.length; i++) {
+            final BlockPos pos = origin.offset(-7 + i, 0, 4);
+            BlockState state = row[i].defaultBlockState();
+            if (state.hasProperty(net.minecraft.world.level.block.StairBlock.FACING)) {
+                state = state.setValue(net.minecraft.world.level.block.StairBlock.FACING, Direction.NORTH);
+            }
+            level.setBlockAndUpdate(pos, state);
+        }
+        // A cobblestone arch with cavernous vines hanging from it, over a pool of bacterial sludge
+        for (int y = 0; y < 5; y++) {
+            level.setBlockAndUpdate(origin.offset(-6, y, -2), GCBlocks.MARS_DUNGEON_BRICK.get().defaultBlockState());
+            level.setBlockAndUpdate(origin.offset(-2, y, -2), GCBlocks.MARS_DUNGEON_BRICK.get().defaultBlockState());
+        }
+        for (int x = -6; x <= -2; x++) {
+            level.setBlockAndUpdate(origin.offset(x, 5, -2), GCBlocks.MARS_DUNGEON_BRICK.get().defaultBlockState());
+        }
+        for (int x = -5; x <= -3; x++) {
+            final int length = x == -4 ? 4 : 2;
+            for (int i = 0; i < length; i++) {
+                level.setBlockAndUpdate(origin.offset(x, 4 - i, -2), GCBlocks.CAVERNOUS_VINES.get().defaultBlockState()
+                        .setValue(io.github.reiko45.galacticraft.block.CavernousVinesBlock.TYPE, i % 3));
+            }
+        }
+        for (int x = -5; x <= -3; x++) {
+            level.setBlockAndUpdate(origin.offset(x, -1, 0), GCBlocks.MARS_STONE.get().defaultBlockState());
+            level.setBlockAndUpdate(origin.offset(x, -1, -1), GCBlocks.MARS_STONE.get().defaultBlockState());
+        }
+        level.setBlockAndUpdate(origin.offset(-4, 0, 0), io.github.reiko45.galacticraft.registry.GCFluids.BACTERIAL_SLUDGE_BLOCK.get().defaultBlockState());
+        // The Tier 2 Rocket with three chests' worth of cargo on a launch pad
+        final BlockPos pad = origin.offset(3, 0, -2);
+        for (BlockPos pos : BlockPos.betweenClosed(pad.offset(-1, 0, -1), pad.offset(1, 0, 1))) {
+            level.setBlockAndUpdate(pos, GCBlocks.LANDING_PAD.get().defaultBlockState());
+        }
+        final io.github.reiko45.galacticraft.entity.Tier2RocketEntity rocket = io.github.reiko45.galacticraft.entity.Tier2RocketEntity.create(level,
+                pad.getX() + 0.5D, pad.getY() + 0.2D, pad.getZ() + 0.5D, 3, 0);
+        rocket.setYRot(180.0F);
+        level.addFreshEntity(rocket);
+    }
 
     private static void logFreefall(Minecraft minecraft, String when) {
         if (minecraft.player != null) {

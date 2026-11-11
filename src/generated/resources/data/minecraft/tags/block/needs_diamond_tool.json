@@ -1,5 +1,10 @@
 {
   "values": [
+    "galacticraftcore:desh_ore",
+    "galacticraftcore:mars_dungeon_brick",
+    "galacticraftcore:mars_dungeon_brick_stairs",
+    "galacticraftcore:mars_dungeon_brick_slab",
+    "galacticraftcore:mars_dungeon_brick_wall",
     "galacticraftcore:fallen_meteor",
     "galacticraftcore:moon_dungeon_brick",
     "galacticraftcore:moon_dungeon_brick_stairs",

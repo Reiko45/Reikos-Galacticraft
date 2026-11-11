@@ -47,6 +47,15 @@ public class GCRecipeProvider extends RecipeProvider {
         ore(output, GCBlocks.MOON_CHEESE_ORE.get(), GCItems.CHEESE_CURD.get(), 1.0F);
         ore(output, GCBlocks.MOON_SAPPHIRE_ORE.get(), GCItems.LUNAR_SAPPHIRE.get(), 1.0F);
         ore(output, GCItems.METEORIC_IRON_RAW.get(), GCItems.METEORIC_IRON_INGOT.get(), 1.0F);
+        // RecipeManagerMars#addUniversalRecipes
+        ore(output, GCItems.RAW_DESH.get(), GCItems.DESH_INGOT.get(), 0.2F);
+        ore(output, GCBlocks.DESH_ORE.get(), GCItems.DESH_INGOT.get(), 0.2F);
+        ore(output, GCBlocks.MARS_COPPER_ORE.get(), Items.COPPER_INGOT, 1.0F);
+        ore(output, GCBlocks.MARS_TIN_ORE.get(), GCItems.TIN_INGOT.get(), 1.0F);
+        ore(output, GCBlocks.MARS_IRON_ORE.get(), Items.IRON_INGOT, 0.2F);
+        SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.MARS_COBBLESTONE.get()), RecipeCategory.BUILDING_BLOCKS, GCBlocks.MARS_STONE.get(), 0.0F, 200)
+                .unlockedBy(getHasName(GCBlocks.MARS_COBBLESTONE.get()), has(GCBlocks.MARS_COBBLESTONE.get()))
+                .save(output, GalacticraftCore.id("smelting/mars_stone"));
 
         // Canisters melt back down to 3 ingots.
         output.accept(GalacticraftCore.id("smelting/tin_ingot_from_tin_canister"), new SmeltingRecipe("", CookingBookCategory.MISC,
@@ -71,6 +80,8 @@ public class GCRecipeProvider extends RecipeProvider {
         cutting(output, GCBlocks.TIN_DECORATION_BLOCK_2.get(), GCBlocks.TIN_DECORATION_STAIRS_2.get(), GCBlocks.TIN_DECORATION_SLAB_2.get(), GCBlocks.TIN_DECORATION_WALL_2.get());
         cutting(output, GCBlocks.MOON_ROCK.get(), GCBlocks.MOON_ROCK_STAIRS.get(), GCBlocks.MOON_ROCK_SLAB.get(), GCBlocks.MOON_ROCK_WALL.get());
         cutting(output, GCBlocks.MOON_DUNGEON_BRICK.get(), GCBlocks.MOON_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MOON_DUNGEON_BRICK_SLAB.get(), GCBlocks.MOON_DUNGEON_BRICK_WALL.get());
+        cutting(output, GCBlocks.MARS_COBBLESTONE.get(), GCBlocks.MARS_COBBLESTONE_STAIRS.get(), GCBlocks.MARS_COBBLESTONE_SLAB.get(), GCBlocks.MARS_COBBLESTONE_WALL.get());
+        cutting(output, GCBlocks.MARS_DUNGEON_BRICK.get(), GCBlocks.MARS_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MARS_DUNGEON_BRICK_SLAB.get(), GCBlocks.MARS_DUNGEON_BRICK_WALL.get());
     }
 
     /** 1.12.2 RecipeManagerGC compressor recipes (CompressorRecipes). */
@@ -95,6 +106,10 @@ public class GCRecipeProvider extends RecipeProvider {
                         'Y', Ingredient.of(GCItems.COMPRESSED_ALUMINUM.get()),
                         'Z', Ingredient.of(GCItems.COMPRESSED_BRONZE.get())), "XYZ", "XYZ"),
                 new ItemStack(GCItems.HEAVY_PLATING.get(), 2)), null);
+        // RecipeManagerMars: the Tier 2 Rocket's plate and Compressed Desh.
+        compressShapeless(output, "heavy_duty_plate", GCItems.HEAVY_DUTY_PLATE.get(),
+                Ingredient.of(GCItems.HEAVY_PLATING.get()), Ingredient.of(GCItems.COMPRESSED_METEORIC_IRON.get()));
+        compressShapeless(output, "compressed_desh", GCItems.COMPRESSED_DESH.get(), tag("ingots/desh"));
     }
 
     private static void compressShapeless(RecipeOutput output, String name, ItemLike result, Ingredient... ingredients) {

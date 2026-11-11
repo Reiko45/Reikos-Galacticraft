@@ -24,9 +24,17 @@ public final class GCEntities {
     public static final Supplier<EntityType<Tier1RocketEntity>> TIER_1_ROCKET = ENTITY_TYPES.register("tier_1_rocket",
             () -> EntityType.Builder.<Tier1RocketEntity>of(Tier1RocketEntity::new, MobCategory.MISC).sized(1.2F, 3.5F)
                     .clientTrackingRange(16).updateInterval(1).fireImmune().build("tier_1_rocket"));
+    /** 1.12.2 EntityTier2Rocket setSize(1.2, 4.5). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>> TIER_2_ROCKET = ENTITY_TYPES.register("tier_2_rocket",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>of(io.github.reiko45.galacticraft.entity.Tier2RocketEntity::new,
+                    MobCategory.MISC).sized(1.2F, 4.5F).clientTrackingRange(16).updateInterval(1).fireImmune().build("tier_2_rocket"));
     public static final Supplier<EntityType<LanderEntity>> LANDER = ENTITY_TYPES.register("lander",
             () -> EntityType.Builder.<LanderEntity>of(LanderEntity::new, MobCategory.MISC).sized(3.0F, 4.25F)
                     .clientTrackingRange(16).updateInterval(1).fireImmune().build("lander"));
+    /** 1.12.2 EntityLandingBalloons setSize(2, 2). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.LandingBalloonsEntity>> LANDING_BALLOONS = ENTITY_TYPES.register("landing_balloons",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.LandingBalloonsEntity>of(io.github.reiko45.galacticraft.entity.LandingBalloonsEntity::new,
+                    MobCategory.MISC).sized(2.0F, 2.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("landing_balloons"));
     public static final Supplier<EntityType<ParachestEntity>> PARACHEST = ENTITY_TYPES.register("parachest",
             () -> EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(10).updateInterval(2).build("parachest"));

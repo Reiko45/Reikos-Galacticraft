@@ -63,9 +63,6 @@ public final class VehicleTests {
         final ServerPlayer player = helper.makeMockServerPlayerInLevel();
         helper.assertValueEqual(Schematics.unlocked(player), List.of(Schematics.ROCKET_T1, Schematics.ADD_SCHEMATIC), "default pages");
         helper.assertValueEqual(Schematics.neighbours(player, Schematics.ROCKET_T1), 2, "rocket page: next only");
-        final ItemStack t2 = new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC.get());
-        helper.assertFalse(Schematics.unlock(player, t2), "the Tier 2 Rocket page doesn't exist yet");
-        helper.assertValueEqual(t2.getCount(), 1, "so its schematic is kept");
         final ItemStack buggy = new ItemStack(GCItems.BUGGY_SCHEMATIC.get(), 2);
         helper.assertTrue(Schematics.unlock(player, buggy), "buggy schematic unlocks");
         helper.assertValueEqual(buggy.getCount(), 1, "one schematic used");
@@ -74,6 +71,10 @@ public final class VehicleTests {
         helper.assertValueEqual(Schematics.neighbours(player, Schematics.MOON_BUGGY), 3, "buggy page: back and next");
         helper.assertFalse(Schematics.unlock(player, buggy), "already unlocked");
         helper.assertValueEqual(buggy.getCount(), 1, "nothing used the second time");
+        final ItemStack t2 = new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC.get());
+        helper.assertTrue(Schematics.unlock(player, t2), "the Tier 2 Rocket schematic unlocks its page");
+        helper.assertValueEqual(Schematics.unlocked(player),
+                List.of(Schematics.ROCKET_T1, Schematics.MOON_BUGGY, Schematics.ROCKET_T2, Schematics.ADD_SCHEMATIC), "pages in 1.12.2 id order");
         final GCPlayerData copy = new GCPlayerData();
         copy.deserializeNBT(player.registryAccess(), GCPlayerData.get(player).serializeNBT(player.registryAccess()));
         helper.assertTrue(copy.hasSchematic(Schematics.MOON_BUGGY.id()), "unlocked pages are saved");

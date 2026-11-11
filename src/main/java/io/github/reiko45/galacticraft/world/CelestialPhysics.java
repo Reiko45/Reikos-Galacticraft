@@ -26,9 +26,15 @@ public record CelestialPhysics(double gravityReduction, float fallDamageModifier
                                float arrowGravity, double meteorFrequency, double fuelUsage, double exitHeight) {
     /** Earth orbit (1.12.2 WorldProviderOverworldOrbit); its solar multiplier is the spaceStationEnergyScalar config. */
     public static final CelestialPhysics ORBIT = new CelestialPhysics(0.075D, 0.4F, 2.0F, false, 0.005F, 0.0D, 0.5D, 750.0D);
+    /**
+     * Mars (1.12.2 WorldProviderMars): solar (1 / 1.25 AU)^3 = 0.512 from WorldProviderSpace#getSolarSize, meteors
+     * 100 x its atmosphere's density of 0.1, arrows fall 0.015 per tick.
+     */
+    public static final CelestialPhysics MARS = new CelestialPhysics(0.058D, 0.38F, 0.512F, false, 0.015F, 10.0D, 0.9D, 1200.0D);
     private static final Map<ResourceKey<Level>, CelestialPhysics> BY_DIMENSION = Map.of(
             GCDimensions.MOON, new CelestialPhysics(0.062D, 0.18F, 1.4F, false, 0.005F, 5.0D, 0.7D, 1200.0D),
-            GCDimensions.ORBIT, ORBIT
+            GCDimensions.ORBIT, ORBIT,
+            GCDimensions.MARS, MARS
     );
 
     /** Where a rocket launched in this world reaches space (1200 outside Galacticraft worlds). */
@@ -37,10 +43,15 @@ public record CelestialPhysics(double gravityReduction, float fallDamageModifier
         return physics == null ? 1200.0D : physics.exitHeight();
     }
 
-    /** Ticks between each mB a climbing rocket burns (3 outside Galacticraft worlds). */
+    /** Ticks between each mB a climbing Tier 1 rocket burns (3 outside Galacticraft worlds). */
     public static int fuelInterval(Level level) {
+        return fuelInterval(level, 3.0D);
+    }
+
+    /** Ticks between each mB a climbing rocket burns: floor(base / fuel usage), {@code base} outside Galacticraft worlds. */
+    public static int fuelInterval(Level level, double base) {
         final CelestialPhysics physics = of(level.dimension());
-        return physics == null || physics.fuelUsage() <= 0.0D ? 3 : Math.max(1, (int) Math.floor(3.0D / physics.fuelUsage()));
+        return physics == null || physics.fuelUsage() <= 0.0D ? (int) base : Math.max(1, (int) Math.floor(base / physics.fuelUsage()));
     }
 
     /** 1.12.2 WorldProviderOverworldOrbit#isDaytime: in orbit the planet only hides the sun for a sixth of the day. */

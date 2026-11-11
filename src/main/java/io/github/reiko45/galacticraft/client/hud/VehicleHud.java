@@ -2,7 +2,7 @@ package io.github.reiko45.galacticraft.client.hud;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
-import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.entity.RocketEntity;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
@@ -24,7 +24,7 @@ public final class VehicleHud {
         }
         final int width = graphics.guiWidth();
         final int height = graphics.guiHeight();
-        if (minecraft.player.getVehicle() instanceof Tier1RocketEntity rocket && rocket.phase() == Tier1RocketEntity.Phase.IGNITED) {
+        if (minecraft.player.getVehicle() instanceof RocketEntity rocket && rocket.phase() == RocketEntity.Phase.IGNITED) {
             final int count = (int) Math.floor(rocket.countdown() / 2 / 10.0F);
             final String text = String.valueOf(count);
             final float scale = count <= 10 ? 4.0F : 2.0F;
@@ -34,7 +34,8 @@ public final class VehicleHud {
             final int y = count <= 10 ? height / 20 : height / 8;
             graphics.drawString(minecraft.font, text, x, y, 0xFFFF0000, false);
             graphics.pose().popPose();
-        } else if (minecraft.player.getVehicle() instanceof LanderEntity lander) {
+        } else if (minecraft.player.getVehicle() instanceof LanderEntity lander
+                && !(lander instanceof io.github.reiko45.galacticraft.entity.LandingBalloonsEntity)) { // 1.12.2 OverlayLander: the lander only
             final double motionY = lander.getDeltaMovement().y;
             graphics.pose().pushPose();
             graphics.pose().scale(2.0F, 2.0F, 1.0F);

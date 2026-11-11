@@ -3,6 +3,7 @@ package io.github.reiko45.galacticraft.registry;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.AluminumWireBlock;
 import io.github.reiko45.galacticraft.block.BossSpawnerBlock;
+import io.github.reiko45.galacticraft.block.CavernousVinesBlock;
 import io.github.reiko45.galacticraft.block.CheeseBlock;
 import io.github.reiko45.galacticraft.block.TreasureChestBlock;
 import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
@@ -46,7 +47,9 @@ import java.util.function.Supplier;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
+import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.StairBlock;
@@ -106,6 +109,33 @@ public final class GCBlocks {
     public static final DeferredBlock<SlabBlock> MOON_DUNGEON_BRICK_SLAB = slab("moon_dungeon_brick_slab", MOON_DUNGEON_BRICK);
     public static final DeferredBlock<WallBlock> MOON_ROCK_WALL = wall("moon_rock_wall", MOON_ROCK);
     public static final DeferredBlock<WallBlock> MOON_DUNGEON_BRICK_WALL = wall("moon_dungeon_brick_wall", MOON_DUNGEON_BRICK);
+
+    // --- Mars (1.12.2 BlockBasicMars "mars": Material.ROCK, hardness 2.2, so even the regolith wants a tool) ---
+    public static final DeferredBlock<Block> MARS_COPPER_ORE = withItem("mars_copper_ore", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_TIN_ORE = withItem("mars_tin_ore", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_IRON_ORE = withItem("mars_iron_ore", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    /** Drops Raw Desh and 2-5 experience (1.12.2 getExpDrop). */
+    public static final DeferredBlock<DropExperienceBlock> DESH_ORE = withItem("desh_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 5), marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_FINE_REGOLITH = withItem("mars_fine_regolith", () -> new Block(marsRock(MapColor.DIRT, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_REGOLITH = withItem("mars_regolith", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_STONE = withItem("mars_stone", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_COBBLESTONE = withItem("mars_cobblestone", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
+    public static final DeferredBlock<Block> MARS_DUNGEON_BRICK = withItem("mars_dungeon_brick", () -> new Block(marsRock(MapColor.COLOR_GREEN, 4.0F, 40.0F)));
+    public static final DeferredBlock<Block> DESH_BLOCK = withItem("desh_block", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 60.0F)
+            .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
+
+    public static final DeferredBlock<StairBlock> MARS_COBBLESTONE_STAIRS = stairs("mars_cobblestone_stairs", MARS_COBBLESTONE, 1.5F);
+    public static final DeferredBlock<StairBlock> MARS_DUNGEON_BRICK_STAIRS = stairs("mars_dungeon_brick_stairs", MARS_DUNGEON_BRICK, 4.0F);
+    public static final DeferredBlock<SlabBlock> MARS_COBBLESTONE_SLAB = slab("mars_cobblestone_slab", MARS_COBBLESTONE);
+    public static final DeferredBlock<SlabBlock> MARS_DUNGEON_BRICK_SLAB = slab("mars_dungeon_brick_slab", MARS_DUNGEON_BRICK);
+    public static final DeferredBlock<WallBlock> MARS_COBBLESTONE_WALL = wall("mars_cobblestone_wall", MARS_COBBLESTONE);
+    public static final DeferredBlock<WallBlock> MARS_DUNGEON_BRICK_WALL = wall("mars_dungeon_brick_wall", MARS_DUNGEON_BRICK);
+
+    /** 1.12.2 BlockCavernousVine: Material.VINE, hardness 0.1, plant sound. */
+    public static final DeferredBlock<CavernousVinesBlock> CAVERNOUS_VINES = withItem("cavernous_vines", () -> new CavernousVinesBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).replaceable().noCollission().randomTicks().strength(0.1F)
+                    .sound(SoundType.VINE).noOcclusion().pushReaction(PushReaction.DESTROY).lightLevel(CavernousVinesBlock::light)));
 
     // --- Energy ---
     public static final DeferredBlock<AluminumWireBlock> ALUMINUM_WIRE = withItem("aluminum_wire", () -> new AluminumWireBlock(wire(), false));
@@ -263,6 +293,12 @@ public final class GCBlocks {
         return withItem(name, () -> new StairBlock(base.get().defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(base.get())));
     }
 
+    /** Stairs whose 1.12.2 hardness differed from their base block (the explosion resistance follows the base). */
+    private static DeferredBlock<StairBlock> stairs(String name, DeferredBlock<Block> base, float hardness) {
+        return withItem(name, () -> new StairBlock(base.get().defaultBlockState(),
+                BlockBehaviour.Properties.ofFullCopy(base.get()).destroyTime(hardness)));
+    }
+
     private static DeferredBlock<SlabBlock> slab(String name, DeferredBlock<Block> base) {
         return withItem(name, () -> new SlabBlock(BlockBehaviour.Properties.ofFullCopy(base.get())));
     }
@@ -293,6 +329,11 @@ public final class GCBlocks {
 
     private static BlockBehaviour.Properties moonStone(float hardness, float resistance) {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM)
+                .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
+    }
+
+    private static BlockBehaviour.Properties marsRock(MapColor color, float hardness, float resistance) {
+        return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
     }
 

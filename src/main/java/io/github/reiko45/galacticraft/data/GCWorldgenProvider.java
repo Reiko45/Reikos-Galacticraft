@@ -83,6 +83,20 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     public static final ResourceKey<PlacedFeature> MOON_ORE_CHEESE_PLACED = placed("moon_ore_cheese");
     public static final ResourceKey<PlacedFeature> MOON_ORE_SAPPHIRE_PLACED = placed("moon_ore_sapphire");
 
+    // Mars (BiomeDecoratorMars)
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ICE = configured("mars_ice");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_REGOLITH_BLOB = configured("mars_regolith_blob");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_DESH = configured("mars_ore_desh");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_COPPER = configured("mars_ore_copper");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_TIN = configured("mars_ore_tin");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> MARS_ORE_IRON = configured("mars_ore_iron");
+    public static final ResourceKey<PlacedFeature> MARS_ICE_PLACED = placed("mars_ice");
+    public static final ResourceKey<PlacedFeature> MARS_REGOLITH_BLOB_PLACED = placed("mars_regolith_blob");
+    public static final ResourceKey<PlacedFeature> MARS_ORE_DESH_PLACED = placed("mars_ore_desh");
+    public static final ResourceKey<PlacedFeature> MARS_ORE_COPPER_PLACED = placed("mars_ore_copper");
+    public static final ResourceKey<PlacedFeature> MARS_ORE_TIN_PLACED = placed("mars_ore_tin");
+    public static final ResourceKey<PlacedFeature> MARS_ORE_IRON_PLACED = placed("mars_ore_iron");
+
     // Overworld crude oil pockets
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_POCKET = configured("oil_pocket");
     public static final ResourceKey<PlacedFeature> OIL_POCKET_PLACED = placed("oil_pocket");
@@ -135,6 +149,15 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         FeatureUtils.register(context, MOON_ORE_COPPER, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_COPPER_ORE.get().defaultBlockState(), 4));
         FeatureUtils.register(context, MOON_ORE_TIN, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_TIN_ORE.get().defaultBlockState(), 4));
         FeatureUtils.register(context, MOON_ORE_CHEESE, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_CHEESE_ORE.get().defaultBlockState(), 3));
+        // BiomeDecoratorMars: ores and regolith pockets replace Mars stone, ice replaces regolith.
+        final RuleTest marsStone = new BlockMatchTest(GCBlocks.MARS_STONE.get());
+        FeatureUtils.register(context, MARS_ICE, Feature.ORE, new OreConfiguration(new BlockMatchTest(GCBlocks.MARS_REGOLITH.get()),
+                net.minecraft.world.level.block.Blocks.ICE.defaultBlockState(), 18));
+        FeatureUtils.register(context, MARS_REGOLITH_BLOB, Feature.ORE, new OreConfiguration(marsStone, GCBlocks.MARS_REGOLITH.get().defaultBlockState(), 32));
+        FeatureUtils.register(context, MARS_ORE_DESH, Feature.ORE, new OreConfiguration(marsStone, GCBlocks.DESH_ORE.get().defaultBlockState(), 6));
+        FeatureUtils.register(context, MARS_ORE_COPPER, Feature.ORE, new OreConfiguration(marsStone, GCBlocks.MARS_COPPER_ORE.get().defaultBlockState(), 4));
+        FeatureUtils.register(context, MARS_ORE_TIN, Feature.ORE, new OreConfiguration(marsStone, GCBlocks.MARS_TIN_ORE.get().defaultBlockState(), 4));
+        FeatureUtils.register(context, MARS_ORE_IRON, Feature.ORE, new OreConfiguration(marsStone, GCBlocks.MARS_IRON_ORE.get().defaultBlockState(), 8));
         // Sapphire was placed as single blocks replacing moon rock.
         FeatureUtils.register(context, MOON_ORE_SAPPHIRE, Feature.REPLACE_SINGLE_BLOCK, new ReplaceBlockConfiguration(
                 List.of(OreConfiguration.target(moonRock, GCBlocks.MOON_SAPPHIRE_ORE.get().defaultBlockState()))));
@@ -153,6 +176,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         ore(context, MOON_ORE_COPPER_PLACED, configured, MOON_ORE_COPPER, 26, 0, 59);
         ore(context, MOON_ORE_TIN_PLACED, configured, MOON_ORE_TIN, 23, 0, 59);
         ore(context, MOON_ORE_CHEESE_PLACED, configured, MOON_ORE_CHEESE, 14, 0, 84);
+        ore(context, MARS_ICE_PLACED, configured, MARS_ICE, 4, 60, 119);
+        ore(context, MARS_REGOLITH_BLOB_PLACED, configured, MARS_REGOLITH_BLOB, 20, 0, 199);
+        ore(context, MARS_ORE_DESH_PLACED, configured, MARS_ORE_DESH, 15, 20, 63);
+        ore(context, MARS_ORE_COPPER_PLACED, configured, MARS_ORE_COPPER, 26, 0, 59);
+        ore(context, MARS_ORE_TIN_PLACED, configured, MARS_ORE_TIN, 23, 0, 59);
+        ore(context, MARS_ORE_IRON_PLACED, configured, MARS_ORE_IRON, 20, 0, 63);
         // 3 + nextInt(6) attempts per chunk at y = 4 + nextInt(28).
         PlacementUtils.register(context, MOON_ORE_SAPPHIRE_PLACED, configured.getOrThrow(MOON_ORE_SAPPHIRE), List.of(
                 CountPlacement.of(UniformInt.of(3, 8)), InSquarePlacement.spread(),
@@ -191,6 +220,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
 
     private static void biomes(BootstrapContext<Biome> context) {
         orbitBiome(context);
+        marsBiome(context);
         final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
                 context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MOON_DIRT_BLOB_PLACED);
@@ -217,6 +247,41 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                         .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_CREEPER.get(), 8, 2, 3))
                         .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ENDERMAN.get(), 10, 1, 4))
                         .creatureGenerationProbability(0.1F)
+                        .build())
+                .generationSettings(generation.build())
+                .build());
+    }
+
+    /**
+     * 1.12.2 BiomeMars "Mars Flat": the evolved mobs of MarsModule#init with 1.12.2's 0.01 spawning chance. The sky and
+     * fog colours are WorldProviderMars's; MarsEffects dims them at night.
+     */
+    private static void marsBiome(BootstrapContext<Biome> context) {
+        final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
+                context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ICE_PLACED);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_REGOLITH_BLOB_PLACED);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_DESH_PLACED);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_COPPER_PLACED);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_TIN_PLACED);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_IRON_PLACED);
+        context.register(GCDimensions.MARS_BIOME, new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .temperature(0.5F)
+                .downfall(0.0F)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .skyColor(0x9A7242)
+                        .fogColor(0xD2783B)
+                        .waterColor(0x3F76E4)
+                        .waterFogColor(0x050533)
+                        .build())
+                .mobSpawnSettings(new MobSpawnSettings.Builder()
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ZOMBIE.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SPIDER.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SKELETON.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_CREEPER.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ENDERMAN.get(), 10, 1, 4))
+                        .creatureGenerationProbability(0.01F)
                         .build())
                 .generationSettings(generation.build())
                 .build());
@@ -256,6 +321,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 GCDimensions.MOON_EFFECTS,
                 0.0F,                   // ambient light
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
+        // 1.12.2 WorldProviderMars: a 24,660 tick day (vanilla cannot express that either), y 0 to 256. Beds work (1.12.2
+        // let them be slept in without exploding); GCPlayerHandler keeps them from setting a spawn point, as 1.12.2 did.
+        context.register(GCDimensions.MARS_TYPE, new DimensionType(
+                OptionalLong.empty(), true, false, false, false, 1.0D, true, false, 0, 256, 256,
+                BlockTags.INFINIBURN_OVERWORLD, GCDimensions.MARS_EFFECTS, 0.0F,
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
         // 1.12.2 WorldProviderOverworldOrbit: 24,000 tick day, worlds from y 0 to 256, no weather
         context.register(GCDimensions.ORBIT_TYPE, new DimensionType(
                 OptionalLong.empty(), true, false, false, false, 1.0D, false, false, 0, 256, 256,
@@ -271,6 +342,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.MOON_TYPE),
                 new MoonChunkGenerator(new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MOON_BIOME)),
                         turf, dirt, rock)));
+        context.register(GCDimensions.MARS_STEM, new LevelStem(
+                context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.MARS_TYPE),
+                new io.github.reiko45.galacticraft.world.MarsChunkGenerator(
+                        new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MARS_BIOME)),
+                        GCBlocks.MARS_FINE_REGOLITH.get().defaultBlockState(), GCBlocks.MARS_REGOLITH.get().defaultBlockState(),
+                        GCBlocks.MARS_STONE.get().defaultBlockState())));
         // 1.12.2 ChunkProviderOrbit: empty space (stations are built when they are created)
         context.register(GCDimensions.ORBIT_STEM, new LevelStem(
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ORBIT_TYPE),

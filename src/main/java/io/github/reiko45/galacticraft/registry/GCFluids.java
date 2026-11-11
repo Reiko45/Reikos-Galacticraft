@@ -8,6 +8,7 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.material.Fluid;
@@ -37,6 +38,11 @@ public final class GCFluids {
             FluidType.Properties.create().descriptionId("block.galacticraftcore.fuel").density(400).viscosity(900)
                     .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
+    /** 1.12.2 MarsModule "bacterialsludge": density 800, viscosity 1500, glowing (light 15), 3 quanta per block. */
+    public static final DeferredHolder<FluidType, FluidType> BACTERIAL_SLUDGE_TYPE = FLUID_TYPES.register("bacterial_sludge", () -> new FluidType(
+            FluidType.Properties.create().descriptionId("block.galacticraftcore.bacterial_sludge").density(800).viscosity(1500).lightLevel(15)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
+
     /**
      * 1.12.2 fluidOxygenGas: a gas with no block or bucket. Machines, tanks and pipes carry it in mB. NeoForge marks
      * gases by a density of 0 or less (1.12.2 had a separate gaseous flag and density 1).
@@ -54,10 +60,20 @@ public final class GCFluids {
             .bucket(() -> GCFluids.FUEL_BUCKET.get()).block(() -> GCFluids.FUEL_BLOCK.get())
             .levelDecreasePerBlock(3).slopeFindDistance(2).tickRate(4).explosionResistance(100.0F);
 
+    private static final BaseFlowingFluid.Properties BACTERIAL_SLUDGE_PROPERTIES = new BaseFlowingFluid.Properties(
+            GCFluids.BACTERIAL_SLUDGE_TYPE, () -> GCFluids.BACTERIAL_SLUDGE.get(), () -> GCFluids.FLOWING_BACTERIAL_SLUDGE.get())
+            .bucket(() -> GCFluids.BACTERIAL_SLUDGE_BUCKET.get()).block(() -> GCFluids.BACTERIAL_SLUDGE_BLOCK.get())
+            .levelDecreasePerBlock(3).slopeFindDistance(2).tickRate(7).explosionResistance(100.0F);
+
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> OIL = FLUIDS.register("oil", () -> new BaseFlowingFluid.Source(OIL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_OIL = FLUIDS.register("flowing_oil", () -> new BaseFlowingFluid.Flowing(OIL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> FUEL = FLUIDS.register("fuel", () -> new BaseFlowingFluid.Source(FUEL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_FUEL = FLUIDS.register("flowing_fuel", () -> new BaseFlowingFluid.Flowing(FUEL_PROPERTIES));
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> BACTERIAL_SLUDGE = FLUIDS.register("bacterial_sludge",
+            () -> new BaseFlowingFluid.Source(BACTERIAL_SLUDGE_PROPERTIES));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_BACTERIAL_SLUDGE = FLUIDS.register("flowing_bacterial_sludge",
+            () -> new BaseFlowingFluid.Flowing(BACTERIAL_SLUDGE_PROPERTIES));
 
     public static final DeferredHolder<Fluid, GasFluid> OXYGEN = FLUIDS.register("oxygen", () -> new GasFluid(GCFluids.OXYGEN_TYPE));
 
@@ -66,10 +82,17 @@ public final class GCFluids {
     public static final DeferredBlock<GCLiquidBlock> FUEL_BLOCK = GCBlocks.BLOCKS.register("fuel",
             () -> new GCLiquidBlock(GCFluids.FUEL.get(), liquid(MapColor.COLOR_YELLOW), true));
 
+    /** Mars caverns pool it on their floors. */
+    public static final DeferredBlock<LiquidBlock> BACTERIAL_SLUDGE_BLOCK = GCBlocks.BLOCKS.register("bacterial_sludge",
+            () -> new LiquidBlock(GCFluids.BACTERIAL_SLUDGE.get(), liquid(MapColor.PLANT).lightLevel(state -> 15)));
+
     public static final DeferredItem<BucketItem> OIL_BUCKET = GCItems.ITEMS.register("oil_bucket",
             () -> new BucketItem(GCFluids.OIL.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final DeferredItem<BucketItem> FUEL_BUCKET = GCItems.ITEMS.register("fuel_bucket",
             () -> new BucketItem(GCFluids.FUEL.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+
+    public static final DeferredItem<BucketItem> BACTERIAL_SLUDGE_BUCKET = GCItems.ITEMS.register("bacterial_sludge_bucket",
+            () -> new BucketItem(GCFluids.BACTERIAL_SLUDGE.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     private GCFluids() {
     }

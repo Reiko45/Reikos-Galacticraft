@@ -1,12 +1,12 @@
 /*
- * Cave algorithm derived from Galacticraft Legacy (micdoodle8.mods.galacticraft.core.world.gen.MapGenCavesMoon and
+ * Cave algorithm derived from Galacticraft Legacy (micdoodle8.mods.galacticraft.core.world.gen.MapGenCavesMoon,
+ * micdoodle8.mods.galacticraft.planets.mars.world.gen.MapGenCaveMars and
  * micdoodle8.mods.galacticraft.api.prefab.world.gen.MapGenBaseMeta). Copyright (c) 2023 Team Galacticraft. Licensed
  * under the MIT license (see LICENSE-GALACTICRAFT-LEGACY).
  */
 package io.github.reiko45.galacticraft.world;
 
 import java.util.Random;
-import java.util.function.Predicate;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.Blocks;
@@ -14,21 +14,28 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
 /**
- * Moon caves (1.12.2 MapGenCavesMoon): the classic pre-1.13 worm carver. Every chunk within 8 chunks may start a few
- * tunnels (1 in 15 chunks has any), which wander and branch; where one passes through the chunk being generated it
- * carves away moon turf, dirt and rock (and nothing else, so ores survive as in 1.12.2). Only y 1-120 is carved.
+ * Moon and Mars caves (1.12.2 MapGenCavesMoon, MapGenCaveMars): the classic pre-1.13 worm carver. Every chunk within 8
+ * chunks may start a few tunnels (1 in 15 chunks has any), which wander and branch; where one passes through the chunk
+ * being generated it carves away the planet's own rock (and nothing else, so ores survive as in 1.12.2). Only y 1-120
+ * is carved. The two planets differ only in what they carve, see {@link Carvable}.
  */
-final class MoonCaves {
+final class WormCaves {
+    /** Whether a block in a tunnel is removed. Mars rolls the tunnel's own random for its surface blocks. */
+    @FunctionalInterface
+    interface Carvable {
+        boolean carve(BlockState state, Random tunnelRandom);
+    }
+
     private static final int RANGE = 8;
     private static final float HALF_PI = (float) (Math.PI / 2.0D);
     private static final float TWO_PI = (float) (Math.PI * 2.0D);
 
-    private final Predicate<BlockState> carvable;
+    private final Carvable carvable;
     private final Random rand = new Random();
     private ChunkAccess chunk;
     private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-    MoonCaves(Predicate<BlockState> carvable) {
+    WormCaves(Carvable carvable) {
         this.carvable = carvable;
     }
 
@@ -145,7 +152,7 @@ final class MoonCaves {
                         final double fz = (localZ + originZ * 16 + 0.5D - z) / radius;
                         if (fx * fx + fz * fz < 1.0D && fy > -0.7D && fx * fx + fy * fy + fz * fz < 1.0D) {
                             this.pos.set(this.chunk.getPos().getMinBlockX() + localX, localY, this.chunk.getPos().getMinBlockZ() + localZ);
-                            if (this.carvable.test(this.chunk.getBlockState(this.pos))) {
+                            if (this.carvable.carve(this.chunk.getBlockState(this.pos), random)) {
                                 this.chunk.setBlockState(this.pos, Blocks.AIR.defaultBlockState(), false);
                             }
                         }

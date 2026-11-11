@@ -47,7 +47,8 @@ public abstract class SchematicPageScreen<T extends SchematicPageMenu> extends A
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTick, int mouseX, int mouseY) {
-        graphics.blit(this.texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, Math.min(this.imageHeight, 220));
+        // The 1.12.2 Tier 1 and buggy pages drew 220 rows of their 221 tall GUIs; the Tier 2 page draws all 238.
+        graphics.blit(this.texture, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight > 230 ? this.imageHeight : Math.min(this.imageHeight, 220));
     }
 
     @Override

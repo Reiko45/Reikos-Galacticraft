@@ -44,6 +44,14 @@ public final class GCItems {
     public static final DeferredItem<Item> METEORIC_IRON_INGOT = simple("meteoric_iron_ingot");
     public static final DeferredItem<Item> LUNAR_SAPPHIRE = simple("lunar_sapphire");
 
+    // --- Mars (1.12.2 item_basic_mars) ---
+    public static final DeferredItem<Item> RAW_DESH = simple("raw_desh");
+    public static final DeferredItem<Item> DESH_INGOT = simple("desh_ingot");
+    public static final DeferredItem<Item> DESH_STICK = simple("desh_stick");
+    public static final DeferredItem<Item> COMPRESSED_DESH = simple("compressed_desh");
+    /** 1.12.2 reinforced_plate_t2 ("Heavy-Duty Plate"), the Tier 2 Rocket's hull. */
+    public static final DeferredItem<Item> HEAVY_DUTY_PLATE = simple("heavy_duty_plate");
+
     // --- Compressed plates (made in the Compressor, a later phase) ---
     public static final DeferredItem<Item> COMPRESSED_COPPER = simple("compressed_copper");
     public static final DeferredItem<Item> COMPRESSED_TIN = simple("compressed_tin");
@@ -133,6 +141,11 @@ public final class GCItems {
     // --- Rockets ---
     public static final DeferredItem<Tier1RocketItem> TIER_1_ROCKET = ITEMS.register("tier_1_rocket",
             () -> new Tier1RocketItem(new Item.Properties()));
+    /** 1.12.2 ItemTier2Rocket (rocket_t2 types 0-3); it stands 0.2 lower on the pad (getOnPadYOffset). */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.RocketItem> TIER_2_ROCKET = ITEMS.register("tier_2_rocket",
+            () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
+                    io.github.reiko45.galacticraft.entity.Tier2RocketEntity.FUEL_CAPACITY, -0.2D,
+                    io.github.reiko45.galacticraft.entity.Tier2RocketEntity::create));
 
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.
@@ -166,6 +179,28 @@ public final class GCItems {
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_LEGGINGS = armor("heavy_duty_leggings", ArmorItem.Type.LEGGINGS);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_BOOTS = armor("heavy_duty_boots", ArmorItem.Type.BOOTS);
 
+    // --- Desh tools and armor (1.12.2 ItemPickaxeMars & co.; attack values from their 1.12.2 ItemTool subclasses) ---
+    public static final DeferredItem<PickaxeItem> DESH_PICKAXE = ITEMS.register("desh_pickaxe",
+            () -> new PickaxeItem(GCTiers.DESH, new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.DESH, 1.0F, -2.8F))));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.StickyPickaxeItem> STICKY_DESH_PICKAXE = ITEMS.register("sticky_desh_pickaxe",
+            () -> new io.github.reiko45.galacticraft.item.StickyPickaxeItem(GCTiers.DESH,
+                    new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.DESH, 1.0F, -2.8F))));
+    /** 1.12.2 ItemAxeMars set attack damage 6 and speed -3 directly. */
+    public static final DeferredItem<AxeItem> DESH_AXE = ITEMS.register("desh_axe",
+            () -> new AxeItem(GCTiers.DESH, new Item.Properties().attributes(AxeItem.createAttributes(GCTiers.DESH, 3.5F, -3.0F))));
+    public static final DeferredItem<ShovelItem> DESH_SHOVEL = ITEMS.register("desh_shovel",
+            () -> new ShovelItem(GCTiers.DESH, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.DESH, 1.5F, -3.0F))));
+    /** 1.12.2 ItemHoe: no damage bonus, attack speed (material damage - 3). */
+    public static final DeferredItem<HoeItem> DESH_HOE = ITEMS.register("desh_hoe",
+            () -> new HoeItem(GCTiers.DESH, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.DESH, -2.5F, -0.5F))));
+    public static final DeferredItem<SwordItem> DESH_SWORD = ITEMS.register("desh_sword",
+            () -> new SwordItem(GCTiers.DESH, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.DESH, 3, -2.4F))));
+
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_HELMET = deshArmor("desh_helmet", ArmorItem.Type.HELMET);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_CHESTPLATE = deshArmor("desh_chestplate", ArmorItem.Type.CHESTPLATE);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_LEGGINGS = deshArmor("desh_leggings", ArmorItem.Type.LEGGINGS);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_BOOTS = deshArmor("desh_boots", ArmorItem.Type.BOOTS);
+
     private static DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> egg(String name,
             java.util.function.Supplier<? extends net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>> type, int primary, int secondary) {
         return ITEMS.register(name + "_spawn_egg", () -> new net.neoforged.neoforge.common.DeferredSpawnEggItem(type, primary, secondary, new Item.Properties()));
@@ -195,6 +230,12 @@ public final class GCItems {
             }
             return new Item(new Item.Properties().food(food.build()));
         });
+    }
+
+    /** ARMORDESH in 1.12.2 used durability factor 42. */
+    private static DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> deshArmor(String name, ArmorItem.Type type) {
+        return ITEMS.register(name, () -> new io.github.reiko45.galacticraft.item.DeshArmorItem(type,
+                new Item.Properties().durability(type.getDurability(42))));
     }
 
     /** ARMOR_STEEL in 1.12.2 used durability factor 30. */

@@ -1,0 +1,19 @@
+{
+  "type": "galacticraftcore:mars",
+  "generator": {
+    "type": "galacticraftcore:mars",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "galacticraftcore:mars"
+    },
+    "filler_block": {
+      "Name": "galacticraftcore:mars_regolith"
+    },
+    "stone_block": {
+      "Name": "galacticraftcore:mars_stone"
+    },
+    "top_block": {
+      "Name": "galacticraftcore:mars_fine_regolith"
+    }
+  }
+}

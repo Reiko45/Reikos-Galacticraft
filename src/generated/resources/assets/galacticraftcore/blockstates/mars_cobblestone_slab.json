@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraftcore:block/mars_cobblestone_slab"
+    },
+    "type=double": {
+      "model": "galacticraftcore:block/mars_cobblestone"
+    },
+    "type=top": {
+      "model": "galacticraftcore:block/mars_cobblestone_slab_top"
+    }
+  }
+}

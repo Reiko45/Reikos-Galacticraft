@@ -35,6 +35,14 @@ public final class GCDimensions {
     public static final ResourceKey<Biome> ORBIT_BIOME = ResourceKey.create(Registries.BIOME, GalacticraftCore.id("space"));
     public static final ResourceLocation ORBIT_EFFECTS = ORBIT_ID;
 
+    /** Mars (1.12.2 WorldProviderMars, planets module). */
+    public static final ResourceLocation MARS_ID = GalacticraftCore.id("mars");
+    public static final ResourceKey<Level> MARS = ResourceKey.create(Registries.DIMENSION, MARS_ID);
+    public static final ResourceKey<LevelStem> MARS_STEM = ResourceKey.create(Registries.LEVEL_STEM, MARS_ID);
+    public static final ResourceKey<DimensionType> MARS_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, MARS_ID);
+    public static final ResourceKey<Biome> MARS_BIOME = ResourceKey.create(Registries.BIOME, MARS_ID);
+    public static final ResourceLocation MARS_EFFECTS = MARS_ID;
+
     private GCDimensions() {
     }
 }

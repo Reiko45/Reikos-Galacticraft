@@ -3,6 +3,7 @@
     "#c:storage_blocks/tin",
     "#c:storage_blocks/aluminum",
     "#c:storage_blocks/meteoric_iron",
-    "#c:storage_blocks/silicon"
+    "#c:storage_blocks/silicon",
+    "#c:storage_blocks/desh"
   ]
 }

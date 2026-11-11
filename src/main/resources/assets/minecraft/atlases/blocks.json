@@ -16,6 +16,14 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/buggy_storage"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/tier_2_rocket"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/landing_balloons"
     }
   ]
 }
