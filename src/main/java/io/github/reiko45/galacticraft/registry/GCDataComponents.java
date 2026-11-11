@@ -22,6 +22,10 @@ public final class GCDataComponents {
     public static final Supplier<DataComponentType<SimpleFluidContent>> FLUID = COMPONENTS.registerComponentType("fluid",
             builder -> builder.persistent(SimpleFluidContent.CODEC).networkSynchronized(SimpleFluidContent.STREAM_CODEC));
 
+    /** Oxygen in an oxygen tank, in mB (1.12.2 stored it as maxDamage - damage). */
+    public static final Supplier<DataComponentType<Integer>> OXYGEN = COMPONENTS.registerComponentType("oxygen",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private GCDataComponents() {
     }
 }

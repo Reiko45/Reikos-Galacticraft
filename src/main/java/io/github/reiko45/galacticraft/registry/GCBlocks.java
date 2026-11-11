@@ -14,6 +14,17 @@ import io.github.reiko45.galacticraft.block.SwitchableWireBlock;
 import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
 import io.github.reiko45.galacticraft.block.FluidPipeBlock;
 import io.github.reiko45.galacticraft.block.FluidTankBlock;
+import io.github.reiko45.galacticraft.block.BreathableAirBlock;
+import io.github.reiko45.galacticraft.block.OxygenDetectorBlock;
+import io.github.reiko45.galacticraft.block.OxygenStorageModuleBlock;
+import io.github.reiko45.galacticraft.block.SpaceTorchBlock;
+import io.github.reiko45.galacticraft.block.SpaceWallTorchBlock;
+import io.github.reiko45.galacticraft.block.entity.OxygenCollectorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.OxygenCompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.OxygenDecompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.OxygenDistributorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.OxygenSealerBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.OxygenStorageModuleBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CoalGeneratorBlockEntity;
@@ -38,6 +49,7 @@ import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
 import net.minecraft.world.level.material.PushReaction;
 import net.neoforged.neoforge.registries.DeferredBlock;
+import net.neoforged.neoforge.registries.DeferredItem;
 import net.neoforged.neoforge.registries.DeferredRegister;
 
 /**
@@ -136,6 +148,34 @@ public final class GCBlocks {
     public static final DeferredBlock<FluidPipeBlock> FLUID_PIPE = withItem("fluid_pipe", () -> new FluidPipeBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.3F).sound(SoundType.GLASS).noOcclusion()));
 
+    // Oxygen (1.12.2 BlockOxygenCollector, BlockOxygenCompressor (compressor + decompressor), BlockMachine2 oxygen
+    // storage, BlockOxygenDistributor, BlockOxygenSealer, BlockOxygenDetector)
+    public static final DeferredBlock<MachineBlock> OXYGEN_COLLECTOR = withItem("oxygen_collector",
+            () -> new MachineBlock(machine(), OxygenCollectorBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> OXYGEN_COMPRESSOR = withItem("oxygen_compressor",
+            () -> new MachineBlock(machine(), OxygenCompressorBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> OXYGEN_DECOMPRESSOR = withItem("oxygen_decompressor",
+            () -> new MachineBlock(machine(), OxygenDecompressorBlockEntity::new));
+    public static final DeferredBlock<OxygenStorageModuleBlock> OXYGEN_STORAGE_MODULE = withItem("oxygen_storage_module",
+            () -> new OxygenStorageModuleBlock(machine(), OxygenStorageModuleBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> OXYGEN_DISTRIBUTOR = withItem("oxygen_distributor",
+            () -> new MachineBlock(machine(), OxygenDistributorBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> OXYGEN_SEALER = withItem("oxygen_sealer",
+            () -> new MachineBlock(machine(), OxygenSealerBlockEntity::new));
+    public static final DeferredBlock<OxygenDetectorBlock> OXYGEN_DETECTOR = withItem("oxygen_detector",
+            () -> new OxygenDetectorBlock(machine()));
+    /** 1.12.2 BlockBreathableAir: hardness 0, resistance 1000. */
+    public static final DeferredBlock<BreathableAirBlock> BREATHABLE_AIR = BLOCKS.register("breathable_air", () -> new BreathableAirBlock(
+            BlockBehaviour.Properties.of().replaceable().noCollission().noLootTable().air().strength(0.0F, 1000.0F)
+                    .pushReaction(PushReaction.DESTROY)));
+    /** 1.12.2 BlockUnlitTorch (unlit_torch / unlit_torch_lit as one block with LIT). */
+    public static final DeferredBlock<SpaceTorchBlock> UNLIT_TORCH = BLOCKS.register("unlit_torch",
+            () -> new SpaceTorchBlock(spaceTorch()));
+    public static final DeferredBlock<SpaceWallTorchBlock> UNLIT_WALL_TORCH = BLOCKS.register("unlit_wall_torch",
+            () -> new SpaceWallTorchBlock(spaceTorch().lootFrom(UNLIT_TORCH)));
+    public static final DeferredItem<StandingAndWallBlockItem> UNLIT_TORCH_ITEM = GCItems.ITEMS.register("unlit_torch",
+            () -> new StandingAndWallBlockItem(UNLIT_TORCH.get(), UNLIT_WALL_TORCH.get(), new Item.Properties(), Direction.DOWN));
+
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.WOOL)
@@ -216,6 +256,11 @@ public final class GCBlocks {
     /** 1.12.2 BlockAluminumWire: Material.CLOTH, hardness 0.075, cloth sound. */
     private static BlockBehaviour.Properties wire() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(0.075F).sound(SoundType.WOOL).noOcclusion();
+    }
+
+    private static BlockBehaviour.Properties spaceTorch() {
+        return BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(SpaceTorchBlock::light)
+                .sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY);
     }
 
     /** setLightLevel(0.85F) in 1.12.2 == light level 12. */

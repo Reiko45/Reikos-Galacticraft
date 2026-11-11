@@ -30,8 +30,8 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         for (Block block : getKnownBlocks()) {
-            if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block.getLootTable() == BuiltInLootTables.EMPTY) {
-                continue; // wall torch uses the standing torch's table; solar parts and liquids drop nothing
+            if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block == GCBlocks.UNLIT_WALL_TORCH.get() || block.getLootTable() == BuiltInLootTables.EMPTY) {
+                continue; // wall torches use the standing torch's table; solar parts, liquids and breathable air drop nothing
             }
             if (block instanceof net.minecraft.world.level.block.SlabBlock) {
                 add(block, createSlabItemTable(block));

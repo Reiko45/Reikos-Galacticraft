@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft;
 
 import io.github.reiko45.galacticraft.registry.GCArmorMaterials;
+import io.github.reiko45.galacticraft.registry.GCAttachments;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
 import io.github.reiko45.galacticraft.registry.GCCapabilities;
 import io.github.reiko45.galacticraft.registry.GCDataComponents;
@@ -45,6 +46,7 @@ public final class GalacticraftCore {
         GCChunkGenerators.CHUNK_GENERATORS.register(modBus);
         GCDataComponents.COMPONENTS.register(modBus);
         GCBlockEntities.BLOCK_ENTITIES.register(modBus);
+        GCAttachments.ATTACHMENT_TYPES.register(modBus);
         GCMenus.MENUS.register(modBus);
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);

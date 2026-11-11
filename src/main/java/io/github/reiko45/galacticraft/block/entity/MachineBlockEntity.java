@@ -201,6 +201,10 @@ public abstract class MachineBlockEntity extends BlockEntity implements MenuProv
         }
     }
 
+    /** The block was broken or replaced (not just unloaded): undo effects on the world. */
+    public void onBroken() {
+    }
+
     public void dropContents(Level level, BlockPos pos) {
         for (int i = 0; i < this.inventory.getSlots(); i++) {
             Containers.dropItemStack(level, pos.getX(), pos.getY(), pos.getZ(), this.inventory.getStackInSlot(i));

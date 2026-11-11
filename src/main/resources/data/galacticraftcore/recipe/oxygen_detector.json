@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "U": {
+      "tag": "c:plates/aluminum"
+    },
+    "V": {
+      "item": "galacticraftcore:basic_wafer"
+    },
+    "W": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Z": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "YVY",
+    "ZUZ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_detector"
+  }
+}

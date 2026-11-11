@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "U": {
+      "tag": "c:plates/aluminum"
+    },
+    "X": {
+      "item": "galacticraftcore:oxygen_fan"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Z": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "UZU",
+    "YXY",
+    "UZU"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_sealer"
+  }
+}

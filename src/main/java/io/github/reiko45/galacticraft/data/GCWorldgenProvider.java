@@ -2,6 +2,9 @@ package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
+import io.github.reiko45.galacticraft.registry.GCDamageTypes;
+import net.minecraft.world.damagesource.DamageScaling;
+import net.minecraft.world.damagesource.DamageType;
 import io.github.reiko45.galacticraft.registry.GCFeatures;
 import io.github.reiko45.galacticraft.world.GCDimensions;
 import io.github.reiko45.galacticraft.world.MoonChunkGenerator;
@@ -51,7 +54,8 @@ import net.neoforged.neoforge.common.world.BiomeModifiers;
 import net.neoforged.neoforge.registries.NeoForgeRegistries;
 
 /**
- * Data-driven worldgen: ore features, the Overworld biome modifier, and the Moon biome, dimension type and dimension.
+ * Data-driven registries: ore and oil features, the Overworld biome modifiers, the Moon biome, dimension type and
+ * dimension, and damage types.
  *
  * <p>1.12.2 generated ores and oil imperatively ({@code OverworldGenerator}, {@code BiomeDecoratorMoon});
  * counts, vein sizes and height ranges below are copied from those classes.
@@ -92,7 +96,9 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.BIOME, GCWorldgenProvider::biomes)
             .add(Registries.DIMENSION_TYPE, GCWorldgenProvider::dimensionTypes)
             .add(Registries.LEVEL_STEM, GCWorldgenProvider::levelStems)
-            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GCWorldgenProvider::biomeModifiers);
+            .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GCWorldgenProvider::biomeModifiers)
+            .add(Registries.DAMAGE_TYPE, context -> context.register(GCDamageTypes.OXYGEN_SUFFOCATION,
+                    new DamageType("oxygen_suffocation", DamageScaling.NEVER, 0.0F)));
 
     public GCWorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(GalacticraftCore.MOD_ID));

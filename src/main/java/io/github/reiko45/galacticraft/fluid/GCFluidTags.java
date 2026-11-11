@@ -12,6 +12,7 @@ import net.minecraft.world.level.material.Fluid;
 public final class GCFluidTags {
     public static final TagKey<Fluid> OIL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", "oil"));
     public static final TagKey<Fluid> FUEL = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", "fuel"));
+    public static final TagKey<Fluid> OXYGEN = TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath("c", "oxygen"));
 
     private GCFluidTags() {
     }

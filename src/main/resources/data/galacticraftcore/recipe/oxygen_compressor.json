@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:plates/aluminum"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "tag": "c:plates/bronze"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_concentrator"
+    }
+  },
+  "pattern": [
+    "XWX",
+    "WZW",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_compressor"
+  }
+}

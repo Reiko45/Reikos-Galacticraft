@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "U": {
+      "tag": "c:plates/aluminum"
+    },
+    "V": {
+      "item": "galacticraftcore:oxygen_concentrator"
+    },
+    "W": {
+      "tag": "c:plates/steel"
+    },
+    "X": {
+      "item": "galacticraftcore:tin_canister"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_fan"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_vent"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "YXZ",
+    "UVU"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_collector"
+  }
+}

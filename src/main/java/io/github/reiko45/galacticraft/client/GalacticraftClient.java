@@ -6,7 +6,19 @@ import io.github.reiko45.galacticraft.client.screen.CoalGeneratorScreen;
 import io.github.reiko45.galacticraft.client.screen.CompressorScreen;
 import io.github.reiko45.galacticraft.client.screen.ElectricCompressorScreen;
 import io.github.reiko45.galacticraft.client.screen.ElectricFurnaceScreen;
+import io.github.reiko45.galacticraft.client.hud.OxygenHud;
+import io.github.reiko45.galacticraft.client.render.BubbleRenderer;
+import io.github.reiko45.galacticraft.client.render.GearLayer;
 import io.github.reiko45.galacticraft.client.screen.EnergyStorageScreen;
+import io.github.reiko45.galacticraft.client.screen.ExtendedInventoryScreen;
+import io.github.reiko45.galacticraft.client.screen.OxygenMachineScreen;
+import io.github.reiko45.galacticraft.registry.GCBlocks;
+import net.minecraft.client.renderer.entity.player.PlayerRenderer;
+import net.minecraft.client.resources.PlayerSkin;
+import net.neoforged.neoforge.client.event.ClientPlayerNetworkEvent;
+import net.neoforged.neoforge.client.event.RegisterGuiLayersEvent;
+import net.neoforged.neoforge.client.gui.VanillaGuiLayers;
+import net.neoforged.neoforge.common.NeoForge;
 import io.github.reiko45.galacticraft.client.screen.RefineryScreen;
 import io.github.reiko45.galacticraft.client.screen.SolarPanelScreen;
 import io.github.reiko45.galacticraft.client.render.FluidPipeRenderer;
@@ -49,11 +61,17 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::registerClientExtensions);
         modBus.addListener(GalacticraftClient::registerAdditionalModels);
         modBus.addListener(GalacticraftClient::clientSetup);
+        modBus.addListener(GalacticraftClient::registerGuiLayers);
+        modBus.addListener(GalacticraftClient::addPlayerLayers);
+        NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
+        NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
         ScreenshotTour.registerIfEnabled();
     }
 
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(SolarPanelRenderer.LAYER, SolarPanelRenderer::createLayer);
+        event.registerLayerDefinition(GearLayer.MASK, GearLayer::createMask);
+        event.registerLayerDefinition(GearLayer.GEAR, GearLayer::createGear);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -61,6 +79,20 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_PIPE.get(), FluidPipeRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.OXYGEN_DISTRIBUTOR.get(), BubbleRenderer::new);
+    }
+
+    private static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
+        for (PlayerSkin.Model skin : event.getSkins()) {
+            if (event.getSkin(skin) instanceof PlayerRenderer renderer) {
+                renderer.addLayer(new GearLayer(renderer, event.getEntityModels()));
+            }
+        }
+    }
+
+    private static void registerGuiLayers(RegisterGuiLayersEvent event) {
+        event.registerAbove(VanillaGuiLayers.HOTBAR, OxygenHud.TANKS_LAYER, OxygenHud::renderTanks);
+        event.registerAbove(OxygenHud.TANKS_LAYER, OxygenHud.WARNING_LAYER, OxygenHud::renderWarning);
     }
 
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
@@ -74,6 +106,8 @@ public final class GalacticraftClient {
                 ItemProperties.register(canister, GalacticraftCore.id("fill"),
                         (stack, level, entity, seed) -> LiquidCanisterItem.fillStage(stack));
             }
+            ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_TORCH.get(), RenderType.cutout());
+            ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_WALL_TORCH.get(), RenderType.cutout());
             for (Fluid fluid : new Fluid[]{GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get(), GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get()}) {
                 ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
             }
@@ -83,6 +117,18 @@ public final class GalacticraftClient {
     private static void registerClientExtensions(RegisterClientExtensionsEvent event) {
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
+        final ResourceLocation oxygen = GalacticraftCore.id("block/fluids/oxygen_gas");
+        event.registerFluidType(new IClientFluidTypeExtensions() {
+            @Override
+            public ResourceLocation getStillTexture() {
+                return oxygen;
+            }
+
+            @Override
+            public ResourceLocation getFlowingTexture() {
+                return oxygen;
+            }
+        }, GCFluids.OXYGEN_TYPE.get());
     }
 
     /** Still/flowing textures and the 1.12.2 "under liquid" screen overlay. */
@@ -119,6 +165,13 @@ public final class GalacticraftClient {
         event.register(GCMenus.CIRCUIT_FABRICATOR.get(), CircuitFabricatorScreen::new);
         event.register(GCMenus.SOLAR_PANEL.get(), SolarPanelScreen::new);
         event.register(GCMenus.REFINERY.get(), RefineryScreen::new);
+        event.register(GCMenus.OXYGEN_COLLECTOR.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.OXYGEN_COMPRESSOR.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.OXYGEN_DECOMPRESSOR.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.OXYGEN_DISTRIBUTOR.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.OXYGEN_SEALER.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.OXYGEN_STORAGE_MODULE.get(), OxygenMachineScreen::new);
+        event.register(GCMenus.EXTENDED_INVENTORY.get(), ExtendedInventoryScreen::new);
     }
 
     private static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {

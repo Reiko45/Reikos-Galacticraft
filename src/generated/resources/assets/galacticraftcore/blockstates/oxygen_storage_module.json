@@ -1,0 +1,94 @@
+{
+  "variants": {
+    "facing=east,sides=back_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_left",
+      "y": 90
+    },
+    "facing=east,sides=back_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_right",
+      "y": 90
+    },
+    "facing=east,sides=left_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_left_back",
+      "y": 90
+    },
+    "facing=east,sides=left_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module",
+      "y": 90
+    },
+    "facing=east,sides=right_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_back",
+      "y": 90
+    },
+    "facing=east,sides=right_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_left",
+      "y": 90
+    },
+    "facing=north,sides=back_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_left"
+    },
+    "facing=north,sides=back_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_right"
+    },
+    "facing=north,sides=left_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_left_back"
+    },
+    "facing=north,sides=left_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module"
+    },
+    "facing=north,sides=right_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_back"
+    },
+    "facing=north,sides=right_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_left"
+    },
+    "facing=south,sides=back_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_left",
+      "y": 180
+    },
+    "facing=south,sides=back_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_right",
+      "y": 180
+    },
+    "facing=south,sides=left_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_left_back",
+      "y": 180
+    },
+    "facing=south,sides=left_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module",
+      "y": 180
+    },
+    "facing=south,sides=right_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_back",
+      "y": 180
+    },
+    "facing=south,sides=right_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_left",
+      "y": 180
+    },
+    "facing=west,sides=back_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_left",
+      "y": 270
+    },
+    "facing=west,sides=back_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module_back_right",
+      "y": 270
+    },
+    "facing=west,sides=left_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_left_back",
+      "y": 270
+    },
+    "facing=west,sides=left_right": {
+      "model": "galacticraftcore:block/oxygen_storage_module",
+      "y": 270
+    },
+    "facing=west,sides=right_back": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_back",
+      "y": 270
+    },
+    "facing=west,sides=right_left": {
+      "model": "galacticraftcore:block/oxygen_storage_module_right_left",
+      "y": 270
+    }
+  }
+}

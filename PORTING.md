@@ -46,12 +46,12 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` (`MachineMenu`/`MachineScreen`, 1.12.2 GUI sheets reused) | done |
 | `ISidedInventory` | `IItemHandler` capability per side (`SidedItemHandler`, rules evaluated per insert) | done |
 | Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` (`GCCapabilities`) | done |
-| `GCPlayerStats` capability (~54 fields) | Data attachments (`AttachmentType`) with codecs + sync payloads | Phase 3 |
-| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`; `galacticraftcore:energy` and `galacticraftcore:fluid` done) | partly |
-| `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` | Phase 2+ |
+| `GCPlayerStats` capability (~54 fields) | Data attachment `galacticraftcore:player_data` (`GCPlayerData`), synced with payloads | oxygen/gear fields done |
+| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`galacticraftcore:energy`, `galacticraftcore:fluid`, `galacticraftcore:oxygen`) | rockets left |
+| `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` (`GCNetwork`) | oxygen state, gear, inventory tab done |
 | Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
 | TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | solar panel, fluid tank, fluid pipe done |
-| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions` | oil + fuel done |
+| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions`; oxygen is a block-less `GasFluid` | oil, fuel, oxygen done |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
 | Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
 | JEI 4.x plugin | JEI 19.x (1.21.1), optional (`compat/jei`) | Compressor, Circuit Fabricator, Refinery done |
@@ -62,6 +62,11 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `IMachineSides` (sneak + wrench face config) | `INPUT`/`SIDES` block state properties, models per configuration, capabilities invalidated on change | done |
 | `FluidNetwork` / `TileEntityFluidPipe` | `FluidNetworkManager`: flood-filled pipe networks per level, colour-separated, buffer shared out per pipe | done |
 | `EventHandlerGC#generateOil` (populate event) | `OilPocketFeature` + placed feature + biome modifier (`LAKES` step) | done |
+| `InventoryExtended` + `TabRegistry` inventory tabs | 11-slot `ItemStackHandler` in the player attachment, `ExtendedInventoryMenu`, tab buttons added in `ScreenEvent.Init` | done |
+| `ThreadFindSeal` (own thread) | `SealFinder` on the server thread, one check per server tick as in 1.12.2 | done |
+| `DamageSourceGC.oxygenSuffocation` | Data-driven damage type `galacticraftcore:oxygen_suffocation` + `bypasses_*` damage type tags | done |
+| Overlays drawn in `TickHandlerClient` | `RegisterGuiLayersEvent` GUI layers (`OxygenHud`) | oxygen done |
+| `LayerOxygenMask/Gear/Tanks` on `RenderPlayer` | `RenderLayer` added in `EntityRenderersEvent.AddLayers` (`GearLayer`) | mask, tanks, tubes done |
 
 ### MicdoodleCore ASM hooks → replacements
 
@@ -128,11 +133,17 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] Crude oil pockets in Overworld biomes (1.12.2 shape, depth and chances)
 - [x] JEI categories for compressing, circuit fabricating and refining, with machine catalysts and GUI click areas
 
-### Phase 3 – Oxygen and survival
-- [ ] Player data attachment (port of `GCPlayerStats`) + sync payloads
-- [ ] Extended inventory: mask, gear, 2 tanks, parachute, frequency module, thermal slots
-- [ ] Oxygen Collector/Compressor/Decompressor/Storage, Distributor (bubble), Sealer (budgeted flood fill), Detector
-- [ ] Suffocation on airless bodies, breathable air blocks, unlit torches, oxygen HUD overlay
+### Phase 3 – Oxygen and survival ✅
+- [x] Player data attachment (the oxygen and gear parts of `GCPlayerStats`) and sync payloads
+- [x] Galacticraft inventory tab: mask, gear, two tanks, parachute, frequency module, four thermal padding slots and a
+      shield controller slot; gear is drawn on players (mask, tanks, tubes)
+- [x] Oxygen Mask, Oxygen Gear, Light/Medium/Heavy Oxygen Tanks, Infinite Oxygen Supply, 16 parachutes; oxygen gas
+- [x] Oxygen Collector, Compressor, Decompressor, Storage Module, Bubble Distributor (with bubble), Sealer (flood
+      fill, shared between sealers, edge checks), Detector, with the 1.12.2 GUIs
+- [x] Airless worlds: players breathe from tanks or suffocate, mobs suffocate, torches only burn in oxygen, breathable
+      air, oxygen HUD and warning
+- [ ] Later: parachute deployment (with landers), thermal padding and heat (Asteroids), frequency module dish and
+      sensor glasses rendering, the Arc Lamp's bright air
 
 ### Phase 4 – Rockets and travel
 - [ ] NASA Workbench + schematic system, Tier 1 rocket entity (OBJ renderer), Launch Pad, Fuel Loader
@@ -177,6 +188,19 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   Biome chance modifiers use tags: mountains and hills halve the chance, oceans and deserts multiply it by 1.8.
   Pockets are placed before structures, so mineshafts and strongholds cut through them instead of being flooded.
 * A Fluid Tank drains from the bottom tank of a stack; the tanks above pour down into it on the next ticks.
+* Oxygen is a fluid (mB of `galacticraftcore:oxygen` gas): tanks, machines and pipes trade it through the NeoForge
+  fluid capability, so other mods' pipes and tanks can carry it. Oxygen Tanks keep their contents in a data component
+  instead of item damage; crafted tanks are empty, like 1.12.2.
+* The seal check runs on the server thread (1.12.2 used a thread), still one sealer per server tick. When a sealed
+  space opens, the breathable air goes at the next check (1.12.2 timing); breathable air that no sealer vents into is
+  cleared at the end of the tick.
+* Vanilla torches held on an airless world turn into space torches (one block with a `lit` state instead of
+  unlit_torch / unlit_torch_lit), and back on a world with air.
+* Mobs that should breathe in space (1.12.2 IEntityBreathable) go in the `galacticraftcore:breathes_in_space` entity tag.
+  Blocks that seal like glass go in `galacticraftcore:sealable` (glass panes by default, the 1.12.2 config default);
+  full blocks that let air through go in `galacticraftcore:air_permeable` (gravel, wool, sponge).
+* Suffocation uses the 1.12.2 defaults (2 damage every 100 ticks) without a config yet; hard-mode increasing damage
+  is not ported.
 * Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
   made the Refinery's status flicker).
 

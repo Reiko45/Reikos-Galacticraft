@@ -7,6 +7,8 @@ import io.github.reiko45.galacticraft.menu.CompressorMenu;
 import io.github.reiko45.galacticraft.menu.ElectricCompressorMenu;
 import io.github.reiko45.galacticraft.menu.ElectricFurnaceMenu;
 import io.github.reiko45.galacticraft.menu.EnergyStorageMenu;
+import io.github.reiko45.galacticraft.menu.ExtendedInventoryMenu;
+import io.github.reiko45.galacticraft.menu.OxygenMachineMenu;
 import io.github.reiko45.galacticraft.menu.RefineryMenu;
 import io.github.reiko45.galacticraft.menu.SolarPanelMenu;
 import java.util.function.Supplier;
@@ -39,6 +41,19 @@ public final class GCMenus {
             () -> IMenuTypeExtension.create(SolarPanelMenu::new));
     public static final Supplier<MenuType<RefineryMenu>> REFINERY = MENUS.register("refinery",
             () -> IMenuTypeExtension.create(RefineryMenu::new));
+
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_COLLECTOR = oxygen("oxygen_collector", OxygenMachineMenu.Kind.COLLECTOR);
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_COMPRESSOR = oxygen("oxygen_compressor", OxygenMachineMenu.Kind.COMPRESSOR);
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_DECOMPRESSOR = oxygen("oxygen_decompressor", OxygenMachineMenu.Kind.DECOMPRESSOR);
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_DISTRIBUTOR = oxygen("oxygen_distributor", OxygenMachineMenu.Kind.DISTRIBUTOR);
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_SEALER = oxygen("oxygen_sealer", OxygenMachineMenu.Kind.SEALER);
+    public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_STORAGE_MODULE = oxygen("oxygen_storage_module", OxygenMachineMenu.Kind.STORAGE_MODULE);
+    public static final Supplier<MenuType<ExtendedInventoryMenu>> EXTENDED_INVENTORY = MENUS.register("extended_inventory",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new ExtendedInventoryMenu(id, inventory)));
+
+    private static Supplier<MenuType<OxygenMachineMenu>> oxygen(String name, OxygenMachineMenu.Kind kind) {
+        return MENUS.register(name, () -> IMenuTypeExtension.create((id, inventory, buf) -> new OxygenMachineMenu(kind, id, inventory, buf)));
+    }
 
     private GCMenus() {
     }

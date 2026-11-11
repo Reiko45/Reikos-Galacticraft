@@ -3,6 +3,7 @@ package io.github.reiko45.galacticraft.registry;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
+import io.github.reiko45.galacticraft.item.gear.OxygenTankItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -20,7 +21,7 @@ public final class GCCreativeTabs {
             .icon(() -> new ItemStack(GCBlocks.MOON_TURF.get()))
             .displayItems((params, output) -> GCItems.ITEMS.getEntries().stream()
                     .map(holder -> holder.get())
-                    .filter(item -> item instanceof BlockItem)
+                    .filter(item -> item instanceof BlockItem && item != GCBlocks.UNLIT_TORCH_ITEM.get()) // 1.12.2 hid space torches
                     .forEach(output::accept))
             .build());
 
@@ -37,6 +38,9 @@ public final class GCCreativeTabs {
                         }
                         if (item instanceof ElectricItem electric) {
                             output.accept(electric.charged());
+                        }
+                        if (item instanceof OxygenTankItem tank) {
+                            output.accept(tank.full()); // 1.12.2 listed every tank empty and full
                         }
                         if (item == GCItems.OIL_CANISTER.get()) {
                             output.accept(LiquidCanisterItem.full(false));

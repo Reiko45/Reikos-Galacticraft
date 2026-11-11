@@ -9,7 +9,7 @@
       "item": "minecraft:sugar"
     },
     "X": {
-      "item": "minecraft:green_dye"
+      "tag": "c:dyes/green"
     }
   },
   "pattern": [

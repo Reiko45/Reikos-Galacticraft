@@ -4,11 +4,17 @@ import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.DescribedItem;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
+import io.github.reiko45.galacticraft.item.gear.GearItem;
+import io.github.reiko45.galacticraft.item.gear.GearSlot;
+import io.github.reiko45.galacticraft.item.gear.InfiniteOxygenTankItem;
+import io.github.reiko45.galacticraft.item.gear.OxygenTankItem;
+import io.github.reiko45.galacticraft.item.gear.ParachuteItem;
 import io.github.reiko45.galacticraft.item.WrenchItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
 import net.minecraft.world.item.HoeItem;
+import java.util.List;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.PickaxeItem;
 import net.minecraft.world.item.ShovelItem;
@@ -85,6 +91,21 @@ public final class GCItems {
     public static final DeferredItem<LiquidCanisterItem> FUEL_CANISTER = ITEMS.register("fuel_canister",
             () -> new LiquidCanisterItem(new Item.Properties(), true));
 
+    // --- Oxygen gear (1.12.2 ItemOxygenMask, ItemOxygenGear, ItemOxygenTank, ItemCanisterOxygenInfinite, ItemParaChute) ---
+    public static final DeferredItem<GearItem> OXYGEN_MASK = ITEMS.register("oxygen_mask",
+            () -> new GearItem(new Item.Properties(), GearSlot.MASK));
+    public static final DeferredItem<GearItem> OXYGEN_GEAR = ITEMS.register("oxygen_gear",
+            () -> new GearItem(new Item.Properties(), GearSlot.GEAR));
+    public static final DeferredItem<OxygenTankItem> LIGHT_OXYGEN_TANK = ITEMS.register("light_oxygen_tank",
+            () -> new OxygenTankItem(new Item.Properties(), 1));
+    public static final DeferredItem<OxygenTankItem> MEDIUM_OXYGEN_TANK = ITEMS.register("medium_oxygen_tank",
+            () -> new OxygenTankItem(new Item.Properties(), 2));
+    public static final DeferredItem<OxygenTankItem> HEAVY_OXYGEN_TANK = ITEMS.register("heavy_oxygen_tank",
+            () -> new OxygenTankItem(new Item.Properties(), 3));
+    public static final DeferredItem<InfiniteOxygenTankItem> INFINITE_OXYGEN = ITEMS.register("infinite_oxygen",
+            () -> new InfiniteOxygenTankItem(new Item.Properties()));
+    public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
+
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.
     public static final DeferredItem<Item> DEHYDRATED_APPLE = food("dehydrated_apple", 8, 0.3F, true);
@@ -116,6 +137,15 @@ public final class GCItems {
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_CHESTPLATE = armor("heavy_duty_chestplate", ArmorItem.Type.CHESTPLATE);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_LEGGINGS = armor("heavy_duty_leggings", ArmorItem.Type.LEGGINGS);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_BOOTS = armor("heavy_duty_boots", ArmorItem.Type.BOOTS);
+
+    private static List<DeferredItem<ParachuteItem>> parachutes() {
+        final List<DeferredItem<ParachuteItem>> list = new java.util.ArrayList<>();
+        for (int color = 0; color < ParachuteItem.IDS.length; color++) {
+            final int c = color;
+            list.add(ITEMS.register(ParachuteItem.IDS[color], () -> new ParachuteItem(new Item.Properties(), c)));
+        }
+        return List.copyOf(list);
+    }
 
     private GCItems() {
     }

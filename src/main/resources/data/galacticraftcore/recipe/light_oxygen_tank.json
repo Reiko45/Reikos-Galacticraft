@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_canister"
+    },
+    "Y": {
+      "tag": "c:plates/copper"
+    },
+    "Z": {
+      "item": "minecraft:lime_wool"
+    }
+  },
+  "pattern": [
+    "Z",
+    "X",
+    "Y"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:light_oxygen_tank"
+  }
+}

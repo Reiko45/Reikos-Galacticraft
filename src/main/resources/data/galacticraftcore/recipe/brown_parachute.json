@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:dyes/brown"
+    },
+    {
+      "item": "galacticraftcore:parachute"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:brown_parachute"
+  }
+}

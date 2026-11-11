@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "lit=false": {
+      "model": "galacticraftcore:block/unlit_torch"
+    },
+    "lit=true": {
+      "model": "galacticraftcore:block/unlit_torch_lit"
+    }
+  }
+}

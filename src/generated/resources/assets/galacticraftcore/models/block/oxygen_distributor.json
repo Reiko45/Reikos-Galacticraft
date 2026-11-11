@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine",
+    "east": "galacticraftcore:block/machine_input",
+    "north": "galacticraftcore:block/oxygen_distributor",
+    "particle": "galacticraftcore:block/machine",
+    "south": "galacticraftcore:block/oxygen_distributor",
+    "up": "galacticraftcore:block/machine",
+    "west": "galacticraftcore:block/machine_oxygen_input"
+  }
+}

@@ -43,5 +43,6 @@ public final class GCDataGenerators {
                 new GCBlockTagsProvider(output, fullLookup, existingFiles));
         generator.addProvider(event.includeServer(), new GCItemTagsProvider(output, fullLookup, blockTags.contentsGetter(), existingFiles));
         generator.addProvider(event.includeServer(), new GCFluidTagsProvider(output, fullLookup, existingFiles));
+        generator.addProvider(event.includeServer(), new GCDamageTypeTagsProvider(output, fullLookup, existingFiles));
     }
 }

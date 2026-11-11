@@ -41,6 +41,13 @@
     "galacticraftcore:advanced_solar_panel",
     "galacticraftcore:solar_panel_part",
     "galacticraftcore:refinery",
-    "galacticraftcore:fluid_tank"
+    "galacticraftcore:fluid_tank",
+    "galacticraftcore:oxygen_collector",
+    "galacticraftcore:oxygen_compressor",
+    "galacticraftcore:oxygen_decompressor",
+    "galacticraftcore:oxygen_storage_module",
+    "galacticraftcore:oxygen_distributor",
+    "galacticraftcore:oxygen_sealer",
+    "galacticraftcore:oxygen_detector"
   ]
 }

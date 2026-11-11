@@ -92,6 +92,7 @@ public class MachineBlock extends Block implements EntityBlock {
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof MachineBlockEntity machine) {
             machine.dropContents(level, pos);
+            machine.onBroken();
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }

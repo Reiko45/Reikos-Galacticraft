@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:plates/steel"
+    },
+    "X": {
+      "item": "galacticraftcore:oxygen_fan"
+    },
+    "Y": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Z": {
+      "tag": "c:plates/aluminum"
+    }
+  },
+  "pattern": [
+    "WXW",
+    "YZY",
+    "WXW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_distributor"
+  }
+}

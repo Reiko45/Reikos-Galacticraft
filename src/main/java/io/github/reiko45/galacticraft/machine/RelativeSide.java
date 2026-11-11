@@ -21,4 +21,16 @@ public enum RelativeSide {
         }
         return side == facing.getClockWise() ? LEFT : RIGHT;
     }
+
+    /** The world direction of this side for a block facing {@code facing}. */
+    public Direction toDirection(Direction facing) {
+        return switch (this) {
+            case FRONT -> facing;
+            case BACK -> facing.getOpposite();
+            case LEFT -> facing.getClockWise();
+            case RIGHT -> facing.getCounterClockWise();
+            case TOP -> Direction.UP;
+            case BOTTOM -> Direction.DOWN;
+        };
+    }
 }

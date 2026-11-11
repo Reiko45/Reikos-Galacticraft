@@ -6,6 +6,8 @@ import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
 import io.github.reiko45.galacticraft.block.FluidPipeBlock;
 import io.github.reiko45.galacticraft.block.FluidTankBlock;
+import io.github.reiko45.galacticraft.block.OxygenStorageModuleBlock;
+import io.github.reiko45.galacticraft.block.SpaceTorchBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
 import io.github.reiko45.galacticraft.machine.InputSide;
 import io.github.reiko45.galacticraft.machine.RelativeSide;
@@ -94,6 +96,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         fluidPipe();
         liquid(GCFluids.OIL_BLOCK.get(), "oil");
         liquid(GCFluids.FUEL_BLOCK.get(), "fuel");
+        oxygenMachines();
         energyStorage(GCBlocks.ENERGY_STORAGE_MODULE.get(), "");
         energyStorage(GCBlocks.ENERGY_STORAGE_CLUSTER.get(), "advanced/");
 
@@ -242,6 +245,66 @@ public class GCBlockStateProvider extends BlockStateProvider {
         builder.part().modelFile(side).rotationX(270).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.UP), true).end();
         builder.part().modelFile(side).rotationX(90).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.DOWN), true).end();
         itemModels().withExistingParent(modelPrefix, mcLoc("item/generated")).texture("layer0", modLoc("item/" + itemTexture));
+    }
+
+    /** 1.12.2 collector/compressor/decompressor/distributor/sealer/detector models (front north, power port east). */
+    private void oxygenMachines() {
+        final ResourceLocation machine = tex("machine");
+        final ResourceLocation power = tex("machine_input");
+        final ResourceLocation in = tex("machine_oxygen_input");
+        final ResourceLocation out = tex("machine_oxygen_output");
+        final ResourceLocation collector = tex("oxygen_collector");
+        oxygenMachine(GCBlocks.OXYGEN_COLLECTOR.get(), collector, collector, collector, collector, power, out);
+        oxygenMachine(GCBlocks.OXYGEN_COMPRESSOR.get(), machine, machine, tex("oxygen_compressor"), tex("oxygen_compressor_back"), power, in);
+        oxygenMachine(GCBlocks.OXYGEN_DECOMPRESSOR.get(), machine, machine, tex("oxygen_decompressor"), tex("oxygen_compressor_back"), power, out);
+        oxygenMachine(GCBlocks.OXYGEN_DISTRIBUTOR.get(), machine, machine, tex("oxygen_distributor"), tex("oxygen_distributor"), power, in);
+        oxygenMachine(GCBlocks.OXYGEN_SEALER.get(), machine, tex("oxygen_sealer"), machine, machine, power, in);
+        final ResourceLocation detector = tex("oxygen_detector");
+        simpleBlockWithItem(GCBlocks.OXYGEN_DETECTOR.get(), models().cube("oxygen_detector", machine, machine, detector, detector, detector, detector)
+                .texture("particle", machine));
+
+        // Oxygen Storage Module: tank front and back, oxygen in/out on the configured faces, casing elsewhere
+        final ResourceLocation tank = tex("oxygen_storage_module");
+        final ResourceLocation side = tex("machine_side");
+        final Map<StorageSides, ModelFile> storage = new EnumMap<>(StorageSides.class);
+        for (StorageSides sides : StorageSides.values()) {
+            final String name = sides == StorageSides.LEFT_RIGHT ? "oxygen_storage_module" : "oxygen_storage_module_" + sides.getSerializedName();
+            storage.put(sides, models().cube(name, machine, machine, tank,
+                    oxygenFace(sides, RelativeSide.BACK, tank), oxygenFace(sides, RelativeSide.LEFT, side), oxygenFace(sides, RelativeSide.RIGHT, side))
+                    .texture("particle", machine));
+        }
+        getVariantBuilder(GCBlocks.OXYGEN_STORAGE_MODULE.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(storage.get(state.getValue(OxygenStorageModuleBlock.SIDES))).rotationY(facingRotation(state)).build());
+        itemModels().withExistingParent("oxygen_storage_module", modLoc("block/oxygen_storage_module"));
+
+        // Breathable air is invisible; the model only exists for the particle sprite
+        simpleBlock(GCBlocks.BREATHABLE_AIR.get(), models().getBuilder("breathable_air").texture("particle", tex("fluids/oxygen_gas")));
+
+        // Space torches: 1.12.2 unlit_torch / unlit_torch_lit textures on the vanilla torch shapes
+        final ModelFile[] standing = {models().torch("unlit_torch", tex("unlit_torch")).renderType("cutout"),
+                models().torch("unlit_torch_lit", tex("unlit_torch_lit")).renderType("cutout")};
+        final ModelFile[] wall = {models().torchWall("unlit_wall_torch", tex("unlit_torch")).renderType("cutout"),
+                models().torchWall("unlit_wall_torch_lit", tex("unlit_torch_lit")).renderType("cutout")};
+        getVariantBuilder(GCBlocks.UNLIT_TORCH.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(standing[state.getValue(SpaceTorchBlock.LIT) ? 1 : 0]).build());
+        getVariantBuilder(GCBlocks.UNLIT_WALL_TORCH.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(wall[state.getValue(SpaceTorchBlock.LIT) ? 1 : 0])
+                .rotationY(((int) state.getValue(net.minecraft.world.level.block.WallTorchBlock.FACING).toYRot() + 90) % 360).build());
+        itemModels().withExistingParent("unlit_torch", mcLoc("item/generated")).texture("layer0", tex("unlit_torch_lit"));
+    }
+
+    private void oxygenMachine(Block block, ResourceLocation down, ResourceLocation up, ResourceLocation north, ResourceLocation south,
+                               ResourceLocation east, ResourceLocation west) {
+        final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        horizontalBlock(block, models().cube(name, down, up, north, south, east, west).texture("particle", down));
+        itemModels().withExistingParent(name, modLoc("block/" + name));
+    }
+
+    private ResourceLocation oxygenFace(StorageSides sides, RelativeSide face, ResourceLocation unused) {
+        if (sides.input() == face) {
+            return tex("machine_oxygen_input");
+        }
+        return sides.output() == face ? tex("machine_oxygen_output") : unused;
     }
 
     /** 1.12.2 tank / tank_u / tank_d / tank_ud: caps where no tank is stacked above or below. */

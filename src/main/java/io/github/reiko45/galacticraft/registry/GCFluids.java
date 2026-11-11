@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.fluid.GasFluid;
 import io.github.reiko45.galacticraft.fluid.GCLiquidBlock;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.sounds.SoundEvents;
@@ -36,6 +37,14 @@ public final class GCFluids {
             FluidType.Properties.create().descriptionId("block.galacticraftcore.fuel").density(400).viscosity(900)
                     .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
+    /**
+     * 1.12.2 fluidOxygenGas: a gas with no block or bucket. Machines, tanks and pipes carry it in mB. NeoForge marks
+     * gases by a density of 0 or less (1.12.2 had a separate gaseous flag and density 1).
+     */
+    public static final DeferredHolder<FluidType, FluidType> OXYGEN_TYPE = FLUID_TYPES.register("oxygen", () -> new FluidType(
+            FluidType.Properties.create().descriptionId("fluid.galacticraftcore.oxygen").density(0).viscosity(1)
+                    .canSwim(false).canDrown(false).canPushEntity(false).canExtinguish(false)));
+
     private static final BaseFlowingFluid.Properties OIL_PROPERTIES = new BaseFlowingFluid.Properties(
             GCFluids.OIL_TYPE, () -> GCFluids.OIL.get(), () -> GCFluids.FLOWING_OIL.get())
             .bucket(() -> GCFluids.OIL_BUCKET.get()).block(() -> GCFluids.OIL_BLOCK.get())
@@ -49,6 +58,8 @@ public final class GCFluids {
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_OIL = FLUIDS.register("flowing_oil", () -> new BaseFlowingFluid.Flowing(OIL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> FUEL = FLUIDS.register("fuel", () -> new BaseFlowingFluid.Source(FUEL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_FUEL = FLUIDS.register("flowing_fuel", () -> new BaseFlowingFluid.Flowing(FUEL_PROPERTIES));
+
+    public static final DeferredHolder<Fluid, GasFluid> OXYGEN = FLUIDS.register("oxygen", () -> new GasFluid(GCFluids.OXYGEN_TYPE));
 
     public static final DeferredBlock<GCLiquidBlock> OIL_BLOCK = GCBlocks.BLOCKS.register("oil",
             () -> new GCLiquidBlock(GCFluids.OIL.get(), liquid(MapColor.COLOR_BROWN), false));

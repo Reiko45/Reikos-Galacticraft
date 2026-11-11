@@ -2,6 +2,7 @@ package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
+import io.github.reiko45.galacticraft.registry.GCModTags;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
@@ -54,7 +55,16 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.COMPRESSOR.get(), GCBlocks.ELECTRIC_COMPRESSOR.get(), GCBlocks.ADVANCED_COMPRESSOR.get(),
                 GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get(), GCBlocks.CIRCUIT_FABRICATOR.get(),
                 GCBlocks.BASIC_SOLAR_PANEL.get(), GCBlocks.ADVANCED_SOLAR_PANEL.get(), GCBlocks.SOLAR_PART.get(),
-                GCBlocks.REFINERY.get(), GCBlocks.FLUID_TANK.get());
+                GCBlocks.REFINERY.get(), GCBlocks.FLUID_TANK.get(),
+                GCBlocks.OXYGEN_COLLECTOR.get(), GCBlocks.OXYGEN_COMPRESSOR.get(), GCBlocks.OXYGEN_DECOMPRESSOR.get(),
+                GCBlocks.OXYGEN_STORAGE_MODULE.get(), GCBlocks.OXYGEN_DISTRIBUTOR.get(), GCBlocks.OXYGEN_SEALER.get(),
+                GCBlocks.OXYGEN_DETECTOR.get());
+        // Oxygen sealing (1.12.2 OxygenPressureProtocol): glass panes seal, gravel/wool/sponge let air through
+        tag(GCModTags.SEALABLE).addTag(Tags.Blocks.GLASS_PANES);
+        tag(GCModTags.AIR_PERMEABLE).add(net.minecraft.world.level.block.Blocks.GRAVEL, net.minecraft.world.level.block.Blocks.SPONGE,
+                net.minecraft.world.level.block.Blocks.WET_SPONGE).addTag(BlockTags.WOOL);
+        tag(BlockTags.REPLACEABLE).add(GCBlocks.BREATHABLE_AIR.get());
+        tag(BlockTags.WALL_POST_OVERRIDE).add(GCBlocks.UNLIT_TORCH.get());
 
         tag(BlockTags.NEEDS_STONE_TOOL).add(
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(),

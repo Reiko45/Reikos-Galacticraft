@@ -19,5 +19,6 @@ public class GCFluidTagsProvider extends FluidTagsProvider {
     protected void addTags(HolderLookup.Provider provider) {
         tag(GCFluidTags.OIL).add(GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get());
         tag(GCFluidTags.FUEL).add(GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get());
+        tag(GCFluidTags.OXYGEN).add(GCFluids.OXYGEN.get());
     }
 }
