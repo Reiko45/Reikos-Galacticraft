@@ -1,0 +1,24 @@
+{
+  "type": "galacticraftcore:circuit_fabricating",
+  "ingredients": [
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "item": "minecraft:repeater"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:advanced_wafer"
+  }
+}

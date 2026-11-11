@@ -1,10 +1,14 @@
 package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.recipe.CircuitFabricatorRecipe;
+import io.github.reiko45.galacticraft.recipe.CompressingRecipe;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCItems;
+import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -15,8 +19,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CookingBookCategory;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
+import net.neoforged.neoforge.common.conditions.NotCondition;
+import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
 
 /**
  * Furnace and stonecutter recipes. 1.12.2 registered smelting in code ({@code RecipeManagerGC}); crafting
@@ -29,6 +36,9 @@ public class GCRecipeProvider extends RecipeProvider {
 
     @Override
     protected void buildRecipes(RecipeOutput output) {
+        compressing(output);
+        fabricating(output);
+
         // RecipeManagerGC#addSmeltingRecipes (experience values kept); blasting is new in this port.
         ore(output, GCBlocks.TIN_ORE.get(), GCItems.TIN_INGOT.get(), 0.5F);
         ore(output, GCBlocks.ALUMINUM_ORE.get(), GCItems.ALUMINUM_INGOT.get(), 0.5F);
@@ -61,6 +71,52 @@ public class GCRecipeProvider extends RecipeProvider {
         cutting(output, GCBlocks.TIN_DECORATION_BLOCK_2.get(), GCBlocks.TIN_DECORATION_STAIRS_2.get(), GCBlocks.TIN_DECORATION_SLAB_2.get(), GCBlocks.TIN_DECORATION_WALL_2.get());
         cutting(output, GCBlocks.MOON_ROCK.get(), GCBlocks.MOON_ROCK_STAIRS.get(), GCBlocks.MOON_ROCK_SLAB.get(), GCBlocks.MOON_ROCK_WALL.get());
         cutting(output, GCBlocks.MOON_DUNGEON_BRICK.get(), GCBlocks.MOON_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MOON_DUNGEON_BRICK_SLAB.get(), GCBlocks.MOON_DUNGEON_BRICK_WALL.get());
+    }
+
+    /** 1.12.2 RecipeManagerGC compressor recipes (CompressorRecipes). */
+    private static void compressing(RecipeOutput output) {
+        compressShapeless(output, "compressed_copper", GCItems.COMPRESSED_COPPER.get(), tag("ingots/copper"), tag("ingots/copper"));
+        compressShapeless(output, "compressed_tin", GCItems.COMPRESSED_TIN.get(), tag("ingots/tin"), tag("ingots/tin"));
+        compressShapeless(output, "compressed_aluminum", GCItems.COMPRESSED_ALUMINUM.get(), tag("ingots/aluminum"), tag("ingots/aluminum"));
+        compressShapeless(output, "compressed_iron", GCItems.COMPRESSED_IRON.get(), Ingredient.of(Items.IRON_INGOT), Ingredient.of(Items.IRON_INGOT));
+        compressShapeless(output, "compressed_meteoric_iron", GCItems.COMPRESSED_METEORIC_IRON.get(), Ingredient.of(GCItems.METEORIC_IRON_INGOT.get()));
+        compressShapeless(output, "compressed_steel_from_coal", GCItems.COMPRESSED_STEEL.get(),
+                Ingredient.of(Items.COAL), Ingredient.of(GCItems.COMPRESSED_IRON.get()), Ingredient.of(Items.COAL));
+        compressShapeless(output, "compressed_bronze_from_plates", GCItems.COMPRESSED_BRONZE.get(),
+                Ingredient.of(GCItems.COMPRESSED_COPPER.get()), Ingredient.of(GCItems.COMPRESSED_TIN.get()));
+        // Only when another mod provides steel/bronze ingots, like 1.12.2's OreDictionary check.
+        compressShapeless(output.withConditions(new NotCondition(new TagEmptyCondition("c", "ingots/bronze"))),
+                "compressed_bronze", GCItems.COMPRESSED_BRONZE.get(), tag("ingots/bronze"), tag("ingots/bronze"));
+        compressShapeless(output.withConditions(new NotCondition(new TagEmptyCondition("c", "ingots/steel"))),
+                "compressed_steel", GCItems.COMPRESSED_STEEL.get(), tag("ingots/steel"), tag("ingots/steel"));
+        output.accept(GalacticraftCore.id("compressing/heavy_plating"), CompressingRecipe.shaped(
+                ShapedRecipePattern.of(Map.of(
+                        'X', Ingredient.of(GCItems.COMPRESSED_STEEL.get()),
+                        'Y', Ingredient.of(GCItems.COMPRESSED_ALUMINUM.get()),
+                        'Z', Ingredient.of(GCItems.COMPRESSED_BRONZE.get())), "XYZ", "XYZ"),
+                new ItemStack(GCItems.HEAVY_PLATING.get(), 2)), null);
+    }
+
+    private static void compressShapeless(RecipeOutput output, String name, ItemLike result, Ingredient... ingredients) {
+        output.accept(GalacticraftCore.id("compressing/" + name),
+                CompressingRecipe.shapeless(NonNullList.of(Ingredient.EMPTY, ingredients), new ItemStack(result)), null);
+    }
+
+    /** 1.12.2 CircuitFabricatorRecipes: diamond, silicon, silicon, redstone, plus one recipe-specific item. */
+    private static void fabricating(RecipeOutput output) {
+        fabricate(output, GCItems.SOLAR_WAFER.get(), 9, tag("gems/lapis"));
+        fabricate(output, GCItems.BASIC_WAFER.get(), 3, Ingredient.of(Items.REDSTONE_TORCH));
+        fabricate(output, GCItems.ADVANCED_WAFER.get(), 1, Ingredient.of(Items.REPEATER));
+    }
+
+    private static void fabricate(RecipeOutput output, ItemLike result, int count, Ingredient extra) {
+        output.accept(GalacticraftCore.id("circuit_fabricating/" + getItemName(result)), new CircuitFabricatorRecipe(
+                NonNullList.of(Ingredient.EMPTY, tag("gems/diamond"), tag("silicon"), tag("silicon"), tag("dusts/redstone"), extra),
+                new ItemStack(result, count)), null);
+    }
+
+    private static Ingredient tag(String path) {
+        return Ingredient.of(GCTags.item(path));
     }
 
     private static void ore(RecipeOutput output, ItemLike input, ItemLike result, float experience) {

@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.item.ElectricItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -29,7 +30,12 @@ public final class GCCreativeTabs {
             .displayItems((params, output) -> GCItems.ITEMS.getEntries().stream()
                     .map(holder -> holder.get())
                     .filter(item -> !(item instanceof BlockItem))
-                    .forEach(output::accept))
+                    .forEach(item -> {
+                        output.accept(item);
+                        if (item instanceof ElectricItem electric) {
+                            output.accept(electric.charged());
+                        }
+                    }))
             .build());
 
     private GCCreativeTabs() {

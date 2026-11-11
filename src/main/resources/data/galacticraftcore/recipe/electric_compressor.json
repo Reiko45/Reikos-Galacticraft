@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "V": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "W": {
+      "tag": "c:plates/steel"
+    },
+    "X": {
+      "item": "minecraft:anvil"
+    },
+    "Y": {
+      "tag": "c:plates/bronze"
+    },
+    "Z": {
+      "item": "galacticraftcore:advanced_wafer"
+    }
+  },
+  "pattern": [
+    "WXW",
+    "WYW",
+    "VZV"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:electric_compressor"
+  }
+}

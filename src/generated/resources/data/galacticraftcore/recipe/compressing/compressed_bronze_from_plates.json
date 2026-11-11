@@ -1,0 +1,15 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:compressed_copper"
+    },
+    {
+      "item": "galacticraftcore:compressed_tin"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_bronze"
+  }
+}

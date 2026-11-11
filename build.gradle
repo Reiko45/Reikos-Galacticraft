@@ -50,6 +50,13 @@ neoForge {
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
+        // Dev aid: creates a flat test world, opens every machine GUI, saves screenshots and quits (client/ScreenshotTour).
+        screenshotTour {
+            client()
+            systemProperty 'galacticraftcore.screenshotTour', 'true'
+            programArguments.addAll '--width', '1280', '--height', '720'
+        }
+
         // Runs every registered GameTest and exits; used in CI.
         gameTestServer {
             type = 'gameTestServer'

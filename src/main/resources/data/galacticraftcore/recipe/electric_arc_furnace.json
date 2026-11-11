@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:ingots/meteoric_iron"
+    },
+    "X": {
+      "item": "galacticraftcore:heavy_plating"
+    },
+    "Y": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "Z": {
+      "item": "galacticraftcore:electric_furnace"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "XZX",
+    "WYW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:electric_arc_furnace"
+  }
+}

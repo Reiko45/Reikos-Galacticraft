@@ -1,6 +1,11 @@
 package io.github.reiko45.galacticraft;
 
 import io.github.reiko45.galacticraft.registry.GCArmorMaterials;
+import io.github.reiko45.galacticraft.registry.GCBlockEntities;
+import io.github.reiko45.galacticraft.registry.GCCapabilities;
+import io.github.reiko45.galacticraft.registry.GCDataComponents;
+import io.github.reiko45.galacticraft.registry.GCMenus;
+import io.github.reiko45.galacticraft.registry.GCRecipes;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCChunkGenerators;
 import io.github.reiko45.galacticraft.registry.GCCreativeTabs;
@@ -9,6 +14,7 @@ import net.minecraft.resources.ResourceLocation;
 import net.neoforged.bus.api.IEventBus;
 import net.neoforged.fml.ModContainer;
 import net.neoforged.fml.common.Mod;
+import net.neoforged.fml.config.ModConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,6 +37,13 @@ public final class GalacticraftCore {
         GCArmorMaterials.ARMOR_MATERIALS.register(modBus);
         GCCreativeTabs.TABS.register(modBus);
         GCChunkGenerators.CHUNK_GENERATORS.register(modBus);
+        GCDataComponents.COMPONENTS.register(modBus);
+        GCBlockEntities.BLOCK_ENTITIES.register(modBus);
+        GCMenus.MENUS.register(modBus);
+        GCRecipes.TYPES.register(modBus);
+        GCRecipes.SERIALIZERS.register(modBus);
+        modBus.addListener(GCCapabilities::register);
+        container.registerConfig(ModConfig.Type.CLIENT, GCConfig.CLIENT_SPEC);
     }
 
     public static ResourceLocation id(String path) {

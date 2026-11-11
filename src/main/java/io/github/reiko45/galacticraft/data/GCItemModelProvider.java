@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.item.WrenchItem;
 import io.github.reiko45.galacticraft.registry.GCItems;
 import net.minecraft.data.PackOutput;
 import net.minecraft.world.item.BlockItem;
@@ -23,7 +24,7 @@ public class GCItemModelProvider extends ItemModelProvider {
             if (item instanceof BlockItem) {
                 continue;
             }
-            if (item instanceof TieredItem) {
+            if (item instanceof TieredItem || item instanceof WrenchItem) {
                 handheldItem(item);
             } else {
                 basicItem(item);

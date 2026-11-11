@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraftcore:block/circuit_fabricator",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/circuit_fabricator"
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/circuit_fabricator",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/circuit_fabricator",
+      "y": 270
+    }
+  }
+}

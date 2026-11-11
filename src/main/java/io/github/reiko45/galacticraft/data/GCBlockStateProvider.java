@@ -1,7 +1,12 @@
 package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.block.AluminumWireBlock;
+import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
+import io.github.reiko45.galacticraft.block.MachineBlock;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
+import net.minecraft.core.Direction;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.Block;
@@ -13,6 +18,7 @@ import net.neoforged.neoforge.client.model.generators.BlockModelBuilder;
 import net.neoforged.neoforge.client.model.generators.BlockStateProvider;
 import net.neoforged.neoforge.client.model.generators.ConfiguredModel;
 import net.neoforged.neoforge.client.model.generators.ModelFile;
+import net.neoforged.neoforge.client.model.generators.MultiPartBlockStateBuilder;
 import net.neoforged.neoforge.common.data.ExistingFileHelper;
 import net.neoforged.neoforge.registries.DeferredBlock;
 
@@ -58,6 +64,19 @@ public class GCBlockStateProvider extends BlockStateProvider {
         wall(GCBlocks.MOON_DUNGEON_BRICK_WALL, tex("moon_dungeon_brick"));
 
         cheese();
+        // Machines: 1.12.2 models put the front on north and the energy port on east (the left side seen from the front).
+        machine(GCBlocks.COAL_GENERATOR.get(), "", "coal_generator", "machine_output", "machine_side", "machine_side");
+        machine(GCBlocks.COMPRESSOR.get(), "", "compressor", "machine_side", "machine_side", "machine_side");
+        machine(GCBlocks.ELECTRIC_COMPRESSOR.get(), "", "electric_compressor", "machine_input", "machine_side", "machine_side");
+        machine(GCBlocks.ADVANCED_COMPRESSOR.get(), "advanced/", "electric_compressor", "machine_input", "machine_side", "machine_side");
+        machine(GCBlocks.ELECTRIC_FURNACE.get(), "", "electric_furnace", "machine_input", "machine_side", "machine_side");
+        machine(GCBlocks.ELECTRIC_ARC_FURNACE.get(), "advanced/", "electric_furnace", "machine_input", "machine_side", "machine_side");
+        machine(GCBlocks.CIRCUIT_FABRICATOR.get(), "", "circuit_fabricator", "machine_input", "machine_side", "machine_side");
+        energyStorage(GCBlocks.ENERGY_STORAGE_MODULE.get(), "");
+        energyStorage(GCBlocks.ENERGY_STORAGE_CLUSTER.get(), "advanced/");
+
+        wire(GCBlocks.ALUMINUM_WIRE.get(), "aluminum_wire", "aluminum_wire");
+        wire(GCBlocks.HEAVY_ALUMINUM_WIRE.get(), "heavy_aluminum_wire", "heavy_aluminum_wire");
 
         simpleBlockWithItem(GCBlocks.FALLEN_METEOR.get(), models().getExistingFile(modLoc("block/fallen_meteor")));
 
@@ -88,6 +107,51 @@ public class GCBlockStateProvider extends BlockStateProvider {
 
     private void blockItem(DeferredBlock<?> block) {
         itemModels().withExistingParent(block.getId().getPath(), modLoc("block/" + block.getId().getPath()));
+    }
+
+    /** Cube machine model + horizontal facing. {@code tier} is "" or "advanced/" (tier-2 textures). */
+    private void machine(Block block, String tier, String front, String east, String south, String west) {
+        final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        final ResourceLocation casing = tex(tier + "machine");
+        final ModelFile model = models().cube(name, casing, casing, tex(tier + front), tex(tier + south), tex(tier + east), tex(tier + west))
+                .texture("particle", casing);
+        horizontalBlock(block, model);
+        itemModels().withExistingParent(name, modLoc("block/" + name));
+    }
+
+    /** Front and back show the charge level (energy_storage_module_0..16); output on the left, input on the right. */
+    private void energyStorage(Block block, String tier) {
+        final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        final ResourceLocation casing = tex(tier + "machine");
+        final ModelFile[] levels = new ModelFile[17];
+        for (int level = 0; level <= 16; level++) {
+            final ResourceLocation face = tex(tier + "energy_storage_module_" + level);
+            levels[level] = models().cube(name + "_" + level, casing, casing, face, face, tex(tier + "machine_output"), tex(tier + "machine_input"))
+                    .texture("particle", casing);
+        }
+        getVariantBuilder(block).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(levels[state.getValue(EnergyStorageBlock.LEVEL)])
+                .rotationY(((int) state.getValue(MachineBlock.FACING).toYRot() + 180) % 360)
+                .build());
+        itemModels().withExistingParent(name, modLoc("block/" + name + "_0"));
+    }
+
+    /**
+     * Multipart: the core always, plus the 1.12.2 north arm rotated onto each connected side
+     * (x=270 points it up, x=90 down, y rotates it around the horizontal sides).
+     */
+    private void wire(Block block, String modelPrefix, String itemTexture) {
+        final ModelFile core = models().getExistingFile(modLoc("block/" + modelPrefix + "_core"));
+        final ModelFile side = models().getExistingFile(modLoc("block/" + modelPrefix + "_side"));
+        final MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
+        builder.part().modelFile(core).addModel().end();
+        builder.part().modelFile(side).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.NORTH), true).end();
+        builder.part().modelFile(side).rotationY(90).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.EAST), true).end();
+        builder.part().modelFile(side).rotationY(180).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.SOUTH), true).end();
+        builder.part().modelFile(side).rotationY(270).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.WEST), true).end();
+        builder.part().modelFile(side).rotationX(270).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.UP), true).end();
+        builder.part().modelFile(side).rotationX(90).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.DOWN), true).end();
+        itemModels().withExistingParent(modelPrefix, mcLoc("item/generated")).texture("layer0", modLoc("item/" + itemTexture));
     }
 
     /** Vanilla cake models with the 1.12.2 cheese textures (same slots: top/bottom/side/inside). */

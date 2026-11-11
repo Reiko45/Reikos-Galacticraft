@@ -27,6 +27,15 @@
     "galacticraftcore:moon_tin_ore",
     "galacticraftcore:moon_cheese_ore",
     "galacticraftcore:moon_sapphire_ore",
-    "galacticraftcore:fallen_meteor"
+    "galacticraftcore:fallen_meteor",
+    "galacticraftcore:coal_generator",
+    "galacticraftcore:energy_storage_module",
+    "galacticraftcore:energy_storage_cluster",
+    "galacticraftcore:compressor",
+    "galacticraftcore:electric_compressor",
+    "galacticraftcore:advanced_compressor",
+    "galacticraftcore:electric_furnace",
+    "galacticraftcore:electric_arc_furnace",
+    "galacticraftcore:circuit_fabricator"
   ]
 }

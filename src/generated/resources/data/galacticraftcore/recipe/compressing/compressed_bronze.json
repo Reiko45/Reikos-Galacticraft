@@ -1,0 +1,24 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:not",
+      "value": {
+        "type": "neoforge:tag_empty",
+        "tag": "c:ingots/bronze"
+      }
+    }
+  ],
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:ingots/bronze"
+    },
+    {
+      "tag": "c:ingots/bronze"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_bronze"
+  }
+}

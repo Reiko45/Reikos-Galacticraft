@@ -1,0 +1,15 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:iron_ingot"
+    },
+    {
+      "item": "minecraft:iron_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_iron"
+  }
+}

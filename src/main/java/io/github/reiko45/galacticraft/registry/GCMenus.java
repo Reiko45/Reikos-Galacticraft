@@ -1,0 +1,38 @@
+package io.github.reiko45.galacticraft.registry;
+
+import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.menu.CircuitFabricatorMenu;
+import io.github.reiko45.galacticraft.menu.CoalGeneratorMenu;
+import io.github.reiko45.galacticraft.menu.CompressorMenu;
+import io.github.reiko45.galacticraft.menu.ElectricCompressorMenu;
+import io.github.reiko45.galacticraft.menu.ElectricFurnaceMenu;
+import io.github.reiko45.galacticraft.menu.EnergyStorageMenu;
+import java.util.function.Supplier;
+import net.minecraft.core.registries.Registries;
+import net.minecraft.world.inventory.MenuType;
+import net.neoforged.neoforge.common.extensions.IMenuTypeExtension;
+import net.neoforged.neoforge.registries.DeferredRegister;
+
+public final class GCMenus {
+    public static final DeferredRegister<MenuType<?>> MENUS = DeferredRegister.create(Registries.MENU, GalacticraftCore.MOD_ID);
+
+    public static final Supplier<MenuType<CoalGeneratorMenu>> COAL_GENERATOR = MENUS.register("coal_generator",
+            () -> IMenuTypeExtension.create(CoalGeneratorMenu::new));
+    public static final Supplier<MenuType<EnergyStorageMenu>> ENERGY_STORAGE = MENUS.register("energy_storage",
+            () -> IMenuTypeExtension.create(EnergyStorageMenu::new));
+    public static final Supplier<MenuType<CompressorMenu>> COMPRESSOR = MENUS.register("compressor",
+            () -> IMenuTypeExtension.create(CompressorMenu::new));
+    public static final Supplier<MenuType<ElectricCompressorMenu>> ELECTRIC_COMPRESSOR = MENUS.register("electric_compressor",
+            () -> IMenuTypeExtension.create(ElectricCompressorMenu::normal));
+    public static final Supplier<MenuType<ElectricCompressorMenu>> ADVANCED_COMPRESSOR = MENUS.register("advanced_compressor",
+            () -> IMenuTypeExtension.create(ElectricCompressorMenu::advanced));
+    public static final Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_FURNACE = MENUS.register("electric_furnace",
+            () -> IMenuTypeExtension.create(ElectricFurnaceMenu::furnace));
+    public static final Supplier<MenuType<ElectricFurnaceMenu>> ELECTRIC_ARC_FURNACE = MENUS.register("electric_arc_furnace",
+            () -> IMenuTypeExtension.create(ElectricFurnaceMenu::arcFurnace));
+    public static final Supplier<MenuType<CircuitFabricatorMenu>> CIRCUIT_FABRICATOR = MENUS.register("circuit_fabricator",
+            () -> IMenuTypeExtension.create(CircuitFabricatorMenu::new));
+
+    private GCMenus() {
+    }
+}

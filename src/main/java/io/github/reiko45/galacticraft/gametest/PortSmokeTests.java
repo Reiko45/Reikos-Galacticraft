@@ -172,6 +172,15 @@ public final class PortSmokeTests {
         helper.succeed();
     }
 
+    /** Recipes with NeoForge load conditions (e.g. "only if another mod adds steel ingots") may legitimately be absent. */
+    private static boolean isConditional(Resource resource) {
+        try (Reader reader = resource.openAsReader()) {
+            return JsonParser.parseReader(reader).getAsJsonObject().has("neoforge:conditions");
+        } catch (IOException e) {
+            return false;
+        }
+    }
+
     /** Recipes that fail to parse are only logged by vanilla; make sure every JSON in our namespace loaded. */
     @GameTest(template = EMPTY)
     public static void allRecipesLoad(GameTestHelper helper) {
@@ -179,9 +188,9 @@ public final class PortSmokeTests {
         final Map<ResourceLocation, Resource> files = server.getResourceManager().listResources("recipe",
                 file -> file.getNamespace().equals(GalacticraftCore.MOD_ID) && file.getPath().endsWith(".json"));
         final List<String> broken = new ArrayList<>();
-        for (ResourceLocation file : files.keySet()) {
-            final String path = file.getPath().substring("recipe/".length(), file.getPath().length() - ".json".length());
-            if (server.getRecipeManager().byKey(GalacticraftCore.id(path)).isEmpty()) {
+        for (Map.Entry<ResourceLocation, Resource> file : files.entrySet()) {
+            final String path = file.getKey().getPath().substring("recipe/".length(), file.getKey().getPath().length() - ".json".length());
+            if (server.getRecipeManager().byKey(GalacticraftCore.id(path)).isEmpty() && !isConditional(file.getValue())) {
                 broken.add(path);
             }
         }

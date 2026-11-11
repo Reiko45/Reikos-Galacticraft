@@ -83,7 +83,68 @@
     "item/heavy_duty_leggings": "items/steel_leggings",
     "item/heavy_duty_boots": "items/steel_boots",
     "models/armor/heavy_duty_layer_1": "model/armor/steel_1",
-    "models/armor/heavy_duty_layer_2": "model/armor/steel_2"
+    "models/armor/heavy_duty_layer_2": "model/armor/steel_2",
+    "block/aluminum_wire": "blocks/aluminum_wire",
+    "item/aluminum_wire": "blocks/aluminum_wire_item",
+    "item/heavy_aluminum_wire": "blocks/aluminum_wire_heavy_item",
+    "block/machine": "blocks/machine",
+    "block/machine_side": "blocks/machine_side",
+    "block/machine_input": "blocks/machine_input",
+    "block/machine_output": "blocks/machine_output",
+    "block/coal_generator": "blocks/coal_generator",
+    "block/compressor": "blocks/compressor",
+    "block/electric_compressor": "blocks/electric_compressor",
+    "block/electric_furnace": "blocks/electric_furnace",
+    "block/circuit_fabricator": "blocks/circuit_fabricator",
+    "block/energy_storage_module_0": "blocks/energy_storage_module_0",
+    "block/advanced/energy_storage_module_0": "blocks/advanced/energy_storage_module_0",
+    "block/energy_storage_module_1": "blocks/energy_storage_module_1",
+    "block/advanced/energy_storage_module_1": "blocks/advanced/energy_storage_module_1",
+    "block/energy_storage_module_2": "blocks/energy_storage_module_2",
+    "block/advanced/energy_storage_module_2": "blocks/advanced/energy_storage_module_2",
+    "block/energy_storage_module_3": "blocks/energy_storage_module_3",
+    "block/advanced/energy_storage_module_3": "blocks/advanced/energy_storage_module_3",
+    "block/energy_storage_module_4": "blocks/energy_storage_module_4",
+    "block/advanced/energy_storage_module_4": "blocks/advanced/energy_storage_module_4",
+    "block/energy_storage_module_5": "blocks/energy_storage_module_5",
+    "block/advanced/energy_storage_module_5": "blocks/advanced/energy_storage_module_5",
+    "block/energy_storage_module_6": "blocks/energy_storage_module_6",
+    "block/advanced/energy_storage_module_6": "blocks/advanced/energy_storage_module_6",
+    "block/energy_storage_module_7": "blocks/energy_storage_module_7",
+    "block/advanced/energy_storage_module_7": "blocks/advanced/energy_storage_module_7",
+    "block/energy_storage_module_8": "blocks/energy_storage_module_8",
+    "block/advanced/energy_storage_module_8": "blocks/advanced/energy_storage_module_8",
+    "block/energy_storage_module_9": "blocks/energy_storage_module_9",
+    "block/advanced/energy_storage_module_9": "blocks/advanced/energy_storage_module_9",
+    "block/energy_storage_module_10": "blocks/energy_storage_module_10",
+    "block/advanced/energy_storage_module_10": "blocks/advanced/energy_storage_module_10",
+    "block/energy_storage_module_11": "blocks/energy_storage_module_11",
+    "block/advanced/energy_storage_module_11": "blocks/advanced/energy_storage_module_11",
+    "block/energy_storage_module_12": "blocks/energy_storage_module_12",
+    "block/advanced/energy_storage_module_12": "blocks/advanced/energy_storage_module_12",
+    "block/energy_storage_module_13": "blocks/energy_storage_module_13",
+    "block/advanced/energy_storage_module_13": "blocks/advanced/energy_storage_module_13",
+    "block/energy_storage_module_14": "blocks/energy_storage_module_14",
+    "block/advanced/energy_storage_module_14": "blocks/advanced/energy_storage_module_14",
+    "block/energy_storage_module_15": "blocks/energy_storage_module_15",
+    "block/advanced/energy_storage_module_15": "blocks/advanced/energy_storage_module_15",
+    "block/energy_storage_module_16": "blocks/energy_storage_module_16",
+    "block/advanced/energy_storage_module_16": "blocks/advanced/energy_storage_module_16",
+    "block/advanced/machine": "blocks/advanced/machine",
+    "block/advanced/machine_side": "blocks/advanced/machine_side",
+    "block/advanced/machine_input": "blocks/advanced/machine_input",
+    "block/advanced/machine_output": "blocks/advanced/machine_output",
+    "block/advanced/electric_compressor": "blocks/advanced/electric_compressor",
+    "block/advanced/electric_furnace": "blocks/advanced/electric_furnace",
+    "gui/coal_generator": "gui/coal_generator",
+    "gui/energy_storage_module": "gui/energy_storage_module",
+    "gui/ingot_compressor": "gui/ingot_compressor",
+    "gui/electric_ingot_compressor": "gui/electric_ingot_compressor",
+    "gui/electric_furnace": "gui/electric_furnace",
+    "gui/electric_arc_furnace": "gui/electric_arc_furnace",
+    "gui/circuit_fabricator": "gui/circuit_fabricator",
+    "item/battery": "items/battery",
+    "item/standard_wrench": "items/standard_wrench"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model"
@@ -181,7 +242,40 @@
     "item.galacticraftcore.heavy_duty_helmet": "item.steel_helmet.name",
     "item.galacticraftcore.heavy_duty_chestplate": "item.steel_chestplate.name",
     "item.galacticraftcore.heavy_duty_leggings": "item.steel_leggings.name",
-    "item.galacticraftcore.heavy_duty_boots": "item.steel_boots.name"
+    "item.galacticraftcore.heavy_duty_boots": "item.steel_boots.name",
+    "block.galacticraftcore.aluminum_wire": "tile.aluminum_wire.alu_wire.name",
+    "block.galacticraftcore.heavy_aluminum_wire": "tile.aluminum_wire.alu_wire_heavy.name",
+    "gui.galacticraftcore.energy": "gui.message.energy",
+    "gui.galacticraftcore.max_energy": "gui.message.max_energy",
+    "gui.galacticraftcore.status": "gui.message.status.name",
+    "gui.galacticraftcore.status.idle": "gui.status.idle.name",
+    "gui.galacticraftcore.status.active": "gui.status.active.name",
+    "gui.galacticraftcore.status.running": "gui.status.running.name",
+    "gui.galacticraftcore.status.ready": "gui.status.ready.name",
+    "gui.galacticraftcore.status.generating": "gui.status.generating.name",
+    "gui.galacticraftcore.status.not_generating": "gui.status.not_generating.name",
+    "gui.galacticraftcore.status.compressing": "gui.status.compressing.name",
+    "gui.galacticraftcore.status.missing_power": "gui.status.missingpower.name",
+    "gui.galacticraftcore.status.hull_heat": "gui.status.hull_heat.name",
+    "gui.galacticraftcore.status.collecting_energy": "gui.status.collectingenergy.name",
+    "gui.galacticraftcore.status.blocked_fully": "gui.status.blockedfully.name",
+    "gui.galacticraftcore.status.blocked_partial": "gui.status.blockedpartial.name",
+    "gui.galacticraftcore.fuel": "gui.message.fuel.name",
+    "gui.galacticraftcore.status.off": "gui.status.off.name",
+    "gui.galacticraftcore.of": "gui.message.of.name",
+    "gui.galacticraftcore.max_output": "gui.max_output.desc",
+    "block.galacticraftcore.coal_generator": "tile.machine.0.name",
+    "block.galacticraftcore.energy_storage_module": "tile.machine.1.name",
+    "block.galacticraftcore.electric_furnace": "tile.machine.2.name",
+    "block.galacticraftcore.compressor": "tile.machine.3.name",
+    "block.galacticraftcore.electric_arc_furnace": "tile.machine.7.name",
+    "block.galacticraftcore.energy_storage_cluster": "tile.machine.8.name",
+    "block.galacticraftcore.electric_compressor": "tile.machine2.4.name",
+    "block.galacticraftcore.circuit_fabricator": "tile.machine2.5.name",
+    "block.galacticraftcore.advanced_compressor": "tile.machine4.11.name",
+    "item.galacticraftcore.battery": "item.battery.name",
+    "item.galacticraftcore.standard_wrench": "item.standard_wrench.name",
+    "gui.galacticraftcore.status.missing_power_short": "gui.status.missingpower.short.name"
   },
   "lang_extra_en_us": {},
   "recipes": {
@@ -293,7 +387,23 @@
       "galacticraftcore:steel_leggings": "galacticraftcore:heavy_duty_leggings",
       "galacticraftcore:steel_boots": "galacticraftcore:heavy_duty_boots",
       "minecraft:lit_pumpkin": "minecraft:jack_o_lantern",
-      "minecraft:dye:2": "minecraft:green_dye"
+      "minecraft:dye:2": "minecraft:green_dye",
+      "galacticraftcore:aluminum_wire:0": "galacticraftcore:aluminum_wire",
+      "galacticraftcore:aluminum_wire:1": "galacticraftcore:heavy_aluminum_wire",
+      "galacticraftcore:machine:0": "galacticraftcore:coal_generator",
+      "galacticraftcore:machine:12": "galacticraftcore:compressor",
+      "galacticraftcore:machine2:0": "galacticraftcore:electric_compressor",
+      "galacticraftcore:machine2:4": "galacticraftcore:circuit_fabricator",
+      "galacticraftcore:machine4:0": "galacticraftcore:advanced_compressor",
+      "galacticraftcore:machine_tiered:0": "galacticraftcore:energy_storage_module",
+      "galacticraftcore:machine_tiered:4": "galacticraftcore:electric_furnace",
+      "galacticraftcore:machine_tiered:8": "galacticraftcore:energy_storage_cluster",
+      "galacticraftcore:machine_tiered:12": "galacticraftcore:electric_arc_furnace",
+      "galacticraftcore:battery": "galacticraftcore:battery",
+      "galacticraftcore:battery:100": "galacticraftcore:battery",
+      "galacticraftcore:battery:32767": "galacticraftcore:battery",
+      "galacticraftcore:standard_wrench": "galacticraftcore:standard_wrench",
+      "minecraft:wool:32767": "#minecraft:wool"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -332,5 +442,32 @@
       "meteoric_iron_plate": "#c:plates/meteoric_iron"
     },
     "item_silicon": "galacticraftcore:raw_silicon"
+  },
+  "model_parts": {
+    "_comment": "Pick named elements (their __comment) out of a 1.12.2 model. Used to turn the per-combination wire models into multipart pieces.",
+    "block/aluminum_wire_core": {
+      "from": "block/alu_wire_n",
+      "elements": [
+        "Middle"
+      ]
+    },
+    "block/aluminum_wire_side": {
+      "from": "block/alu_wire_n",
+      "elements": [
+        "North"
+      ]
+    },
+    "block/heavy_aluminum_wire_core": {
+      "from": "block/hvy_alu_wire_n",
+      "elements": [
+        "Middle"
+      ]
+    },
+    "block/heavy_aluminum_wire_side": {
+      "from": "block/hvy_alu_wire_n",
+      "elements": [
+        "North"
+      ]
+    }
   }
 }

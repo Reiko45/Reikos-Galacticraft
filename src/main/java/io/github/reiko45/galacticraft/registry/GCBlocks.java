@@ -1,9 +1,18 @@
 package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.block.AluminumWireBlock;
 import io.github.reiko45.galacticraft.block.CheeseBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneTorchBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneWallTorchBlock;
+import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
+import io.github.reiko45.galacticraft.block.entity.CircuitFabricatorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.CoalGeneratorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -70,6 +79,30 @@ public final class GCBlocks {
     public static final DeferredBlock<SlabBlock> MOON_DUNGEON_BRICK_SLAB = slab("moon_dungeon_brick_slab", MOON_DUNGEON_BRICK);
     public static final DeferredBlock<WallBlock> MOON_ROCK_WALL = wall("moon_rock_wall", MOON_ROCK);
     public static final DeferredBlock<WallBlock> MOON_DUNGEON_BRICK_WALL = wall("moon_dungeon_brick_wall", MOON_DUNGEON_BRICK);
+
+    // --- Energy ---
+    public static final DeferredBlock<AluminumWireBlock> ALUMINUM_WIRE = withItem("aluminum_wire", () -> new AluminumWireBlock(wire(), false));
+    public static final DeferredBlock<AluminumWireBlock> HEAVY_ALUMINUM_WIRE = withItem("heavy_aluminum_wire", () -> new AluminumWireBlock(wire(), true));
+
+    // --- Machines (1.12.2 BlockMachineBase: hardness 1, metal sound) ---
+    public static final DeferredBlock<MachineBlock> COAL_GENERATOR = withItem("coal_generator",
+            () -> new MachineBlock(machine(), CoalGeneratorBlockEntity::new));
+    public static final DeferredBlock<EnergyStorageBlock> ENERGY_STORAGE_MODULE = withItem("energy_storage_module",
+            () -> new EnergyStorageBlock(machine(), EnergyStorageBlockEntity::module));
+    public static final DeferredBlock<EnergyStorageBlock> ENERGY_STORAGE_CLUSTER = withItem("energy_storage_cluster",
+            () -> new EnergyStorageBlock(machine(), EnergyStorageBlockEntity::cluster));
+    public static final DeferredBlock<MachineBlock> COMPRESSOR = withItem("compressor",
+            () -> new MachineBlock(machine(), CompressorBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> ELECTRIC_COMPRESSOR = withItem("electric_compressor",
+            () -> new MachineBlock(machine(), ElectricCompressorBlockEntity::normal));
+    public static final DeferredBlock<MachineBlock> ADVANCED_COMPRESSOR = withItem("advanced_compressor",
+            () -> new MachineBlock(machine(), ElectricCompressorBlockEntity::advanced));
+    public static final DeferredBlock<MachineBlock> ELECTRIC_FURNACE = withItem("electric_furnace",
+            () -> new MachineBlock(machine(), ElectricFurnaceBlockEntity::furnace));
+    public static final DeferredBlock<MachineBlock> ELECTRIC_ARC_FURNACE = withItem("electric_arc_furnace",
+            () -> new MachineBlock(machine(), ElectricFurnaceBlockEntity::arcFurnace));
+    public static final DeferredBlock<MachineBlock> CIRCUIT_FABRICATOR = withItem("circuit_fabricator",
+            () -> new MachineBlock(machine(), CircuitFabricatorBlockEntity::new));
 
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(
@@ -142,6 +175,15 @@ public final class GCBlocks {
     private static BlockBehaviour.Properties moonStone(float hardness, float resistance) {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
+    }
+
+    private static BlockBehaviour.Properties machine() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F).sound(SoundType.METAL);
+    }
+
+    /** 1.12.2 BlockAluminumWire: Material.CLOTH, hardness 0.075, cloth sound. */
+    private static BlockBehaviour.Properties wire() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).strength(0.075F).sound(SoundType.WOOL).noOcclusion();
     }
 
     /** setLightLevel(0.85F) in 1.12.2 == light level 12. */

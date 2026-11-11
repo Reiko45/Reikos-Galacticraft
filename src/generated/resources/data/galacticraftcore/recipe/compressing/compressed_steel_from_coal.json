@@ -1,0 +1,18 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "minecraft:coal"
+    },
+    {
+      "item": "galacticraftcore:compressed_iron"
+    },
+    {
+      "item": "minecraft:coal"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_steel"
+  }
+}

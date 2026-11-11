@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine",
+    "east": "galacticraftcore:block/machine_output",
+    "north": "galacticraftcore:block/energy_storage_module_13",
+    "particle": "galacticraftcore:block/machine",
+    "south": "galacticraftcore:block/energy_storage_module_13",
+    "up": "galacticraftcore:block/machine",
+    "west": "galacticraftcore:block/machine_input"
+  }
+}

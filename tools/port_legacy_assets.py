@@ -77,7 +77,19 @@ def port_models(mapping, legacy_assets, out_assets):
                 raise SystemExit(f"model {old}: texture {ref} is not in the textures mapping")
             model["textures"][slot] = reverse[ref]
         write_json(os.path.join(out_assets, "models", new + ".json"), model)
-    print(f"models: {len(mapping['models'])} converted")
+    parts = {k: v for k, v in mapping.get("model_parts", {}).items() if not k.startswith("_")}
+    for new, spec in parts.items():
+        with open(os.path.join(legacy_assets, "models", spec["from"] + ".json"), encoding="utf-8") as f:
+            source = json.load(f)
+        model = {"textures": {}, "elements": [e for e in source["elements"] if e.get("__comment") in spec["elements"]]}
+        if len(model["elements"]) != len(spec["elements"]):
+            raise SystemExit(f"model_parts {new}: elements {spec['elements']} not all found in {spec['from']}")
+        for element in model["elements"]:
+            element.pop("__comment", None)
+        for slot, ref in source.get("textures", {}).items():
+            model["textures"][slot] = ref if ref.startswith("#") else reverse.get(ref) or sys.exit(f"{new}: unmapped texture {ref}")
+        write_json(os.path.join(out_assets, "models", new + ".json"), model)
+    print(f"models: {len(mapping['models'])} converted, {len(parts)} extracted")
 
 
 def port_lang(mapping, legacy_assets, out_assets):

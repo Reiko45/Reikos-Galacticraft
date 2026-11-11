@@ -35,26 +35,29 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | OreDictionary | `c:` convention tags (`compressedSteel` → `c:plates/steel`) | done |
 | JSON recipes with `forge:ore_dict`/metadata | Converted by `tools/port_legacy_assets.py` | 60 of 166 converted; the rest need unported items |
 | Code-registered smelting (`RecipeManagerGC`) | Datagen (`GCRecipeProvider`) | done |
-| Machine recipes (compressor, circuit fabricator, refinery...) | Custom `RecipeType` + `RecipeSerializer`, JSON recipes | Phase 2 |
+| Machine recipes (compressor, circuit fabricator, refinery...) | Custom `RecipeType` + `RecipeSerializer`, JSON recipes (`galacticraftcore:compressing_shaped/_shapeless`, `circuit_fabricating`) | compressor + fabricator done |
 | `EnumHelper.addToolMaterial/ArmorMaterial` | `SimpleTier`; `ArmorMaterial` registry entry | done |
 | `IWorldGenerator` ore generation | Configured/placed features + NeoForge biome modifier | done |
 | `WorldProvider` + `ChunkProvider` + numeric dimension IDs | Datapack `dimension_type` + `dimension`; custom `ChunkGenerator` with a `MapCodec` | Moon done |
 | Gravity via ASM (`TransformerHooks.getGravityForEntity`) | `generic.gravity` attribute modifier (vanilla since 1.20.5) | done (living entities) |
 | `LivingFallEvent` distance scaling | Same event in NeoForge | done |
 | `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` (+ `renderSky` override) | Moon: black sky only; Earth/stars renderer pending |
-| `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` | Phase 2 |
-| `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` | Phase 2 |
-| Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` | Phase 2 |
+| `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` (`MachineBlockEntity`) | done |
+| `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` (`MachineMenu`/`MachineScreen`, 1.12.2 GUI sheets reused) | done |
+| `ISidedInventory` | `IItemHandler` capability per side (`SidedItemHandler`, rules evaluated per insert) | done |
+| Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` (`GCCapabilities`) | energy + items done |
 | `GCPlayerStats` capability (~54 fields) | Data attachments (`AttachmentType`) with codecs + sync payloads | Phase 3 |
-| Item NBT (oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`) | Phase 2–4 |
+| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`; `galacticraftcore:energy` done) | partly |
 | `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` | Phase 2+ |
-| Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | Phase 2 |
+| Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
 | TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | Phase 2–5 |
-| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler` | Phase 2 |
+| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler` | Phase 2b |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
 | Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
-| JEI 4.x plugin | JEI 19.x (1.21.1) and/or EMI | Phase 2+ |
-| gJ energy with RF/IC2/BC/Mekanism conversion | FE (`IEnergyStorage`) as the storage unit, gJ shown via a configurable display ratio | Phase 2 |
+| JEI 4.x plugin | JEI 19.x (1.21.1) and/or EMI | Phase 2b |
+| gJ energy with RF/IC2/BC/Mekanism conversion | Float gJ internally (`GCEnergyStorage`, `galacticraftcore:energy` capability) + FE (`IEnergyStorage`) on every machine at 1 FE = 1.6 gJ | done |
+| `EnergyNetwork` / `NetworkFinder`, conductor tiers | `EnergyNetworkManager`: flood-filled wire networks, rebuilt on change, ticked per level; tier = min(source, weakest wire) | done |
+| Forge `Configuration` energy display options | `ModConfigSpec` client config (`energyDisplayUnit`: gJ or FE) | done |
 
 ### MicdoodleCore ASM hooks → replacements
 
@@ -97,12 +100,24 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] 60 crafting recipes converted, smelting/blasting/stonecutting, loot tables, tags, translations in 25 languages
 - [x] GameTests + static asset check
 
-### Phase 2 – Energy, machines, fluids
-- [ ] FE-based energy API, gJ display, aluminum wire (+ heavy wire, switches) as a cable network
-- [ ] Coal Generator, Basic/Advanced Solar Panel, Energy Storage Module/Cluster
-- [ ] Compressor + Electric Compressor (compressed plates become craftable), Electric Furnace, Circuit Fabricator (wafers)
-- [ ] Fluids: oil, fuel (+ buckets, canisters), Refinery, Fluid Tank, Fluid Pipe
-- [ ] Machine block entities, menus, screens (port `GuiContainerGC` layouts and textures), config, JEI categories
+### Phase 2a – Energy and machines ✅
+- [x] gJ energy (float, 1.12.2 numbers unchanged) with FE interop on every machine face that takes or gives power
+- [x] Aluminum Wire and Heavy Aluminum Wire forming networks; tier-2 power (Cluster over heavy wire) speeds machines up
+- [x] Sources push straight into an adjacent machine too; per-tick output budget shared by wires, neighbours and batteries
+- [x] Coal Generator (hull heat), Energy Storage Module and Cluster (charge level shown on the block)
+- [x] Compressor (fuel), Electric Compressor, Advanced Compressor: compressed plates and Heavy-Duty Plates are craftable
+- [x] Electric Furnace, Electric Arc Furnace (doubles ore smelting), Circuit Fabricator (wafers)
+- [x] Battery (15,000 gJ; empty ones stack to 4), Standard Wrench (rotates machines)
+- [x] 1.12.2 consumer rules: redstone turns machines off, idle machines lose 5 gJ / 10 ticks, battery power is tier 1
+- [x] GUIs drawn from the 1.12.2 sheets at the 1.12.2 coordinates; status text and energy tooltips in 25 languages
+- [x] Hopper/pipe automation per side (outputs from below, grid balancing for compressors, silicon balancing)
+
+### Phase 2b – Solar, fluids and the rest of the power tier
+- [ ] Basic/Advanced Solar Panel: needs the `BlockMulti` fake-block system (pole + 3x3 panel) and a panel renderer
+- [ ] Sneak + wrench to reconfigure a machine's input/output faces (1.12.2 `IMachineSides`), with matching textures
+- [ ] Switchable wires (redstone splits the network)
+- [ ] Fluids: oil, fuel (+ buckets, canisters), Refinery, Fluid Tank, Fluid Pipe; oil generation in the Overworld
+- [ ] JEI categories for compressing and circuit fabricating (JEI 19.x for 1.21.1 is available on maven.blamejared.com)
 
 ### Phase 3 – Oxygen and survival
 - [ ] Player data attachment (port of `GCPlayerStats`) + sync payloads
@@ -140,6 +155,12 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * Added for modern parity: blasting, smoker/campfire and stonecutter recipes, `c:` tags, and the Heavy Duty set
   in the enchantability tags.
 * Both tin stair and slab variants keep their duplicate 1.12.2 English names ("Tin Decoration Stairs").
+* Energy is moved only through Galacticraft wires and direct contact, like 1.12.2; foreign FE cables can
+  connect to any machine face that takes or gives power.
+* Coal Generator heat now survives a world reload (1.12.2 saved and loaded it under different NBT keys).
+* Compressor recipes for steel/bronze ingots load only when some mod puts items in `c:ingots/steel` or
+  `c:ingots/bronze` (the 1.12.2 OreDictionary check). Hard/quick/adventure mode recipe variants are not ported.
+* The Circuit Fabricator's bonus output in zero-gravity dimensions waits for space stations.
 
 ## Workflow for porting more content
 

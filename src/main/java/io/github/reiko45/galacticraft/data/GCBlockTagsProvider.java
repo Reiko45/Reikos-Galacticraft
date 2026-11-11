@@ -49,7 +49,10 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.MOON_DUNGEON_BRICK.get(), GCBlocks.MOON_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MOON_DUNGEON_BRICK_SLAB.get(),
                 GCBlocks.MOON_DUNGEON_BRICK_WALL.get(),
                 GCBlocks.MOON_COPPER_ORE.get(), GCBlocks.MOON_TIN_ORE.get(), GCBlocks.MOON_CHEESE_ORE.get(), GCBlocks.MOON_SAPPHIRE_ORE.get(),
-                GCBlocks.FALLEN_METEOR.get());
+                GCBlocks.FALLEN_METEOR.get(),
+                GCBlocks.COAL_GENERATOR.get(), GCBlocks.ENERGY_STORAGE_MODULE.get(), GCBlocks.ENERGY_STORAGE_CLUSTER.get(),
+                GCBlocks.COMPRESSOR.get(), GCBlocks.ELECTRIC_COMPRESSOR.get(), GCBlocks.ADVANCED_COMPRESSOR.get(),
+                GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get(), GCBlocks.CIRCUIT_FABRICATOR.get());
 
         tag(BlockTags.NEEDS_STONE_TOOL).add(
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(),

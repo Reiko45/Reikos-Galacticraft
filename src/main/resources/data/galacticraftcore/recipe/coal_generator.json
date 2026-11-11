@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:ingots/copper"
+    },
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Y": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "Z": {
+      "item": "minecraft:furnace"
+    }
+  },
+  "pattern": [
+    "WWW",
+    "XZX",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:coal_generator"
+  }
+}

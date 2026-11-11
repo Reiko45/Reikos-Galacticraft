@@ -1,0 +1,12 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:meteoric_iron_ingot"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_meteoric_iron"
+  }
+}

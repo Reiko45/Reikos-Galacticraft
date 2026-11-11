@@ -2,6 +2,8 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.DescribedItem;
+import io.github.reiko45.galacticraft.item.ElectricItem;
+import io.github.reiko45.galacticraft.item.WrenchItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
 import net.minecraft.world.item.AxeItem;
@@ -67,6 +69,14 @@ public final class GCItems {
     public static final DeferredItem<Item> BUGGY_STORAGE_BOX = simple("buggy_storage_box");
     public static final DeferredItem<Item> TIN_CANISTER = simple("tin_canister");
     public static final DeferredItem<Item> COPPER_CANISTER = simple("copper_canister");
+
+    // --- Electrical ---
+    /** 1.12.2 ItemBattery: 15,000 gJ, 200 gJ/t in and out; empty batteries stack to 4. */
+    public static final DeferredItem<ElectricItem> BATTERY = ITEMS.register("battery",
+            () -> new ElectricItem(new Item.Properties().stacksTo(4), 15_000.0F, 200.0F));
+    /** 1.12.2 ItemUniversalWrench: 256 uses, rotates machines. */
+    public static final DeferredItem<WrenchItem> STANDARD_WRENCH = ITEMS.register("standard_wrench",
+            () -> new WrenchItem(new Item.Properties().durability(256)));
 
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.

@@ -4,8 +4,9 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 1 of 8 (alpha).** The Moon exists and can be explored. Rockets, oxygen and machines are not
-ported yet. See [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
+**Status: Phase 2a of 8 (alpha).** The Moon exists, and Galacticraft's power system and core machines work.
+Rockets, oxygen, solar panels and fluids are not ported yet. See [PORTING.md](PORTING.md) for the roadmap and
+how each 1.12.2 system maps to NeoForge.
 
 ## What works
 
@@ -16,11 +17,23 @@ ported yet. See [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 sys
   fall distance is ×0.18, the same as 1.12.2.
 * **Items**: ingots, compressed plates, wafers, rocket/oxygen/buggy parts, canisters, Heavy Duty tools and armor.
   Food includes cheese, the cheeseburger, and canned food that gives back its tin canister.
-* 91 recipes (crafting converted from 1.12.2, plus smelting/blasting/stonecutting), loot tables, `c:` tags,
-  and translations for all 25 languages that 1.12.2 shipped.
+* **Power** (gJ, with FE compatibility at 1 FE = 1.6 gJ): Coal Generator, Energy Storage Module and Cluster,
+  Aluminum Wire and Heavy Aluminum Wire networks, Battery and Standard Wrench. Tier-2 power (a Cluster over
+  heavy wire) makes the Arc Furnace, Electric/Advanced Compressor and Circuit Fabricator faster, as in 1.12.2.
+* **Machines**: Compressor (burns fuel), Electric Compressor, Advanced Compressor, Electric Furnace, Electric Arc
+  Furnace, Circuit Fabricator. Their GUIs use the original 1.12.2 artwork, and hoppers/pipes work per side.
+* Recipes: 77 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
+  blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
+  shipped.
 
-Many parts (compressed plates, wafers) still have no recipe because the machines that make them come in Phase 2.
-They are available in creative mode.
+![Machines and an aluminum wire network](docs/screenshots/machines.png)
+
+| Circuit Fabricator | Electric Furnace powered over wire |
+|---|---|
+| ![Circuit Fabricator GUI](docs/screenshots/circuit_fabricator.png) | ![Electric Furnace GUI](docs/screenshots/electric_furnace.png) |
+
+Some parts (rocket and oxygen components) have recipes but no use yet. Their machines and vehicles come in later
+phases.
 
 ### Visiting the Moon
 
@@ -42,6 +55,9 @@ Requires JDK 21.
 python3 tools/check_assets.py # static check of models/textures/translations
 ```
 
+`./gradlew runScreenshotTour` is a development aid. It loads the world `run/saves/tour` (any singleplayer
+save), places every machine, opens each GUI, saves screenshots to `run/screenshots/` and quits.
+
 ## Porting tools
 
 `tools/port_legacy_assets.py` reads a Galacticraft Legacy checkout and `tools/legacy_mapping.json`. It copies
@@ -59,6 +75,9 @@ python3 tools/port_legacy_assets.py --legacy ../Galacticraft-Legacy
 |---|---|
 | `src/main/java/.../registry` | Blocks, items, armor materials, tiers, creative tabs, chunk generator codec |
 | `src/main/java/.../world` | Moon chunk generator, dimension keys, per-dimension physics, ported noise |
+| `src/main/java/.../energy` | gJ storage, energy capability, FE bridge, wire networks |
+| `src/main/java/.../block/entity`, `menu`, `client/screen` | Machines, their menus and GUIs |
+| `src/main/java/.../recipe` | Compressing and circuit fabricating recipe types |
 | `src/main/java/.../event` | Gravity and fall-damage handling |
 | `src/main/java/.../data` | Datagen providers |
 | `src/main/java/.../gametest` | GameTests |

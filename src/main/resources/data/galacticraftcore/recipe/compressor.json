@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:ingots/aluminum"
+    },
+    "X": {
+      "item": "minecraft:anvil"
+    },
+    "Y": {
+      "tag": "c:ingots/copper"
+    },
+    "Z": {
+      "item": "galacticraftcore:basic_wafer"
+    }
+  },
+  "pattern": [
+    "WXW",
+    "WYW",
+    "WZW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressor"
+  }
+}
