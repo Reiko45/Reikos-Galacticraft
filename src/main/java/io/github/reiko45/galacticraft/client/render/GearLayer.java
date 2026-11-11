@@ -4,6 +4,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.client.ClientPayloads;
+import io.github.reiko45.galacticraft.item.gear.ParachuteItem;
 import io.github.reiko45.galacticraft.player.GearData;
 import net.minecraft.client.model.PlayerModel;
 import net.minecraft.client.model.geom.ModelLayerLocation;
@@ -23,19 +24,22 @@ import net.minecraft.client.model.geom.EntityModelSet;
 import net.minecraft.resources.ResourceLocation;
 
 /**
- * Oxygen gear on players (1.12.2 LayerOxygenMask, LayerOxygenTanks, LayerOxygenGear): a glass helmet over the head,
- * two tanks on the back (green light, orange medium, red heavy/infinite) and the tubes running up to the mask.
+ * Oxygen gear on players (1.12.2 LayerOxygenMask, LayerOxygenTanks, LayerOxygenGear, LayerOxygenParachute): a glass
+ * helmet over the head, two tanks on the back (green light, orange medium, red heavy/infinite), the tubes running up to
+ * the mask, and an open parachute in the worn parachute's colour.
  * Positions are the 1.12.2 values after its GL translations, in model units relative to the body.
  */
 public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
     public static final ModelLayerLocation MASK = new ModelLayerLocation(GalacticraftCore.id("oxygen_mask"), "main");
     public static final ModelLayerLocation GEAR = new ModelLayerLocation(GalacticraftCore.id("oxygen_gear"), "main");
+    public static final ModelLayerLocation PARACHUTE = new ModelLayerLocation(GalacticraftCore.id("parachute"), "main");
     private static final ResourceLocation MASK_TEXTURE = GalacticraftCore.id("textures/model/oxygen.png");
     private static final ResourceLocation GEAR_TEXTURE = GalacticraftCore.id("textures/model/player.png");
 
     private final ModelPart mask;
     private final ModelPart[] tanks;
     private final ModelPart tube;
+    private final ModelPart parachute;
 
     public GearLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> parent, EntityModelSet models) {
         super(parent);
@@ -43,6 +47,25 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
         final ModelPart gear = models.bakeLayer(GEAR);
         this.tanks = new ModelPart[]{gear.getChild("tank_light"), gear.getChild("tank_medium"), gear.getChild("tank_heavy")};
         this.tube = gear.getChild("tube");
+        this.parachute = models.bakeLayer(PARACHUTE);
+    }
+
+    /** LayerOxygenParachute: three canopy panels and four strings, 256x256 parachute texture. */
+    public static LayerDefinition createParachute() {
+        final MeshDefinition mesh = new MeshDefinition();
+        final PartDefinition root = mesh.getRoot();
+        final float deg = (float) (Math.PI / 180.0D);
+        root.addOrReplaceChild("canopy_0", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40),
+                PartPose.offsetAndRotation(15.0F, 4.0F, 0.0F, 0.0F, 0.0F, 30.0F * deg));
+        root.addOrReplaceChild("canopy_1", CubeListBuilder.create().texOffs(0, 42).addBox(-20.0F, -45.0F, -20.0F, 40, 2, 40), PartPose.ZERO);
+        root.addOrReplaceChild("canopy_2", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40),
+                PartPose.offsetAndRotation(11.0F, -11.0F, 0.0F, 0.0F, 0.0F, -30.0F * deg));
+        final float[][] strings = {{-9.0F, 23.0F, 155.0F}, {-9.0F, -23.0F, 155.0F}, {9.0F, 23.0F, -155.0F}, {9.0F, -23.0F, -155.0F}};
+        for (int i = 0; i < strings.length; i++) {
+            root.addOrReplaceChild("string_" + i, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1),
+                    PartPose.offsetAndRotation(strings[i][0], -7.0F, 2.0F, strings[i][1] * deg, 0.0F, strings[i][2] * deg));
+        }
+        return LayerDefinition.create(mesh, 256, 256);
     }
 
     public static LayerDefinition createMask() {
@@ -72,6 +95,11 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
             return;
         }
         final PlayerModel<AbstractClientPlayer> model = getParentModel();
+        if (gear.parachuteOpen() && gear.parachute() >= 0) {
+            final ResourceLocation texture = GalacticraftCore.id("textures/model/parachute/"
+                    + ParachuteItem.LEGACY_COLORS[Math.min(gear.parachute(), ParachuteItem.LEGACY_COLORS.length - 1)] + ".png");
+            this.parachute.render(poseStack, buffers.getBuffer(RenderType.entityCutout(texture)), light, OverlayTexture.NO_OVERLAY);
+        }
         if (gear.mask()) {
             poseStack.pushPose();
             model.head.translateAndRotate(poseStack);

@@ -1,0 +1,244 @@
+{
+  "variants": {
+    "color=0,facing=east": {
+      "model": "galacticraftcore:block/parachest_plain",
+      "y": 270
+    },
+    "color=0,facing=north": {
+      "model": "galacticraftcore:block/parachest_plain",
+      "y": 180
+    },
+    "color=0,facing=south": {
+      "model": "galacticraftcore:block/parachest_plain"
+    },
+    "color=0,facing=west": {
+      "model": "galacticraftcore:block/parachest_plain",
+      "y": 90
+    },
+    "color=1,facing=east": {
+      "model": "galacticraftcore:block/parachest_black",
+      "y": 270
+    },
+    "color=1,facing=north": {
+      "model": "galacticraftcore:block/parachest_black",
+      "y": 180
+    },
+    "color=1,facing=south": {
+      "model": "galacticraftcore:block/parachest_black"
+    },
+    "color=1,facing=west": {
+      "model": "galacticraftcore:block/parachest_black",
+      "y": 90
+    },
+    "color=10,facing=east": {
+      "model": "galacticraftcore:block/parachest_orange",
+      "y": 270
+    },
+    "color=10,facing=north": {
+      "model": "galacticraftcore:block/parachest_orange",
+      "y": 180
+    },
+    "color=10,facing=south": {
+      "model": "galacticraftcore:block/parachest_orange"
+    },
+    "color=10,facing=west": {
+      "model": "galacticraftcore:block/parachest_orange",
+      "y": 90
+    },
+    "color=11,facing=east": {
+      "model": "galacticraftcore:block/parachest_pink",
+      "y": 270
+    },
+    "color=11,facing=north": {
+      "model": "galacticraftcore:block/parachest_pink",
+      "y": 180
+    },
+    "color=11,facing=south": {
+      "model": "galacticraftcore:block/parachest_pink"
+    },
+    "color=11,facing=west": {
+      "model": "galacticraftcore:block/parachest_pink",
+      "y": 90
+    },
+    "color=12,facing=east": {
+      "model": "galacticraftcore:block/parachest_purple",
+      "y": 270
+    },
+    "color=12,facing=north": {
+      "model": "galacticraftcore:block/parachest_purple",
+      "y": 180
+    },
+    "color=12,facing=south": {
+      "model": "galacticraftcore:block/parachest_purple"
+    },
+    "color=12,facing=west": {
+      "model": "galacticraftcore:block/parachest_purple",
+      "y": 90
+    },
+    "color=13,facing=east": {
+      "model": "galacticraftcore:block/parachest_red",
+      "y": 270
+    },
+    "color=13,facing=north": {
+      "model": "galacticraftcore:block/parachest_red",
+      "y": 180
+    },
+    "color=13,facing=south": {
+      "model": "galacticraftcore:block/parachest_red"
+    },
+    "color=13,facing=west": {
+      "model": "galacticraftcore:block/parachest_red",
+      "y": 90
+    },
+    "color=14,facing=east": {
+      "model": "galacticraftcore:block/parachest_teal",
+      "y": 270
+    },
+    "color=14,facing=north": {
+      "model": "galacticraftcore:block/parachest_teal",
+      "y": 180
+    },
+    "color=14,facing=south": {
+      "model": "galacticraftcore:block/parachest_teal"
+    },
+    "color=14,facing=west": {
+      "model": "galacticraftcore:block/parachest_teal",
+      "y": 90
+    },
+    "color=15,facing=east": {
+      "model": "galacticraftcore:block/parachest_yellow",
+      "y": 270
+    },
+    "color=15,facing=north": {
+      "model": "galacticraftcore:block/parachest_yellow",
+      "y": 180
+    },
+    "color=15,facing=south": {
+      "model": "galacticraftcore:block/parachest_yellow"
+    },
+    "color=15,facing=west": {
+      "model": "galacticraftcore:block/parachest_yellow",
+      "y": 90
+    },
+    "color=2,facing=east": {
+      "model": "galacticraftcore:block/parachest_blue",
+      "y": 270
+    },
+    "color=2,facing=north": {
+      "model": "galacticraftcore:block/parachest_blue",
+      "y": 180
+    },
+    "color=2,facing=south": {
+      "model": "galacticraftcore:block/parachest_blue"
+    },
+    "color=2,facing=west": {
+      "model": "galacticraftcore:block/parachest_blue",
+      "y": 90
+    },
+    "color=3,facing=east": {
+      "model": "galacticraftcore:block/parachest_lime",
+      "y": 270
+    },
+    "color=3,facing=north": {
+      "model": "galacticraftcore:block/parachest_lime",
+      "y": 180
+    },
+    "color=3,facing=south": {
+      "model": "galacticraftcore:block/parachest_lime"
+    },
+    "color=3,facing=west": {
+      "model": "galacticraftcore:block/parachest_lime",
+      "y": 90
+    },
+    "color=4,facing=east": {
+      "model": "galacticraftcore:block/parachest_brown",
+      "y": 270
+    },
+    "color=4,facing=north": {
+      "model": "galacticraftcore:block/parachest_brown",
+      "y": 180
+    },
+    "color=4,facing=south": {
+      "model": "galacticraftcore:block/parachest_brown"
+    },
+    "color=4,facing=west": {
+      "model": "galacticraftcore:block/parachest_brown",
+      "y": 90
+    },
+    "color=5,facing=east": {
+      "model": "galacticraftcore:block/parachest_darkblue",
+      "y": 270
+    },
+    "color=5,facing=north": {
+      "model": "galacticraftcore:block/parachest_darkblue",
+      "y": 180
+    },
+    "color=5,facing=south": {
+      "model": "galacticraftcore:block/parachest_darkblue"
+    },
+    "color=5,facing=west": {
+      "model": "galacticraftcore:block/parachest_darkblue",
+      "y": 90
+    },
+    "color=6,facing=east": {
+      "model": "galacticraftcore:block/parachest_darkgray",
+      "y": 270
+    },
+    "color=6,facing=north": {
+      "model": "galacticraftcore:block/parachest_darkgray",
+      "y": 180
+    },
+    "color=6,facing=south": {
+      "model": "galacticraftcore:block/parachest_darkgray"
+    },
+    "color=6,facing=west": {
+      "model": "galacticraftcore:block/parachest_darkgray",
+      "y": 90
+    },
+    "color=7,facing=east": {
+      "model": "galacticraftcore:block/parachest_darkgreen",
+      "y": 270
+    },
+    "color=7,facing=north": {
+      "model": "galacticraftcore:block/parachest_darkgreen",
+      "y": 180
+    },
+    "color=7,facing=south": {
+      "model": "galacticraftcore:block/parachest_darkgreen"
+    },
+    "color=7,facing=west": {
+      "model": "galacticraftcore:block/parachest_darkgreen",
+      "y": 90
+    },
+    "color=8,facing=east": {
+      "model": "galacticraftcore:block/parachest_gray",
+      "y": 270
+    },
+    "color=8,facing=north": {
+      "model": "galacticraftcore:block/parachest_gray",
+      "y": 180
+    },
+    "color=8,facing=south": {
+      "model": "galacticraftcore:block/parachest_gray"
+    },
+    "color=8,facing=west": {
+      "model": "galacticraftcore:block/parachest_gray",
+      "y": 90
+    },
+    "color=9,facing=east": {
+      "model": "galacticraftcore:block/parachest_magenta",
+      "y": 270
+    },
+    "color=9,facing=north": {
+      "model": "galacticraftcore:block/parachest_magenta",
+      "y": 180
+    },
+    "color=9,facing=south": {
+      "model": "galacticraftcore:block/parachest_magenta"
+    },
+    "color=9,facing=west": {
+      "model": "galacticraftcore:block/parachest_magenta",
+      "y": 90
+    }
+  }
+}

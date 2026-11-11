@@ -6,6 +6,7 @@ import io.github.reiko45.galacticraft.registry.GCAttachments;
 import io.github.reiko45.galacticraft.registry.GCItems;
 import io.github.reiko45.galacticraft.registry.GCModTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.NonNullList;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +43,22 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     private boolean lastOxygenSetupValid = true;
     private int damageCounter;
     private int incrementalDamage;
+    // --- Space travel (1.12.2 GCPlayerStats rocketStacks, fuelLevel, launchpadStack, coordsTeleportedFrom, ...) ---
+    /** The rocket's cargo while travelling: storage slots, then the launch pads, then the rocket itself. */
+    public NonNullList<ItemStack> rocketCargo = NonNullList.create();
+    public int rocketFuel;
+    public int rocketStorage;
+    public int launchpadCount;
+    public double launchedFromX;
+    public double launchedFromZ;
+    /** Choosing a destination: held in place at {@link #spacePos} until a world is picked. */
+    public boolean inSpace;
+    public net.minecraft.world.phys.Vec3 spacePos = net.minecraft.world.phys.Vec3.ZERO;
+    public int launchAttempts;
+    public boolean usingParachute;
+    public int chestSpawnCooldown;
+    public net.minecraft.world.phys.Vec3 chestSpawnPos;
+
     /** Last HUD state sent to the client (not saved). */
     io.github.reiko45.galacticraft.network.GCNetwork.OxygenState lastSentState;
     /** Set when the gear changes, so the server sends the new look to everyone watching this player. */
@@ -157,6 +174,26 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         tag.putInt("AirRemaining", this.airRemaining);
         tag.putInt("AirRemaining2", this.airRemaining2);
         tag.putInt("DamageCounter", this.damageCounter);
+        final CompoundTag travel = new CompoundTag();
+        travel.putInt("CargoSize", this.rocketCargo.size());
+        net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
+        travel.putInt("Fuel", this.rocketFuel);
+        travel.putInt("Storage", this.rocketStorage);
+        travel.putInt("Launchpads", this.launchpadCount);
+        travel.putDouble("FromX", this.launchedFromX);
+        travel.putDouble("FromZ", this.launchedFromZ);
+        travel.putBoolean("InSpace", this.inSpace);
+        travel.putDouble("SpaceX", this.spacePos.x);
+        travel.putDouble("SpaceY", this.spacePos.y);
+        travel.putDouble("SpaceZ", this.spacePos.z);
+        travel.putBoolean("Parachute", this.usingParachute);
+        travel.putInt("ChestCooldown", this.chestSpawnCooldown);
+        if (this.chestSpawnPos != null) {
+            travel.putDouble("ChestX", this.chestSpawnPos.x);
+            travel.putDouble("ChestY", this.chestSpawnPos.y);
+            travel.putDouble("ChestZ", this.chestSpawnPos.z);
+        }
+        tag.put("Travel", travel);
         return tag;
     }
 
@@ -168,6 +205,20 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.airRemaining = tag.getInt("AirRemaining");
         this.airRemaining2 = tag.getInt("AirRemaining2");
         this.damageCounter = tag.getInt("DamageCounter");
+        final CompoundTag travel = tag.getCompound("Travel");
+        this.rocketCargo = NonNullList.withSize(travel.getInt("CargoSize"), ItemStack.EMPTY);
+        net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);
+        this.rocketFuel = travel.getInt("Fuel");
+        this.rocketStorage = travel.getInt("Storage");
+        this.launchpadCount = travel.getInt("Launchpads");
+        this.launchedFromX = travel.getDouble("FromX");
+        this.launchedFromZ = travel.getDouble("FromZ");
+        this.inSpace = travel.getBoolean("InSpace");
+        this.spacePos = new net.minecraft.world.phys.Vec3(travel.getDouble("SpaceX"), travel.getDouble("SpaceY"), travel.getDouble("SpaceZ"));
+        this.usingParachute = travel.getBoolean("Parachute");
+        this.chestSpawnCooldown = travel.getInt("ChestCooldown");
+        this.chestSpawnPos = travel.contains("ChestX")
+                ? new net.minecraft.world.phys.Vec3(travel.getDouble("ChestX"), travel.getDouble("ChestY"), travel.getDouble("ChestZ")) : null;
         this.gearChanged = true;
     }
 }

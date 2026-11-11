@@ -7,6 +7,9 @@ import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneTorchBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneWallTorchBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.block.LandingPadBlock;
+import io.github.reiko45.galacticraft.block.NasaWorkbenchBlock;
+import io.github.reiko45.galacticraft.block.ParachestBlock;
 import io.github.reiko45.galacticraft.block.SolarPanelBlock;
 import io.github.reiko45.galacticraft.block.SolarPartBlock;
 import io.github.reiko45.galacticraft.block.entity.SolarPanelBlockEntity;
@@ -32,6 +35,7 @@ import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.FuelLoaderBlockEntity;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -175,6 +179,22 @@ public final class GCBlocks {
             () -> new SpaceWallTorchBlock(spaceTorch().lootFrom(UNLIT_TORCH)));
     public static final DeferredItem<StandingAndWallBlockItem> UNLIT_TORCH_ITEM = GCItems.ITEMS.register("unlit_torch",
             () -> new StandingAndWallBlockItem(UNLIT_TORCH.get(), UNLIT_WALL_TORCH.get(), new Item.Properties(), Direction.DOWN));
+
+    // --- Rockets (1.12.2 BlockLandingPad(Full), BlockFuelLoader, BlockNasaWorkbench, BlockParaChest) ---
+    /** 1.12.2: hardness 1, resistance 10, metal sound. */
+    public static final DeferredBlock<LandingPadBlock> LANDING_PAD = withItem("landing_pad", () -> new LandingPadBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<MachineBlock> FUEL_LOADER = withItem("fuel_loader",
+            () -> new MachineBlock(machine(), FuelLoaderBlockEntity::new));
+    /** 1.12.2: Material.IRON, hardness 2.5, metal sound. */
+    public static final DeferredBlock<NasaWorkbenchBlock> NASA_WORKBENCH = withItem("nasa_workbench", () -> new NasaWorkbenchBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<SolarPartBlock> NASA_WORKBENCH_PART = BLOCKS.register("nasa_workbench_part", () -> new SolarPartBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 3_600_000.0F).sound(SoundType.METAL)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
+    /** 1.12.2: Material.WOOD, hardness 3, wood sound. */
+    public static final DeferredBlock<ParachestBlock> PARACHEST = withItem("parachest", () -> new ParachestBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
 
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(

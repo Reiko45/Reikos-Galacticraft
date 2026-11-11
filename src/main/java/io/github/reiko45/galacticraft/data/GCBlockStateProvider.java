@@ -19,7 +19,12 @@ import java.util.Map;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
+import io.github.reiko45.galacticraft.block.LandingPadBlock;
+import io.github.reiko45.galacticraft.block.ParachestBlock;
+import io.github.reiko45.galacticraft.item.gear.ParachuteItem;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CakeBlock;
@@ -109,11 +114,42 @@ public class GCBlockStateProvider extends BlockStateProvider {
         wire(GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get(), "heavy_aluminum_wire_switch", "heavy_aluminum_wire_switch");
 
         simpleBlockWithItem(GCBlocks.FALLEN_METEOR.get(), models().getExistingFile(modLoc("block/fallen_meteor")));
+        rockets();
 
         final ResourceLocation torchTexture = tex("glowstone_torch");
         simpleBlock(GCBlocks.GLOWSTONE_TORCH.get(), models().torch("glowstone_torch", torchTexture).renderType("cutout"));
         horizontalBlock(GCBlocks.GLOWSTONE_WALL_TORCH.get(), models().torchWall("glowstone_wall_torch", torchTexture).renderType("cutout"), 90);
         itemModels().withExistingParent("glowstone_torch", mcLoc("item/generated")).texture("layer0", torchTexture);
+    }
+
+    /** Launch pad, Fuel Loader, NASA Workbench (1.12.2 OBJ model) and Para-chest (one model per parachute colour). */
+    private void rockets() {
+        final ModelFile pad = models().getExistingFile(modLoc("block/landing_pad"));
+        final ModelFile fullPad = models().getExistingFile(modLoc("block/landing_pad_full"));
+        getVariantBuilder(GCBlocks.LANDING_PAD.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(LandingPadBlock.PAD) == LandingPadBlock.Pad.SINGLE ? pad : fullPad).build());
+        itemModels().withExistingParent("landing_pad", modLoc("block/landing_pad"));
+        // 1.12.2 fuel_loader_model: loader panels front and back, power in on the left (east), fuel in on the right (west)
+        machine(GCBlocks.FUEL_LOADER.get(), "", "machine_fuelloader", "machine_input", "machine_fuelloader", "machine_fuel_input");
+        final ModelFile workbench = models().getBuilder("nasa_workbench").customLoader(ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/block/nasa_workbench.obj")).flipV(true).end()
+                .texture("particle", tex("assembly"));
+        simpleBlock(GCBlocks.NASA_WORKBENCH.get(), workbench);
+        itemModels().withExistingParent("nasa_workbench", modLoc("block/nasa_workbench")).transforms()
+                .transform(ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -3.5F, 0).scale(0.18F).end()
+                .transform(ItemDisplayContext.GROUND).translation(0, 1, 0).scale(0.12F).end()
+                .transform(ItemDisplayContext.FIXED).translation(0, -3.5F, 0).scale(0.18F).end()
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 1.5F, 0).scale(0.15F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(0, -2, 0).scale(0.15F).end()
+                .end();
+        simpleBlock(GCBlocks.NASA_WORKBENCH_PART.get(), models().getBuilder("nasa_workbench_part").texture("particle", tex("assembly")));
+        getVariantBuilder(GCBlocks.PARACHEST.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(models().withExistingParent("parachest_" + ParachuteItem.LEGACY_COLORS[state.getValue(ParachestBlock.COLOR)],
+                                modLoc("block/parachest"))
+                        .texture("chute", modLoc("model/parachute/" + ParachuteItem.LEGACY_COLORS[state.getValue(ParachestBlock.COLOR)])))
+                .rotationY(((int) state.getValue(ParachestBlock.FACING).toYRot()) % 360)
+                .build());
+        itemModels().withExistingParent("parachest", modLoc("block/parachest"));
     }
 
     private ResourceLocation tex(String name) {

@@ -26,6 +26,14 @@ public final class GCDataComponents {
     public static final Supplier<DataComponentType<Integer>> OXYGEN = COMPONENTS.registerComponentType("oxygen",
             builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
 
+    /** Chests built into a rocket, 0-3 (1.12.2 EnumRocketType as item damage). */
+    public static final Supplier<DataComponentType<Integer>> ROCKET_STORAGE = COMPONENTS.registerComponentType("rocket_storage",
+            builder -> builder.persistent(Codec.intRange(0, 3)).networkSynchronized(ByteBufCodecs.VAR_INT));
+
+    /** Fuel left in a rocket item, in mB (1.12.2 "RocketFuel" tag). */
+    public static final Supplier<DataComponentType<Integer>> ROCKET_FUEL = COMPONENTS.registerComponentType("rocket_fuel",
+            builder -> builder.persistent(Codec.INT).networkSynchronized(ByteBufCodecs.VAR_INT));
+
     private GCDataComponents() {
     }
 }

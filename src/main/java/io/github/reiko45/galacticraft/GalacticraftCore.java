@@ -5,6 +5,7 @@ import io.github.reiko45.galacticraft.registry.GCAttachments;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
 import io.github.reiko45.galacticraft.registry.GCCapabilities;
 import io.github.reiko45.galacticraft.registry.GCDataComponents;
+import io.github.reiko45.galacticraft.registry.GCEntities;
 import io.github.reiko45.galacticraft.registry.GCFeatures;
 import io.github.reiko45.galacticraft.registry.GCFluids;
 import io.github.reiko45.galacticraft.registry.GCMenus;
@@ -48,6 +49,7 @@ public final class GalacticraftCore {
         GCBlockEntities.BLOCK_ENTITIES.register(modBus);
         GCAttachments.ATTACHMENT_TYPES.register(modBus);
         GCMenus.MENUS.register(modBus);
+        GCEntities.ENTITY_TYPES.register(modBus);
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);

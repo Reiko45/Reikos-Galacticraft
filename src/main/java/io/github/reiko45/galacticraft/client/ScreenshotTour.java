@@ -3,6 +3,26 @@ package io.github.reiko45.galacticraft.client;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.FluidPipeBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.block.ParachestBlock;
+import io.github.reiko45.galacticraft.block.entity.FuelLoaderBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.ParachestBlockEntity;
+import io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen;
+import io.github.reiko45.galacticraft.entity.LanderEntity;
+import io.github.reiko45.galacticraft.entity.ParachestEntity;
+import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.item.Tier1RocketItem;
+import io.github.reiko45.galacticraft.menu.CargoMenu;
+import io.github.reiko45.galacticraft.menu.NasaWorkbenchMenu;
+import io.github.reiko45.galacticraft.network.GCNetwork;
+import io.github.reiko45.galacticraft.travel.SpaceTravel;
+import net.minecraft.core.NonNullList;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.inventory.ContainerLevelAccess;
+import net.minecraft.world.item.Item;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.network.PacketDistributor;
 import io.github.reiko45.galacticraft.block.entity.FluidTankBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
@@ -74,6 +94,8 @@ public final class ScreenshotTour {
     private final List<BlockPos> machines = new ArrayList<>();
     private BlockPos oilScene = BlockPos.ZERO;
     private BlockPos oxygenScene = BlockPos.ZERO;
+    private BlockPos rocketScene = BlockPos.ZERO;
+    private java.util.UUID rocketId;
     /** Steps after the machine GUIs, one every 30 ticks. */
     private final List<BiConsumer<Minecraft, MinecraftServer>> extras = new ArrayList<>();
     private boolean worldRequested;
@@ -216,6 +238,7 @@ public final class ScreenshotTour {
         this.machines.add(furnace);
         buildOilScene(level, base.offset(0, 0, -9));
         buildOxygenScene(level, base.offset(0, 0, -20));
+        buildRocketScene(level, base.offset(0, 0, -34));
 
         // The solar / oil scene from a few viewpoints: teleport, then shoot on the next step.
         for (int i = 0; i < VIEWS.length; i++) {
@@ -272,6 +295,7 @@ public final class ScreenshotTour {
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_oxygen_warning"));
         this.extras.add((minecraft, srv) -> srv.execute(() -> srv.getPlayerList().getPlayers().get(0).setGameMode(GameType.CREATIVE)));
+        rocketSteps();
         // JEI recipe categories, when JEI is installed.
         if (ModList.get().isLoaded("jei")) {
             final String[] categories = {"compressing", "circuit_fabricating", "refining"};
@@ -288,6 +312,181 @@ public final class ScreenshotTour {
                 });
             }
         }
+    }
+
+    /**
+     * A launch pad with a Tier 1 Rocket and a Fuel Loader, a NASA Workbench, a Para-chest and a landed lander. The Fuel
+     * Loader GUI is shot with the machines.
+     */
+    private void buildRocketScene(ServerLevel level, BlockPos origin) {
+        this.rocketScene = origin;
+        for (int x = -9; x <= 10; x++) {
+            for (int z = -4; z <= 4; z++) {
+                level.setBlockAndUpdate(origin.offset(x, -1, z), Blocks.SMOOTH_STONE.defaultBlockState());
+            }
+        }
+        for (int dx = -1; dx <= 1; dx++) {
+            for (int dz = -1; dz <= 1; dz++) {
+                level.setBlockAndUpdate(origin.offset(dx, 0, dz), GCBlocks.LANDING_PAD.get().defaultBlockState());
+            }
+        }
+        final BlockPos loader = origin.offset(2, 0, 1);
+        level.setBlockAndUpdate(loader, GCBlocks.FUEL_LOADER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        if (level.getBlockEntity(loader) instanceof FuelLoaderBlockEntity fuelLoader) {
+            fuelLoader.energy().setStored(16_000.0F);
+            fuelLoader.fuelTank().fill(new FluidStack(GCFluids.FUEL.get(), 8_000), IFluidHandler.FluidAction.EXECUTE);
+            fuelLoader.inventory().setStackInSlot(0, GCItems.BATTERY.get().charged());
+        }
+        this.machines.add(loader);
+        final Tier1RocketEntity rocket = Tier1RocketEntity.create(level, origin.getX() + 0.5D, origin.getY() + 0.4D, origin.getZ() + 0.5D, 3, 0);
+        rocket.setYRot(180.0F);
+        level.addFreshEntity(rocket);
+        this.rocketId = rocket.getUUID();
+        final BlockPos bench = origin.offset(-5, 0, 0);
+        level.setBlockAndUpdate(bench, GCBlocks.NASA_WORKBENCH.get().defaultBlockState());
+        GCBlocks.NASA_WORKBENCH.get().setPlacedBy(level, bench, level.getBlockState(bench), null, new ItemStack(GCBlocks.NASA_WORKBENCH.get()));
+        final BlockPos chest = origin.offset(4, 0, 2);
+        level.setBlockAndUpdate(chest, GCBlocks.PARACHEST.get().defaultBlockState().setValue(ParachestBlock.COLOR, 13));
+        if (level.getBlockEntity(chest) instanceof ParachestBlockEntity parachest) {
+            final NonNullList<ItemStack> cargo = NonNullList.withSize(20, ItemStack.EMPTY);
+            cargo.set(0, new ItemStack(Items.DIAMOND, 5));
+            cargo.set(4, new ItemStack(GCItems.CANNED_BEEF.get(), 12));
+            cargo.set(18, new ItemStack(GCBlocks.LANDING_PAD.get(), 9));
+            cargo.set(19, Tier1RocketItem.create(1, 0));
+            parachest.fill(cargo, 2_500);
+        }
+        final LanderEntity lander = LanderEntity.create(level, origin.getX() + 8.0D, origin.getY(), origin.getZ() - 1.0D,
+                NonNullList.withSize(20, ItemStack.EMPTY), 1_000);
+        lander.setOnGround(true);
+        lander.setYRot(200.0F);
+        level.addFreshEntity(lander);
+    }
+
+    /** The scene's rocket (looked up again: its chunk may have been unloaded while the tour was on the Moon). */
+    private Tier1RocketEntity rocket(MinecraftServer server) {
+        return server.overworld().getEntity(this.rocketId) instanceof Tier1RocketEntity rocket ? rocket : null;
+    }
+
+    /** The rocket scene, its GUIs, and a flight: countdown, lift-off, destination screen, lander descent to the Moon. */
+    private void rocketSteps() {
+        final double[][] views = {{0.5, 3.0, 10.5, 180.0, 15.0}, {-9.0, 4.0, 8.0, 225.0, 20.0}, {4.5, 1.2, 4.6, 180.0, 40.0}};
+        for (int i = 0; i < views.length; i++) {
+            final double[] v = views[i];
+            final String name = "galacticraft_rockets_" + i;
+            this.extras.add((minecraft, srv) -> srv.execute(() -> {
+                final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                p.teleportTo(srv.overworld(), this.rocketScene.getX() + v[0], this.rocketScene.getY() + v[1], this.rocketScene.getZ() + v[2],
+                        (float) v[3], (float) v[4]);
+                if (v == views[0]) {
+                    // Item icons in the hotbar
+                    p.getInventory().setItem(5, Tier1RocketItem.create(1, 0));
+                    p.getInventory().setItem(6, new ItemStack(GCBlocks.NASA_WORKBENCH.get()));
+                    p.getInventory().setItem(7, new ItemStack(GCBlocks.LANDING_PAD.get(), 9));
+                    p.getInventory().setItem(8, new ItemStack(GCBlocks.PARACHEST.get()));
+                    // A para-chest coming down next to the landed one
+                    p.serverLevel().addFreshEntity(ParachestEntity.create(p.serverLevel(), this.rocketScene.getX() + 6.5D,
+                            this.rocketScene.getY() + 11.0D, this.rocketScene.getZ() + 0.5D, NonNullList.withSize(2, ItemStack.EMPTY), 0, 5));
+                }
+            }));
+            this.extras.add((minecraft, srv) -> shoot(minecraft, name));
+        }
+        // NASA Workbench with every part in place
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+            p.teleportTo(p.serverLevel(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+            p.openMenu(new SimpleMenuProvider((id, inventory, player) -> new NasaWorkbenchMenu(id, inventory,
+                    ContainerLevelAccess.create(p.serverLevel(), bench)), Component.translatable("schematic.galacticraftcore.rocket_t1")));
+            final Item[] parts = {null, GCItems.NOSE_CONE.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(),
+                    GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(),
+                    GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.ROCKET_FINS.get(), GCItems.ROCKET_FINS.get(),
+                    GCItems.TIER_1_ROCKET_ENGINE.get(), GCItems.ROCKET_FINS.get(), GCItems.ROCKET_FINS.get(), Items.CHEST, Items.CHEST};
+            for (int i = 1; i < parts.length; i++) {
+                p.containerMenu.getSlot(i).set(new ItemStack(parts[i]));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_nasa_workbench"));
+        // Para-chest contents
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            p.closeContainer();
+            final BlockPos chest = this.rocketScene.offset(4, 0, 2);
+            p.teleportTo(p.serverLevel(), chest.getX() + 0.5, chest.getY(), chest.getZ() + 3.5, 180.0F, 15.0F);
+            if (p.serverLevel().getBlockEntity(chest) instanceof ParachestBlockEntity parachest) {
+                parachest.open(p);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_parachest"));
+        // Into the rocket: its cargo screen (the Fuel Loader has been filling it), then ignition
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            p.closeContainer();
+            p.getAbilities().flying = false;
+            p.onUpdateAbilities();
+            GCPlayerData.get(p).setGear(GearSlot.PARACHUTE, new ItemStack(GCItems.PARACHUTES.get(13).get()));
+            final Tier1RocketEntity rocket = rocket(srv);
+            if (rocket != null) {
+                // The Fuel Loader only works while its chunk is loaded; make sure there is enough for the flight
+                rocket.setFuel(Math.max(rocket.fuel(), 600));
+                p.startRiding(rocket, true);
+                CargoMenu.openRocket(p, rocket);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_rocket_cargo"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            srv.execute(() -> {
+                final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                p.closeContainer();
+                SpaceTravel.ignite(p);
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "rocket_countdown"));
+        for (int i = 0; i < 13; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the rest of the 400 tick countdown
+        }
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "rocket_launch"));
+        // Skip the long climb: put the rocket just under the edge of space
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final Tier1RocketEntity rocket = rocket(srv);
+            if (rocket != null) {
+                rocket.setPos(rocket.getX(), Tier1RocketEntity.EXIT_HEIGHT - 2.0D, rocket.getZ());
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_selection"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(GCDimensions.MOON);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_selection_selected"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            PacketDistributor.sendToServer(new GCNetwork.ChooseDestination(GCDimensions.MOON.location()));
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "lander_descent"));
+        // Back to Earth instead: out of the lander, into space again, choose the Overworld; the parachute opens
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            if (p.getVehicle() != null) {
+                p.getVehicle().discard();
+            }
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.inSpace = true;
+            data.spacePos = p.position();
+            data.launchedFromX = this.rocketScene.getX() + 0.5D;
+            data.launchedFromZ = this.rocketScene.getZ() + 0.5D;
+            SpaceTravel.choose(p, net.minecraft.world.level.Level.OVERWORLD);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "parachute_descent"));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.FIRST_PERSON));
     }
 
     /**

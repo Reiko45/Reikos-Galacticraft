@@ -8,6 +8,8 @@ import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.FluidPipeBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.FuelLoaderBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.ParachestBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.FluidTankBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.MachineBlockEntity;
@@ -64,7 +66,7 @@ public final class GCBlockEntities {
             SolarPanelBlockEntity::advanced, GCBlocks.ADVANCED_SOLAR_PANEL);
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<SolarPartBlockEntity>> SOLAR_PART = BLOCK_ENTITIES.register("solar_panel_part",
-            () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get()).build(null));
+            () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get(), GCBlocks.NASA_WORKBENCH_PART.get()).build(null));
 
     public static final Supplier<BlockEntityType<RefineryBlockEntity>> REFINERY = machine("refinery",
             RefineryBlockEntity::new, GCBlocks.REFINERY);
@@ -90,6 +92,12 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<OxygenDetectorBlockEntity>> OXYGEN_DETECTOR = BLOCK_ENTITIES.register("oxygen_detector",
             () -> BlockEntityType.Builder.of(OxygenDetectorBlockEntity::new, GCBlocks.OXYGEN_DETECTOR.get()).build(null));
+
+    public static final Supplier<BlockEntityType<FuelLoaderBlockEntity>> FUEL_LOADER = machine("fuel_loader",
+            FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER);
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<ParachestBlockEntity>> PARACHEST = BLOCK_ENTITIES.register("parachest",
+            () -> BlockEntityType.Builder.of(ParachestBlockEntity::new, GCBlocks.PARACHEST.get()).build(null));
 
     /** Every machine block entity type (for capability registration). */
     public static List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>> machineTypes() {

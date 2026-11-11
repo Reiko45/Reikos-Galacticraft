@@ -1,0 +1,33 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "U": {
+      "item": "minecraft:lever"
+    },
+    "V": {
+      "item": "minecraft:redstone_torch"
+    },
+    "W": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "tag": "c:plates/steel"
+    },
+    "Z": {
+      "item": "minecraft:crafting_table"
+    }
+  },
+  "pattern": [
+    "XZX",
+    "UWU",
+    "YVY"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:nasa_workbench"
+  }
+}

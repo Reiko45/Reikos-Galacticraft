@@ -4,9 +4,10 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 3 of 8 (alpha).** The Moon exists and has no air: you need oxygen gear, sealed rooms or oxygen
-bubbles to survive there. Galacticraft's power system, machines, solar panels and oil processing work. Rockets are not
-ported yet. See [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
+**Status: Phase 4 of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Fly back and you come down by parachute, with your
+cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
+[PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
 
 ## What works
 
@@ -33,8 +34,16 @@ ported yet. See [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 sys
   burn where there is oxygen. Oxygen Collector (from leaves and crops, or from the air on Earth), Oxygen Compressor and
   Decompressor (fill and empty tanks), Oxygen Storage Module, Oxygen Bubble Distributor, Oxygen Sealer (fills a closed
   room with breathable air) and Oxygen Detector. Oxygen travels through Fluid Pipes. Parachutes can be worn already.
+* **Rockets**: the NASA Workbench (a 3x3x4 multiblock) builds a Tier 1 Rocket from a nose cone, eight heavy plates,
+  four fins and an engine; each wooden chest added gives it 18 cargo slots. Nine Rocket Launch Pads in a square make a
+  launch pad; a Fuel Loader next to it pumps fuel into the rocket. Sit in the rocket, press Jump to start the 20-second
+  countdown (the first press warns you if you have no parachute) and F to open its cargo and fuel. The rocket climbs
+  to the edge of space and the destination screen opens: pick the Moon or the Overworld.
+* **Travel**: on the Moon you arrive at y 900 in a Space Lander holding your cargo, launch pads and rocket; steer it with
+  the movement keys, Jump to brake and Sneak to dive, and land gently or it explodes. Back on Earth you arrive at y 250
+  and fall slowly under your parachute, and a Para-chest with the cargo, the rocket and the leftover fuel lands nearby.
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
-* Recipes: 114 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
+* Recipes: 117 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 
@@ -60,12 +69,25 @@ ported yet. See [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 sys
 |---|---|
 | ![Galacticraft inventory tab](docs/screenshots/galacticraft_inventory.png) | ![Oxygen machine GUIs](docs/screenshots/oxygen_guis.png) |
 
-Some parts (rocket components) have recipes but no use yet, and fuel has no use until rockets arrive.
-Their machines and vehicles come in later phases.
+![A Tier 1 Rocket on its launch pad with a Fuel Loader, the NASA Workbench, a Para-chest and a Space Lander](docs/screenshots/rocket_launch_site.png)
+
+| NASA Workbench and Fuel Loader | Rocket cargo and Para-chest |
+|---|---|
+| ![NASA Workbench and Fuel Loader GUIs](docs/screenshots/rocket_guis.png) | ![Rocket cargo and Para-chest GUIs](docs/screenshots/cargo_guis.png) |
+
+| Lift-off | Choosing a destination |
+|---|---|
+| ![A Tier 1 Rocket lifting off](docs/screenshots/rocket_launch.png) | ![The destination screen with the Moon selected](docs/screenshots/celestial_selection.png) |
+
+| Landing on the Moon | Back on Earth |
+|---|---|
+| ![Descending to the Moon in a Space Lander](docs/screenshots/lander_descent.png) | ![Coming down under a parachute](docs/screenshots/parachute_descent.png) |
+
+Buggy parts have recipes but no use yet; the Moon Buggy comes in a later phase.
 
 ### Visiting the Moon
 
-There are no rockets yet, so use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
+Fly there in a Tier 1 Rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
 (right-click them, or use the Galacticraft tab of the inventory):
 
 ```

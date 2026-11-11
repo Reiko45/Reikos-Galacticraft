@@ -48,6 +48,10 @@
     "galacticraftcore:oxygen_storage_module",
     "galacticraftcore:oxygen_distributor",
     "galacticraftcore:oxygen_sealer",
-    "galacticraftcore:oxygen_detector"
+    "galacticraftcore:oxygen_detector",
+    "galacticraftcore:landing_pad",
+    "galacticraftcore:fuel_loader",
+    "galacticraftcore:nasa_workbench",
+    "galacticraftcore:nasa_workbench_part"
   ]
 }

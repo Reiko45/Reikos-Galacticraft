@@ -20,6 +20,7 @@ Usage:
 """
 import argparse
 import json
+import re
 import os
 import shutil
 import sys
@@ -95,7 +96,35 @@ def port_models(mapping, legacy_assets, out_assets):
         for slot, ref in source.get("textures", {}).items():
             model["textures"][slot] = ref if ref.startswith("#") else reverse.get(ref) or sys.exit(f"{new}: unmapped texture {ref}")
         write_json(os.path.join(out_assets, "models", new + ".json"), model)
-    print(f"models: {len(mapping['models'])} converted, {len(parts)} extracted")
+    objs = {k: v for k, v in mapping.get("obj_models", {}).items() if not k.startswith("_")}
+    for new, old in objs.items():
+        # Copy the .obj under its new name and rewrite its .mtl: mtllib points at the renamed .mtl, and map_Kd
+        # texture names go through the textures mapping (1.21 path, e.g. blocks/assembly -> block/assembly).
+        src = os.path.join(legacy_assets, "models", old)
+        dst = os.path.join(out_assets, "models", new)
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        old_mtl, new_mtl = os.path.basename(old) + ".mtl", os.path.basename(new) + ".mtl"
+        with open(src + ".obj", encoding="utf-8") as f:
+            obj = f.read().replace("mtllib " + old_mtl, "mtllib " + new_mtl)
+        with open(dst + ".obj", "w", encoding="utf-8", newline="\n") as f:
+            f.write(obj)
+        lines = []
+        with open(src + ".mtl", encoding="utf-8") as f:
+            for line in f.read().splitlines():
+                if line.startswith("map_Kd "):
+                    ref = line.split(" ", 1)[1].strip()
+                    if ref not in reverse:
+                        raise SystemExit(f"obj {old}: texture {ref} is not in the textures mapping")
+                    line = "map_Kd " + reverse[ref]
+                lines.append(line)
+        with open(dst + ".mtl", "w", encoding="utf-8", newline="\n") as f:
+            f.write("\n".join(lines) + "\n")
+    print(f"models: {len(mapping['models'])} converted, {len(parts)} extracted, {len(objs)} OBJ copied")
+
+
+def java_format(value):
+    """1.21 translations only take %s / %n$s; 1.12 strings used printf-style %d and %f too."""
+    return re.sub(r"%(\d+\$)?(\.\d+)?[dfi]", lambda m: "%" + (m.group(1) or "") + "s", value)
 
 
 def port_lang(mapping, legacy_assets, out_assets):
@@ -110,7 +139,7 @@ def port_lang(mapping, legacy_assets, out_assets):
             continue
         locale = name[:-5].lower()
         source = load_lang(os.path.join(lang_dir, name))
-        out = {new: source[old] for new, old in sorted(keys.items()) if old in source}
+        out = {new: java_format(source[old]) for new, old in sorted(keys.items()) if old in source}
         if locale == "en_us":
             out.update(mapping.get("lang_extra_en_us", {}))
         if out:

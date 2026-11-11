@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraftcore:block/parachest",
+  "textures": {
+    "chute": "galacticraftcore:model/parachute/darkgreen"
+  }
+}

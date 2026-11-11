@@ -4,6 +4,7 @@ import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.DescribedItem;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
+import io.github.reiko45.galacticraft.item.Tier1RocketItem;
 import io.github.reiko45.galacticraft.item.gear.GearItem;
 import io.github.reiko45.galacticraft.item.gear.GearSlot;
 import io.github.reiko45.galacticraft.item.gear.InfiniteOxygenTankItem;
@@ -105,6 +106,10 @@ public final class GCItems {
     public static final DeferredItem<InfiniteOxygenTankItem> INFINITE_OXYGEN = ITEMS.register("infinite_oxygen",
             () -> new InfiniteOxygenTankItem(new Item.Properties()));
     public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
+
+    // --- Rockets ---
+    public static final DeferredItem<Tier1RocketItem> TIER_1_ROCKET = ITEMS.register("tier_1_rocket",
+            () -> new Tier1RocketItem(new Item.Properties()));
 
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.

@@ -2,7 +2,9 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.ElectricItem;
+import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
+import io.github.reiko45.galacticraft.item.Tier1RocketItem;
 import io.github.reiko45.galacticraft.item.gear.OxygenTankItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
@@ -41,6 +43,13 @@ public final class GCCreativeTabs {
                         }
                         if (item instanceof OxygenTankItem tank) {
                             output.accept(tank.full()); // 1.12.2 listed every tank empty and full
+                        }
+                        if (item == GCItems.TIER_1_ROCKET.get()) {
+                            // 1.12.2 rocket types: 18, 36, 54 slots, then the creative-only pre-fuelled rocket
+                            for (int storage = 1; storage <= 3; storage++) {
+                                output.accept(Tier1RocketItem.create(storage, 0));
+                            }
+                            output.accept(Tier1RocketItem.create(0, Tier1RocketEntity.FUEL_CAPACITY));
                         }
                         if (item == GCItems.OIL_CANISTER.get()) {
                             output.accept(LiquidCanisterItem.full(false));

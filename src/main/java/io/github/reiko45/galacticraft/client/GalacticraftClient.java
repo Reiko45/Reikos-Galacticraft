@@ -1,12 +1,23 @@
 package io.github.reiko45.galacticraft.client;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.client.render.RocketItemRenderer;
+import io.github.reiko45.galacticraft.client.render.entity.LanderRenderer;
+import io.github.reiko45.galacticraft.client.render.entity.ParachestRenderer;
+import io.github.reiko45.galacticraft.client.render.entity.Tier1RocketRenderer;
+import io.github.reiko45.galacticraft.client.screen.CargoScreen;
 import io.github.reiko45.galacticraft.client.screen.CircuitFabricatorScreen;
+import io.github.reiko45.galacticraft.client.screen.FuelLoaderScreen;
+import io.github.reiko45.galacticraft.client.screen.NasaWorkbenchScreen;
+import io.github.reiko45.galacticraft.registry.GCEntities;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.neoforged.neoforge.client.extensions.common.IClientItemExtensions;
 import io.github.reiko45.galacticraft.client.screen.CoalGeneratorScreen;
 import io.github.reiko45.galacticraft.client.screen.CompressorScreen;
 import io.github.reiko45.galacticraft.client.screen.ElectricCompressorScreen;
 import io.github.reiko45.galacticraft.client.screen.ElectricFurnaceScreen;
 import io.github.reiko45.galacticraft.client.hud.OxygenHud;
+import io.github.reiko45.galacticraft.client.hud.VehicleHud;
 import io.github.reiko45.galacticraft.client.render.BubbleRenderer;
 import io.github.reiko45.galacticraft.client.render.GearLayer;
 import io.github.reiko45.galacticraft.client.screen.EnergyStorageScreen;
@@ -63,6 +74,8 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::clientSetup);
         modBus.addListener(GalacticraftClient::registerGuiLayers);
         modBus.addListener(GalacticraftClient::addPlayerLayers);
+        modBus.addListener(VehicleControls::registerKeys);
+        NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
         ScreenshotTour.registerIfEnabled();
@@ -72,6 +85,11 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(SolarPanelRenderer.LAYER, SolarPanelRenderer::createLayer);
         event.registerLayerDefinition(GearLayer.MASK, GearLayer::createMask);
         event.registerLayerDefinition(GearLayer.GEAR, GearLayer::createGear);
+        event.registerLayerDefinition(GearLayer.PARACHUTE, GearLayer::createParachute);
+        event.registerLayerDefinition(Tier1RocketRenderer.LAYER, Tier1RocketRenderer::createLayer);
+        event.registerLayerDefinition(LanderRenderer.LAYER, LanderRenderer::createLayer);
+        event.registerLayerDefinition(ParachestRenderer.CHEST, ParachestRenderer::createChest);
+        event.registerLayerDefinition(ParachestRenderer.CHUTE, ParachestRenderer::createChute);
     }
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
@@ -80,6 +98,9 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_PIPE.get(), FluidPipeRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.OXYGEN_DISTRIBUTOR.get(), BubbleRenderer::new);
+        event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
+        event.registerEntityRenderer(GCEntities.PARACHEST.get(), ParachestRenderer::new);
     }
 
     private static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
@@ -93,6 +114,7 @@ public final class GalacticraftClient {
     private static void registerGuiLayers(RegisterGuiLayersEvent event) {
         event.registerAbove(VanillaGuiLayers.HOTBAR, OxygenHud.TANKS_LAYER, OxygenHud::renderTanks);
         event.registerAbove(OxygenHud.TANKS_LAYER, OxygenHud.WARNING_LAYER, OxygenHud::renderWarning);
+        event.registerAbove(OxygenHud.WARNING_LAYER, VehicleHud.LAYER, VehicleHud::render);
     }
 
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
@@ -115,6 +137,17 @@ public final class GalacticraftClient {
     }
 
     private static void registerClientExtensions(RegisterClientExtensionsEvent event) {
+        event.registerItem(new IClientItemExtensions() {
+            private RocketItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new RocketItemRenderer();
+                }
+                return this.renderer;
+            }
+        }, GCItems.TIER_1_ROCKET.get());
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         final ResourceLocation oxygen = GalacticraftCore.id("block/fluids/oxygen_gas");
@@ -172,6 +205,9 @@ public final class GalacticraftClient {
         event.register(GCMenus.OXYGEN_SEALER.get(), OxygenMachineScreen::new);
         event.register(GCMenus.OXYGEN_STORAGE_MODULE.get(), OxygenMachineScreen::new);
         event.register(GCMenus.EXTENDED_INVENTORY.get(), ExtendedInventoryScreen::new);
+        event.register(GCMenus.FUEL_LOADER.get(), FuelLoaderScreen::new);
+        event.register(GCMenus.CARGO.get(), CargoScreen::new);
+        event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
     }
 
     private static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {

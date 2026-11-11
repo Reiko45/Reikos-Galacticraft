@@ -28,12 +28,12 @@ public class SolarPartBlock extends Block implements EntityBlock {
     public static final MapCodec<SolarPartBlock> CODEC = simpleCodec(SolarPartBlock::new);
     public static final EnumProperty<Part> PART = EnumProperty.create("part", Part.class);
 
-    /** 1.12.2 AABB_SOLAR_POLE (0.3-0.7) and AABB_SOLAR (y 0.2-0.8). */
+    /** 1.12.2 AABB_SOLAR_POLE (0.3-0.7) and AABB_SOLAR (y 0.2-0.8); NASA Workbench parts are full blocks. */
     private static final VoxelShape POLE = Block.box(4.8, 0, 4.8, 11.2, 16, 11.2);
     private static final VoxelShape PANEL = Block.box(0, 3.2, 0, 16, 12.8, 16);
 
     public enum Part implements StringRepresentable {
-        POLE, PANEL;
+        POLE, PANEL, WORKBENCH;
 
         @Override
         public String getSerializedName() {
@@ -63,7 +63,11 @@ public class SolarPartBlock extends Block implements EntityBlock {
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
-        return state.getValue(PART) == Part.POLE ? POLE : PANEL;
+        return switch (state.getValue(PART)) {
+            case POLE -> POLE;
+            case PANEL -> PANEL;
+            case WORKBENCH -> net.minecraft.world.phys.shapes.Shapes.block();
+        };
     }
 
     @Override
@@ -89,12 +93,24 @@ public class SolarPartBlock extends Block implements EntityBlock {
         return ItemStack.EMPTY;
     }
 
+    /** Using a part uses the main block (1.12.2 BlockMulti#onBlockActivated). */
+    @Override
+    protected net.minecraft.world.InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player,
+                                                                  net.minecraft.world.phys.BlockHitResult hit) {
+        if (level.getBlockEntity(pos) instanceof SolarPartBlockEntity part && part.mainPos() != null) {
+            final BlockState main = level.getBlockState(part.mainPos());
+            return main.useWithoutItem(level, player, hit.withPosition(part.mainPos()));
+        }
+        return net.minecraft.world.InteractionResult.PASS;
+    }
+
     /** Breaking any part breaks the panel (1.12.2 TileEntityMulti#onBlockRemoval). */
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
         if (!state.is(newState.getBlock()) && !level.isClientSide && level.getBlockEntity(pos) instanceof SolarPartBlockEntity part) {
             final BlockPos main = part.mainPos();
-            if (main != null && level.getBlockState(main).getBlock() instanceof SolarPanelBlock) {
+            if (main != null && (level.getBlockState(main).getBlock() instanceof SolarPanelBlock
+                    || level.getBlockState(main).getBlock() instanceof NasaWorkbenchBlock)) {
                 level.destroyBlock(main, true);
             }
         }

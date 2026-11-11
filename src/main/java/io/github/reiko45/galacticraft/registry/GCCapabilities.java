@@ -1,5 +1,6 @@
 package io.github.reiko45.galacticraft.registry;
 
+import io.github.reiko45.galacticraft.block.entity.FuelLoaderBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.MachineBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.OxygenMachineBlockEntity;
@@ -23,6 +24,7 @@ public final class GCCapabilities {
             registerMachine(event, type.get());
         }
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.REFINERY.get(), RefineryBlockEntity::fluidHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FUEL_LOADER.get(), FuelLoaderBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_TANK.get(), (tank, side) -> tank.stackHandler());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_PIPE.get(), (pipe, side) -> pipe.fluidHandler());
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) -> new LiquidCanisterItem.Handler(stack),

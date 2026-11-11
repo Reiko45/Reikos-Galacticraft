@@ -246,7 +246,44 @@
     "item/purple_parachute": "items/parachute_purple",
     "item/red_parachute": "items/parachute_red",
     "item/cyan_parachute": "items/parachute_teal",
-    "item/yellow_parachute": "items/parachute_yellow"
+    "item/yellow_parachute": "items/parachute_yellow",
+    "block/assembly": "blocks/assembly",
+    "block/landing_pad": "blocks/landing_pad",
+    "block/machine_fuelloader": "blocks/machine_fuelloader",
+    "block/parachest": "blocks/parachest",
+    "model/rocket_t1": "model/rocket_t1",
+    "model/lander": "model/lander",
+    "model/parachest": "model/parachest",
+    "gui/fuel_loader": "gui/fuel_loader",
+    "gui/rocketbench": "gui/rocketbench",
+    "gui/celestialselection": "gui/celestialselection",
+    "gui/celestialbodies/sun": "gui/celestialbodies/sun",
+    "gui/celestialbodies/earth": "gui/celestialbodies/earth",
+    "gui/celestialbodies/moon": "gui/celestialbodies/moon",
+    "gui/chest_0": "gui/chest_0",
+    "gui/rocket_0": "gui/rocket_0",
+    "gui/chest_18": "gui/chest_18",
+    "gui/rocket_18": "gui/rocket_18",
+    "gui/chest_36": "gui/chest_36",
+    "gui/rocket_36": "gui/rocket_36",
+    "gui/chest_54": "gui/chest_54",
+    "gui/rocket_54": "gui/rocket_54",
+    "model/parachute/plain": "model/parachute/plain",
+    "model/parachute/black": "model/parachute/black",
+    "model/parachute/blue": "model/parachute/blue",
+    "model/parachute/lime": "model/parachute/lime",
+    "model/parachute/brown": "model/parachute/brown",
+    "model/parachute/darkblue": "model/parachute/darkblue",
+    "model/parachute/darkgray": "model/parachute/darkgray",
+    "model/parachute/darkgreen": "model/parachute/darkgreen",
+    "model/parachute/gray": "model/parachute/gray",
+    "model/parachute/magenta": "model/parachute/magenta",
+    "model/parachute/orange": "model/parachute/orange",
+    "model/parachute/pink": "model/parachute/pink",
+    "model/parachute/purple": "model/parachute/purple",
+    "model/parachute/red": "model/parachute/red",
+    "model/parachute/teal": "model/parachute/teal",
+    "model/parachute/yellow": "model/parachute/yellow"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -269,6 +306,12 @@
     "block/fluid_pipe_pull": "block/fluid_pipe_pull_n",
     "block/fluid_pipe_inventory": {
       "from": "block/fluid_pipe_neswud",
+      "render_type": "minecraft:cutout"
+    },
+    "block/landing_pad": "block/landing_pad_model",
+    "block/landing_pad_full": "block/landing_pad_full_model",
+    "block/parachest": {
+      "from": "block/parachest",
       "render_type": "minecraft:cutout"
     }
   },
@@ -489,13 +532,57 @@
     "item.galacticraftcore.purple_parachute": "item.parachute_purple.name",
     "item.galacticraftcore.red_parachute": "item.parachute_red.name",
     "item.galacticraftcore.cyan_parachute": "item.parachute_teal.name",
-    "item.galacticraftcore.yellow_parachute": "item.parachute_yellow.name"
+    "item.galacticraftcore.yellow_parachute": "item.parachute_yellow.name",
+    "block.galacticraftcore.landing_pad": "tile.landing_pad.landing_pad.name",
+    "block.galacticraftcore.fuel_loader": "tile.fuel_loader.name",
+    "block.galacticraftcore.nasa_workbench": "tile.rocket_workbench.name",
+    "block.galacticraftcore.nasa_workbench_part": "tile.dummyblock.nasa_workbench.name",
+    "block.galacticraftcore.parachest": "tile.parachest.name",
+    "item.galacticraftcore.tier_1_rocket": "item.rocket_t1.name",
+    "entity.galacticraftcore.tier_1_rocket": "entity.rocket_t1.name",
+    "entity.galacticraftcore.lander": "entity.lander.name",
+    "entity.galacticraftcore.parachest": "entity.para_chest.name",
+    "container.galacticraftcore.parachest": "container.parachest.name",
+    "container.galacticraftcore.lander": "container.lander.name",
+    "gui.galacticraftcore.button.load_fuel": "gui.button.loadfuel.name",
+    "gui.galacticraftcore.button.stop_loading": "gui.button.stoploading.name",
+    "gui.galacticraftcore.status.no_fuel": "gui.status.nofuel.name",
+    "gui.galacticraftcore.fuel_tank.desc.0": "gui.fuel_tank.desc.0",
+    "gui.galacticraftcore.fuel_tank.desc.1": "gui.fuel_tank.desc.1",
+    "gui.galacticraftcore.fuel_tank.desc.2": "gui.fuel_tank.desc.2",
+    "gui.galacticraftcore.fuel_tank.desc.3": "gui.fuel_tank.desc.3",
+    "gui.galacticraftcore.message.fuel": "gui.message.fuel.name",
+    "gui.galacticraftcore.message.full": "gui.message.full.name",
+    "gui.galacticraftcore.message.launch": "gui.message.launch.name",
+    "gui.galacticraftcore.message.catalog": "gui.message.catalog.name",
+    "gui.galacticraftcore.message.tier": "gui.message.tier.name",
+    "gui.galacticraftcore.rocket_type.0": "gui.rocket_type.0",
+    "gui.galacticraftcore.rocket_type.1": "gui.rocket_type.1",
+    "gui.galacticraftcore.rocket_type.2": "gui.rocket_type.2",
+    "gui.galacticraftcore.rocket_type.3": "gui.rocket_type.3",
+    "gui.galacticraftcore.creative_only.desc": "gui.creative_only.desc",
+    "gui.galacticraftcore.rocket.warning.no_fuel": "gui.rocket.warning.nofuel",
+    "gui.galacticraftcore.rocket.warning.no_parachute": "gui.rocket.warning.noparachute",
+    "gui.galacticraftcore.lander.velocity": "gui.lander.velocity",
+    "gui.galacticraftcore.lander.velocityu": "gui.lander.velocityu",
+    "gui.galacticraftcore.lander.warning2": "gui.lander.warning2",
+    "gui.galacticraftcore.lander.warning3": "gui.lander.warning3",
+    "schematic.galacticraftcore.rocket_t1": "schematic.rocket_t1.name",
+    "planet.galacticraftcore.overworld": "planet.overworld",
+    "moon.galacticraftcore.moon": "moon.moon",
+    "star.galacticraftcore.sol": "star.sol",
+    "death.attack.spaceship_crash": "death.attack.spaceship_crash",
+    "key.galacticraftcore.spaceship_inventory": "keybind.spaceshipinv.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
     "fluid.galacticraftcore.oxygen": "Oxygen",
     "fluid_type.galacticraftcore.oxygen": "Oxygen",
-    "gui.galacticraftcore.galacticraft_inventory": "Galacticraft Inventory"
+    "gui.galacticraftcore.galacticraft_inventory": "Galacticraft Inventory",
+    "gui.galacticraftcore.rocket.controls": "Press %s to launch, %s for the rocket's cargo and fuel",
+    "gui.galacticraftcore.message.select_destination": "Select a destination",
+    "gui.galacticraftcore.message.not_reachable": "Not reachable",
+    "key.categories.galacticraftcore": "Galacticraft"
   },
   "recipes": {
     "skip_conditions": [
@@ -678,7 +765,10 @@
       "galacticraftcore:parachute:12": "galacticraftcore:purple_parachute",
       "galacticraftcore:parachute:13": "galacticraftcore:red_parachute",
       "galacticraftcore:parachute:14": "galacticraftcore:cyan_parachute",
-      "galacticraftcore:parachute:15": "galacticraftcore:yellow_parachute"
+      "galacticraftcore:parachute:15": "galacticraftcore:yellow_parachute",
+      "galacticraftcore:landing_pad:0": "galacticraftcore:landing_pad",
+      "galacticraftcore:fuel_loader": "galacticraftcore:fuel_loader",
+      "galacticraftcore:rocket_workbench": "galacticraftcore:nasa_workbench"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -758,5 +848,9 @@
       ],
       "render_type": "minecraft:cutout"
     }
+  },
+  "obj_models": {
+    "_comment": "1.12.2 OBJ models copied with their .mtl; texture references in the .mtl go through the textures mapping.",
+    "block/nasa_workbench": "block/workbench"
   }
 }

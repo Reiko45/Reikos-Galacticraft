@@ -47,10 +47,10 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `ISidedInventory` | `IItemHandler` capability per side (`SidedItemHandler`, rules evaluated per insert) | done |
 | Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` (`GCCapabilities`) | done |
 | `GCPlayerStats` capability (~54 fields) | Data attachment `galacticraftcore:player_data` (`GCPlayerData`), synced with payloads | oxygen/gear fields done |
-| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`galacticraftcore:energy`, `galacticraftcore:fluid`, `galacticraftcore:oxygen`) | rockets left |
-| `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` (`GCNetwork`) | oxygen state, gear, inventory tab done |
+| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`galacticraftcore:energy`, `galacticraftcore:fluid`, `galacticraftcore:oxygen`, `galacticraftcore:rocket_storage`, `galacticraftcore:rocket_fuel`) | done |
+| `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` (`GCNetwork`) | oxygen, gear, inventory tab, rocket/lander controls, destination done |
 | Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
-| TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | solar panel, fluid tank, fluid pipe done |
+| TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer` with `LayerDefinition`s converted from the 1.12.2 `ModelRenderer` code (`tools/convert_java_model.py`), NeoForge OBJ loader (`neoforge:obj`), `BlockEntityWithoutLevelRenderer` for item models | solar panel, fluid tank/pipe, rocket, lander, para-chest, NASA Workbench done |
 | Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions`; oxygen is a block-less `GasFluid` | oil, fuel, oxygen done |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
 | Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
@@ -64,9 +64,12 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `EventHandlerGC#generateOil` (populate event) | `OilPocketFeature` + placed feature + biome modifier (`LAKES` step) | done |
 | `InventoryExtended` + `TabRegistry` inventory tabs | 11-slot `ItemStackHandler` in the player attachment, `ExtendedInventoryMenu`, tab buttons added in `ScreenEvent.Init` | done |
 | `ThreadFindSeal` (own thread) | `SealFinder` on the server thread, one check per server tick as in 1.12.2 | done |
-| `DamageSourceGC.oxygenSuffocation` | Data-driven damage type `galacticraftcore:oxygen_suffocation` + `bypasses_*` damage type tags | done |
+| `DamageSourceGC.oxygenSuffocation`, `.spaceshipCrash` | Data-driven damage types `galacticraftcore:oxygen_suffocation`, `galacticraftcore:spaceship_crash` + damage type tags | done |
 | Overlays drawn in `TickHandlerClient` | `RegisterGuiLayersEvent` GUI layers (`OxygenHud`) | oxygen done |
-| `LayerOxygenMask/Gear/Tanks` on `RenderPlayer` | `RenderLayer` added in `EntityRenderersEvent.AddLayers` (`GearLayer`) | mask, tanks, tubes done |
+| `LayerOxygenMask/Gear/Tanks/Parachute` on `RenderPlayer` | `RenderLayer` added in `EntityRenderersEvent.AddLayers` (`GearLayer`) | mask, tanks, tubes, parachute done |
+| `WorldUtil.transferEntityToDimension` + `ITeleportType` | `ServerPlayer#teleportTo(ServerLevel, ...)` in `SpaceTravel`, per destination | Overworld, Moon done |
+| `EntitySpaceshipBase`/`EntityTieredRocket`/`EntityLander` (`IControllableEntity`, key packets) | Plain `Entity` subclasses with `SynchedEntityData`; keys sent as payloads (`VehicleControls`); riders kept by cancelling `EntityMountEvent` | done |
+| `KeyHandlerClient` key bindings | `RegisterKeyMappingsEvent` (Spaceship Inventory, default F as in 1.12.2) | done |
 
 ### MicdoodleCore ASM hooks → replacements
 
@@ -92,6 +95,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   thread is not safe against 1.21 chunk access. Port it as an incremental, budgeted flood fill on the server thread.
 * **Rendering**: 53 OBJ models (rockets, buggy, landers, machines). NeoForge's OBJ loader covers static models.
   Animated parts (rocket flames, buggy wheels) need code renderers.
+* **GameTest mock players** never negotiate the mod's network channels; server-to-client payloads go through
+  `GCNetwork#sendToPlayer`, which skips such connections.
 * **GameTest server** ignores datapack dimensions, so the Moon tests in `PortSmokeTests` run the generator on
   in-memory chunks. Check the real dimension by hand (see the README).
 
@@ -145,9 +150,18 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [ ] Later: parachute deployment (with landers), thermal padding and heat (Asteroids), frequency module dish and
       sensor glasses rendering, the Arc Lamp's bright air
 
-### Phase 4 – Rockets and travel
-- [ ] NASA Workbench + schematic system, Tier 1 rocket entity (OBJ renderer), Launch Pad, Fuel Loader
-- [ ] Launch sequence, celestial selection screen (galaxy map), teleport types, lander, parachest, buggy + Buggy Pad
+### Phase 4 – Rockets and travel ✅
+- [x] NASA Workbench (3x3x4 multiblock, 1.12.2 OBJ model through the NeoForge OBJ loader) with the Tier 1 Rocket page;
+      Tier 1 Rocket item (0-3 chests, creative pre-fuelled variant) drawn with the rocket model
+- [x] Rocket Launch Pad (nine join into a launch pad), Fuel Loader (12,000 mB, 2 mB per tick into a docked rocket)
+- [x] Tier 1 rocket entity (1.12.2 ModelRocketTier1, converted by `tools/convert_java_model.py`): fuel, cargo,
+      400 tick countdown with HUD, lift-off taking the launch pad along, crash when it falls back, hit to break
+- [x] Destination screen (simplified 1.12.2 celestial selection: Sun, Earth, Moon), Overworld and Moon arrival
+      (1.12.2 TeleportTypeOverworld/TeleportTypeMoon)
+- [x] Space Lander (1.12.2 ModelLander, steering, braking, crash, entry HUD), Para-chest entity and block (16 parachute
+      colours), parachute deployment (slow fall + canopy on the player)
+- [ ] Deferred: Moon Buggy + Buggy Fueling Pad + buggy schematic (moon dungeon loot, Phase 5), the schematic page
+      system (only the Tier 1 page exists), the full galaxy map (zoom, catalogue panels, space stations)
 
 ### Phase 5 – Finish the Moon
 - [ ] Caves (`MapGenCavesMoon`), moon villages, dungeon + Skeleton Boss + Tier 1 treasure chest
@@ -203,12 +217,29 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   is not ported.
 * Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
   made the Refinery's status flicker).
+* The destination screen is a simplified galaxy map: the Sun, Earth and the Moon on their orbits with the 1.12.2 icons,
+  frame and LAUNCH button. Zooming, the planet catalogue panels and the space station list come with later phases.
+* The NASA Workbench opens straight on the Tier 1 Rocket page; there is no schematic paging until the Moon Buggy
+  schematic exists. Its Tier 1 recipe is hard-coded as in 1.12.2 (`RecipeManagerGC`), so it is not a JSON recipe and
+  doesn't show in JEI yet.
+* Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
+  creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
+* The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
+* Rocket and lander exhaust uses vanilla flame and smoke particles instead of 1.12.2's custom flame particles.
+* The Fuel Loader takes power on its left face and fuel on its right; the sneak + wrench side configuration of 1.12.2
+  is not ported for it yet. Fuel Loaders take any fluid in the `c:fuel` tag.
+* Buggy Fueling Pads (`landing_pad:1`) are not ported, so their recipe is skipped.
 
 ## Workflow for porting more content
 
 1. Register the block/item in `GCBlocks`/`GCItems` (flatten metadata variants).
-2. Add `textures`, `lang` and `recipes.items` entries to `tools/legacy_mapping.json`.
+2. Add `textures`, `lang` and `recipes.items` entries to `tools/legacy_mapping.json` (`models` for 1.12.2 JSON
+   models, `obj_models` for OBJ models and their `.mtl`).
 3. `python3 tools/port_legacy_assets.py --legacy /path/to/Galacticraft-Legacy`. It copies textures, converts
    translations and re-converts recipes, and lists every recipe still blocked on unmapped items.
 4. Add block states/models/loot/tags to the datagen providers, then run `./gradlew runData`.
 5. `python3 tools/check_assets.py` and `./gradlew runGameTestServer`.
+6. Entity and block-entity models written as 1.12.2 `ModelRenderer` code: `python3 tools/convert_java_model.py
+   Model.java` prints the 1.21 `LayerDefinition` body (boxes, pivots, rotations, mirroring, texture offsets).
+7. `xvfb-run -a ./gradlew runScreenshotTour` (or plain `./gradlew runScreenshotTour` with a display) builds scenes and
+   saves screenshots of every GUI and model to `run/screenshots/` for a visual check.

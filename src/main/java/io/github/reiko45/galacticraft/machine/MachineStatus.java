@@ -32,7 +32,9 @@ public enum MachineStatus {
     CHECK_STARTING("gui.galacticraftcore.status.check_starting", ChatFormatting.GOLD),
     CHECK_PENDING("gui.galacticraftcore.status.check_pending", ChatFormatting.GOLD),
     UNSEALED("gui.galacticraftcore.status.unsealed", ChatFormatting.DARK_RED),
-    SEALED("gui.galacticraftcore.status.sealed", ChatFormatting.DARK_GREEN);
+    SEALED("gui.galacticraftcore.status.sealed", ChatFormatting.DARK_GREEN),
+    // Fuel Loader (1.12.2 GuiFuelLoader#getStatus)
+    NO_FUEL("gui.galacticraftcore.status.no_fuel", ChatFormatting.DARK_RED);
 
     private final String key;
     private final ChatFormatting color;

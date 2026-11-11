@@ -12,7 +12,14 @@ public final class GCDamageTypes {
     /** 1.12.2 DamageSourceGC.oxygenSuffocation: bypasses armour, absolute. Death message "%1$s ran out of oxygen!". */
     public static final ResourceKey<DamageType> OXYGEN_SUFFOCATION = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("oxygen_suffocation"));
 
+    /** 1.12.2 DamageSourceGC.spaceshipCrash: "%1$s was in a spaceship crash!". */
+    public static final ResourceKey<DamageType> SPACESHIP_CRASH = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("spaceship_crash"));
+
     private GCDamageTypes() {
+    }
+
+    public static DamageSource crash(Level level) {
+        return level.damageSources().source(SPACESHIP_CRASH);
     }
 
     public static DamageSource suffocation(Level level) {

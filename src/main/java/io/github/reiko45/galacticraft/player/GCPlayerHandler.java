@@ -1,6 +1,9 @@
 package io.github.reiko45.galacticraft.player;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.entity.LanderEntity;
+import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
+import io.github.reiko45.galacticraft.travel.SpaceTravel;
 import io.github.reiko45.galacticraft.item.gear.GearSlot;
 import io.github.reiko45.galacticraft.item.gear.OxygenTankItem;
 import io.github.reiko45.galacticraft.network.GCNetwork;
@@ -26,7 +29,6 @@ import net.neoforged.neoforge.event.entity.living.LivingDropsEvent;
 import net.neoforged.neoforge.event.entity.player.PlayerEvent;
 import net.neoforged.neoforge.event.tick.EntityTickEvent;
 import net.neoforged.neoforge.event.tick.PlayerTickEvent;
-import net.neoforged.neoforge.network.PacketDistributor;
 
 /**
  * Server-side player and mob rules (1.12.2 GCPlayerHandler#onPlayerUpdate and EventHandlerGC#entityLivingEvent):
@@ -51,12 +53,25 @@ public final class GCPlayerHandler {
             data.setDamageCounter(data.damageCounter() - 1);
         }
         swapTorches(player);
-        checkOxygen(player, data, CelestialPhysics.isAirless(player.level()) && !player.isCreative() && !player.isSpectator());
+        SpaceTravel.tick(player, data);
+        checkOxygen(player, data, needsOxygen(player, data));
         sendState(player, data);
         if (data.takeGearChanged()) {
             broadcastGear(player, data);
         }
         data.setLastOxygenSetupValid(data.oxygenSetupValid());
+    }
+
+    /**
+     * Airless worlds, and the Overworld above y 450 (1.12.2 OXYGENHEIGHTLIMIT), except in creative/spectator, in a rocket
+     * or lander, or while choosing a destination.
+     */
+    private static boolean needsOxygen(ServerPlayer player, GCPlayerData data) {
+        if (player.isCreative() || player.isSpectator() || data.inSpace
+                || player.getVehicle() instanceof Tier1RocketEntity || player.getVehicle() instanceof LanderEntity) {
+            return false;
+        }
+        return CelestialPhysics.isAirless(player.level()) || player.level().dimension() == net.minecraft.world.level.Level.OVERWORLD && player.getY() > 450.0D;
     }
 
     /**
@@ -139,7 +154,7 @@ public final class GCPlayerHandler {
         final GCNetwork.OxygenState state = new GCNetwork.OxygenState(air1, air2, data.oxygenSetupValid());
         if (!state.equals(data.lastSentState) || player.tickCount % 100 == 0) {
             data.lastSentState = state;
-            PacketDistributor.sendToPlayer(player, state);
+            GCNetwork.sendToPlayer(player, state);
         }
     }
 
@@ -149,19 +164,30 @@ public final class GCPlayerHandler {
     }
 
     public static void broadcastGear(ServerPlayer player, GCPlayerData data) {
-        PacketDistributor.sendToPlayersTrackingEntityAndSelf(player, new GCNetwork.GearSync(player.getId(), GearData.of(data)));
+        GCNetwork.sendToTrackingAndSelf(player, new GCNetwork.GearSync(player.getId(), GearData.of(data)));
     }
 
     @SubscribeEvent
     public static void onStartTracking(PlayerEvent.StartTracking event) {
         if (event.getTarget() instanceof ServerPlayer target && event.getEntity() instanceof ServerPlayer watcher) {
-            PacketDistributor.sendToPlayer(watcher, new GCNetwork.GearSync(target.getId(), GearData.of(GCPlayerData.get(target))));
+            GCNetwork.sendToPlayer(watcher, new GCNetwork.GearSync(target.getId(), GearData.of(GCPlayerData.get(target))));
         }
     }
 
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         GCPlayerData.get(event.getEntity()).markGearChanged();
+    }
+
+    /** No getting out of a launched rocket or a flying lander (1.12.2 IIgnoreShift). */
+    @SubscribeEvent
+    public static void onMount(net.neoforged.neoforge.event.entity.EntityMountEvent event) {
+        if (event.isDismounting() && event.getEntityMounting() instanceof net.minecraft.world.entity.player.Player
+                && (event.getEntityBeingMounted() instanceof Tier1RocketEntity rocket && rocket.keepsRider()
+                || event.getEntityBeingMounted() instanceof LanderEntity lander && lander.keepsRider())
+                && !event.getEntityBeingMounted().isRemoved()) {
+            event.setCanceled(true);
+        }
     }
 
     @SubscribeEvent

@@ -97,8 +97,10 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.DIMENSION_TYPE, GCWorldgenProvider::dimensionTypes)
             .add(Registries.LEVEL_STEM, GCWorldgenProvider::levelStems)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GCWorldgenProvider::biomeModifiers)
-            .add(Registries.DAMAGE_TYPE, context -> context.register(GCDamageTypes.OXYGEN_SUFFOCATION,
-                    new DamageType("oxygen_suffocation", DamageScaling.NEVER, 0.0F)));
+            .add(Registries.DAMAGE_TYPE, context -> {
+                context.register(GCDamageTypes.OXYGEN_SUFFOCATION, new DamageType("oxygen_suffocation", DamageScaling.NEVER, 0.0F));
+                context.register(GCDamageTypes.SPACESHIP_CRASH, new DamageType("spaceship_crash", DamageScaling.NEVER, 0.1F));
+            });
 
     public GCWorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
         super(output, registries, BUILDER, Set.of(GalacticraftCore.MOD_ID));

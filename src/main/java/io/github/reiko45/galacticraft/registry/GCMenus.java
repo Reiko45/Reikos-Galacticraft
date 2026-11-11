@@ -1,7 +1,10 @@
 package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.menu.CargoMenu;
 import io.github.reiko45.galacticraft.menu.CircuitFabricatorMenu;
+import io.github.reiko45.galacticraft.menu.FuelLoaderMenu;
+import io.github.reiko45.galacticraft.menu.NasaWorkbenchMenu;
 import io.github.reiko45.galacticraft.menu.CoalGeneratorMenu;
 import io.github.reiko45.galacticraft.menu.CompressorMenu;
 import io.github.reiko45.galacticraft.menu.ElectricCompressorMenu;
@@ -50,6 +53,13 @@ public final class GCMenus {
     public static final Supplier<MenuType<OxygenMachineMenu>> OXYGEN_STORAGE_MODULE = oxygen("oxygen_storage_module", OxygenMachineMenu.Kind.STORAGE_MODULE);
     public static final Supplier<MenuType<ExtendedInventoryMenu>> EXTENDED_INVENTORY = MENUS.register("extended_inventory",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new ExtendedInventoryMenu(id, inventory)));
+
+    public static final Supplier<MenuType<FuelLoaderMenu>> FUEL_LOADER = MENUS.register("fuel_loader",
+            () -> IMenuTypeExtension.create(FuelLoaderMenu::new));
+    public static final Supplier<MenuType<CargoMenu>> CARGO = MENUS.register("cargo",
+            () -> IMenuTypeExtension.create(CargoMenu::client));
+    public static final Supplier<MenuType<NasaWorkbenchMenu>> NASA_WORKBENCH = MENUS.register("nasa_workbench",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new NasaWorkbenchMenu(id, inventory)));
 
     private static Supplier<MenuType<OxygenMachineMenu>> oxygen(String name, OxygenMachineMenu.Kind kind) {
         return MENUS.register(name, () -> IMenuTypeExtension.create((id, inventory, buf) -> new OxygenMachineMenu(kind, id, inventory, buf)));

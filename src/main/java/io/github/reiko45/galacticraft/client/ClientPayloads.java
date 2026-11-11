@@ -21,6 +21,13 @@ public final class ClientPayloads {
         oxygenValid = payload.valid();
     }
 
+    public static void openCelestialSelection(GCNetwork.OpenCelestialSelection payload) {
+        final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (!(minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen)) {
+            minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen(payload.tier()));
+        }
+    }
+
     public static void gearSync(GCNetwork.GearSync payload) {
         if (payload.gear().equals(GearData.NONE)) {
             GEAR.remove(payload.entityId());

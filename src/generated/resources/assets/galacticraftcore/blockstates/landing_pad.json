@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "pad=centre": {
+      "model": "galacticraftcore:block/landing_pad_full"
+    },
+    "pad=part": {
+      "model": "galacticraftcore:block/landing_pad_full"
+    },
+    "pad=single": {
+      "model": "galacticraftcore:block/landing_pad"
+    }
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/block/nasa_workbench.obj",
+  "textures": {
+    "particle": "galacticraftcore:block/assembly"
+  }
+}
