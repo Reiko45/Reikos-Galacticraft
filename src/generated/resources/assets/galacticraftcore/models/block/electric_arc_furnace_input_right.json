@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/advanced/machine",
+    "east": "galacticraftcore:block/advanced/machine_side",
+    "north": "galacticraftcore:block/advanced/electric_furnace",
+    "particle": "galacticraftcore:block/advanced/machine",
+    "south": "galacticraftcore:block/advanced/machine_side",
+    "up": "galacticraftcore:block/advanced/machine",
+    "west": "galacticraftcore:block/advanced/machine_input"
+  }
+}

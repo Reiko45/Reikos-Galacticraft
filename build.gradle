@@ -14,6 +14,14 @@ group = mod_group_id
 
 repositories {
     mavenLocal()
+    // JEI (optional recipe viewer integration)
+    maven {
+        url = 'https://maven.blamejared.com'
+        content {
+            includeGroup 'mezz.jei'
+            includeGroup 'net.mezzdev.config'
+        }
+    }
 }
 
 base {
@@ -90,6 +98,10 @@ configurations {
 }
 
 dependencies {
+    // JEI is optional: compile against its API only, and run it in the dev client.
+    compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
+    compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
+    localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
 }
 
 // Expands ${...} placeholders in src/main/templates (neoforge.mods.toml) from gradle.properties.

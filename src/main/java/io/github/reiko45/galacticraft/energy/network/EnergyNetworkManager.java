@@ -106,7 +106,11 @@ public final class EnergyNetworkManager {
     }
 
     private boolean isLoadedWire(BlockPos pos) {
-        return this.level.isLoaded(pos) && this.level.getBlockState(pos).getBlock() instanceof AluminumWireBlock;
+        if (!this.level.isLoaded(pos)) {
+            return false;
+        }
+        final net.minecraft.world.level.block.state.BlockState state = this.level.getBlockState(pos);
+        return state.getBlock() instanceof AluminumWireBlock wire && wire.isConductive(state);
     }
 
     private void tick() {

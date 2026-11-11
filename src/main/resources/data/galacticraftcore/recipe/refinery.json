@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:stones"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "item": "minecraft:furnace"
+    },
+    "Z": {
+      "item": "galacticraftcore:copper_canister"
+    }
+  },
+  "pattern": [
+    " Z ",
+    "WZW",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:refinery"
+  }
+}

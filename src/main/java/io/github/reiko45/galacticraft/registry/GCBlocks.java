@@ -3,10 +3,18 @@ package io.github.reiko45.galacticraft.registry;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.AluminumWireBlock;
 import io.github.reiko45.galacticraft.block.CheeseBlock;
+import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneTorchBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneWallTorchBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.block.SolarPanelBlock;
+import io.github.reiko45.galacticraft.block.SolarPartBlock;
+import io.github.reiko45.galacticraft.block.entity.SolarPanelBlockEntity;
+import io.github.reiko45.galacticraft.block.SwitchableWireBlock;
 import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
+import io.github.reiko45.galacticraft.block.FluidPipeBlock;
+import io.github.reiko45.galacticraft.block.FluidTankBlock;
+import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
@@ -83,6 +91,10 @@ public final class GCBlocks {
     // --- Energy ---
     public static final DeferredBlock<AluminumWireBlock> ALUMINUM_WIRE = withItem("aluminum_wire", () -> new AluminumWireBlock(wire(), false));
     public static final DeferredBlock<AluminumWireBlock> HEAVY_ALUMINUM_WIRE = withItem("heavy_aluminum_wire", () -> new AluminumWireBlock(wire(), true));
+    public static final DeferredBlock<SwitchableWireBlock> ALUMINUM_WIRE_SWITCH = withItem("aluminum_wire_switch",
+            () -> new SwitchableWireBlock(wire(), false));
+    public static final DeferredBlock<SwitchableWireBlock> HEAVY_ALUMINUM_WIRE_SWITCH = withItem("heavy_aluminum_wire_switch",
+            () -> new SwitchableWireBlock(wire(), true));
 
     // --- Machines (1.12.2 BlockMachineBase: hardness 1, metal sound) ---
     public static final DeferredBlock<MachineBlock> COAL_GENERATOR = withItem("coal_generator",
@@ -93,16 +105,36 @@ public final class GCBlocks {
             () -> new EnergyStorageBlock(machine(), EnergyStorageBlockEntity::cluster));
     public static final DeferredBlock<MachineBlock> COMPRESSOR = withItem("compressor",
             () -> new MachineBlock(machine(), CompressorBlockEntity::new));
-    public static final DeferredBlock<MachineBlock> ELECTRIC_COMPRESSOR = withItem("electric_compressor",
-            () -> new MachineBlock(machine(), ElectricCompressorBlockEntity::normal));
-    public static final DeferredBlock<MachineBlock> ADVANCED_COMPRESSOR = withItem("advanced_compressor",
-            () -> new MachineBlock(machine(), ElectricCompressorBlockEntity::advanced));
-    public static final DeferredBlock<MachineBlock> ELECTRIC_FURNACE = withItem("electric_furnace",
-            () -> new MachineBlock(machine(), ElectricFurnaceBlockEntity::furnace));
-    public static final DeferredBlock<MachineBlock> ELECTRIC_ARC_FURNACE = withItem("electric_arc_furnace",
-            () -> new MachineBlock(machine(), ElectricFurnaceBlockEntity::arcFurnace));
-    public static final DeferredBlock<MachineBlock> CIRCUIT_FABRICATOR = withItem("circuit_fabricator",
-            () -> new MachineBlock(machine(), CircuitFabricatorBlockEntity::new));
+    public static final DeferredBlock<ConfigurableMachineBlock> ELECTRIC_COMPRESSOR = withItem("electric_compressor",
+            () -> new ConfigurableMachineBlock(machine(), ElectricCompressorBlockEntity::normal));
+    public static final DeferredBlock<ConfigurableMachineBlock> ADVANCED_COMPRESSOR = withItem("advanced_compressor",
+            () -> new ConfigurableMachineBlock(machine(), ElectricCompressorBlockEntity::advanced));
+    public static final DeferredBlock<ConfigurableMachineBlock> ELECTRIC_FURNACE = withItem("electric_furnace",
+            () -> new ConfigurableMachineBlock(machine(), ElectricFurnaceBlockEntity::furnace));
+    public static final DeferredBlock<ConfigurableMachineBlock> ELECTRIC_ARC_FURNACE = withItem("electric_arc_furnace",
+            () -> new ConfigurableMachineBlock(machine(), ElectricFurnaceBlockEntity::arcFurnace));
+    public static final DeferredBlock<ConfigurableMachineBlock> CIRCUIT_FABRICATOR = withItem("circuit_fabricator",
+            () -> new ConfigurableMachineBlock(machine(), CircuitFabricatorBlockEntity::new));
+
+    // Solar panels: base block + invisible pole/panel parts (1.12.2 BlockSolar + BlockMulti)
+    public static final DeferredBlock<SolarPanelBlock> BASIC_SOLAR_PANEL = withItem("basic_solar_panel",
+            () -> new SolarPanelBlock(machine(), SolarPanelBlockEntity::basic));
+    public static final DeferredBlock<SolarPanelBlock> ADVANCED_SOLAR_PANEL = withItem("advanced_solar_panel",
+            () -> new SolarPanelBlock(machine(), SolarPanelBlockEntity::advanced));
+    public static final DeferredBlock<SolarPartBlock> SOLAR_PART = BLOCKS.register("solar_panel_part", () -> new SolarPartBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 3_600_000.0F).sound(SoundType.METAL)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
+
+    // Oil processing (1.12.2 BlockRefinery, BlockFluidTank, BlockFluidPipe)
+    public static final DeferredBlock<MachineBlock> REFINERY = withItem("refinery",
+            () -> new MachineBlock(machine(), RefineryBlockEntity::new));
+    /** 1.12.2: Material.GLASS, hardness 3, resistance 8. */
+    public static final DeferredBlock<FluidTankBlock> FLUID_TANK = withItem("fluid_tank", () -> new FluidTankBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(3.0F, 8.0F).sound(SoundType.GLASS).noOcclusion()
+                    .isViewBlocking((state, level, pos) -> false).isSuffocating((state, level, pos) -> false)));
+    /** 1.12.2: Material.GLASS, hardness 0.3. */
+    public static final DeferredBlock<FluidPipeBlock> FLUID_PIPE = withItem("fluid_pipe", () -> new FluidPipeBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.NONE).strength(0.3F).sound(SoundType.GLASS).noOcclusion()));
 
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(

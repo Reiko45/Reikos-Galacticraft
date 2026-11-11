@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine",
+    "east": "galacticraftcore:block/solar_advanced_1",
+    "north": "galacticraftcore:block/machine_output",
+    "particle": "galacticraftcore:block/solar_advanced_1",
+    "south": "galacticraftcore:block/solar_advanced_1",
+    "up": "galacticraftcore:block/solar_advanced_0",
+    "west": "galacticraftcore:block/solar_advanced_1"
+  }
+}

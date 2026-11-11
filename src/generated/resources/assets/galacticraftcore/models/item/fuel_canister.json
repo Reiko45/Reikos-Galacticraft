@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_1",
+      "predicate": {
+        "galacticraftcore:fill": 1.0
+      }
+    },
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_2",
+      "predicate": {
+        "galacticraftcore:fill": 2.0
+      }
+    },
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_3",
+      "predicate": {
+        "galacticraftcore:fill": 3.0
+      }
+    },
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_4",
+      "predicate": {
+        "galacticraftcore:fill": 4.0
+      }
+    },
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_5",
+      "predicate": {
+        "galacticraftcore:fill": 5.0
+      }
+    },
+    {
+      "model": "galacticraftcore:item/fuel_canister/stage_6",
+      "predicate": {
+        "galacticraftcore:fill": 6.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "galacticraftcore:item/fuel_canister_partial_0"
+  }
+}

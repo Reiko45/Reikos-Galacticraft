@@ -96,6 +96,11 @@ public class MachineBlock extends Block implements EntityBlock {
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
 
+    /** Sneak + wrench (1.12.2 BlockMachineBase#onSneakUseWrench): move the energy faces. @return whether it did anything */
+    public boolean cycleSides(Level level, BlockPos pos, BlockState state) {
+        return false;
+    }
+
     /** Wrench rotation (1.12.2 BlockTileGC#onUseWrench): turn clockwise and refresh capabilities. */
     public void rotateWithWrench(Level level, BlockPos pos, BlockState state) {
         level.setBlockAndUpdate(pos, state.setValue(FACING, state.getValue(FACING).getClockWise()));

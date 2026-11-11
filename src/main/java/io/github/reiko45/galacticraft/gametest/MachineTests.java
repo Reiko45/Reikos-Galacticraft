@@ -9,6 +9,7 @@ import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.MachineBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.SolarPanelBlockEntity;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCItems;
 import net.minecraft.core.BlockPos;
@@ -18,6 +19,8 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 import net.neoforged.neoforge.capabilities.Capabilities;
 import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.gametest.GameTestHolder;
@@ -147,6 +150,89 @@ public final class MachineTests {
             helper.assertTrue(out.is(GCItems.BASIC_WAFER.get()) && out.getCount() == 3, "Expected 3 basic wafers, got " + out);
             helper.assertTrue(fabricator.processTime() == 300, "Battery power is tier 1: 300 ticks");
         });
+    }
+
+    /** Sneak + wrench cycling: storage (R,L) -> (R,B) moves the output to the back; a consumer's input LEFT -> BACK. */
+    @GameTest(template = ROOM)
+    public static void sideConfigurationMovesEnergyFaces(GameTestHelper helper) {
+        final EnergyStorageBlockEntity module = place(helper, GCBlocks.ENERGY_STORAGE_MODULE.get(), 0, Direction.NORTH);
+        final BlockPos modulePos = helper.absolutePos(new BlockPos(0, 1, 1));
+        helper.assertTrue(feCanExtract(helper, modulePos, Direction.EAST), "Default output should be the left (east) face");
+        ((MachineBlock) module.getBlockState().getBlock()).cycleSides(helper.getLevel(), modulePos, module.getBlockState());
+        helper.assertTrue(feCanExtract(helper, modulePos, Direction.SOUTH), "Output should move to the back (south)");
+        helper.assertTrue(fe(helper, modulePos, Direction.EAST) == null, "Left face should be unused after cycling");
+        helper.assertTrue(fe(helper, modulePos, Direction.WEST) != null && fe(helper, modulePos, Direction.WEST).canReceive(),
+                "Input should stay on the right (west)");
+
+        final ElectricFurnaceBlockEntity furnace = place(helper, GCBlocks.ELECTRIC_FURNACE.get(), 3, Direction.NORTH);
+        final BlockPos furnacePos = helper.absolutePos(new BlockPos(3, 1, 1));
+        ((MachineBlock) furnace.getBlockState().getBlock()).cycleSides(helper.getLevel(), furnacePos, furnace.getBlockState());
+        helper.assertTrue(fe(helper, furnacePos, Direction.EAST) == null, "Furnace input should have left the east face");
+        helper.assertTrue(fe(helper, furnacePos, Direction.SOUTH) != null, "Furnace input should now be the back (south)");
+        helper.succeed();
+    }
+
+    /** A redstone-powered Switchable Aluminum Wire cuts the network; removing the signal reconnects it. */
+    @GameTest(template = ROOM, timeoutTicks = 200)
+    public static void switchWireCutsPower(GameTestHelper helper) {
+        final EnergyStorageBlockEntity module = place(helper, GCBlocks.ENERGY_STORAGE_MODULE.get(), 0, Direction.NORTH);
+        module.energy().setStored(100_000.0F);
+        helper.setBlock(new BlockPos(1, 1, 1), GCBlocks.ALUMINUM_WIRE.get());
+        helper.setBlock(new BlockPos(2, 1, 1), GCBlocks.ALUMINUM_WIRE_SWITCH.get());
+        helper.setBlock(new BlockPos(2, 2, 1), Blocks.REDSTONE_BLOCK);
+        final ElectricFurnaceBlockEntity furnace = place(helper, GCBlocks.ELECTRIC_FURNACE.get(), 3, Direction.SOUTH);
+        helper.runAfterDelay(40, () -> {
+            helper.assertTrue(furnace.energy().getStoredGJ() == 0.0F, "Power crossed a switched-off wire");
+            helper.setBlock(new BlockPos(2, 2, 1), Blocks.AIR);
+        });
+        helper.succeedWhen(() -> {
+            helper.assertTrue(helper.getTick() > 40, "Waiting for the switch to be turned back on");
+            helper.assertTrue(furnace.energy().getStoredGJ() > 0.0F, "No power after the switch was turned back on");
+        });
+    }
+
+    private static SolarPanelBlockEntity placeSolar(GameTestHelper helper, Block block, BlockPos rel) {
+        final BlockState state = block.defaultBlockState().setValue(MachineBlock.FACING, Direction.NORTH);
+        helper.setBlock(rel, state);
+        block.setPlacedBy(helper.getLevel(), helper.absolutePos(rel), state, null, new ItemStack(block));
+        return (SolarPanelBlockEntity) helper.getBlockEntity(rel);
+    }
+
+    /** Placing a solar panel adds a pole and a 3x3 panel; breaking any part removes it all and drops the panel item. */
+    @GameTest(template = ROOM)
+    public static void solarPanelIsOneMultiblock(GameTestHelper helper) {
+        final BlockPos base = new BlockPos(3, 0, 1);
+        placeSolar(helper, GCBlocks.BASIC_SOLAR_PANEL.get(), base);
+        helper.assertBlockPresent(GCBlocks.SOLAR_PART.get(), base.above());
+        for (int x = -1; x <= 1; x++) {
+            for (int z = -1; z <= 1; z++) {
+                helper.assertBlockPresent(GCBlocks.SOLAR_PART.get(), base.offset(x, 2, z));
+            }
+        }
+        helper.getLevel().destroyBlock(helper.absolutePos(base.offset(1, 2, 1)), true);
+        helper.assertBlockNotPresent(GCBlocks.BASIC_SOLAR_PANEL.get(), base);
+        helper.assertBlockNotPresent(GCBlocks.SOLAR_PART.get(), base.above());
+        helper.assertBlockNotPresent(GCBlocks.SOLAR_PART.get(), base.offset(-1, 2, -1));
+        helper.assertItemEntityPresent(GCBlocks.BASIC_SOLAR_PANEL.get().asItem(), base, 3.0D);
+        helper.succeed();
+    }
+
+    /** In clear daylight a basic panel generates power. */
+    @GameTest(template = ROOM, timeoutTicks = 200)
+    public static void solarPanelGeneratesInDaylight(GameTestHelper helper) {
+        helper.getLevel().setDayTime(6000);
+        helper.getLevel().setWeatherParameters(6000, 0, false, false);
+        final SolarPanelBlockEntity panel = placeSolar(helper, GCBlocks.BASIC_SOLAR_PANEL.get(), new BlockPos(3, 0, 1));
+        helper.succeedWhen(() -> helper.assertTrue(panel.energy().getStoredGJ() > 0.0F, "Solar panel generated nothing at noon"));
+    }
+
+    private static IEnergyStorage fe(GameTestHelper helper, BlockPos absolute, Direction side) {
+        return helper.getLevel().getCapability(Capabilities.EnergyStorage.BLOCK, absolute, side);
+    }
+
+    private static boolean feCanExtract(GameTestHelper helper, BlockPos absolute, Direction side) {
+        final IEnergyStorage storage = fe(helper, absolute, side);
+        return storage != null && storage.canExtract();
     }
 
     /** FE interop: 1 FE = 1.6 gJ, and the furnace only takes 2.5 x 45 = 112.5 gJ per call, i.e. 70 whole FE. */

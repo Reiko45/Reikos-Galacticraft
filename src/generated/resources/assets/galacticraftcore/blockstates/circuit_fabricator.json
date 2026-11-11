@@ -1,18 +1,48 @@
 {
   "variants": {
-    "facing=east": {
+    "facing=east,input=back": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_back",
+      "y": 90
+    },
+    "facing=east,input=left": {
       "model": "galacticraftcore:block/circuit_fabricator",
       "y": 90
     },
-    "facing=north": {
+    "facing=east,input=right": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_right",
+      "y": 90
+    },
+    "facing=north,input=back": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_back"
+    },
+    "facing=north,input=left": {
       "model": "galacticraftcore:block/circuit_fabricator"
     },
-    "facing=south": {
+    "facing=north,input=right": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_right"
+    },
+    "facing=south,input=back": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_back",
+      "y": 180
+    },
+    "facing=south,input=left": {
       "model": "galacticraftcore:block/circuit_fabricator",
       "y": 180
     },
-    "facing=west": {
+    "facing=south,input=right": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_right",
+      "y": 180
+    },
+    "facing=west,input=back": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_back",
+      "y": 270
+    },
+    "facing=west,input=left": {
       "model": "galacticraftcore:block/circuit_fabricator",
+      "y": 270
+    },
+    "facing=west,input=right": {
+      "model": "galacticraftcore:block/circuit_fabricator_input_right",
       "y": 270
     }
   }

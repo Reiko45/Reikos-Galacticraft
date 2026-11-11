@@ -4,6 +4,8 @@ import io.github.reiko45.galacticraft.registry.GCArmorMaterials;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
 import io.github.reiko45.galacticraft.registry.GCCapabilities;
 import io.github.reiko45.galacticraft.registry.GCDataComponents;
+import io.github.reiko45.galacticraft.registry.GCFeatures;
+import io.github.reiko45.galacticraft.registry.GCFluids;
 import io.github.reiko45.galacticraft.registry.GCMenus;
 import io.github.reiko45.galacticraft.registry.GCRecipes;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
@@ -34,6 +36,10 @@ public final class GalacticraftCore {
         // GCBlocks first: it also registers the block items into GCItems.ITEMS.
         GCBlocks.BLOCKS.register(modBus);
         GCItems.ITEMS.register(modBus);
+        // GCFluids also adds the oil/fuel liquid blocks and buckets to GCBlocks.BLOCKS and GCItems.ITEMS.
+        GCFluids.FLUID_TYPES.register(modBus);
+        GCFluids.FLUIDS.register(modBus);
+        GCFeatures.FEATURES.register(modBus);
         GCArmorMaterials.ARMOR_MATERIALS.register(modBus);
         GCCreativeTabs.TABS.register(modBus);
         GCChunkGenerators.CHUNK_GENERATORS.register(modBus);

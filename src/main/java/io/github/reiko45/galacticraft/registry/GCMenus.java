@@ -7,6 +7,8 @@ import io.github.reiko45.galacticraft.menu.CompressorMenu;
 import io.github.reiko45.galacticraft.menu.ElectricCompressorMenu;
 import io.github.reiko45.galacticraft.menu.ElectricFurnaceMenu;
 import io.github.reiko45.galacticraft.menu.EnergyStorageMenu;
+import io.github.reiko45.galacticraft.menu.RefineryMenu;
+import io.github.reiko45.galacticraft.menu.SolarPanelMenu;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.inventory.MenuType;
@@ -32,6 +34,11 @@ public final class GCMenus {
             () -> IMenuTypeExtension.create(ElectricFurnaceMenu::arcFurnace));
     public static final Supplier<MenuType<CircuitFabricatorMenu>> CIRCUIT_FABRICATOR = MENUS.register("circuit_fabricator",
             () -> IMenuTypeExtension.create(CircuitFabricatorMenu::new));
+
+    public static final Supplier<MenuType<SolarPanelMenu>> SOLAR_PANEL = MENUS.register("solar_panel",
+            () -> IMenuTypeExtension.create(SolarPanelMenu::new));
+    public static final Supplier<MenuType<RefineryMenu>> REFINERY = MENUS.register("refinery",
+            () -> IMenuTypeExtension.create(RefineryMenu::new));
 
     private GCMenus() {
     }

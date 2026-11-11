@@ -1,0 +1,8 @@
+{
+  "feature": "galacticraftcore:oil_pocket",
+  "placement": [
+    {
+      "type": "minecraft:biome"
+    }
+  ]
+}

@@ -45,19 +45,23 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` (`MachineBlockEntity`) | done |
 | `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` (`MachineMenu`/`MachineScreen`, 1.12.2 GUI sheets reused) | done |
 | `ISidedInventory` | `IItemHandler` capability per side (`SidedItemHandler`, rules evaluated per insert) | done |
-| Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` (`GCCapabilities`) | energy + items done |
+| Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` (`GCCapabilities`) | done |
 | `GCPlayerStats` capability (~54 fields) | Data attachments (`AttachmentType`) with codecs + sync payloads | Phase 3 |
-| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`; `galacticraftcore:energy` done) | partly |
+| Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`; `galacticraftcore:energy` and `galacticraftcore:fluid` done) | partly |
 | `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` | Phase 2+ |
 | Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
-| TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | Phase 2–5 |
-| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler` | Phase 2b |
+| TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | solar panel, fluid tank, fluid pipe done |
+| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions` | oil + fuel done |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
 | Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
-| JEI 4.x plugin | JEI 19.x (1.21.1) and/or EMI | Phase 2b |
+| JEI 4.x plugin | JEI 19.x (1.21.1), optional (`compat/jei`) | Compressor, Circuit Fabricator, Refinery done |
 | gJ energy with RF/IC2/BC/Mekanism conversion | Float gJ internally (`GCEnergyStorage`, `galacticraftcore:energy` capability) + FE (`IEnergyStorage`) on every machine at 1 FE = 1.6 gJ | done |
 | `EnergyNetwork` / `NetworkFinder`, conductor tiers | `EnergyNetworkManager`: flood-filled wire networks, rebuilt on change, ticked per level; tier = min(source, weakest wire) | done |
 | Forge `Configuration` energy display options | `ModConfigSpec` client config (`energyDisplayUnit`: gJ or FE) | done |
+| `BlockMulti` + `TileEntityFake` (solar panels, later launch pads/dishes) | Invisible `SolarPartBlock` parts pointing at the main block entity; breaking any part breaks the whole | solar done |
+| `IMachineSides` (sneak + wrench face config) | `INPUT`/`SIDES` block state properties, models per configuration, capabilities invalidated on change | done |
+| `FluidNetwork` / `TileEntityFluidPipe` | `FluidNetworkManager`: flood-filled pipe networks per level, colour-separated, buffer shared out per pipe | done |
+| `EventHandlerGC#generateOil` (populate event) | `OilPocketFeature` + placed feature + biome modifier (`LAKES` step) | done |
 
 ### MicdoodleCore ASM hooks → replacements
 
@@ -112,12 +116,17 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] GUIs drawn from the 1.12.2 sheets at the 1.12.2 coordinates; status text and energy tooltips in 25 languages
 - [x] Hopper/pipe automation per side (outputs from below, grid balancing for compressors, silicon balancing)
 
-### Phase 2b – Solar, fluids and the rest of the power tier
-- [ ] Basic/Advanced Solar Panel: needs the `BlockMulti` fake-block system (pole + 3x3 panel) and a panel renderer
-- [ ] Sneak + wrench to reconfigure a machine's input/output faces (1.12.2 `IMachineSides`), with matching textures
-- [ ] Switchable wires (redstone splits the network)
-- [ ] Fluids: oil, fuel (+ buckets, canisters), Refinery, Fluid Tank, Fluid Pipe; oil generation in the Overworld
-- [ ] JEI categories for compressing and circuit fabricating (JEI 19.x for 1.21.1 is available on maven.blamejared.com)
+### Phase 2b – Solar, fluids and the rest of the power tier ✅
+- [x] Basic/Advanced Solar Panel: pole + 3x3 panel of invisible parts (port of `BlockMulti`), panel renderer that
+      flips at night (basic) or tracks the sun (advanced), sky checks every second, ×1.4 output on the Moon
+- [x] Sneak + wrench reconfigures a machine's energy face (left/back/right) and a storage block's input/output pair,
+      with matching block textures
+- [x] Aluminum Wire Switch and Heavy Aluminum Wire Switch: a redstone signal cuts the network
+- [x] Oil and fuel (flowing liquids, buckets, fuel explodes when burnt), Oil/Fuel Canisters (1,000 mB, 7 fill textures)
+- [x] Refinery (oil in on the left, fuel out on the right, power on top; 1 mB per 2 ticks, per tick on tier-2 power)
+- [x] Fluid Tank (16,000 mB, stacks act as one), Fluid Pipe (16 colours, pull mode via wrench, fluid visible inside)
+- [x] Crude oil pockets in Overworld biomes (1.12.2 shape, depth and chances)
+- [x] JEI categories for compressing, circuit fabricating and refining, with machine catalysts and GUI click areas
 
 ### Phase 3 – Oxygen and survival
 - [ ] Player data attachment (port of `GCPlayerStats`) + sync payloads
@@ -161,6 +170,15 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * Compressor recipes for steel/bronze ingots load only when some mod puts items in `c:ingots/steel` or
   `c:ingots/bronze` (the 1.12.2 OreDictionary check). Hard/quick/adventure mode recipe variants are not ported.
 * The Circuit Fabricator's bonus output in zero-gravity dimensions waits for space stations.
+* Fluid Pipe and Pull Fluid Pipe are one block with a `pull` state that the wrench toggles; there is no separate
+  pull pipe item. Pipes only take fluid in; they can't be drained by other blocks, as in 1.12.2.
+* The amount of liquid drawn inside a pipe is synced in 5% steps, and only when it changes.
+* Oil generation uses the default 1.12.2 oil gen factor (1.8) and has no config, retrogen or extra-dimension list yet.
+  Biome chance modifiers use tags: mountains and hills halve the chance, oceans and deserts multiply it by 1.8.
+  Pockets are placed before structures, so mineshafts and strongholds cut through them instead of being flooded.
+* A Fluid Tank drains from the bottom tank of a stack; the tanks above pour down into it on the next ticks.
+* Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
+  made the Refinery's status flicker).
 
 ## Workflow for porting more content
 

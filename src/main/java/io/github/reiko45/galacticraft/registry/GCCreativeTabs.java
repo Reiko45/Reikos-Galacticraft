@@ -2,6 +2,7 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.ElectricItem;
+import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
 import java.util.function.Supplier;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
@@ -31,9 +32,16 @@ public final class GCCreativeTabs {
                     .map(holder -> holder.get())
                     .filter(item -> !(item instanceof BlockItem))
                     .forEach(item -> {
-                        output.accept(item);
+                        if (item != GCItems.FUEL_CANISTER.get()) {
+                            output.accept(item); // an empty fuel canister is an empty (oil) canister
+                        }
                         if (item instanceof ElectricItem electric) {
                             output.accept(electric.charged());
+                        }
+                        if (item == GCItems.OIL_CANISTER.get()) {
+                            output.accept(LiquidCanisterItem.full(false));
+                        } else if (item == GCItems.FUEL_CANISTER.get()) {
+                            output.accept(LiquidCanisterItem.full(true));
                         }
                     }))
             .build());

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "V": {
+      "item": "galacticraftcore:aluminum_wire"
+    },
+    "W": {
+      "item": "galacticraftcore:basic_wafer"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "item": "galacticraftcore:full_solar_panel"
+    },
+    "Z": {
+      "item": "galacticraftcore:steel_pole"
+    }
+  },
+  "pattern": [
+    "XYX",
+    "XZX",
+    "VWV"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:basic_solar_panel"
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "galacticraftcore:block/aluminum_wire_side",
+  "textures": {
+    "aluminum_wire": "galacticraftcore:block/aluminum_wire_switch",
+    "particle": "galacticraftcore:block/aluminum_wire_switch"
+  }
+}

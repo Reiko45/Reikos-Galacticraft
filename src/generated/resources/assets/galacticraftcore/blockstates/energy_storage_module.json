@@ -1,257 +1,1532 @@
 {
   "variants": {
-    "facing=east,level=0": {
+    "facing=east,level=0,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_0",
+      "y": 90
+    },
+    "facing=east,level=0,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_0",
+      "y": 90
+    },
+    "facing=east,level=0,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_0",
+      "y": 90
+    },
+    "facing=east,level=0,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_0",
+      "y": 90
+    },
+    "facing=east,level=0,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_0",
+      "y": 90
+    },
+    "facing=east,level=0,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_0",
       "y": 90
     },
-    "facing=east,level=1": {
+    "facing=east,level=1,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_1",
+      "y": 90
+    },
+    "facing=east,level=1,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_1",
+      "y": 90
+    },
+    "facing=east,level=1,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_1",
+      "y": 90
+    },
+    "facing=east,level=1,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_1",
+      "y": 90
+    },
+    "facing=east,level=1,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_1",
+      "y": 90
+    },
+    "facing=east,level=1,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_1",
       "y": 90
     },
-    "facing=east,level=10": {
+    "facing=east,level=10,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_10",
+      "y": 90
+    },
+    "facing=east,level=10,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_10",
+      "y": 90
+    },
+    "facing=east,level=10,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_10",
+      "y": 90
+    },
+    "facing=east,level=10,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_10",
+      "y": 90
+    },
+    "facing=east,level=10,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_10",
+      "y": 90
+    },
+    "facing=east,level=10,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_10",
       "y": 90
     },
-    "facing=east,level=11": {
+    "facing=east,level=11,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_11",
+      "y": 90
+    },
+    "facing=east,level=11,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_11",
+      "y": 90
+    },
+    "facing=east,level=11,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_11",
+      "y": 90
+    },
+    "facing=east,level=11,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_11",
+      "y": 90
+    },
+    "facing=east,level=11,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_11",
+      "y": 90
+    },
+    "facing=east,level=11,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_11",
       "y": 90
     },
-    "facing=east,level=12": {
+    "facing=east,level=12,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_12",
+      "y": 90
+    },
+    "facing=east,level=12,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_12",
+      "y": 90
+    },
+    "facing=east,level=12,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_12",
+      "y": 90
+    },
+    "facing=east,level=12,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_12",
+      "y": 90
+    },
+    "facing=east,level=12,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_12",
+      "y": 90
+    },
+    "facing=east,level=12,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_12",
       "y": 90
     },
-    "facing=east,level=13": {
+    "facing=east,level=13,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_13",
+      "y": 90
+    },
+    "facing=east,level=13,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_13",
+      "y": 90
+    },
+    "facing=east,level=13,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_13",
+      "y": 90
+    },
+    "facing=east,level=13,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_13",
+      "y": 90
+    },
+    "facing=east,level=13,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_13",
+      "y": 90
+    },
+    "facing=east,level=13,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_13",
       "y": 90
     },
-    "facing=east,level=14": {
+    "facing=east,level=14,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_14",
+      "y": 90
+    },
+    "facing=east,level=14,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_14",
+      "y": 90
+    },
+    "facing=east,level=14,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_14",
+      "y": 90
+    },
+    "facing=east,level=14,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_14",
+      "y": 90
+    },
+    "facing=east,level=14,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_14",
+      "y": 90
+    },
+    "facing=east,level=14,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_14",
       "y": 90
     },
-    "facing=east,level=15": {
+    "facing=east,level=15,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_15",
+      "y": 90
+    },
+    "facing=east,level=15,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_15",
+      "y": 90
+    },
+    "facing=east,level=15,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_15",
+      "y": 90
+    },
+    "facing=east,level=15,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_15",
+      "y": 90
+    },
+    "facing=east,level=15,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_15",
+      "y": 90
+    },
+    "facing=east,level=15,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_15",
       "y": 90
     },
-    "facing=east,level=16": {
+    "facing=east,level=16,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_16",
+      "y": 90
+    },
+    "facing=east,level=16,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_16",
+      "y": 90
+    },
+    "facing=east,level=16,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_16",
+      "y": 90
+    },
+    "facing=east,level=16,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_16",
+      "y": 90
+    },
+    "facing=east,level=16,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_16",
+      "y": 90
+    },
+    "facing=east,level=16,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_16",
       "y": 90
     },
-    "facing=east,level=2": {
+    "facing=east,level=2,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_2",
+      "y": 90
+    },
+    "facing=east,level=2,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_2",
+      "y": 90
+    },
+    "facing=east,level=2,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_2",
+      "y": 90
+    },
+    "facing=east,level=2,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_2",
+      "y": 90
+    },
+    "facing=east,level=2,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_2",
+      "y": 90
+    },
+    "facing=east,level=2,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_2",
       "y": 90
     },
-    "facing=east,level=3": {
+    "facing=east,level=3,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_3",
+      "y": 90
+    },
+    "facing=east,level=3,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_3",
+      "y": 90
+    },
+    "facing=east,level=3,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_3",
+      "y": 90
+    },
+    "facing=east,level=3,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_3",
+      "y": 90
+    },
+    "facing=east,level=3,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_3",
+      "y": 90
+    },
+    "facing=east,level=3,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_3",
       "y": 90
     },
-    "facing=east,level=4": {
+    "facing=east,level=4,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_4",
+      "y": 90
+    },
+    "facing=east,level=4,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_4",
+      "y": 90
+    },
+    "facing=east,level=4,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_4",
+      "y": 90
+    },
+    "facing=east,level=4,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_4",
+      "y": 90
+    },
+    "facing=east,level=4,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_4",
+      "y": 90
+    },
+    "facing=east,level=4,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_4",
       "y": 90
     },
-    "facing=east,level=5": {
+    "facing=east,level=5,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_5",
+      "y": 90
+    },
+    "facing=east,level=5,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_5",
+      "y": 90
+    },
+    "facing=east,level=5,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_5",
+      "y": 90
+    },
+    "facing=east,level=5,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_5",
+      "y": 90
+    },
+    "facing=east,level=5,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_5",
+      "y": 90
+    },
+    "facing=east,level=5,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_5",
       "y": 90
     },
-    "facing=east,level=6": {
+    "facing=east,level=6,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_6",
+      "y": 90
+    },
+    "facing=east,level=6,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_6",
+      "y": 90
+    },
+    "facing=east,level=6,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_6",
+      "y": 90
+    },
+    "facing=east,level=6,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_6",
+      "y": 90
+    },
+    "facing=east,level=6,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_6",
+      "y": 90
+    },
+    "facing=east,level=6,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_6",
       "y": 90
     },
-    "facing=east,level=7": {
+    "facing=east,level=7,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_7",
+      "y": 90
+    },
+    "facing=east,level=7,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_7",
+      "y": 90
+    },
+    "facing=east,level=7,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_7",
+      "y": 90
+    },
+    "facing=east,level=7,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_7",
+      "y": 90
+    },
+    "facing=east,level=7,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_7",
+      "y": 90
+    },
+    "facing=east,level=7,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_7",
       "y": 90
     },
-    "facing=east,level=8": {
+    "facing=east,level=8,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_8",
+      "y": 90
+    },
+    "facing=east,level=8,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_8",
+      "y": 90
+    },
+    "facing=east,level=8,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_8",
+      "y": 90
+    },
+    "facing=east,level=8,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_8",
+      "y": 90
+    },
+    "facing=east,level=8,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_8",
+      "y": 90
+    },
+    "facing=east,level=8,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_8",
       "y": 90
     },
-    "facing=east,level=9": {
+    "facing=east,level=9,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_9",
+      "y": 90
+    },
+    "facing=east,level=9,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_9",
+      "y": 90
+    },
+    "facing=east,level=9,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_9",
+      "y": 90
+    },
+    "facing=east,level=9,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_9",
+      "y": 90
+    },
+    "facing=east,level=9,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_9",
+      "y": 90
+    },
+    "facing=east,level=9,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_9",
       "y": 90
     },
-    "facing=north,level=0": {
+    "facing=north,level=0,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_0"
+    },
+    "facing=north,level=0,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_0"
+    },
+    "facing=north,level=0,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_0"
+    },
+    "facing=north,level=0,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_0"
+    },
+    "facing=north,level=0,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_0"
+    },
+    "facing=north,level=0,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_0"
     },
-    "facing=north,level=1": {
+    "facing=north,level=1,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_1"
+    },
+    "facing=north,level=1,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_1"
+    },
+    "facing=north,level=1,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_1"
+    },
+    "facing=north,level=1,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_1"
+    },
+    "facing=north,level=1,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_1"
+    },
+    "facing=north,level=1,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_1"
     },
-    "facing=north,level=10": {
+    "facing=north,level=10,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_10"
+    },
+    "facing=north,level=10,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_10"
+    },
+    "facing=north,level=10,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_10"
+    },
+    "facing=north,level=10,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_10"
+    },
+    "facing=north,level=10,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_10"
+    },
+    "facing=north,level=10,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_10"
     },
-    "facing=north,level=11": {
+    "facing=north,level=11,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_11"
+    },
+    "facing=north,level=11,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_11"
+    },
+    "facing=north,level=11,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_11"
+    },
+    "facing=north,level=11,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_11"
+    },
+    "facing=north,level=11,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_11"
+    },
+    "facing=north,level=11,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_11"
     },
-    "facing=north,level=12": {
+    "facing=north,level=12,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_12"
+    },
+    "facing=north,level=12,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_12"
+    },
+    "facing=north,level=12,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_12"
+    },
+    "facing=north,level=12,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_12"
+    },
+    "facing=north,level=12,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_12"
+    },
+    "facing=north,level=12,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_12"
     },
-    "facing=north,level=13": {
+    "facing=north,level=13,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_13"
+    },
+    "facing=north,level=13,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_13"
+    },
+    "facing=north,level=13,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_13"
+    },
+    "facing=north,level=13,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_13"
+    },
+    "facing=north,level=13,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_13"
+    },
+    "facing=north,level=13,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_13"
     },
-    "facing=north,level=14": {
+    "facing=north,level=14,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_14"
+    },
+    "facing=north,level=14,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_14"
+    },
+    "facing=north,level=14,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_14"
+    },
+    "facing=north,level=14,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_14"
+    },
+    "facing=north,level=14,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_14"
+    },
+    "facing=north,level=14,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_14"
     },
-    "facing=north,level=15": {
+    "facing=north,level=15,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_15"
+    },
+    "facing=north,level=15,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_15"
+    },
+    "facing=north,level=15,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_15"
+    },
+    "facing=north,level=15,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_15"
+    },
+    "facing=north,level=15,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_15"
+    },
+    "facing=north,level=15,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_15"
     },
-    "facing=north,level=16": {
+    "facing=north,level=16,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_16"
+    },
+    "facing=north,level=16,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_16"
+    },
+    "facing=north,level=16,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_16"
+    },
+    "facing=north,level=16,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_16"
+    },
+    "facing=north,level=16,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_16"
+    },
+    "facing=north,level=16,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_16"
     },
-    "facing=north,level=2": {
+    "facing=north,level=2,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_2"
+    },
+    "facing=north,level=2,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_2"
+    },
+    "facing=north,level=2,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_2"
+    },
+    "facing=north,level=2,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_2"
+    },
+    "facing=north,level=2,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_2"
+    },
+    "facing=north,level=2,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_2"
     },
-    "facing=north,level=3": {
+    "facing=north,level=3,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_3"
+    },
+    "facing=north,level=3,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_3"
+    },
+    "facing=north,level=3,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_3"
+    },
+    "facing=north,level=3,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_3"
+    },
+    "facing=north,level=3,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_3"
+    },
+    "facing=north,level=3,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_3"
     },
-    "facing=north,level=4": {
+    "facing=north,level=4,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_4"
+    },
+    "facing=north,level=4,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_4"
+    },
+    "facing=north,level=4,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_4"
+    },
+    "facing=north,level=4,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_4"
+    },
+    "facing=north,level=4,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_4"
+    },
+    "facing=north,level=4,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_4"
     },
-    "facing=north,level=5": {
+    "facing=north,level=5,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_5"
+    },
+    "facing=north,level=5,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_5"
+    },
+    "facing=north,level=5,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_5"
+    },
+    "facing=north,level=5,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_5"
+    },
+    "facing=north,level=5,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_5"
+    },
+    "facing=north,level=5,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_5"
     },
-    "facing=north,level=6": {
+    "facing=north,level=6,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_6"
+    },
+    "facing=north,level=6,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_6"
+    },
+    "facing=north,level=6,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_6"
+    },
+    "facing=north,level=6,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_6"
+    },
+    "facing=north,level=6,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_6"
+    },
+    "facing=north,level=6,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_6"
     },
-    "facing=north,level=7": {
+    "facing=north,level=7,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_7"
+    },
+    "facing=north,level=7,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_7"
+    },
+    "facing=north,level=7,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_7"
+    },
+    "facing=north,level=7,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_7"
+    },
+    "facing=north,level=7,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_7"
+    },
+    "facing=north,level=7,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_7"
     },
-    "facing=north,level=8": {
+    "facing=north,level=8,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_8"
+    },
+    "facing=north,level=8,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_8"
+    },
+    "facing=north,level=8,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_8"
+    },
+    "facing=north,level=8,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_8"
+    },
+    "facing=north,level=8,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_8"
+    },
+    "facing=north,level=8,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_8"
     },
-    "facing=north,level=9": {
+    "facing=north,level=9,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_9"
+    },
+    "facing=north,level=9,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_9"
+    },
+    "facing=north,level=9,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_9"
+    },
+    "facing=north,level=9,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_9"
+    },
+    "facing=north,level=9,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_9"
+    },
+    "facing=north,level=9,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_9"
     },
-    "facing=south,level=0": {
+    "facing=south,level=0,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_0",
+      "y": 180
+    },
+    "facing=south,level=0,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_0",
+      "y": 180
+    },
+    "facing=south,level=0,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_0",
+      "y": 180
+    },
+    "facing=south,level=0,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_0",
+      "y": 180
+    },
+    "facing=south,level=0,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_0",
+      "y": 180
+    },
+    "facing=south,level=0,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_0",
       "y": 180
     },
-    "facing=south,level=1": {
+    "facing=south,level=1,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_1",
+      "y": 180
+    },
+    "facing=south,level=1,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_1",
+      "y": 180
+    },
+    "facing=south,level=1,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_1",
+      "y": 180
+    },
+    "facing=south,level=1,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_1",
+      "y": 180
+    },
+    "facing=south,level=1,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_1",
+      "y": 180
+    },
+    "facing=south,level=1,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_1",
       "y": 180
     },
-    "facing=south,level=10": {
+    "facing=south,level=10,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_10",
+      "y": 180
+    },
+    "facing=south,level=10,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_10",
+      "y": 180
+    },
+    "facing=south,level=10,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_10",
+      "y": 180
+    },
+    "facing=south,level=10,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_10",
+      "y": 180
+    },
+    "facing=south,level=10,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_10",
+      "y": 180
+    },
+    "facing=south,level=10,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_10",
       "y": 180
     },
-    "facing=south,level=11": {
+    "facing=south,level=11,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_11",
+      "y": 180
+    },
+    "facing=south,level=11,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_11",
+      "y": 180
+    },
+    "facing=south,level=11,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_11",
+      "y": 180
+    },
+    "facing=south,level=11,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_11",
+      "y": 180
+    },
+    "facing=south,level=11,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_11",
+      "y": 180
+    },
+    "facing=south,level=11,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_11",
       "y": 180
     },
-    "facing=south,level=12": {
+    "facing=south,level=12,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_12",
+      "y": 180
+    },
+    "facing=south,level=12,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_12",
+      "y": 180
+    },
+    "facing=south,level=12,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_12",
+      "y": 180
+    },
+    "facing=south,level=12,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_12",
+      "y": 180
+    },
+    "facing=south,level=12,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_12",
+      "y": 180
+    },
+    "facing=south,level=12,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_12",
       "y": 180
     },
-    "facing=south,level=13": {
+    "facing=south,level=13,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_13",
+      "y": 180
+    },
+    "facing=south,level=13,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_13",
+      "y": 180
+    },
+    "facing=south,level=13,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_13",
+      "y": 180
+    },
+    "facing=south,level=13,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_13",
+      "y": 180
+    },
+    "facing=south,level=13,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_13",
+      "y": 180
+    },
+    "facing=south,level=13,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_13",
       "y": 180
     },
-    "facing=south,level=14": {
+    "facing=south,level=14,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_14",
+      "y": 180
+    },
+    "facing=south,level=14,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_14",
+      "y": 180
+    },
+    "facing=south,level=14,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_14",
+      "y": 180
+    },
+    "facing=south,level=14,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_14",
+      "y": 180
+    },
+    "facing=south,level=14,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_14",
+      "y": 180
+    },
+    "facing=south,level=14,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_14",
       "y": 180
     },
-    "facing=south,level=15": {
+    "facing=south,level=15,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_15",
+      "y": 180
+    },
+    "facing=south,level=15,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_15",
+      "y": 180
+    },
+    "facing=south,level=15,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_15",
+      "y": 180
+    },
+    "facing=south,level=15,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_15",
+      "y": 180
+    },
+    "facing=south,level=15,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_15",
+      "y": 180
+    },
+    "facing=south,level=15,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_15",
       "y": 180
     },
-    "facing=south,level=16": {
+    "facing=south,level=16,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_16",
+      "y": 180
+    },
+    "facing=south,level=16,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_16",
+      "y": 180
+    },
+    "facing=south,level=16,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_16",
+      "y": 180
+    },
+    "facing=south,level=16,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_16",
+      "y": 180
+    },
+    "facing=south,level=16,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_16",
+      "y": 180
+    },
+    "facing=south,level=16,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_16",
       "y": 180
     },
-    "facing=south,level=2": {
+    "facing=south,level=2,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_2",
+      "y": 180
+    },
+    "facing=south,level=2,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_2",
+      "y": 180
+    },
+    "facing=south,level=2,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_2",
+      "y": 180
+    },
+    "facing=south,level=2,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_2",
+      "y": 180
+    },
+    "facing=south,level=2,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_2",
+      "y": 180
+    },
+    "facing=south,level=2,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_2",
       "y": 180
     },
-    "facing=south,level=3": {
+    "facing=south,level=3,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_3",
+      "y": 180
+    },
+    "facing=south,level=3,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_3",
+      "y": 180
+    },
+    "facing=south,level=3,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_3",
+      "y": 180
+    },
+    "facing=south,level=3,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_3",
+      "y": 180
+    },
+    "facing=south,level=3,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_3",
+      "y": 180
+    },
+    "facing=south,level=3,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_3",
       "y": 180
     },
-    "facing=south,level=4": {
+    "facing=south,level=4,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_4",
+      "y": 180
+    },
+    "facing=south,level=4,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_4",
+      "y": 180
+    },
+    "facing=south,level=4,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_4",
+      "y": 180
+    },
+    "facing=south,level=4,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_4",
+      "y": 180
+    },
+    "facing=south,level=4,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_4",
+      "y": 180
+    },
+    "facing=south,level=4,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_4",
       "y": 180
     },
-    "facing=south,level=5": {
+    "facing=south,level=5,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_5",
+      "y": 180
+    },
+    "facing=south,level=5,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_5",
+      "y": 180
+    },
+    "facing=south,level=5,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_5",
+      "y": 180
+    },
+    "facing=south,level=5,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_5",
+      "y": 180
+    },
+    "facing=south,level=5,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_5",
+      "y": 180
+    },
+    "facing=south,level=5,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_5",
       "y": 180
     },
-    "facing=south,level=6": {
+    "facing=south,level=6,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_6",
+      "y": 180
+    },
+    "facing=south,level=6,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_6",
+      "y": 180
+    },
+    "facing=south,level=6,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_6",
+      "y": 180
+    },
+    "facing=south,level=6,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_6",
+      "y": 180
+    },
+    "facing=south,level=6,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_6",
+      "y": 180
+    },
+    "facing=south,level=6,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_6",
       "y": 180
     },
-    "facing=south,level=7": {
+    "facing=south,level=7,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_7",
+      "y": 180
+    },
+    "facing=south,level=7,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_7",
+      "y": 180
+    },
+    "facing=south,level=7,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_7",
+      "y": 180
+    },
+    "facing=south,level=7,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_7",
+      "y": 180
+    },
+    "facing=south,level=7,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_7",
+      "y": 180
+    },
+    "facing=south,level=7,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_7",
       "y": 180
     },
-    "facing=south,level=8": {
+    "facing=south,level=8,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_8",
+      "y": 180
+    },
+    "facing=south,level=8,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_8",
+      "y": 180
+    },
+    "facing=south,level=8,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_8",
+      "y": 180
+    },
+    "facing=south,level=8,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_8",
+      "y": 180
+    },
+    "facing=south,level=8,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_8",
+      "y": 180
+    },
+    "facing=south,level=8,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_8",
       "y": 180
     },
-    "facing=south,level=9": {
+    "facing=south,level=9,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_9",
+      "y": 180
+    },
+    "facing=south,level=9,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_9",
+      "y": 180
+    },
+    "facing=south,level=9,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_9",
+      "y": 180
+    },
+    "facing=south,level=9,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_9",
+      "y": 180
+    },
+    "facing=south,level=9,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_9",
+      "y": 180
+    },
+    "facing=south,level=9,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_9",
       "y": 180
     },
-    "facing=west,level=0": {
+    "facing=west,level=0,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_0",
+      "y": 270
+    },
+    "facing=west,level=0,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_0",
+      "y": 270
+    },
+    "facing=west,level=0,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_0",
+      "y": 270
+    },
+    "facing=west,level=0,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_0",
+      "y": 270
+    },
+    "facing=west,level=0,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_0",
+      "y": 270
+    },
+    "facing=west,level=0,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_0",
       "y": 270
     },
-    "facing=west,level=1": {
+    "facing=west,level=1,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_1",
+      "y": 270
+    },
+    "facing=west,level=1,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_1",
+      "y": 270
+    },
+    "facing=west,level=1,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_1",
+      "y": 270
+    },
+    "facing=west,level=1,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_1",
+      "y": 270
+    },
+    "facing=west,level=1,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_1",
+      "y": 270
+    },
+    "facing=west,level=1,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_1",
       "y": 270
     },
-    "facing=west,level=10": {
+    "facing=west,level=10,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_10",
+      "y": 270
+    },
+    "facing=west,level=10,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_10",
+      "y": 270
+    },
+    "facing=west,level=10,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_10",
+      "y": 270
+    },
+    "facing=west,level=10,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_10",
+      "y": 270
+    },
+    "facing=west,level=10,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_10",
+      "y": 270
+    },
+    "facing=west,level=10,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_10",
       "y": 270
     },
-    "facing=west,level=11": {
+    "facing=west,level=11,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_11",
+      "y": 270
+    },
+    "facing=west,level=11,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_11",
+      "y": 270
+    },
+    "facing=west,level=11,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_11",
+      "y": 270
+    },
+    "facing=west,level=11,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_11",
+      "y": 270
+    },
+    "facing=west,level=11,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_11",
+      "y": 270
+    },
+    "facing=west,level=11,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_11",
       "y": 270
     },
-    "facing=west,level=12": {
+    "facing=west,level=12,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_12",
+      "y": 270
+    },
+    "facing=west,level=12,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_12",
+      "y": 270
+    },
+    "facing=west,level=12,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_12",
+      "y": 270
+    },
+    "facing=west,level=12,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_12",
+      "y": 270
+    },
+    "facing=west,level=12,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_12",
+      "y": 270
+    },
+    "facing=west,level=12,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_12",
       "y": 270
     },
-    "facing=west,level=13": {
+    "facing=west,level=13,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_13",
+      "y": 270
+    },
+    "facing=west,level=13,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_13",
+      "y": 270
+    },
+    "facing=west,level=13,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_13",
+      "y": 270
+    },
+    "facing=west,level=13,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_13",
+      "y": 270
+    },
+    "facing=west,level=13,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_13",
+      "y": 270
+    },
+    "facing=west,level=13,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_13",
       "y": 270
     },
-    "facing=west,level=14": {
+    "facing=west,level=14,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_14",
+      "y": 270
+    },
+    "facing=west,level=14,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_14",
+      "y": 270
+    },
+    "facing=west,level=14,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_14",
+      "y": 270
+    },
+    "facing=west,level=14,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_14",
+      "y": 270
+    },
+    "facing=west,level=14,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_14",
+      "y": 270
+    },
+    "facing=west,level=14,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_14",
       "y": 270
     },
-    "facing=west,level=15": {
+    "facing=west,level=15,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_15",
+      "y": 270
+    },
+    "facing=west,level=15,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_15",
+      "y": 270
+    },
+    "facing=west,level=15,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_15",
+      "y": 270
+    },
+    "facing=west,level=15,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_15",
+      "y": 270
+    },
+    "facing=west,level=15,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_15",
+      "y": 270
+    },
+    "facing=west,level=15,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_15",
       "y": 270
     },
-    "facing=west,level=16": {
+    "facing=west,level=16,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_16",
+      "y": 270
+    },
+    "facing=west,level=16,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_16",
+      "y": 270
+    },
+    "facing=west,level=16,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_16",
+      "y": 270
+    },
+    "facing=west,level=16,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_16",
+      "y": 270
+    },
+    "facing=west,level=16,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_16",
+      "y": 270
+    },
+    "facing=west,level=16,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_16",
       "y": 270
     },
-    "facing=west,level=2": {
+    "facing=west,level=2,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_2",
+      "y": 270
+    },
+    "facing=west,level=2,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_2",
+      "y": 270
+    },
+    "facing=west,level=2,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_2",
+      "y": 270
+    },
+    "facing=west,level=2,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_2",
+      "y": 270
+    },
+    "facing=west,level=2,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_2",
+      "y": 270
+    },
+    "facing=west,level=2,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_2",
       "y": 270
     },
-    "facing=west,level=3": {
+    "facing=west,level=3,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_3",
+      "y": 270
+    },
+    "facing=west,level=3,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_3",
+      "y": 270
+    },
+    "facing=west,level=3,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_3",
+      "y": 270
+    },
+    "facing=west,level=3,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_3",
+      "y": 270
+    },
+    "facing=west,level=3,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_3",
+      "y": 270
+    },
+    "facing=west,level=3,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_3",
       "y": 270
     },
-    "facing=west,level=4": {
+    "facing=west,level=4,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_4",
+      "y": 270
+    },
+    "facing=west,level=4,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_4",
+      "y": 270
+    },
+    "facing=west,level=4,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_4",
+      "y": 270
+    },
+    "facing=west,level=4,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_4",
+      "y": 270
+    },
+    "facing=west,level=4,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_4",
+      "y": 270
+    },
+    "facing=west,level=4,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_4",
       "y": 270
     },
-    "facing=west,level=5": {
+    "facing=west,level=5,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_5",
+      "y": 270
+    },
+    "facing=west,level=5,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_5",
+      "y": 270
+    },
+    "facing=west,level=5,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_5",
+      "y": 270
+    },
+    "facing=west,level=5,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_5",
+      "y": 270
+    },
+    "facing=west,level=5,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_5",
+      "y": 270
+    },
+    "facing=west,level=5,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_5",
       "y": 270
     },
-    "facing=west,level=6": {
+    "facing=west,level=6,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_6",
+      "y": 270
+    },
+    "facing=west,level=6,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_6",
+      "y": 270
+    },
+    "facing=west,level=6,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_6",
+      "y": 270
+    },
+    "facing=west,level=6,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_6",
+      "y": 270
+    },
+    "facing=west,level=6,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_6",
+      "y": 270
+    },
+    "facing=west,level=6,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_6",
       "y": 270
     },
-    "facing=west,level=7": {
+    "facing=west,level=7,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_7",
+      "y": 270
+    },
+    "facing=west,level=7,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_7",
+      "y": 270
+    },
+    "facing=west,level=7,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_7",
+      "y": 270
+    },
+    "facing=west,level=7,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_7",
+      "y": 270
+    },
+    "facing=west,level=7,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_7",
+      "y": 270
+    },
+    "facing=west,level=7,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_7",
       "y": 270
     },
-    "facing=west,level=8": {
+    "facing=west,level=8,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_8",
+      "y": 270
+    },
+    "facing=west,level=8,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_8",
+      "y": 270
+    },
+    "facing=west,level=8,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_8",
+      "y": 270
+    },
+    "facing=west,level=8,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_8",
+      "y": 270
+    },
+    "facing=west,level=8,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_8",
+      "y": 270
+    },
+    "facing=west,level=8,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_8",
       "y": 270
     },
-    "facing=west,level=9": {
+    "facing=west,level=9,sides=back_left": {
+      "model": "galacticraftcore:block/energy_storage_module_back_left_9",
+      "y": 270
+    },
+    "facing=west,level=9,sides=back_right": {
+      "model": "galacticraftcore:block/energy_storage_module_back_right_9",
+      "y": 270
+    },
+    "facing=west,level=9,sides=left_back": {
+      "model": "galacticraftcore:block/energy_storage_module_left_back_9",
+      "y": 270
+    },
+    "facing=west,level=9,sides=left_right": {
+      "model": "galacticraftcore:block/energy_storage_module_left_right_9",
+      "y": 270
+    },
+    "facing=west,level=9,sides=right_back": {
+      "model": "galacticraftcore:block/energy_storage_module_right_back_9",
+      "y": 270
+    },
+    "facing=west,level=9,sides=right_left": {
       "model": "galacticraftcore:block/energy_storage_module_9",
       "y": 270
     }

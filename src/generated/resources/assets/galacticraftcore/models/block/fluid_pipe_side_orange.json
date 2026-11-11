@@ -1,0 +1,8 @@
+{
+  "parent": "galacticraftcore:block/fluid_pipe_side",
+  "render_type": "minecraft:cutout",
+  "textures": {
+    "particle": "galacticraftcore:block/pipe/orange",
+    "pipeTex": "galacticraftcore:block/pipe/orange"
+  }
+}

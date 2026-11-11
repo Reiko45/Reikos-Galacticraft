@@ -111,10 +111,16 @@ public class AluminumWireBlock extends Block implements EntityBlock {
         return state.setValue(CONNECTIONS.get(direction), connects(level, pos, direction));
     }
 
+    /** Whether this wire currently carries power (switchable wires stop when powered by redstone). */
+    public boolean isConductive(BlockState state) {
+        return true;
+    }
+
     public static boolean connects(LevelAccessor level, BlockPos pos, Direction direction) {
         final BlockPos neighbor = pos.relative(direction);
-        if (level.getBlockState(neighbor).getBlock() instanceof AluminumWireBlock) {
-            return true;
+        final BlockState neighborState = level.getBlockState(neighbor);
+        if (neighborState.getBlock() instanceof AluminumWireBlock wire) {
+            return wire.isConductive(neighborState);
         }
         if (level instanceof Level real) {
             final Direction face = direction.getOpposite();

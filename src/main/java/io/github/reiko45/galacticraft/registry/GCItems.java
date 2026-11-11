@@ -3,6 +3,7 @@ package io.github.reiko45.galacticraft.registry;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.DescribedItem;
 import io.github.reiko45.galacticraft.item.ElectricItem;
+import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
 import io.github.reiko45.galacticraft.item.WrenchItem;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ArmorItem;
@@ -77,6 +78,12 @@ public final class GCItems {
     /** 1.12.2 ItemUniversalWrench: 256 uses, rotates machines. */
     public static final DeferredItem<WrenchItem> STANDARD_WRENCH = ITEMS.register("standard_wrench",
             () -> new WrenchItem(new Item.Properties().durability(256)));
+
+    // --- Liquid canisters (1.12.2 oil_canister_partial / fuel_canister_partial) ---
+    public static final DeferredItem<LiquidCanisterItem> OIL_CANISTER = ITEMS.register("oil_canister",
+            () -> new LiquidCanisterItem(new Item.Properties(), false));
+    public static final DeferredItem<LiquidCanisterItem> FUEL_CANISTER = ITEMS.register("fuel_canister",
+            () -> new LiquidCanisterItem(new Item.Properties(), true));
 
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.

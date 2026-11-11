@@ -67,9 +67,13 @@ def port_textures(mapping, legacy_assets, out_assets):
 
 def port_models(mapping, legacy_assets, out_assets):
     reverse = {f"{MOD_ID}:{old}": f"{MOD_ID}:{new}" for new, old in mapping["textures"].items()}
-    for new, old in mapping["models"].items():
+    for new, spec in mapping["models"].items():
+        # A plain string names the 1.12 model; an object can also set a 1.21 render_type (e.g. minecraft:cutout).
+        old = spec if isinstance(spec, str) else spec["from"]
         with open(os.path.join(legacy_assets, "models", old + ".json"), encoding="utf-8") as f:
             model = json.load(f)
+        if isinstance(spec, dict) and "render_type" in spec:
+            model["render_type"] = spec["render_type"]
         for slot, ref in list(model.get("textures", {}).items()):
             if ref.startswith("#"):
                 continue
@@ -82,6 +86,8 @@ def port_models(mapping, legacy_assets, out_assets):
         with open(os.path.join(legacy_assets, "models", spec["from"] + ".json"), encoding="utf-8") as f:
             source = json.load(f)
         model = {"textures": {}, "elements": [e for e in source["elements"] if e.get("__comment") in spec["elements"]]}
+        if "render_type" in spec:
+            model["render_type"] = spec["render_type"]
         if len(model["elements"]) != len(spec["elements"]):
             raise SystemExit(f"model_parts {new}: elements {spec['elements']} not all found in {spec['from']}")
         for element in model["elements"]:

@@ -4,6 +4,7 @@ import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.machine.EnergyAccess;
 import io.github.reiko45.galacticraft.machine.RelativeSide;
+import io.github.reiko45.galacticraft.machine.StorageSides;
 import io.github.reiko45.galacticraft.menu.EnergyStorageMenu;
 import io.github.reiko45.galacticraft.menu.SyncedData;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
@@ -16,8 +17,8 @@ import net.minecraft.world.level.block.state.BlockState;
 
 /**
  * Energy Storage Module (tier 1: 500,000 gJ, 300 gJ/t out) and Energy Storage Cluster (tier 2: 2,500,000 gJ,
- * 1,800 gJ/t out), from 1.12.2 TileEntityEnergyStorageModule. Input on the right face, output on the left face
- * (as seen from the front). Slot 0 charges a battery, slot 1 drains one into the module.
+ * 1,800 gJ/t out), from 1.12.2 TileEntityEnergyStorageModule. By default input on the right face and output on the
+ * left face (as seen from the front); sneak + wrench moves them. Slot 0 charges a battery, slot 1 drains one into the module.
  */
 public class EnergyStorageBlockEntity extends MachineBlockEntity {
     public static final float MODULE_CAPACITY = 500_000.0F;
@@ -86,11 +87,12 @@ public class EnergyStorageBlockEntity extends MachineBlockEntity {
 
     @Override
     protected EnergyAccess energyAccess(RelativeSide side) {
-        return switch (side) {
-            case LEFT -> EnergyAccess.OUTPUT;
-            case RIGHT -> EnergyAccess.INPUT;
-            default -> EnergyAccess.NONE;
-        };
+        final BlockState state = getBlockState();
+        final StorageSides sides = state.hasProperty(EnergyStorageBlock.SIDES) ? state.getValue(EnergyStorageBlock.SIDES) : StorageSides.RIGHT_LEFT;
+        if (side == sides.output()) {
+            return EnergyAccess.OUTPUT;
+        }
+        return side == sides.input() ? EnergyAccess.INPUT : EnergyAccess.NONE;
     }
 
     @Override

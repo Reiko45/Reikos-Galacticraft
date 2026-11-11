@@ -13,7 +13,9 @@ public enum MachineStatus {
     OFF("gui.galacticraftcore.status.off", ChatFormatting.DARK_RED),
     NO_POWER("gui.galacticraftcore.status.missing_power_short", ChatFormatting.DARK_RED),
     LOW_POWER("gui.galacticraftcore.status.missing_power_short", ChatFormatting.GOLD),
-    COMPRESSING("gui.galacticraftcore.status.compressing", ChatFormatting.DARK_GREEN);
+    COMPRESSING("gui.galacticraftcore.status.compressing", ChatFormatting.DARK_GREEN),
+    NO_OIL("gui.galacticraftcore.status.no_oil", ChatFormatting.DARK_RED),
+    REFINING("gui.galacticraftcore.status.refining", ChatFormatting.DARK_GREEN);
 
     private final String key;
     private final ChatFormatting color;

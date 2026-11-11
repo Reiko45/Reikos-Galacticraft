@@ -52,7 +52,9 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.FALLEN_METEOR.get(),
                 GCBlocks.COAL_GENERATOR.get(), GCBlocks.ENERGY_STORAGE_MODULE.get(), GCBlocks.ENERGY_STORAGE_CLUSTER.get(),
                 GCBlocks.COMPRESSOR.get(), GCBlocks.ELECTRIC_COMPRESSOR.get(), GCBlocks.ADVANCED_COMPRESSOR.get(),
-                GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get(), GCBlocks.CIRCUIT_FABRICATOR.get());
+                GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get(), GCBlocks.CIRCUIT_FABRICATOR.get(),
+                GCBlocks.BASIC_SOLAR_PANEL.get(), GCBlocks.ADVANCED_SOLAR_PANEL.get(), GCBlocks.SOLAR_PART.get(),
+                GCBlocks.REFINERY.get(), GCBlocks.FLUID_TANK.get());
 
         tag(BlockTags.NEEDS_STONE_TOOL).add(
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(),

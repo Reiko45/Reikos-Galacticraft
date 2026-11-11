@@ -1,0 +1,227 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:fluid_pipe"
+        }
+      ],
+      "rolls": 1.0
+    },
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "orange"
+              }
+            }
+          ],
+          "name": "minecraft:orange_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "magenta"
+              }
+            }
+          ],
+          "name": "minecraft:magenta_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "light_blue"
+              }
+            }
+          ],
+          "name": "minecraft:light_blue_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "yellow"
+              }
+            }
+          ],
+          "name": "minecraft:yellow_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "lime"
+              }
+            }
+          ],
+          "name": "minecraft:lime_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "pink"
+              }
+            }
+          ],
+          "name": "minecraft:pink_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "gray"
+              }
+            }
+          ],
+          "name": "minecraft:gray_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "light_gray"
+              }
+            }
+          ],
+          "name": "minecraft:light_gray_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "cyan"
+              }
+            }
+          ],
+          "name": "minecraft:cyan_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "purple"
+              }
+            }
+          ],
+          "name": "minecraft:purple_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "blue"
+              }
+            }
+          ],
+          "name": "minecraft:blue_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "brown"
+              }
+            }
+          ],
+          "name": "minecraft:brown_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "green"
+              }
+            }
+          ],
+          "name": "minecraft:green_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "red"
+              }
+            }
+          ],
+          "name": "minecraft:red_dye"
+        },
+        {
+          "type": "minecraft:item",
+          "conditions": [
+            {
+              "block": "galacticraftcore:fluid_pipe",
+              "condition": "minecraft:block_state_property",
+              "properties": {
+                "color": "black"
+              }
+            }
+          ],
+          "name": "minecraft:black_dye"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "galacticraftcore:blocks/fluid_pipe"
+}

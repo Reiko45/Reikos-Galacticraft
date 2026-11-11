@@ -22,7 +22,12 @@ public abstract class ProcessingMenu extends MachineMenu {
     }
 
     protected ProcessingMenu(MenuType<?> type, int id, Inventory playerInventory, RegistryFriendlyByteBuf buf, int slots) {
-        super(type, id, playerInventory, buf, slots, DATA_COUNT);
+        this(type, id, playerInventory, buf, slots, DATA_COUNT);
+    }
+
+    /** For subclasses that sync extra values after the processing ones. */
+    protected ProcessingMenu(MenuType<?> type, int id, Inventory playerInventory, RegistryFriendlyByteBuf buf, int slots, int dataCount) {
+        super(type, id, playerInventory, buf, slots, dataCount);
         this.level = playerInventory.player.level();
     }
 

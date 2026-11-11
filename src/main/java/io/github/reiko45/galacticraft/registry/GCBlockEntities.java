@@ -7,7 +7,12 @@ import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.FluidPipeBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.FluidTankBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.RefineryBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.MachineBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.SolarPanelBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.SolarPartBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.WireBlockEntity;
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +29,8 @@ public final class GCBlockEntities {
 
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<WireBlockEntity>> WIRE = BLOCK_ENTITIES.register("wire",
-            () -> BlockEntityType.Builder.of(WireBlockEntity::new, GCBlocks.ALUMINUM_WIRE.get(), GCBlocks.HEAVY_ALUMINUM_WIRE.get()).build(null));
+            () -> BlockEntityType.Builder.of(WireBlockEntity::new, GCBlocks.ALUMINUM_WIRE.get(), GCBlocks.HEAVY_ALUMINUM_WIRE.get(),
+                    GCBlocks.ALUMINUM_WIRE_SWITCH.get(), GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get()).build(null));
 
     public static final Supplier<BlockEntityType<CoalGeneratorBlockEntity>> COAL_GENERATOR = machine("coal_generator",
             CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR);
@@ -44,6 +50,23 @@ public final class GCBlockEntities {
             ElectricFurnaceBlockEntity::arcFurnace, GCBlocks.ELECTRIC_ARC_FURNACE);
     public static final Supplier<BlockEntityType<CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = machine("circuit_fabricator",
             CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR);
+
+    public static final Supplier<BlockEntityType<SolarPanelBlockEntity>> BASIC_SOLAR_PANEL = machine("basic_solar_panel",
+            SolarPanelBlockEntity::basic, GCBlocks.BASIC_SOLAR_PANEL);
+    public static final Supplier<BlockEntityType<SolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = machine("advanced_solar_panel",
+            SolarPanelBlockEntity::advanced, GCBlocks.ADVANCED_SOLAR_PANEL);
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<SolarPartBlockEntity>> SOLAR_PART = BLOCK_ENTITIES.register("solar_panel_part",
+            () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get()).build(null));
+
+    public static final Supplier<BlockEntityType<RefineryBlockEntity>> REFINERY = machine("refinery",
+            RefineryBlockEntity::new, GCBlocks.REFINERY);
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<FluidTankBlockEntity>> FLUID_TANK = BLOCK_ENTITIES.register("fluid_tank",
+            () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new, GCBlocks.FLUID_TANK.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<FluidPipeBlockEntity>> FLUID_PIPE = BLOCK_ENTITIES.register("fluid_pipe",
+            () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new, GCBlocks.FLUID_PIPE.get()).build(null));
 
     /** Every machine block entity type (for capability registration). */
     public static List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>> machineTypes() {

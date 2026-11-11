@@ -4,8 +4,8 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 2a of 8 (alpha).** The Moon exists, and Galacticraft's power system and core machines work.
-Rockets, oxygen, solar panels and fluids are not ported yet. See [PORTING.md](PORTING.md) for the roadmap and
+**Status: Phase 2b of 8 (alpha).** The Moon exists, and Galacticraft's power system, core machines, solar panels
+and oil processing work. Rockets and oxygen are not ported yet. See [PORTING.md](PORTING.md) for the roadmap and
 how each 1.12.2 system maps to NeoForge.
 
 ## What works
@@ -17,12 +17,19 @@ how each 1.12.2 system maps to NeoForge.
   fall distance is ×0.18, the same as 1.12.2.
 * **Items**: ingots, compressed plates, wafers, rocket/oxygen/buggy parts, canisters, Heavy Duty tools and armor.
   Food includes cheese, the cheeseburger, and canned food that gives back its tin canister.
-* **Power** (gJ, with FE compatibility at 1 FE = 1.6 gJ): Coal Generator, Energy Storage Module and Cluster,
-  Aluminum Wire and Heavy Aluminum Wire networks, Battery and Standard Wrench. Tier-2 power (a Cluster over
-  heavy wire) makes the Arc Furnace, Electric/Advanced Compressor and Circuit Fabricator faster, as in 1.12.2.
+* **Power** (gJ, with FE compatibility at 1 FE = 1.6 gJ): Coal Generator, Basic and Advanced Solar Panels, Energy
+  Storage Module and Cluster, Aluminum Wire and Heavy Aluminum Wire networks and their redstone switches, Battery
+  and Standard Wrench. Tier-2 power (a Cluster over heavy wire) makes the Arc Furnace, Electric/Advanced
+  Compressor, Circuit Fabricator and Refinery faster, as in 1.12.2. Sneak-use the wrench on a machine to move its
+  energy port.
 * **Machines**: Compressor (burns fuel), Electric Compressor, Advanced Compressor, Electric Furnace, Electric Arc
   Furnace, Circuit Fabricator. Their GUIs use the original 1.12.2 artwork, and hoppers/pipes work per side.
-* Recipes: 77 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
+* **Oil**: crude oil pockets underground in the Overworld, oil and fuel liquids and buckets, Oil/Fuel Canisters,
+  the Refinery, stackable Fluid Tanks and dyeable Fluid Pipes (wrench a pipe to make it pull from the block next
+  to it). Oil and fuel work with other mods' tanks and pipes, and the `c:oil` tag lets the Refinery take other
+  mods' oil.
+* **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
+* Recipes: 85 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 
@@ -32,8 +39,16 @@ how each 1.12.2 system maps to NeoForge.
 |---|---|
 | ![Circuit Fabricator GUI](docs/screenshots/circuit_fabricator.png) | ![Electric Furnace GUI](docs/screenshots/electric_furnace.png) |
 
-Some parts (rocket and oxygen components) have recipes but no use yet. Their machines and vehicles come in later
-phases.
+![Oil tanks, pull pipes, the Refinery and a fuel tank; solar panels behind](docs/screenshots/oil_processing.png)
+
+![Basic (flat) and Advanced (sun-tracking) Solar Panels](docs/screenshots/solar_panels.png)
+
+| Refinery | JEI |
+|---|---|
+| ![Refinery GUI](docs/screenshots/refinery.png) | ![Refinery recipes in JEI](docs/screenshots/jei_refinery.png) |
+
+Some parts (rocket and oxygen components) have recipes but no use yet, and fuel has no use until rockets arrive.
+Their machines and vehicles come in later phases.
 
 ### Visiting the Moon
 
@@ -51,12 +66,13 @@ Requires JDK 21.
 ./gradlew build               # mod jar in build/libs/
 ./gradlew runClient           # dev client
 ./gradlew runData             # regenerate src/generated/resources (models, loot, tags, worldgen, ...)
-./gradlew runGameTestServer   # in-game tests (gametest/PortSmokeTests), exits non-zero on failure
+./gradlew runGameTestServer   # in-game tests (gametest/*Tests), exits non-zero on failure
 python3 tools/check_assets.py # static check of models/textures/translations
 ```
 
-`./gradlew runScreenshotTour` is a development aid. It loads the world `run/saves/tour` (any singleplayer
-save), places every machine, opens each GUI, saves screenshots to `run/screenshots/` and quits.
+`./gradlew runScreenshotTour` is a development aid. It creates a flat creative world, builds every machine, the
+solar panels and an oil processing line, opens each GUI and the JEI categories, saves screenshots to
+`run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
 
 ## Porting tools
 
@@ -74,9 +90,11 @@ python3 tools/port_legacy_assets.py --legacy ../Galacticraft-Legacy
 | Path | Contents |
 |---|---|
 | `src/main/java/.../registry` | Blocks, items, armor materials, tiers, creative tabs, chunk generator codec |
-| `src/main/java/.../world` | Moon chunk generator, dimension keys, per-dimension physics, ported noise |
+| `src/main/java/.../world` | Moon chunk generator, dimension keys, per-dimension physics, ported noise, oil pockets |
 | `src/main/java/.../energy` | gJ storage, energy capability, FE bridge, wire networks |
-| `src/main/java/.../block/entity`, `menu`, `client/screen` | Machines, their menus and GUIs |
+| `src/main/java/.../fluid` | Oil/fuel blocks, fluid tags, fluid pipe networks |
+| `src/main/java/.../block/entity`, `menu`, `client/screen`, `client/render` | Machines, their menus, GUIs and block entity renderers |
+| `src/main/java/.../compat/jei` | Optional JEI plugin |
 | `src/main/java/.../recipe` | Compressing and circuit fabricating recipe types |
 | `src/main/java/.../event` | Gravity and fall-damage handling |
 | `src/main/java/.../data` | Datagen providers |

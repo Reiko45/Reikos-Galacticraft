@@ -2,6 +2,7 @@ package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
+import io.github.reiko45.galacticraft.registry.GCFeatures;
 import io.github.reiko45.galacticraft.world.GCDimensions;
 import io.github.reiko45.galacticraft.world.MoonChunkGenerator;
 import java.util.List;
@@ -33,6 +34,7 @@ import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
 import net.minecraft.world.level.levelgen.feature.ConfiguredFeature;
 import net.minecraft.world.level.levelgen.feature.Feature;
+import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.OreConfiguration;
 import net.minecraft.world.level.levelgen.feature.configurations.ReplaceBlockConfiguration;
 import net.minecraft.world.level.levelgen.placement.BiomeFilter;
@@ -51,7 +53,7 @@ import net.neoforged.neoforge.registries.NeoForgeRegistries;
 /**
  * Data-driven worldgen: ore features, the Overworld biome modifier, and the Moon biome, dimension type and dimension.
  *
- * <p>1.12.2 generated ores imperatively ({@code OverworldGenerator}, {@code BiomeDecoratorMoon});
+ * <p>1.12.2 generated ores and oil imperatively ({@code OverworldGenerator}, {@code BiomeDecoratorMoon});
  * counts, vein sizes and height ranges below are copied from those classes.
  */
 public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
@@ -74,6 +76,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     public static final ResourceKey<PlacedFeature> MOON_ORE_TIN_PLACED = placed("moon_ore_tin");
     public static final ResourceKey<PlacedFeature> MOON_ORE_CHEESE_PLACED = placed("moon_ore_cheese");
     public static final ResourceKey<PlacedFeature> MOON_ORE_SAPPHIRE_PLACED = placed("moon_ore_sapphire");
+
+    // Overworld crude oil pockets
+    public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_POCKET = configured("oil_pocket");
+    public static final ResourceKey<PlacedFeature> OIL_POCKET_PLACED = placed("oil_pocket");
+    public static final ResourceKey<BiomeModifier> ADD_OVERWORLD_OIL =
+            ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GalacticraftCore.id("add_overworld_oil"));
 
     public static final ResourceKey<BiomeModifier> ADD_OVERWORLD_ORES =
             ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GalacticraftCore.id("add_overworld_ores"));
@@ -107,6 +115,9 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         FeatureUtils.register(context, ORE_ALUMINUM, Feature.ORE, new OreConfiguration(stone, GCBlocks.ALUMINUM_ORE.get().defaultBlockState(), 7));
         FeatureUtils.register(context, ORE_SILICON, Feature.ORE, new OreConfiguration(stone, GCBlocks.SILICON_ORE.get().defaultBlockState(), 7));
 
+        // The pocket feature rolls its own (biome-dependent) chance, like 1.12.2 EventHandlerGC#oilPresent.
+        FeatureUtils.register(context, OIL_POCKET, GCFeatures.OIL_POCKET.get(), NoneFeatureConfiguration.INSTANCE);
+
         // BiomeDecoratorMoon: WorldGenMinableMeta vein sizes.
         FeatureUtils.register(context, MOON_DIRT_BLOB, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_DIRT.get().defaultBlockState(), 32));
         FeatureUtils.register(context, MOON_ORE_COPPER, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_COPPER_ORE.get().defaultBlockState(), 4));
@@ -123,6 +134,8 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         ore(context, ORE_TIN_PLACED, configured, ORE_TIN, 22, 0, 59);
         ore(context, ORE_ALUMINUM_PLACED, configured, ORE_ALUMINUM, 18, 0, 44);
         ore(context, ORE_SILICON_PLACED, configured, ORE_SILICON, 3, 0, 24);
+
+        PlacementUtils.register(context, OIL_POCKET_PLACED, configured.getOrThrow(OIL_POCKET), List.of(BiomeFilter.biome()));
 
         ore(context, MOON_DIRT_BLOB_PLACED, configured, MOON_DIRT_BLOB, 20, 0, 199);
         ore(context, MOON_ORE_COPPER_PLACED, configured, MOON_ORE_COPPER, 26, 0, 59);
@@ -202,5 +215,9 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_OVERWORLD),
                 HolderSet.direct(placed.getOrThrow(ORE_TIN_PLACED), placed.getOrThrow(ORE_ALUMINUM_PLACED), placed.getOrThrow(ORE_SILICON_PLACED)),
                 GenerationStep.Decoration.UNDERGROUND_ORES));
+        // LAKES: after caves are carved (so pockets stay sealed) but before structures, which then win over oil.
+        context.register(ADD_OVERWORLD_OIL, new BiomeModifiers.AddFeaturesBiomeModifier(
+                context.lookup(Registries.BIOME).getOrThrow(BiomeTags.IS_OVERWORLD),
+                HolderSet.direct(placed.getOrThrow(OIL_POCKET_PLACED)), GenerationStep.Decoration.LAKES));
     }
 }

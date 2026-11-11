@@ -2,13 +2,23 @@ package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.AluminumWireBlock;
+import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
+import io.github.reiko45.galacticraft.block.FluidPipeBlock;
+import io.github.reiko45.galacticraft.block.FluidTankBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.machine.InputSide;
+import io.github.reiko45.galacticraft.machine.RelativeSide;
+import io.github.reiko45.galacticraft.machine.StorageSides;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
+import io.github.reiko45.galacticraft.registry.GCFluids;
+import java.util.EnumMap;
+import java.util.Map;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.PackOutput;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CakeBlock;
 import net.minecraft.world.level.block.SlabBlock;
@@ -67,16 +77,33 @@ public class GCBlockStateProvider extends BlockStateProvider {
         // Machines: 1.12.2 models put the front on north and the energy port on east (the left side seen from the front).
         machine(GCBlocks.COAL_GENERATOR.get(), "", "coal_generator", "machine_output", "machine_side", "machine_side");
         machine(GCBlocks.COMPRESSOR.get(), "", "compressor", "machine_side", "machine_side", "machine_side");
-        machine(GCBlocks.ELECTRIC_COMPRESSOR.get(), "", "electric_compressor", "machine_input", "machine_side", "machine_side");
-        machine(GCBlocks.ADVANCED_COMPRESSOR.get(), "advanced/", "electric_compressor", "machine_input", "machine_side", "machine_side");
-        machine(GCBlocks.ELECTRIC_FURNACE.get(), "", "electric_furnace", "machine_input", "machine_side", "machine_side");
-        machine(GCBlocks.ELECTRIC_ARC_FURNACE.get(), "advanced/", "electric_furnace", "machine_input", "machine_side", "machine_side");
-        machine(GCBlocks.CIRCUIT_FABRICATOR.get(), "", "circuit_fabricator", "machine_input", "machine_side", "machine_side");
+        configurableMachine(GCBlocks.ELECTRIC_COMPRESSOR.get(), "", "electric_compressor");
+        configurableMachine(GCBlocks.ADVANCED_COMPRESSOR.get(), "advanced/", "electric_compressor");
+        configurableMachine(GCBlocks.ELECTRIC_FURNACE.get(), "", "electric_furnace");
+        configurableMachine(GCBlocks.ELECTRIC_ARC_FURNACE.get(), "advanced/", "electric_furnace");
+        configurableMachine(GCBlocks.CIRCUIT_FABRICATOR.get(), "", "circuit_fabricator");
+        solarBase(GCBlocks.BASIC_SOLAR_PANEL.get(), "solar_basic");
+        solarBase(GCBlocks.ADVANCED_SOLAR_PANEL.get(), "solar_advanced");
+        // Parts are invisible (the base block's renderer draws the panel); the model only supplies break particles.
+        simpleBlock(GCBlocks.SOLAR_PART.get(), models().getBuilder("solar_panel_part").texture("particle", tex("machine")));
+        // 1.12.2 refinery_model: oil in on the left (east), fuel out on the right (west), power in on top.
+        horizontalBlock(GCBlocks.REFINERY.get(), models().cube("refinery", tex("machine"), tex("machine_input"), tex("refinery_front"),
+                tex("refinery_side"), tex("machine_oil_input"), tex("machine_fuel_input")).texture("particle", tex("machine")));
+        itemModels().withExistingParent("refinery", modLoc("block/refinery"));
+        fluidTank();
+        fluidPipe();
+        liquid(GCFluids.OIL_BLOCK.get(), "oil");
+        liquid(GCFluids.FUEL_BLOCK.get(), "fuel");
         energyStorage(GCBlocks.ENERGY_STORAGE_MODULE.get(), "");
         energyStorage(GCBlocks.ENERGY_STORAGE_CLUSTER.get(), "advanced/");
 
         wire(GCBlocks.ALUMINUM_WIRE.get(), "aluminum_wire", "aluminum_wire");
         wire(GCBlocks.HEAVY_ALUMINUM_WIRE.get(), "heavy_aluminum_wire", "heavy_aluminum_wire");
+        // Switch variants reuse the wire geometry with the switch texture (1.12.2 blockstate texture overrides).
+        switchWireParts("aluminum_wire");
+        switchWireParts("heavy_aluminum_wire");
+        wire(GCBlocks.ALUMINUM_WIRE_SWITCH.get(), "aluminum_wire_switch", "aluminum_wire_switch");
+        wire(GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get(), "heavy_aluminum_wire_switch", "heavy_aluminum_wire_switch");
 
         simpleBlockWithItem(GCBlocks.FALLEN_METEOR.get(), models().getExistingFile(modLoc("block/fallen_meteor")));
 
@@ -119,21 +146,84 @@ public class GCBlockStateProvider extends BlockStateProvider {
         itemModels().withExistingParent(name, modLoc("block/" + name));
     }
 
-    /** Front and back show the charge level (energy_storage_module_0..16); output on the left, input on the right. */
+    /** 1.12.2 solar base: panel texture on top, output port on the front, side texture elsewhere, casing below. */
+    private void solarBase(Block block, String texture) {
+        final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        final ResourceLocation side = tex(texture + "_1");
+        horizontalBlock(block, models().cube(name, tex("machine"), tex(texture + "_0"), tex("machine_output"), side, side, side)
+                .texture("particle", side));
+        itemModels().withExistingParent(name, modLoc("block/" + name));
+    }
+
+    /**
+     * Electric machine whose input face (machine_input texture) can be left/back/right of the front. 1.12.2 models put the
+     * front on north, so left = east, back = south, right = west.
+     */
+    private void configurableMachine(Block block, String tier, String front) {
+        final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
+        final ResourceLocation casing = tex(tier + "machine");
+        final ResourceLocation side = tex(tier + "machine_side");
+        final ResourceLocation input = tex(tier + "machine_input");
+        final Map<InputSide, ModelFile> models = new EnumMap<>(InputSide.class);
+        for (InputSide config : InputSide.values()) {
+            final String model = config == InputSide.LEFT ? name : name + "_input_" + config.getSerializedName();
+            models.put(config, models().cube(model, casing, casing, tex(tier + front),
+                    config == InputSide.BACK ? input : side,
+                    config == InputSide.LEFT ? input : side,
+                    config == InputSide.RIGHT ? input : side).texture("particle", casing));
+        }
+        getVariantBuilder(block).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(models.get(state.getValue(ConfigurableMachineBlock.INPUT)))
+                .rotationY(facingRotation(state))
+                .build());
+        itemModels().withExistingParent(name, modLoc("block/" + name));
+    }
+
+    /**
+     * Front and back show the charge level (energy_storage_module_0..16). The input/output faces (left, right or back)
+     * show machine_input/machine_output; unused left/right faces show the casing, an unused back the charge level.
+     */
     private void energyStorage(Block block, String tier) {
         final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
         final ResourceLocation casing = tex(tier + "machine");
-        final ModelFile[] levels = new ModelFile[17];
-        for (int level = 0; level <= 16; level++) {
-            final ResourceLocation face = tex(tier + "energy_storage_module_" + level);
-            levels[level] = models().cube(name + "_" + level, casing, casing, face, face, tex(tier + "machine_output"), tex(tier + "machine_input"))
-                    .texture("particle", casing);
+        final Map<StorageSides, ModelFile[]> models = new EnumMap<>(StorageSides.class);
+        for (StorageSides sides : StorageSides.values()) {
+            final ModelFile[] levels = new ModelFile[17];
+            for (int level = 0; level <= 16; level++) {
+                final ResourceLocation charge = tex(tier + "energy_storage_module_" + level);
+                final String model = sides == StorageSides.RIGHT_LEFT ? name + "_" + level : name + "_" + sides.getSerializedName() + "_" + level;
+                levels[level] = models().cube(model, casing, casing, charge,
+                        storageFace(sides, RelativeSide.BACK, tier, charge),
+                        storageFace(sides, RelativeSide.LEFT, tier, casing),
+                        storageFace(sides, RelativeSide.RIGHT, tier, casing)).texture("particle", casing);
+            }
+            models.put(sides, levels);
         }
         getVariantBuilder(block).forAllStates(state -> ConfiguredModel.builder()
-                .modelFile(levels[state.getValue(EnergyStorageBlock.LEVEL)])
-                .rotationY(((int) state.getValue(MachineBlock.FACING).toYRot() + 180) % 360)
+                .modelFile(models.get(state.getValue(EnergyStorageBlock.SIDES))[state.getValue(EnergyStorageBlock.LEVEL)])
+                .rotationY(facingRotation(state))
                 .build());
         itemModels().withExistingParent(name, modLoc("block/" + name + "_0"));
+    }
+
+    private ResourceLocation storageFace(StorageSides sides, RelativeSide face, String tier, ResourceLocation unused) {
+        if (sides.input() == face) {
+            return tex(tier + "machine_input");
+        }
+        return sides.output() == face ? tex(tier + "machine_output") : unused;
+    }
+
+    /** Models face north; blockstates rotate them to the block's facing. */
+    private static int facingRotation(net.minecraft.world.level.block.state.BlockState state) {
+        return ((int) state.getValue(MachineBlock.FACING).toYRot() + 180) % 360;
+    }
+
+    private void switchWireParts(String basePrefix) {
+        for (String part : new String[]{"_core", "_side"}) {
+            models().withExistingParent(basePrefix + "_switch" + part, modLoc("block/" + basePrefix + part))
+                    .texture("aluminum_wire", tex("aluminum_wire_switch"))
+                    .texture("particle", tex("aluminum_wire_switch"));
+        }
     }
 
     /**
@@ -141,8 +231,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
      * (x=270 points it up, x=90 down, y rotates it around the horizontal sides).
      */
     private void wire(Block block, String modelPrefix, String itemTexture) {
-        final ModelFile core = models().getExistingFile(modLoc("block/" + modelPrefix + "_core"));
-        final ModelFile side = models().getExistingFile(modLoc("block/" + modelPrefix + "_side"));
+        final ModelFile core = new ModelFile.UncheckedModelFile(modLoc("block/" + modelPrefix + "_core"));
+        final ModelFile side = new ModelFile.UncheckedModelFile(modLoc("block/" + modelPrefix + "_side"));
         final MultiPartBlockStateBuilder builder = getMultipartBuilder(block);
         builder.part().modelFile(core).addModel().end();
         builder.part().modelFile(side).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.NORTH), true).end();
@@ -152,6 +242,53 @@ public class GCBlockStateProvider extends BlockStateProvider {
         builder.part().modelFile(side).rotationX(270).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.UP), true).end();
         builder.part().modelFile(side).rotationX(90).addModel().condition(AluminumWireBlock.CONNECTIONS.get(Direction.DOWN), true).end();
         itemModels().withExistingParent(modelPrefix, mcLoc("item/generated")).texture("layer0", modLoc("item/" + itemTexture));
+    }
+
+    /** 1.12.2 tank / tank_u / tank_d / tank_ud: caps where no tank is stacked above or below. */
+    private void fluidTank() {
+        final ModelFile single = models().getExistingFile(modLoc("block/fluid_tank_single"));
+        final ModelFile top = models().getExistingFile(modLoc("block/fluid_tank_top"));
+        final ModelFile bottom = models().getExistingFile(modLoc("block/fluid_tank_bottom"));
+        final ModelFile middle = models().getExistingFile(modLoc("block/fluid_tank_middle"));
+        getVariantBuilder(GCBlocks.FLUID_TANK.get()).forAllStates(state -> {
+            final boolean up = state.getValue(FluidTankBlock.UP);
+            final boolean down = state.getValue(FluidTankBlock.DOWN);
+            return ConfiguredModel.builder().modelFile(up ? (down ? middle : bottom) : (down ? top : single)).build();
+        });
+        itemModels().withExistingParent("fluid_tank", modLoc("block/fluid_tank_single"));
+    }
+
+    /** Multipart per colour: the 1.12.2 core and north arm with that colour's pipe texture, arms rotated like wires. */
+    private void fluidPipe() {
+        final MultiPartBlockStateBuilder builder = getMultipartBuilder(GCBlocks.FLUID_PIPE.get());
+        for (DyeColor color : DyeColor.values()) {
+            final ResourceLocation texture = tex("pipe/" + color.getSerializedName());
+            final ModelFile core = color == DyeColor.WHITE ? models().getExistingFile(modLoc("block/fluid_pipe_core"))
+                    : models().withExistingParent("fluid_pipe_core_" + color.getSerializedName(), modLoc("block/fluid_pipe_core"))
+                    .texture("pipeTex", texture).texture("particle", texture).renderType("cutout");
+            final ModelFile side = color == DyeColor.WHITE ? models().getExistingFile(modLoc("block/fluid_pipe_side"))
+                    : models().withExistingParent("fluid_pipe_side_" + color.getSerializedName(), modLoc("block/fluid_pipe_side"))
+                    .texture("pipeTex", texture).texture("particle", texture).renderType("cutout");
+            builder.part().modelFile(core).addModel().condition(FluidPipeBlock.COLOR, color).end();
+            builder.part().modelFile(side).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.NORTH), true).end();
+            builder.part().modelFile(side).rotationY(90).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.EAST), true).end();
+            builder.part().modelFile(side).rotationY(180).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.SOUTH), true).end();
+            builder.part().modelFile(side).rotationY(270).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.WEST), true).end();
+            builder.part().modelFile(side).rotationX(270).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.UP), true).end();
+            builder.part().modelFile(side).rotationX(90).addModel().condition(FluidPipeBlock.COLOR, color)
+                    .condition(FluidPipeBlock.CONNECTIONS.get(Direction.DOWN), true).end();
+        }
+        itemModels().withExistingParent("fluid_pipe", modLoc("block/fluid_pipe_inventory"));
+    }
+
+    /** Liquid blocks are drawn by the fluid renderer; the model only gives break/landing particles. */
+    private void liquid(Block block, String name) {
+        simpleBlock(block, models().getBuilder(name).texture("particle", tex("fluids/" + name + "_still")));
     }
 
     /** Vanilla cake models with the 1.12.2 cheese textures (same slots: top/bottom/side/inside). */

@@ -1,5 +1,6 @@
 package io.github.reiko45.galacticraft.block.entity;
 
+import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.machine.EnergyAccess;
 import io.github.reiko45.galacticraft.machine.MachineStatus;
 import io.github.reiko45.galacticraft.machine.RelativeSide;
@@ -21,10 +22,13 @@ import net.minecraft.world.level.block.state.BlockState;
  *     <li>when not using energy it slowly loses 5 gJ every 10 ticks;</li>
  *     <li>by default progress resets when power or a valid recipe is missing.</li>
  * </ul>
- * Energy enters through the face on the left of the front, receive rate 2.5x usage (1.12.2 setMaxExtract).
+ * Energy enters through the face on the left of the front (sneak + wrench moves it to the back or right), receive rate
+ * 2.5x usage (1.12.2 setMaxExtract).
  */
 public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
     protected int progress;
+    /** Used energy for work this tick (progress alone is 0 again right after each operation of a 1-2 tick cycle). */
+    private boolean working;
 
     protected ProcessingMachineBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state, int slots,
                                            float capacity, float energyPerTick) {
@@ -71,6 +75,7 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
             this.progress = 0;
             setChanged();
         }
+        this.working = used;
         if (!used && this.level != null && this.level.getGameTime() % 10 == 0 && this.energy.getStoredGJ() > 0.0F) {
             this.energy.consume(Math.min(5.0F, this.energy.getStoredGJ()));
         }
@@ -85,7 +90,7 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
     }
 
     public boolean isWorking() {
-        return this.progress > 0;
+        return this.working;
     }
 
     /** Tier of the power last received: 2 with tier-2 sources over heavy wire, 1 otherwise (and from batteries). */
@@ -117,7 +122,10 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
 
     @Override
     protected EnergyAccess energyAccess(RelativeSide side) {
-        return side == RelativeSide.LEFT ? EnergyAccess.INPUT : EnergyAccess.NONE;
+        final BlockState state = getBlockState();
+        final RelativeSide input = state.hasProperty(ConfigurableMachineBlock.INPUT)
+                ? state.getValue(ConfigurableMachineBlock.INPUT).side() : RelativeSide.LEFT;
+        return side == input ? EnergyAccess.INPUT : EnergyAccess.NONE;
     }
 
     /** Merge {@code result} into {@code slot}, or report whether it would fit. */

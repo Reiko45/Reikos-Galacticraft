@@ -144,10 +144,88 @@
     "gui/electric_arc_furnace": "gui/electric_arc_furnace",
     "gui/circuit_fabricator": "gui/circuit_fabricator",
     "item/battery": "items/battery",
-    "item/standard_wrench": "items/standard_wrench"
+    "item/standard_wrench": "items/standard_wrench",
+    "block/aluminum_wire_switch": "blocks/aluminum_wire_switch",
+    "item/aluminum_wire_switch": "blocks/aluminum_wire_switch_item",
+    "item/heavy_aluminum_wire_switch": "blocks/aluminum_wire_heavy_switch_item",
+    "block/solar_basic_0": "blocks/solar_basic_0",
+    "block/solar_basic_1": "blocks/solar_basic_1",
+    "block/solar_advanced_0": "blocks/solar_advanced_0",
+    "block/solar_advanced_1": "blocks/solar_advanced_1",
+    "gui/solar": "gui/solar",
+    "model/solar_panel_basic": "model/solar_panel_basic",
+    "model/solar_panel_advanced": "model/solar_panel_advanced",
+    "block/fluid_tank": "blocks/tank",
+    "block/fluid_tank_cap": "blocks/tank_top",
+    "block/pipe_pull": "blocks/pipe_pull",
+    "block/refinery_front": "blocks/refinery_front",
+    "block/refinery_side": "blocks/refinery_side",
+    "block/machine_oil_input": "blocks/machine_oil_input",
+    "block/machine_fuel_input": "blocks/machine_fuel_input",
+    "block/fluids/oil_still": "blocks/fluids/oil_still",
+    "block/fluids/oil_flow": "blocks/fluids/oil_flow",
+    "block/fluids/fuel_still": "blocks/fluids/fuel_still",
+    "block/fluids/fuel_flow": "blocks/fluids/fuel_flow",
+    "misc/underoil": "misc/underoil",
+    "misc/underfuel": "misc/underfuel",
+    "item/oil_bucket": "items/bucket_oil",
+    "item/fuel_bucket": "items/bucket_fuel",
+    "gui/refinery": "gui/refinery",
+    "gui/refinery_recipe": "gui/refinery_recipe",
+    "block/pipe/black": "blocks/pipe_oxygen_black",
+    "block/pipe/blue": "blocks/pipe_oxygen_blue",
+    "block/pipe/brown": "blocks/pipe_oxygen_brown",
+    "block/pipe/cyan": "blocks/pipe_oxygen_cyan",
+    "block/pipe/gray": "blocks/pipe_oxygen_gray",
+    "block/pipe/green": "blocks/pipe_oxygen_green",
+    "block/pipe/light_blue": "blocks/pipe_oxygen_light_blue",
+    "block/pipe/lime": "blocks/pipe_oxygen_lime",
+    "block/pipe/magenta": "blocks/pipe_oxygen_magenta",
+    "block/pipe/orange": "blocks/pipe_oxygen_orange",
+    "block/pipe/pink": "blocks/pipe_oxygen_pink",
+    "block/pipe/purple": "blocks/pipe_oxygen_purple",
+    "block/pipe/red": "blocks/pipe_oxygen_red",
+    "block/pipe/white": "blocks/pipe_oxygen_white",
+    "block/pipe/yellow": "blocks/pipe_oxygen_yellow",
+    "item/oil_canister_partial_0": "items/oil_canister_partial_0",
+    "item/fuel_canister_partial_0": "items/fuel_canister_partial_0",
+    "item/oil_canister_partial_1": "items/oil_canister_partial_1",
+    "item/fuel_canister_partial_1": "items/fuel_canister_partial_1",
+    "item/oil_canister_partial_2": "items/oil_canister_partial_2",
+    "item/fuel_canister_partial_2": "items/fuel_canister_partial_2",
+    "item/oil_canister_partial_3": "items/oil_canister_partial_3",
+    "item/fuel_canister_partial_3": "items/fuel_canister_partial_3",
+    "item/oil_canister_partial_4": "items/oil_canister_partial_4",
+    "item/fuel_canister_partial_4": "items/fuel_canister_partial_4",
+    "item/oil_canister_partial_5": "items/oil_canister_partial_5",
+    "item/fuel_canister_partial_5": "items/fuel_canister_partial_5",
+    "item/oil_canister_partial_6": "items/oil_canister_partial_6",
+    "item/fuel_canister_partial_6": "items/fuel_canister_partial_6",
+    "block/pipe/light_gray": "blocks/pipe_oxygen_silver"
   },
   "models": {
-    "block/fallen_meteor": "block/fallen_meteor_model"
+    "block/fallen_meteor": "block/fallen_meteor_model",
+    "block/fluid_tank_middle": {
+      "from": "block/tank",
+      "render_type": "minecraft:cutout"
+    },
+    "block/fluid_tank_top": {
+      "from": "block/tank_u",
+      "render_type": "minecraft:cutout"
+    },
+    "block/fluid_tank_bottom": {
+      "from": "block/tank_d",
+      "render_type": "minecraft:cutout"
+    },
+    "block/fluid_tank_single": {
+      "from": "block/tank_ud",
+      "render_type": "minecraft:cutout"
+    },
+    "block/fluid_pipe_pull": "block/fluid_pipe_pull_n",
+    "block/fluid_pipe_inventory": {
+      "from": "block/fluid_pipe_neswud",
+      "render_type": "minecraft:cutout"
+    }
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -275,7 +353,38 @@
     "block.galacticraftcore.advanced_compressor": "tile.machine4.11.name",
     "item.galacticraftcore.battery": "item.battery.name",
     "item.galacticraftcore.standard_wrench": "item.standard_wrench.name",
-    "gui.galacticraftcore.status.missing_power_short": "gui.status.missingpower.short.name"
+    "gui.galacticraftcore.status.missing_power_short": "gui.status.missingpower.short.name",
+    "block.galacticraftcore.aluminum_wire_switch": "tile.aluminum_wire.alu_wire_switch.name",
+    "block.galacticraftcore.heavy_aluminum_wire_switch": "tile.aluminum_wire.alu_wire_switch_heavy.name",
+    "block.galacticraftcore.basic_solar_panel": "tile.solar.basic_solar.name",
+    "block.galacticraftcore.advanced_solar_panel": "tile.solar.advanced_solar.name",
+    "block.galacticraftcore.solar_panel_part": "tile.solar.basic_solar.name",
+    "gui.galacticraftcore.button.enable": "gui.button.enable.name",
+    "gui.galacticraftcore.button.disable": "gui.button.disable.name",
+    "gui.galacticraftcore.generating": "gui.message.generating.name",
+    "gui.galacticraftcore.environment": "gui.message.environment.name",
+    "gui.galacticraftcore.status.disabled": "gui.status.disabled.name",
+    "gui.galacticraftcore.status.raining": "gui.status.raining.name",
+    "gui.galacticraftcore.status.sun_visible": "gui.status.sun_visible.name",
+    "gui.galacticraftcore.status.unknown": "gui.status.unknown.name",
+    "gui.galacticraftcore.warning.no_room": "gui.warning.noroom",
+    "block.galacticraftcore.oil": "tile.crude_oil_still.name",
+    "block.galacticraftcore.fuel": "tile.fuel.name",
+    "item.galacticraftcore.oil_bucket": "item.bucket_oil.name",
+    "item.galacticraftcore.fuel_bucket": "item.bucket_fuel.name",
+    "item.galacticraftcore.oil_canister": "item.oil_canister.name",
+    "item.galacticraftcore.oil_canister_partial": "item.oil_canister_partial.name",
+    "item.galacticraftcore.fuel_canister": "item.fuel_canister.name",
+    "item.galacticraftcore.fuel_canister_partial": "item.fuel_canister_partial.name",
+    "item.galacticraftcore.empty_liquid_canister": "item.empty_liquid_canister.name",
+    "gui.galacticraftcore.oil": "gui.message.oil.name",
+    "gui.galacticraftcore.status.no_oil": "gui.status.nooil.name",
+    "gui.galacticraftcore.status.refining": "gui.status.refining.name",
+    "gui.galacticraftcore.button.refine": "gui.button.refine.name",
+    "gui.galacticraftcore.button.stop_refine": "gui.button.stoprefine.name",
+    "block.galacticraftcore.refinery": "tile.refinery.name",
+    "block.galacticraftcore.fluid_tank": "tile.fluid_tank.name",
+    "block.galacticraftcore.fluid_pipe": "tile.fluid_pipe.name"
   },
   "lang_extra_en_us": {},
   "recipes": {
@@ -403,7 +512,17 @@
       "galacticraftcore:battery:100": "galacticraftcore:battery",
       "galacticraftcore:battery:32767": "galacticraftcore:battery",
       "galacticraftcore:standard_wrench": "galacticraftcore:standard_wrench",
-      "minecraft:wool:32767": "#minecraft:wool"
+      "minecraft:wool:32767": "#minecraft:wool",
+      "galacticraftcore:aluminum_wire:2": "galacticraftcore:aluminum_wire_switch",
+      "galacticraftcore:aluminum_wire:3": "galacticraftcore:heavy_aluminum_wire_switch",
+      "galacticraftcore:solar:0": "galacticraftcore:basic_solar_panel",
+      "galacticraftcore:solar:4": "galacticraftcore:advanced_solar_panel",
+      "galacticraftcore:oil_canister_partial:1001": "galacticraftcore:oil_canister",
+      "galacticraftcore:fuel_canister_partial:1": "galacticraftcore:fuel_canister",
+      "galacticraftcore:refinery": "galacticraftcore:refinery",
+      "galacticraftcore:fluid_tank": "galacticraftcore:fluid_tank",
+      "galacticraftcore:fluid_pipe": "galacticraftcore:fluid_pipe",
+      "minecraft:glass": "minecraft:glass"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -468,6 +587,20 @@
       "elements": [
         "North"
       ]
+    },
+    "block/fluid_pipe_core": {
+      "from": "block/fluid_pipe_n",
+      "elements": [
+        "Middle"
+      ],
+      "render_type": "minecraft:cutout"
+    },
+    "block/fluid_pipe_side": {
+      "from": "block/fluid_pipe_n",
+      "elements": [
+        "North"
+      ],
+      "render_type": "minecraft:cutout"
     }
   }
 }
