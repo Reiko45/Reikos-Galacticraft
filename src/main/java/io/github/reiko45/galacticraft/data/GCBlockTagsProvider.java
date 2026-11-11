@@ -39,7 +39,7 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
         }
 
         tag(BlockTags.MINEABLE_WITH_SHOVEL).add(GCBlocks.MOON_TURF.get(), GCBlocks.MOON_DIRT.get());
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_1.get(),
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(), GCBlocks.SILICON_ORE.get(),
                 GCBlocks.TIN_BLOCK.get(), GCBlocks.ALUMINUM_BLOCK.get(), GCBlocks.METEORIC_IRON_BLOCK.get(), GCBlocks.SILICON_BLOCK.get(),
                 GCBlocks.TIN_DECORATION_BLOCK_1.get(), GCBlocks.TIN_DECORATION_BLOCK_2.get(),
@@ -59,7 +59,8 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.OXYGEN_COLLECTOR.get(), GCBlocks.OXYGEN_COMPRESSOR.get(), GCBlocks.OXYGEN_DECOMPRESSOR.get(),
                 GCBlocks.OXYGEN_STORAGE_MODULE.get(), GCBlocks.OXYGEN_DISTRIBUTOR.get(), GCBlocks.OXYGEN_SEALER.get(),
                 GCBlocks.OXYGEN_DETECTOR.get(),
-                GCBlocks.LANDING_PAD.get(), GCBlocks.FUEL_LOADER.get(), GCBlocks.NASA_WORKBENCH.get(), GCBlocks.NASA_WORKBENCH_PART.get());
+                GCBlocks.LANDING_PAD.get(), GCBlocks.BUGGY_FUELING_PAD.get(), GCBlocks.FUEL_LOADER.get(), GCBlocks.NASA_WORKBENCH.get(),
+                GCBlocks.NASA_WORKBENCH_PART.get());
         tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST.get());
         // Oxygen sealing (1.12.2 OxygenPressureProtocol): glass panes seal, gravel/wool/sponge let air through
         tag(GCModTags.SEALABLE).addTag(Tags.Blocks.GLASS_PANES);

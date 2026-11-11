@@ -51,6 +51,12 @@ public final class GCCreativeTabs {
                             }
                             output.accept(Tier1RocketItem.create(0, Tier1RocketEntity.FUEL_CAPACITY));
                         }
+                        if (item == GCItems.BUGGY.get()) {
+                            // 1.12.2 buggy types 1-3: 18, 36, 54 storage slots
+                            for (int storage = 1; storage <= 3; storage++) {
+                                output.accept(io.github.reiko45.galacticraft.item.BuggyItem.create(storage, 0));
+                            }
+                        }
                         if (item == GCItems.OIL_CANISTER.get()) {
                             output.accept(LiquidCanisterItem.full(false));
                         } else if (item == GCItems.FUEL_CANISTER.get()) {

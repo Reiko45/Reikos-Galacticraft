@@ -1,5 +1,6 @@
 {
   "values": [
+    "galacticraftcore:treasure_chest_tier_1",
     "galacticraftcore:tin_ore",
     "galacticraftcore:aluminum_ore",
     "galacticraftcore:silicon_ore",
@@ -50,6 +51,7 @@
     "galacticraftcore:oxygen_sealer",
     "galacticraftcore:oxygen_detector",
     "galacticraftcore:landing_pad",
+    "galacticraftcore:buggy_fueling_pad",
     "galacticraftcore:fuel_loader",
     "galacticraftcore:nasa_workbench",
     "galacticraftcore:nasa_workbench_part"

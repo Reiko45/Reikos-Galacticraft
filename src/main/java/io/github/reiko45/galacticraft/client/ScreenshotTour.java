@@ -12,6 +12,7 @@ import io.github.reiko45.galacticraft.entity.ParachestEntity;
 import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
 import io.github.reiko45.galacticraft.item.Tier1RocketItem;
 import io.github.reiko45.galacticraft.menu.CargoMenu;
+import io.github.reiko45.galacticraft.registry.GCEntities;
 import io.github.reiko45.galacticraft.menu.NasaWorkbenchMenu;
 import io.github.reiko45.galacticraft.network.GCNetwork;
 import io.github.reiko45.galacticraft.travel.SpaceTravel;
@@ -296,6 +297,7 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_oxygen_warning"));
         this.extras.add((minecraft, srv) -> srv.execute(() -> srv.getPlayerList().getPlayers().get(0).setGameMode(GameType.CREATIVE)));
         moonSteps();
+        dungeonSteps();
         rocketSteps();
         // JEI recipe categories, when JEI is installed.
         if (ModList.get().isLoaded("jei")) {
@@ -364,6 +366,7 @@ public final class ScreenshotTour {
     }
 
     private static int surface(ServerLevel level, int x, int z) {
+        level.getChunk(x >> 4, z >> 4); // getHeight only reads loaded chunks (unloaded ones give the bottom of the world)
         return level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, x, z);
     }
 
@@ -457,6 +460,318 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_cave"));
     }
 
+    private BlockPos dungeonBoss;
+    private BlockPos dungeonTreasure;
+    private BlockPos dungeonCrater;
+
+    private static ServerPlayer tourPlayer(MinecraftServer server) {
+        return server.getPlayerList().getPlayers().get(0);
+    }
+
+    /**
+     * Phase 5b: the evolved mobs and the Skeleton Boss in a row; the nearest Moon dungeon found by the real structure
+     * placement (crater, boss room with the boss woken up, treasure room); the boss's death filling the treasure chest;
+     * the NASA Workbench pages (Add New Schematic, Moon Buggy); and buggies on a Buggy Fueling Pad, with one driven.
+     */
+    private void dungeonSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null) {
+                return;
+            }
+            srv.setDifficulty(Difficulty.NORMAL, true); // monsters vanish on Peaceful
+            srv.overworld().setDayTime(18000L); // zombies and skeletons burn by day (until the airless Moon puts them out)
+            final ServerPlayer p = tourPlayer(srv);
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 2400, 0, false, false));
+            final net.minecraft.world.entity.EntityType<?>[] types = {GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(),
+                    GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_SPIDER.get(), GCEntities.EVOLVED_ENDERMAN.get(), GCEntities.SKELETON_BOSS.get()};
+            for (int i = 0; i < types.length; i++) {
+                final int x = -30 + i * 3;
+                final net.minecraft.world.entity.Entity mob = types[i].create(moon);
+                if (mob instanceof net.minecraft.world.entity.Mob living) {
+                    living.moveTo(x + 0.5D, surface(moon, x, -30), -29.5D, 180.0F, 0.0F);
+                    living.setYHeadRot(180.0F);
+                    living.setYBodyRot(180.0F);
+                    living.setNoAi(true);
+                    living.setPersistenceRequired();
+                    if (living instanceof io.github.reiko45.galacticraft.entity.SkeletonBossEntity) {
+                        living.setItemSlot(net.minecraft.world.entity.EquipmentSlot.MAINHAND, new ItemStack(Items.BOW));
+                    }
+                    moon.addFreshEntity(living);
+                }
+            }
+            p.teleportTo(moon, -22.5D, surface(moon, -22, -38) + 2.5D, -39.5D, 0.0F, 12.0F);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_evolved_mobs"));
+        // The tour world has structures off, so build the dungeon of the first 44x44 chunk region where the structure
+        // set puts it, like /place structure does, then look down its crater
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null) {
+                return;
+            }
+            final var structure = moon.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                    .getHolderOrThrow(io.github.reiko45.galacticraft.data.GCWorldgenProvider.MOON_DUNGEON);
+            final var generator = moon.getChunkSource().getGenerator();
+            final var placement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement)
+                    moon.getChunkSource().getGeneratorState().getPlacementsForStructure(structure).get(0);
+            final net.minecraft.world.level.ChunkPos chunk = placement.getPotentialStructureChunk(moon.getSeed(), 0, 0);
+            final net.minecraft.world.level.levelgen.structure.StructureStart start = structure.value().generate(moon.registryAccess(), generator,
+                    generator.getBiomeSource(), moon.getChunkSource().randomState(), moon.getStructureManager(), moon.getSeed(), chunk, 0, moon,
+                    biome -> true);
+            if (!start.isValid()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Moon dungeon start at {}", chunk);
+                return;
+            }
+            final var box = start.getBoundingBox();
+            net.minecraft.world.level.ChunkPos.rangeClosed(new net.minecraft.world.level.ChunkPos(box.minX() >> 4, box.minZ() >> 4),
+                    new net.minecraft.world.level.ChunkPos(box.maxX() >> 4, box.maxZ() >> 4)).forEach(pos -> {
+                moon.getChunk(pos.x, pos.z);
+                start.placeInChunk(moon, moon.structureManager(), generator, moon.getRandom(), new net.minecraft.world.level.levelgen.structure.BoundingBox(
+                        pos.getMinBlockX(), moon.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(), moon.getMaxBuildHeight(), pos.getMaxBlockZ()), pos);
+            });
+            final BlockPos found = chunk.getMiddleBlockPosition(io.github.reiko45.galacticraft.world.dungeon.MoonDungeon.Y);
+            for (var piece : start.getPieces()) {
+                if (piece instanceof io.github.reiko45.galacticraft.world.dungeon.MoonDungeonPiece room) {
+                    final BlockPos centre = room.getBoundingBox().getCenter();
+                    switch (room.kind()) {
+                        case CRATER -> this.dungeonCrater = centre;
+                        case BOSS -> this.dungeonBoss = new BlockPos(centre.getX(), room.getBoundingBox().minY() + 1, centre.getZ());
+                        case TREASURE -> {
+                            this.dungeonTreasure = new BlockPos(centre.getX(), room.getBoundingBox().minY() + 1, centre.getZ());
+                            for (BlockPos pos : BlockPos.betweenClosed(room.getBoundingBox().minX(), room.getBoundingBox().minY(), room.getBoundingBox().minZ(),
+                                    room.getBoundingBox().maxX(), room.getBoundingBox().maxY(), room.getBoundingBox().maxZ())) {
+                                if (moon.getBlockState(pos).is(GCBlocks.TREASURE_CHEST_TIER_1.get())) {
+                                    this.dungeonTreasure = pos.immutable();
+                                }
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+                }
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: Moon dungeon at {} ({} pieces), boss room {}, treasure {}", found,
+                    start.getPieces().size(), this.dungeonBoss, this.dungeonTreasure);
+            if (this.dungeonCrater != null) {
+                final ServerPlayer p = tourPlayer(srv);
+                final int camX = this.dungeonCrater.getX() + 20;
+                int top = 0;
+                for (int dx = -2; dx <= 2; dx++) {
+                    top = Math.max(top, surface(moon, camX + dx, this.dungeonCrater.getZ()));
+                }
+                p.teleportTo(moon, camX + 0.5D, top + 10.0D, this.dungeonCrater.getZ() + 0.5D, 90.0F, 35.0F);
+            }
+        }));
+        for (int i = 0; i < 4; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // chunks around the dungeon load and generate
+        }
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_dungeon_crater"));
+        // Into the boss room: entering wakes the boss
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.dungeonBoss == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 1200, 0, false, false));
+            p.teleportTo(moon, this.dungeonBoss.getX() + 0.5D, this.dungeonBoss.getY() + 1.0D, this.dungeonBoss.getZ() + 6.5D, 180.0F, 5.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.dungeonBoss == null) {
+                return;
+            }
+            // Hold the boss still facing the camera for the picture
+            for (var boss : moon.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.SkeletonBossEntity.class,
+                    new net.minecraft.world.phys.AABB(this.dungeonBoss).inflate(20.0D))) {
+                boss.setNoAi(true);
+                boss.moveTo(this.dungeonBoss.getX() + 0.5D, this.dungeonBoss.getY(), this.dungeonBoss.getZ() + 0.5D, 0.0F, 0.0F);
+                boss.setYHeadRot(0.0F);
+                boss.setYBodyRot(0.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_dungeon_boss"));
+        // The boss dies (the player stays in its room, or it would leave) and fills the treasure chest
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.dungeonBoss == null) {
+                return;
+            }
+            for (var boss : moon.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.SkeletonBossEntity.class,
+                    new net.minecraft.world.phys.AABB(this.dungeonBoss).inflate(20.0D))) {
+                boss.setNoAi(false);
+                boss.kill();
+            }
+        }));
+        for (int i = 0; i < 7; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // 200 ticks of dying
+        }
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.dungeonTreasure == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.teleportTo(moon, this.dungeonTreasure.getX() + 0.5D, this.dungeonTreasure.getY() + 0.5D, this.dungeonTreasure.getZ() + 3.0D, 180.0F, 25.0F);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_dungeon_treasure"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.dungeonTreasure == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            if (moon.getBlockEntity(this.dungeonTreasure) instanceof io.github.reiko45.galacticraft.block.entity.TreasureChestBlockEntity chest) {
+                boolean schematic = false;
+                for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+                    schematic |= chest.getItem(slot).getItem() instanceof io.github.reiko45.galacticraft.item.SchematicItem;
+                }
+                GalacticraftCore.LOGGER.info("Screenshot tour: treasure chest locked {}, schematic inside {}", chest.isLocked(), schematic);
+                chest.setLocked(false); // what the Tier 1 Dungeon Key does
+                p.teleportTo(moon, this.dungeonTreasure.getX() + 0.5D, this.dungeonTreasure.getY(), this.dungeonTreasure.getZ() + 2.5D, 180.0F, 30.0F);
+                p.openMenu(chest);
+            } else {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no treasure chest at {}", this.dungeonTreasure);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_treasure_chest"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            tourPlayer(srv).closeContainer();
+            srv.setDifficulty(Difficulty.PEACEFUL, true);
+            srv.overworld().setDayTime(6000L);
+        }));
+        buggySteps();
+    }
+
+    private BlockPos buggyScene = BlockPos.ZERO;
+
+    private void logBuggies(Minecraft minecraft, MinecraftServer srv, String when) {
+        final ServerPlayer p = tourPlayer(srv);
+        GalacticraftCore.LOGGER.info("Screenshot tour ({}): server player {} riding {}, client player {} riding {}", when, p.position(),
+                p.getVehicle(), minecraft.player == null ? null : minecraft.player.position(), minecraft.player == null ? null : minecraft.player.getVehicle());
+    }
+
+    private void buggySteps() {
+        // A Buggy Fueling Pad with a Fuel Loader and a buggy on it, two more buggies with storage boxes
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null) {
+                return;
+            }
+            final int y = surface(moon, 40, 0);
+            this.buggyScene = new BlockPos(40, y, 0);
+            for (int x = -8; x <= 12; x++) {
+                for (int z = -8; z <= 14; z++) {
+                    for (int dy = -2; dy <= 10; dy++) {
+                        moon.setBlockAndUpdate(this.buggyScene.offset(x, dy, z), dy < 0 ? GCBlocks.MOON_TURF.get().defaultBlockState() : Blocks.AIR.defaultBlockState());
+                    }
+                }
+            }
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dz = -1; dz <= 1; dz++) {
+                    moon.setBlockAndUpdate(this.buggyScene.offset(dx, 0, dz), GCBlocks.BUGGY_FUELING_PAD.get().defaultBlockState());
+                }
+            }
+            final BlockPos loader = this.buggyScene.offset(-2, 0, 1);
+            moon.setBlockAndUpdate(loader, GCBlocks.FUEL_LOADER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+            if (moon.getBlockEntity(loader) instanceof FuelLoaderBlockEntity fuelLoader) {
+                fuelLoader.energy().setStored(16_000.0F);
+                fuelLoader.fuelTank().fill(new FluidStack(GCFluids.FUEL.get(), 8_000), IFluidHandler.FluidAction.EXECUTE);
+            }
+            final double[][] buggies = {{0.5, 0.2, 0.5, 200.0, 0}, {5.0, 0.0, -2.5, 150.0, 2}, {6.0, 0.0, 3.0, 100.0, 3}};
+            for (double[] b : buggies) {
+                final var buggy = io.github.reiko45.galacticraft.entity.BuggyEntity.create(moon, this.buggyScene.getX() + b[0],
+                        this.buggyScene.getY() + b[1], this.buggyScene.getZ() + b[2], (int) b[4], 0);
+                buggy.setYRot((float) b[3]);
+                moon.addFreshEntity(buggy);
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.getInventory().setItem(3, io.github.reiko45.galacticraft.item.BuggyItem.create(3, 0));
+            p.getInventory().setItem(4, new ItemStack(GCBlocks.BUGGY_FUELING_PAD.get(), 9));
+            p.getInventory().setItem(5, new ItemStack(GCItems.BUGGY_SCHEMATIC.get()));
+            p.getInventory().setItem(6, new ItemStack(GCItems.TIER_1_DUNGEON_KEY.get()));
+            p.getInventory().setItem(7, new ItemStack(GCBlocks.TREASURE_CHEST_TIER_1.get()));
+            p.getInventory().setItem(8, new ItemStack(GCItems.SKELETON_BOSS_SPAWN_EGG.get()));
+            p.teleportTo(moon, this.buggyScene.getX() + 3.0D, this.buggyScene.getY() + 4.0D, this.buggyScene.getZ() + 11.0D, 165.0F, 22.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive after the long teleport
+        this.extras.add((minecraft, srv) -> {
+        }); // (still arriving)
+        this.extras.add((minecraft, srv) -> {
+            logBuggies(minecraft, srv, "scene");
+            shoot(minecraft, "moon_buggies");
+        });
+        // Drive the buggy off the pad (the Fuel Loader has filled it)
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            srv.execute(() -> {
+                final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+                final ServerPlayer p = tourPlayer(srv);
+                p.getAbilities().flying = false;
+                p.onUpdateAbilities();
+                for (var buggy : moon.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.BuggyEntity.class,
+                        new net.minecraft.world.phys.AABB(this.buggyScene).inflate(1.0D))) {
+                    GalacticraftCore.LOGGER.info("Screenshot tour: buggy on the fueling pad has {} mB of fuel", buggy.fuel());
+                    p.startRiding(buggy, true);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> minecraft.options.keyUp.setDown(true)); // hold W: accelerate
+        this.extras.add((minecraft, srv) -> minecraft.options.keyLeft.setDown(true)); // and turn left a little
+        this.extras.add((minecraft, srv) -> minecraft.options.keyLeft.setDown(false));
+        this.extras.add((minecraft, srv) -> {
+            logBuggies(minecraft, srv, "driving");
+            shoot(minecraft, "moon_buggy_driving");
+        });
+        this.extras.add((minecraft, srv) -> minecraft.options.keyUp.setDown(false));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            if (p.getVehicle() instanceof io.github.reiko45.galacticraft.entity.BuggyEntity buggy) {
+                GalacticraftCore.LOGGER.info("Screenshot tour: buggy driven to {} with {} mB left", buggy.blockPosition(), buggy.fuel());
+                CargoMenu.openBuggy(p, buggy);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_buggy"));
+        // The workbench pages: Add New Schematic with the buggy schematic in, then the unlocked Moon Buggy page
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                p.stopRiding();
+                final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+                p.teleportTo(srv.overworld(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+                io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.ADD_SCHEMATIC, srv.overworld(), bench);
+                p.containerMenu.getSlot(0).set(new ItemStack(GCItems.BUGGY_SCHEMATIC.get()));
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_add_new_schematic"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            io.github.reiko45.galacticraft.menu.Schematics.action(p, io.github.reiko45.galacticraft.menu.Schematics.ACTION_UNLOCK);
+            io.github.reiko45.galacticraft.menu.Schematics.action(p, io.github.reiko45.galacticraft.menu.Schematics.ACTION_BACK);
+            if (p.containerMenu instanceof io.github.reiko45.galacticraft.menu.BuggyBenchMenu) {
+                for (int i = 1; i <= 19; i++) {
+                    // menu slots go row by row, the 1.12.2 matrix numbers go down the columns
+                    final int index = p.containerMenu.getSlot(i).getContainerSlot();
+                    final Item part = index == io.github.reiko45.galacticraft.menu.BuggyBenchMenu.SEAT ? GCItems.BUGGY_SEAT.get()
+                            : index <= 12 ? GCItems.HEAVY_PLATING.get() : index <= 16 ? GCItems.BUGGY_WHEEL.get() : GCItems.BUGGY_STORAGE_BOX.get();
+                    p.containerMenu.getSlot(i).set(new ItemStack(part));
+                }
+            } else {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: Back from Add New Schematic opened {}", p.containerMenu);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_moon_buggy"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).closeContainer()));
+    }
+
     /** The cave space closest to the Moon's spawn with room to stand: air with rock below and air above, under the surface. */
     @org.jetbrains.annotations.Nullable
     private static BlockPos findCave(ServerLevel moon) {
@@ -509,8 +824,7 @@ public final class ScreenshotTour {
             final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
             final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
             p.teleportTo(p.serverLevel(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
-            p.openMenu(new SimpleMenuProvider((id, inventory, player) -> new NasaWorkbenchMenu(id, inventory,
-                    ContainerLevelAccess.create(p.serverLevel(), bench)), Component.translatable("schematic.galacticraftcore.rocket_t1")));
+            io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.ROCKET_T1, p.serverLevel(), bench);
             final Item[] parts = {null, GCItems.NOSE_CONE.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(),
                     GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(),
                     GCItems.HEAVY_PLATING.get(), GCItems.HEAVY_PLATING.get(), GCItems.ROCKET_FINS.get(), GCItems.ROCKET_FINS.get(),

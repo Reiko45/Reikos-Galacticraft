@@ -61,6 +61,11 @@ public final class GCMenus {
     public static final Supplier<MenuType<NasaWorkbenchMenu>> NASA_WORKBENCH = MENUS.register("nasa_workbench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new NasaWorkbenchMenu(id, inventory)));
 
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.BuggyBenchMenu>> BUGGY_BENCH = MENUS.register("buggy_bench",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.BuggyBenchMenu(id, inventory)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.SchematicInputMenu>> SCHEMATIC_INPUT = MENUS.register("schematic_input",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.SchematicInputMenu(id, inventory)));
+
     private static Supplier<MenuType<OxygenMachineMenu>> oxygen(String name, OxygenMachineMenu.Kind kind) {
         return MENUS.register(name, () -> IMenuTypeExtension.create((id, inventory, buf) -> new OxygenMachineMenu(kind, id, inventory, buf)));
     }

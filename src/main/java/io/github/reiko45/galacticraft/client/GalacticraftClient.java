@@ -7,6 +7,8 @@ import io.github.reiko45.galacticraft.client.render.RocketItemRenderer;
 import io.github.reiko45.galacticraft.block.FallenMeteorBlock;
 import io.github.reiko45.galacticraft.client.render.entity.LanderRenderer;
 import io.github.reiko45.galacticraft.client.render.entity.MeteorRenderer;
+import io.github.reiko45.galacticraft.client.render.entity.monster.EvolvedMobModels;
+import io.github.reiko45.galacticraft.client.render.entity.monster.EvolvedRenderers;
 import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import io.github.reiko45.galacticraft.client.render.entity.ParachestRenderer;
 import io.github.reiko45.galacticraft.client.render.entity.Tier1RocketRenderer;
@@ -97,6 +99,15 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(Tier1RocketRenderer.LAYER, Tier1RocketRenderer::createLayer);
         event.registerLayerDefinition(LanderRenderer.LAYER, LanderRenderer::createLayer);
         event.registerLayerDefinition(MeteorRenderer.LAYER, MeteorRenderer::createLayer);
+        event.registerLayerDefinition(EvolvedMobModels.ZOMBIE, EvolvedMobModels::zombie);
+        event.registerLayerDefinition(EvolvedMobModels.SKELETON, EvolvedMobModels::skeleton);
+        event.registerLayerDefinition(EvolvedMobModels.CREEPER, EvolvedMobModels::creeper);
+        event.registerLayerDefinition(EvolvedMobModels.SPIDER, EvolvedMobModels::spider);
+        event.registerLayerDefinition(EvolvedMobModels.ENDERMAN, EvolvedMobModels::enderman);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.LAYER,
+                io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::createLayer);
         event.registerLayerDefinition(ParachestRenderer.CHEST, ParachestRenderer::createChest);
         event.registerLayerDefinition(ParachestRenderer.CHUTE, ParachestRenderer::createChute);
     }
@@ -111,6 +122,14 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
         event.registerEntityRenderer(GCEntities.PARACHEST.get(), ParachestRenderer::new);
         event.registerEntityRenderer(GCEntities.METEOR.get(), MeteorRenderer::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_ZOMBIE.get(), EvolvedRenderers.Zombies::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_SKELETON.get(), EvolvedRenderers.Skeletons::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_SPIDER.get(), EvolvedRenderers.Spiders::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_CREEPER.get(), EvolvedRenderers.Creepers::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_ENDERMAN.get(), EvolvedRenderers.Endermen::new);
+        event.registerEntityRenderer(GCEntities.BUGGY.get(), io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer::new);
+        event.registerEntityRenderer(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.SkeletonBossRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.TREASURE_CHEST.get(), io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::new);
     }
 
     private static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
@@ -134,6 +153,7 @@ public final class GalacticraftClient {
 
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
         event.register(FluidPipeRenderer.PULL_MODEL);
+        io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
     }
 
     private static void clientSetup(FMLClientSetupEvent event) {
@@ -143,6 +163,9 @@ public final class GalacticraftClient {
                 ItemProperties.register(canister, GalacticraftCore.id("fill"),
                         (stack, level, entity, seed) -> LiquidCanisterItem.fillStage(stack));
             }
+            // Buggy item: 1.12.2 buggy types 1-3 showed 1-3 storage boxes.
+            ItemProperties.register(GCItems.BUGGY.get(), GalacticraftCore.id("storage"),
+                    (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.BuggyItem.storage(stack));
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_TORCH.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_WALL_TORCH.get(), RenderType.cutout());
             for (Fluid fluid : new Fluid[]{GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get(), GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get()}) {
@@ -163,6 +186,17 @@ public final class GalacticraftClient {
                 return this.renderer;
             }
         }, GCItems.TIER_1_ROCKET.get());
+        event.registerItem(new IClientItemExtensions() {
+            private io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.Item renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.Item();
+                }
+                return this.renderer;
+            }
+        }, GCBlocks.TREASURE_CHEST_TIER_1.asItem());
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         final ResourceLocation oxygen = GalacticraftCore.id("block/fluids/oxygen_gas");
@@ -223,6 +257,8 @@ public final class GalacticraftClient {
         event.register(GCMenus.FUEL_LOADER.get(), FuelLoaderScreen::new);
         event.register(GCMenus.CARGO.get(), CargoScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
+        event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);
+        event.register(GCMenus.SCHEMATIC_INPUT.get(), io.github.reiko45.galacticraft.client.screen.SchematicInputScreen::new);
     }
 
     private static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {

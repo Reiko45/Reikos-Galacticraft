@@ -2,6 +2,8 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.item.DescribedItem;
+import io.github.reiko45.galacticraft.item.DungeonKeyItem;
+import io.github.reiko45.galacticraft.item.SchematicItem;
 import io.github.reiko45.galacticraft.item.ElectricItem;
 import io.github.reiko45.galacticraft.item.LiquidCanisterItem;
 import io.github.reiko45.galacticraft.item.Tier1RocketItem;
@@ -107,6 +109,27 @@ public final class GCItems {
             () -> new InfiniteOxygenTankItem(new Item.Properties()));
     public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
 
+    // --- Spawn eggs (1.12.2 GCCoreUtil#registerGalacticraftCreature colours) ---
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_ZOMBIE_SPAWN_EGG = egg("evolved_zombie", GCEntities.EVOLVED_ZOMBIE, 44975, 7969893);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_SKELETON_SPAWN_EGG = egg("evolved_skeleton", GCEntities.EVOLVED_SKELETON, 12698049, 4802889);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_SPIDER_SPAWN_EGG = egg("evolved_spider", GCEntities.EVOLVED_SPIDER, 3419431, 11013646);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_CREEPER_SPAWN_EGG = egg("evolved_creeper", GCEntities.EVOLVED_CREEPER, 894731, 0);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_ENDERMAN_SPAWN_EGG = egg("evolved_enderman", GCEntities.EVOLVED_ENDERMAN, 1447446, 0);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SKELETON_BOSS_SPAWN_EGG = egg("skeleton_boss", GCEntities.SKELETON_BOSS, 12698049, 4802889);
+
+    // --- Dungeon loot (1.12.2 ItemKey, ItemSchematic) ---
+    public static final DeferredItem<DungeonKeyItem> TIER_1_DUNGEON_KEY = ITEMS.register("tier_1_dungeon_key",
+            () -> new DungeonKeyItem(new Item.Properties(), 1));
+    public static final DeferredItem<SchematicItem> BUGGY_SCHEMATIC = ITEMS.register("buggy_schematic",
+            () -> new SchematicItem(new Item.Properties(), "moon_buggy"));
+    /** Found in Moon dungeons; its workbench page arrives with the Tier 2 Rocket (Mars phase). */
+    public static final DeferredItem<SchematicItem> TIER_2_ROCKET_SCHEMATIC = ITEMS.register("tier_2_rocket_schematic",
+            () -> new SchematicItem(new Item.Properties(), "rocket_t2"));
+
+    // --- Vehicles ---
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.BuggyItem> BUGGY = ITEMS.register("buggy",
+            () -> new io.github.reiko45.galacticraft.item.BuggyItem(new Item.Properties()));
+
     // --- Rockets ---
     public static final DeferredItem<Tier1RocketItem> TIER_1_ROCKET = ITEMS.register("tier_1_rocket",
             () -> new Tier1RocketItem(new Item.Properties()));
@@ -142,6 +165,11 @@ public final class GCItems {
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_CHESTPLATE = armor("heavy_duty_chestplate", ArmorItem.Type.CHESTPLATE);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_LEGGINGS = armor("heavy_duty_leggings", ArmorItem.Type.LEGGINGS);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_BOOTS = armor("heavy_duty_boots", ArmorItem.Type.BOOTS);
+
+    private static DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> egg(String name,
+            java.util.function.Supplier<? extends net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>> type, int primary, int secondary) {
+        return ITEMS.register(name + "_spawn_egg", () -> new net.neoforged.neoforge.common.DeferredSpawnEggItem(type, primary, secondary, new Item.Properties()));
+    }
 
     private static List<DeferredItem<ParachuteItem>> parachutes() {
         final List<DeferredItem<ParachuteItem>> list = new java.util.ArrayList<>();

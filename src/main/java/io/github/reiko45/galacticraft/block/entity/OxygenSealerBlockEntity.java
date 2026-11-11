@@ -75,7 +75,10 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void setRemoved() {
         if (this.level != null) {
-            LOADED.getOrDefault(this.level, Set.of()).remove(this);
+            final Set<OxygenSealerBlockEntity> loaded = LOADED.get(this.level);
+            if (loaded != null) {
+                loaded.remove(this); // Set.of() would throw, even with nothing to remove
+            }
         }
         super.setRemoved();
     }
@@ -91,7 +94,10 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void onChunkUnloaded() {
         if (this.level != null) {
-            LOADED.getOrDefault(this.level, Set.of()).remove(this);
+            final Set<OxygenSealerBlockEntity> loaded = LOADED.get(this.level);
+            if (loaded != null) {
+                loaded.remove(this); // Set.of() would throw, even with nothing to remove
+            }
         }
         super.onChunkUnloaded();
     }

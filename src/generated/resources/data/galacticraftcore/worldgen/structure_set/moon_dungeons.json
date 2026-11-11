@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10387340,
+    "separation": 0,
+    "spacing": 44
+  },
+  "structures": [
+    {
+      "structure": "galacticraftcore:moon_dungeon",
+      "weight": 1
+    }
+  ]
+}

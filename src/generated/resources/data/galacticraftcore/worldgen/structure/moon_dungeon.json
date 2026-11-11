@@ -1,0 +1,6 @@
+{
+  "type": "galacticraftcore:moon_dungeon",
+  "biomes": "galacticraftcore:moon",
+  "spawn_overrides": {},
+  "step": "underground_structures"
+}

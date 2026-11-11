@@ -10,7 +10,11 @@ Only the straightforward pattern used by ModelRocketTier1 and ModelLander is und
     this.setRotation(this.part, rx, ry, rz);
 The parts are emitted in the order the model's render() method draws them.
 
-Usage: python3 tools/convert_java_model.py Legacy/ModelRocketTier1.java > snippet.java
+A variable inflate argument (``par1``, ``scale``...) counts as 0; a texture size chosen with ``a ? b : c`` takes the
+second value. ``--json`` prints the parts (texture offset, boxes, pivot, rotation, mirror) instead, to rebuild a model
+around vanilla part names.
+
+Usage: python3 tools/convert_java_model.py [--json] Legacy/ModelRocketTier1.java > snippet.java
 """
 import re
 import sys
@@ -23,22 +27,36 @@ def f(value):
     return ("%sF" % repr(value)).replace(".0F", ".0F")
 
 
-def main(path):
+def parse(path):
     src = open(path, encoding="utf-8").read()
-    tex = re.search(r"this\.textureWidth = (\d+);\s*this\.textureHeight = (\d+);", src)
+    tex = re.search(r"this\.textureWidth = (?:[^;?]*\?\s*\d+\s*:\s*)?(\d+);\s*this\.textureHeight = (?:[^;?]*\?\s*\d+\s*:\s*)?(\d+);", src)
     parts = {}
     order = []
     for m in re.finditer(r"this\.(\w+) = new ModelRenderer(?:GC)?\(this, (\d+), (\d+)\);", src):
         parts[m.group(1)] = {"uv": (int(m.group(2)), int(m.group(3))), "boxes": [], "pivot": (0, 0, 0), "rot": (0, 0, 0), "mirror": False}
         order.append(m.group(1))
-    for m in re.finditer(r"this\.(\w+)\.addBox\(" + r",\s*".join([NUM] * 6) + r"(?:,\s*" + NUM + r")?\);", src):
-        parts[m.group(1)]["boxes"].append(tuple(float(g) for g in m.groups()[1:7]) + ((float(m.group(8)),) if m.group(8) else ()))
+    for m in re.finditer(r"this\.(\w+)\.addBox\(" + r",\s*".join([NUM] * 6) + r"(?:,\s*(" + NUM[1:-4] + r"|[A-Za-z_]\w*)F?)?\);", src):
+        if m.group(1) not in parts:
+            continue
+        inflate = m.group(8)
+        inflate = float(inflate) if inflate and re.match(r"-?[0-9.]+$", inflate) else 0.0
+        parts[m.group(1)]["boxes"].append(tuple(float(g) for g in m.groups()[1:7]) + ((inflate,) if inflate else ()))
     for m in re.finditer(r"this\.(\w+)\.setRotationPoint\(" + r",\s*".join([NUM] * 3) + r"\);", src):
         parts[m.group(1)]["pivot"] = tuple(float(g) for g in m.groups()[1:])
     for m in re.finditer(r"this\.(\w+)\.mirror = true;", src):
         parts[m.group(1)]["mirror"] = True
     for m in re.finditer(r"this\.setRotation\(this\.(\w+), " + r",\s*".join([NUM] * 3) + r"\);", src):
         parts[m.group(1)]["rot"] = tuple(float(g) for g in m.groups()[1:])
+    return src, tex, parts, order
+
+
+def main(path, as_json=False):
+    src, tex, parts, order = parse(path)
+    if as_json:
+        import json
+        print(json.dumps({"texture": [int(tex.group(1)), int(tex.group(2))] if tex else None,
+                          "order": order, "parts": parts}, indent=1))
+        return
     render = re.search(r"public void render\(Entity.*?\{(.*?)\n    \}", src, re.S)
     drawn = re.findall(r"this\.(\w+)\.render\(", render.group(1)) if render else order
     out = ["        final MeshDefinition mesh = new MeshDefinition();", "        final PartDefinition root = mesh.getRoot();"]
@@ -57,4 +75,7 @@ def main(path):
 
 
 if __name__ == "__main__":
-    main(sys.argv[1])
+    if sys.argv[1] == "--json":
+        main(sys.argv[2], True)
+    else:
+        main(sys.argv[1])

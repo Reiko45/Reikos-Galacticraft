@@ -37,12 +37,15 @@ public final class GCDataGenerators {
         final GCWorldgenProvider worldgen = generator.addProvider(event.includeServer(), new GCWorldgenProvider(output, lookup));
         final CompletableFuture<HolderLookup.Provider> fullLookup = worldgen.getRegistryProvider();
         generator.addProvider(event.includeServer(), new LootTableProvider(output, Set.of(),
-                List.of(new LootTableProvider.SubProviderEntry(GCBlockLootProvider::new, LootContextParamSets.BLOCK)), fullLookup));
+                List.of(new LootTableProvider.SubProviderEntry(GCBlockLootProvider::new, LootContextParamSets.BLOCK),
+                        new LootTableProvider.SubProviderEntry(GCEntityLootProvider::new, LootContextParamSets.ENTITY),
+                        new LootTableProvider.SubProviderEntry(GCChestLootProvider::new, LootContextParamSets.CHEST)), fullLookup));
         generator.addProvider(event.includeServer(), new GCRecipeProvider(output, fullLookup));
         final GCBlockTagsProvider blockTags = generator.addProvider(event.includeServer(),
                 new GCBlockTagsProvider(output, fullLookup, existingFiles));
         generator.addProvider(event.includeServer(), new GCItemTagsProvider(output, fullLookup, blockTags.contentsGetter(), existingFiles));
         generator.addProvider(event.includeServer(), new GCFluidTagsProvider(output, fullLookup, existingFiles));
         generator.addProvider(event.includeServer(), new GCDamageTypeTagsProvider(output, fullLookup, existingFiles));
+        generator.addProvider(event.includeServer(), new GCEntityTypeTagsProvider(output, fullLookup, existingFiles));
     }
 }

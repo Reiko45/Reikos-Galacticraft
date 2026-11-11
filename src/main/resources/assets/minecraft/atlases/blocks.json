@@ -4,6 +4,18 @@
       "type": "directory",
       "source": "model/parachute",
       "prefix": "model/parachute/"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/buggy_main"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/buggy_wheels"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/buggy_storage"
     }
   ]
 }

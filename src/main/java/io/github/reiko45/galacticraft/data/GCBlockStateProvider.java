@@ -115,6 +115,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
 
         simpleBlockWithItem(GCBlocks.FALLEN_METEOR.get(), models().getExistingFile(modLoc("block/fallen_meteor")));
         rockets();
+        dungeon();
 
         final ResourceLocation torchTexture = tex("glowstone_torch");
         simpleBlock(GCBlocks.GLOWSTONE_TORCH.get(), models().torch("glowstone_torch", torchTexture).renderType("cutout"));
@@ -129,6 +130,12 @@ public class GCBlockStateProvider extends BlockStateProvider {
         getVariantBuilder(GCBlocks.LANDING_PAD.get()).forAllStates(state -> ConfiguredModel.builder()
                 .modelFile(state.getValue(LandingPadBlock.PAD) == LandingPadBlock.Pad.SINGLE ? pad : fullPad).build());
         itemModels().withExistingParent("landing_pad", modLoc("block/landing_pad"));
+        final ModelFile buggyPad = models().getExistingFile(modLoc("block/buggy_fueling_pad"));
+        final ModelFile fullBuggyPad = models().getExistingFile(modLoc("block/buggy_fueling_pad_full"));
+        getVariantBuilder(GCBlocks.BUGGY_FUELING_PAD.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(LandingPadBlock.PAD) == LandingPadBlock.Pad.SINGLE ? buggyPad : fullBuggyPad).build());
+        itemModels().withExistingParent("buggy_fueling_pad", modLoc("block/buggy_fueling_pad"));
+        buggy();
         // 1.12.2 fuel_loader_model: loader panels front and back, power in on the left (east), fuel in on the right (west)
         machine(GCBlocks.FUEL_LOADER.get(), "", "machine_fuelloader", "machine_input", "machine_fuelloader", "machine_fuel_input");
         final ModelFile workbench = models().getBuilder("nasa_workbench").customLoader(ObjModelBuilder::begin)
@@ -150,6 +157,36 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .rotationY(((int) state.getValue(ParachestBlock.FACING).toYRot()) % 360)
                 .build());
         itemModels().withExistingParent("parachest", modLoc("block/parachest"));
+    }
+
+    /** One standalone model per part of the 1.12.2 buggy OBJ, drawn by BuggyRenderer (1.12.2 RenderBuggy baked them the same way). */
+    public static final String[] BUGGY_PARTS = {"MainBody", "RadarDish_Dish", "Wheel_Left", "Wheel_Right", "Wheel_Left_Cover", "Wheel_Right_Cover",
+            "CargoLeft", "CargoMid", "CargoRight"};
+
+    private void buggy() {
+        for (String part : BUGGY_PARTS) {
+            final var loader = models().getBuilder("entity/buggy/" + part.toLowerCase(java.util.Locale.ROOT)).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/buggy.obj")).flipV(true);
+            for (String other : BUGGY_PARTS) {
+                loader.visibility(other, other.equals(part));
+            }
+            loader.end();
+        }
+    }
+
+    /** Boss spawner (invisible) and the Tier 1 Treasure Chest, drawn by TreasureChestRenderer (block and item). */
+    private void dungeon() {
+        simpleBlock(GCBlocks.BOSS_SPAWNER.get(), models().getBuilder("boss_spawner").texture("particle", tex("moon_dungeon_brick")));
+        simpleBlock(GCBlocks.TREASURE_CHEST_TIER_1.get(), models().getBuilder("treasure_chest_tier_1").texture("particle", tex("treasure_chest")));
+        itemModels().getBuilder("treasure_chest_tier_1").parent(new ModelFile.UncheckedModelFile("builtin/entity"))
+                .texture("particle", tex("treasure_chest")).transforms()
+                .transform(ItemDisplayContext.GUI).rotation(30, 45, 0).scale(0.625F).end()
+                .transform(ItemDisplayContext.GROUND).translation(0, 3, 0).scale(0.25F).end()
+                .transform(ItemDisplayContext.HEAD).rotation(0, 180, 0).end()
+                .transform(ItemDisplayContext.FIXED).rotation(0, 180, 0).scale(0.5F).end()
+                .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 315, 0).translation(0, 2.5F, 0).scale(0.375F).end()
+                .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 315, 0).scale(0.4F).end()
+                .end();
     }
 
     private ResourceLocation tex(String name) {

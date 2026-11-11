@@ -29,6 +29,20 @@ public final class VehicleControls {
     private VehicleControls() {
     }
 
+    /** 1.12.2 EntityBuggy#processInitialInteract on the client: the controls, when getting in. */
+    public static void buggyHelp(net.minecraft.world.entity.player.Player player) {
+        final Options options = Minecraft.getInstance().options;
+        player.displayClientMessage(net.minecraft.network.chat.Component.empty().append(options.keyLeft.getTranslatedKeyMessage()).append(" / ")
+                .append(options.keyRight.getTranslatedKeyMessage()).append("  - ")
+                .append(net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.buggy.turn")), false);
+        player.displayClientMessage(net.minecraft.network.chat.Component.empty().append(options.keyUp.getTranslatedKeyMessage()).append("       - ")
+                .append(net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.buggy.accelerate")), false);
+        player.displayClientMessage(net.minecraft.network.chat.Component.empty().append(options.keyDown.getTranslatedKeyMessage()).append("       - ")
+                .append(net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.buggy.decelerate")), false);
+        player.displayClientMessage(net.minecraft.network.chat.Component.empty().append(SPACESHIP_INVENTORY.getTranslatedKeyMessage()).append("       - ")
+                .append(net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.buggy.inventory")), false);
+    }
+
     public static void registerKeys(RegisterKeyMappingsEvent event) {
         event.register(SPACESHIP_INVENTORY);
     }
@@ -47,8 +61,8 @@ public final class VehicleControls {
         final Entity vehicle = minecraft.player.getVehicle();
         final Options options = minecraft.options;
         final boolean jumpDown = minecraft.screen == null && options.keyJump.isDown();
-        if (vehicle instanceof Tier1RocketEntity) {
-            if (jumpDown && !jumpWasDown) {
+        if (vehicle instanceof Tier1RocketEntity || vehicle instanceof io.github.reiko45.galacticraft.entity.BuggyEntity) {
+            if (vehicle instanceof Tier1RocketEntity && jumpDown && !jumpWasDown) {
                 PacketDistributor.sendToServer(new GCNetwork.IgniteRocket());
             }
             while (SPACESHIP_INVENTORY.consumeClick()) {
@@ -56,7 +70,7 @@ public final class VehicleControls {
             }
         } else {
             while (SPACESHIP_INVENTORY.consumeClick()) {
-                // only meaningful in a rocket
+                // only meaningful in a rocket or buggy
             }
         }
         jumpWasDown = jumpDown;

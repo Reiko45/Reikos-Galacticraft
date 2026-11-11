@@ -5,6 +5,7 @@ Galacticraft Legacy: https://github.com/TeamGalacticraft/Galacticraft-Legacy (MI
 
 Driven by tools/legacy_mapping.json. For every entry it:
   * copies textures to their 1.21 location/name                 (assets/galacticraftcore/textures/...)
+  * copies sounds                                                 (assets/galacticraftcore/sounds/...)
   * copies hand-made block models, rewriting texture references (assets/galacticraftcore/models/...)
   * converts the .lang files of every locale to .json           (assets/galacticraftcore/lang/*.json)
   * converts 1.12 JSON crafting recipes (metadata + ore dictionary -> item ids + tags)
@@ -66,6 +67,18 @@ def port_textures(mapping, legacy_assets, out_assets):
     print(f"textures: {count} copied")
 
 
+def port_sounds(mapping, legacy_assets, out_assets):
+    """Copy .ogg files; sounds.json itself is hand-written (event names follow 1.21 conventions)."""
+    for new, old in mapping.get("sounds", {}).items():
+        src = os.path.join(legacy_assets, "sounds", old + ".ogg")
+        if not os.path.isfile(src):
+            raise SystemExit(f"missing legacy sound {src}")
+        dst = os.path.join(out_assets, "sounds", new + ".ogg")
+        os.makedirs(os.path.dirname(dst), exist_ok=True)
+        shutil.copyfile(src, dst)
+    print(f"sounds: {len(mapping.get('sounds', {}))} copied")
+
+
 def port_models(mapping, legacy_assets, out_assets):
     reverse = {f"{MOD_ID}:{old}": f"{MOD_ID}:{new}" for new, old in mapping["textures"].items()}
     for new, spec in mapping["models"].items():
@@ -97,9 +110,12 @@ def port_models(mapping, legacy_assets, out_assets):
             model["textures"][slot] = ref if ref.startswith("#") else reverse.get(ref) or sys.exit(f"{new}: unmapped texture {ref}")
         write_json(os.path.join(out_assets, "models", new + ".json"), model)
     objs = {k: v for k, v in mapping.get("obj_models", {}).items() if not k.startswith("_")}
-    for new, old in objs.items():
+    for new, spec in objs.items():
         # Copy the .obj under its new name and rewrite its .mtl: mtllib points at the renamed .mtl, and map_Kd
         # texture names go through the textures mapping (1.21 path, e.g. blocks/assembly -> block/assembly).
+        # {"from": ..., "default_map": ...} also gives untextured materials (1.12.2 drew them white) a texture.
+        old = spec if isinstance(spec, str) else spec["from"]
+        default_map = None if isinstance(spec, str) else spec.get("default_map")
         src = os.path.join(legacy_assets, "models", old)
         dst = os.path.join(out_assets, "models", new)
         os.makedirs(os.path.dirname(dst), exist_ok=True)
@@ -109,14 +125,22 @@ def port_models(mapping, legacy_assets, out_assets):
         with open(dst + ".obj", "w", encoding="utf-8", newline="\n") as f:
             f.write(obj)
         lines = []
+        textured = True
         with open(src + ".mtl", encoding="utf-8") as f:
             for line in f.read().splitlines():
+                if line.startswith("newmtl "):
+                    if not textured and default_map:
+                        lines.append("map_Kd " + default_map)
+                    textured = False
                 if line.startswith("map_Kd "):
                     ref = line.split(" ", 1)[1].strip()
                     if ref not in reverse:
                         raise SystemExit(f"obj {old}: texture {ref} is not in the textures mapping")
                     line = "map_Kd " + reverse[ref]
+                    textured = True
                 lines.append(line)
+        if not textured and default_map:
+            lines.append("map_Kd " + default_map)
         with open(dst + ".mtl", "w", encoding="utf-8", newline="\n") as f:
             f.write("\n".join(lines) + "\n")
     print(f"models: {len(mapping['models'])} converted, {len(parts)} extracted, {len(objs)} OBJ copied")
@@ -302,6 +326,7 @@ def main():
     out_data = os.path.join(resources, "data", MOD_ID)
 
     port_textures(mapping, legacy_assets, out_assets)
+    port_sounds(mapping, legacy_assets, out_assets)
     port_models(mapping, legacy_assets, out_assets)
     port_lang(mapping, legacy_assets, out_assets)
     port_recipes(mapping, legacy_assets, out_data)

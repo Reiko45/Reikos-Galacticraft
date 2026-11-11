@@ -162,8 +162,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
       (1.12.2 TeleportTypeOverworld/TeleportTypeMoon)
 - [x] Space Lander (1.12.2 ModelLander, steering, braking, crash, entry HUD), Para-chest entity and block (16 parachute
       colours), parachute deployment (slow fall + canopy on the player)
-- [ ] Deferred: Moon Buggy + Buggy Fueling Pad + buggy schematic (moon dungeon loot, Phase 5), the schematic page
-      system (only the Tier 1 page exists), the full galaxy map (zoom, catalogue panels, space stations)
+- [ ] Deferred: the full galaxy map (zoom, catalogue panels, space stations). (The Moon Buggy, its fueling pad and
+      the schematic pages came in Phase 5b.)
 
 ### Phase 5a – The Moon as a place ✅
 - [x] Moon caves (1.12.2 MapGenCavesMoon worm carver, through moon blocks only)
@@ -174,10 +174,29 @@ translation won't work: almost every vanilla and Forge API it touched changed be
       and pushes whatever touches it, falls like sand); `meteorSpawnMod` and `meteorBlockDamage` server config
 - [x] Low gravity for dropped items (0.0046) and arrows (0.005) on the Moon
 
-### Phase 5b – Things to fight and find
-- [ ] Evolved mobs and their spawns, moon villages, dungeon + Skeleton Boss + Tier 1 treasure chest
-- [ ] Schematic items, the "unlock schematic" slot and page switching in the NASA Workbench
-- [ ] Moon Buggy (schematic, entity, model, cargo) and Buggy Fueling Pad
+### Phase 5b – Things to fight and find ✅
+- [x] Evolved Zombie, Skeleton, Spider, Creeper and Enderman (1.12.2 models with oxygen gear, converted by
+      `tools/convert_java_model.py`; 1.12.2 health, speed and damage; common drops plus the rare player-kill drops),
+      spawning on the Moon (weights 8/8/8/8/10), with spawn eggs
+- [x] Moon dungeon (1.12.2 MapGenDungeon: one per 704x704 block region, a crater down to y 25, 10-25 corridors and
+      rooms with spawners, cobwebs and loot chests, then the boss room, a low corridor and the treasure room)
+- [x] Skeleton Boss (150 health × `dungeonBossHealthMod`, two bows, grabs and throws its target, boss bar, leaves
+      when you leave its room, 200-tick death), its laugh/death/hurt sounds; it fills the locked Tier 1 Treasure Chest
+      with `dungeon_tier_1` loot plus a Moon Buggy or Tier 2 Rocket schematic and drops the Tier 1 Dungeon Key
+- [x] Schematics: per-player unlocked NASA Workbench pages (kept through death), Back/Next page buttons, the
+      "Add New Schematic" page with its slot and Unlock Schematic button
+- [x] Moon Buggy: workbench page (11 plates, a seat, 4 wheels, 0-3 storage boxes), item (0-3 boxes, fuel kept),
+      entity drawn from the 1.12.2 OBJ (steering and spinning wheels, wobbling radar dish), W/S/A/D driving with the
+      1.12.2 speeds and climbing, fuel use, 18 slots per storage box behind the inventory key
+- [x] Buggy Fueling Pad: joins 3x3 like the launch pad (never with it); an attached Fuel Loader fills a parked buggy
+- [x] Fire needs oxygen: burning entities on the Moon outside breathable air are put out when the flames first hurt
+      them (1.12.2 EventHandlerGC#onEntityDamaged, missed in Phase 3)
+- [ ] Deferred to Phase 5c: Moon villages and Alien Villagers (1.12.2 MapGenVillageMoon, its eleven building pieces
+      and EntityAlienVillager trading for lunar sapphires). The Tier 2 Rocket schematic can drop already; its page
+      comes with the Tier 2 Rocket in Phase 7.
+
+### Phase 5c – Moon villages
+- [ ] Moon village structure and pieces, Alien Villager with its trades
 
 ### Phase 6 – Space stations
 - [ ] Station creation/ownership, orbit dimension(s), Spin Thruster, docking, Space Race teams
@@ -232,16 +251,30 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   made the Refinery's status flicker).
 * The destination screen is a simplified galaxy map: the Sun, Earth and the Moon on their orbits with the 1.12.2 icons,
   frame and LAUNCH button. Zooming, the planet catalogue panels and the space station list come with later phases.
-* The NASA Workbench opens straight on the Tier 1 Rocket page; there is no schematic paging until the Moon Buggy
-  schematic exists. Its Tier 1 recipe is hard-coded as in 1.12.2 (`RecipeManagerGC`), so it is not a JSON recipe and
-  doesn't show in JEI yet.
+* The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
+  not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
+  configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id). A
+  schematic whose page doesn't exist yet (Tier 2 Rocket) is not used up by Unlock Schematic.
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
 * Rocket and lander exhaust uses vanilla flame and smoke particles instead of 1.12.2's custom flame particles.
 * The Fuel Loader takes power on its left face and fuel on its right; the sneak + wrench side configuration of 1.12.2
   is not ported for it yet. Fuel Loaders take any fluid in the `c:fuel` tag.
-* Buggy Fueling Pads (`landing_pad:1`) are not ported, so their recipe is skipped.
+* The Buggy Fueling Pad is its own block (`buggy_fueling_pad`, 1.12.2 `landing_pad:1`); launch pads and fueling pads
+  next to each other never join into one pad.
+* The Moon Buggy is steered with the normal movement keys (1.12.2 had separate key bindings defaulting to the same
+  keys) and its storage uses the Spaceship Inventory key. Like 1.12.2 the driver's client moves it; it now rolls to
+  a stop on the ground when out of fuel (1.12.2 coasted). The 1.12.2 radar dish had no texture (drawn white); it uses
+  white concrete. The item's hand and GUI transforms approximate the 1.12.2 matrices.
+* Evolved Zombies don't call reinforcements (vanilla would spawn plain zombies), don't drown into anything, and Evolved
+  Skeletons don't freeze into strays. The Evolved Witch (Mars) and 1.12.2 "challenge mode" drops are not ported.
+* The Skeleton Boss's treasure goes into the treasure chest its dungeon was built with (1.12.2 searched for the
+  nearest Tier 1 chest within 1,000 blocks; that search is kept, within 32 blocks, as a fallback). The boss respawns
+  15 minutes after a kill when a player enters again. Its rare bow drop is a plain bow (1.12.2 enchanted it when the
+  kill used Looting).
+* Dungeons need "Generate Structures" like any structure; `/place structure galacticraftcore:moon_dungeon` places one.
+  Without terrain adaptation the dungeon digs its own crater, as in 1.12.2.
 * Footprints are tracked only on the server and sent to players who can see them (1.12.2 also drew your own prints
   on your own client). They are still not saved. Prints sit on top of the turf; 1.12.2's server put other players'
   prints one block lower.

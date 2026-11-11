@@ -225,6 +225,22 @@ public final class GCPlayerHandler {
         }
     }
 
+    /**
+     * 1.12.2 EventHandlerGC#onEntityDamaged: without oxygen nothing keeps burning. A burning entity on an airless world
+     * outside breathable air is put out (in a puff of smoke) the first time the flames hurt it.
+     */
+    @SubscribeEvent
+    public static void onFireDamage(net.neoforged.neoforge.event.entity.living.LivingIncomingDamageEvent event) {
+        final LivingEntity entity = event.getEntity();
+        if (!event.getSource().is(net.minecraft.world.damagesource.DamageTypes.ON_FIRE) || !(entity.level() instanceof net.minecraft.server.level.ServerLevel level)
+                || !CelestialPhysics.isAirless(level) || OxygenUtil.isInBreathableAir(entity)) {
+            return;
+        }
+        level.sendParticles(net.minecraft.core.particles.ParticleTypes.SMOKE, entity.getX(), entity.getY() + entity.getBbHeight(), entity.getZ(),
+                50, 0.0D, 0.05D, 0.0D, 0.001D);
+        entity.clearFire();
+    }
+
     /** 1.12.2 EventHandlerGC#entityLivingEvent: mobs on airless worlds take 1 damage every 100 ticks outside breathable air. */
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {

@@ -65,6 +65,9 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public double distanceSinceLastStep;
     public int lastStep;
 
+    /** NASA Workbench pages unlocked with schematics (1.12.2 GCPlayerStats#unlockedSchematics); kept through death. */
+    private final java.util.Set<String> unlockedSchematics = new java.util.LinkedHashSet<>();
+
     /** Last HUD state sent to the client (not saved). */
     io.github.reiko45.galacticraft.network.GCNetwork.OxygenState lastSentState;
     /** Set when the gear changes, so the server sends the new look to everyone watching this player. */
@@ -161,8 +164,19 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.gearChanged = true;
     }
 
+    public boolean hasSchematic(String id) {
+        return this.unlockedSchematics.contains(id);
+    }
+
+    /** @return whether it was newly unlocked */
+    public boolean unlockSchematic(String id) {
+        return this.unlockedSchematics.add(id);
+    }
+
     /** Copy everything from a previous player entity (respawn, End exit). */
     public void copyFrom(GCPlayerData other, boolean keepItems) {
+        this.unlockedSchematics.clear();
+        this.unlockedSchematics.addAll(other.unlockedSchematics);
         if (keepItems) {
             for (int i = 0; i < GearSlot.COUNT; i++) {
                 this.inventory.setStackInSlot(i, other.inventory.getStackInSlot(i).copy());
@@ -200,6 +214,11 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
             travel.putDouble("ChestZ", this.chestSpawnPos.z);
         }
         tag.put("Travel", travel);
+        final net.minecraft.nbt.ListTag schematics = new net.minecraft.nbt.ListTag();
+        for (String id : this.unlockedSchematics) {
+            schematics.add(net.minecraft.nbt.StringTag.valueOf(id));
+        }
+        tag.put("Schematics", schematics);
         return tag;
     }
 
@@ -225,6 +244,10 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.chestSpawnCooldown = travel.getInt("ChestCooldown");
         this.chestSpawnPos = travel.contains("ChestX")
                 ? new net.minecraft.world.phys.Vec3(travel.getDouble("ChestX"), travel.getDouble("ChestY"), travel.getDouble("ChestZ")) : null;
+        this.unlockedSchematics.clear();
+        for (net.minecraft.nbt.Tag id : tag.getList("Schematics", net.minecraft.nbt.Tag.TAG_STRING)) {
+            this.unlockedSchematics.add(id.getAsString());
+        }
         this.gearChanged = true;
     }
 }

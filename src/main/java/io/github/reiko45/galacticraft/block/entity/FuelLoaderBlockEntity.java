@@ -105,9 +105,9 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             this.attachedPad = findPad();
         }
         if (!this.tank.isEmpty() && this.hasEnoughEnergyToRun && !this.disabled) {
-            final Tier1RocketEntity rocket = dockedRocket();
-            if (rocket != null) {
-                final int filled = rocket.addFuel(Math.min(FUEL_PER_TICK, this.tank.getFluidAmount()), true);
+            final io.github.reiko45.galacticraft.entity.Refuelable vehicle = dockedVehicle();
+            if (vehicle != null) {
+                final int filled = vehicle.addFuel(Math.min(FUEL_PER_TICK, this.tank.getFluidAmount()), true);
                 this.loadedFuelLastTick = filled > 0;
                 this.tank.drain(filled, IFluidHandler.FluidAction.EXECUTE);
             }
@@ -150,14 +150,32 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         return null;
     }
 
-    /** The rocket standing on the attached pad (1.12.2 TileEntityLandingPad#getDockedEntity). */
+    /**
+     * The rocket standing on the attached launch pad (1.12.2 TileEntityLandingPad#getDockedEntity), or the buggy parked
+     * on the attached fueling pad (1.12.2 TileEntityBuggyFueler: within 1.5 blocks of the centre, up to 1 block above).
+     */
     @Nullable
-    public Tier1RocketEntity dockedRocket() {
+    public io.github.reiko45.galacticraft.entity.Refuelable dockedVehicle() {
         if (this.level == null || this.attachedPad == null) {
             return null;
         }
         if (LandingPadBlock.findCentre(this.level, this.attachedPad) == null) {
             this.attachedPad = null;
+            return null;
+        }
+        if (this.level.getBlockState(this.attachedPad).getBlock() instanceof io.github.reiko45.galacticraft.block.BuggyFuelingPadBlock) {
+            final List<io.github.reiko45.galacticraft.entity.BuggyEntity> buggies = this.level.getEntitiesOfClass(
+                    io.github.reiko45.galacticraft.entity.BuggyEntity.class, new AABB(this.attachedPad).inflate(1.5D, 0.0D, 1.5D).expandTowards(0.0D, 1.0D, 0.0D),
+                    io.github.reiko45.galacticraft.entity.BuggyEntity::isAlive);
+            return buggies.isEmpty() ? null : buggies.get(0);
+        }
+        return dockedRocket();
+    }
+
+    /** The rocket standing on the attached launch pad. */
+    @Nullable
+    public Tier1RocketEntity dockedRocket() {
+        if (this.level == null || this.attachedPad == null || LandingPadBlock.findLaunchPadCentre(this.level, this.attachedPad) == null) {
             return null;
         }
         final List<Tier1RocketEntity> rockets = this.level.getEntitiesOfClass(Tier1RocketEntity.class,

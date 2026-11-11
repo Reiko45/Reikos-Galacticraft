@@ -54,9 +54,10 @@ public class LandingPadBlock extends Block {
         return SHAPE;
     }
 
-    private static boolean isPad(Level level, BlockPos pos, Pad pad) {
+    /** A pad of the same kind as {@code block} (launch pads and fueling pads never join each other). */
+    private static boolean isPad(Level level, BlockPos pos, Pad pad, Block block) {
         final BlockState state = level.getBlockState(pos);
-        return state.getBlock() instanceof LandingPadBlock && state.getValue(PAD) == pad;
+        return state.is(block) && state.getValue(PAD) == pad;
     }
 
     private static List<BlockPos> square(BlockPos centre) {
@@ -70,7 +71,7 @@ public class LandingPadBlock extends Block {
             return;
         }
         for (BlockPos centre : square(pos)) {
-            if (square(centre).stream().allMatch(p -> isPad(level, p, Pad.SINGLE))) {
+            if (square(centre).stream().allMatch(p -> isPad(level, p, Pad.SINGLE, this))) {
                 for (BlockPos part : square(centre)) {
                     level.setBlock(part, defaultBlockState().setValue(PAD, part.equals(centre) ? Pad.CENTRE : Pad.PART), Block.UPDATE_ALL);
                 }
@@ -86,13 +87,13 @@ public class LandingPadBlock extends Block {
             // The block at pos is already gone here, so look for the centre around it rather than through it.
             BlockPos centre = state.getValue(PAD) == Pad.CENTRE ? pos : null;
             for (BlockPos candidate : square(pos)) {
-                if (centre == null && isPad(level, candidate, Pad.CENTRE)) {
+                if (centre == null && isPad(level, candidate, Pad.CENTRE, this)) {
                     centre = candidate;
                 }
             }
             if (centre != null) {
                 for (BlockPos part : square(centre)) {
-                    if (!part.equals(pos) && level.getBlockState(part).getBlock() instanceof LandingPadBlock) {
+                    if (!part.equals(pos) && level.getBlockState(part).is(this)) {
                         level.setBlock(part, defaultBlockState(), Block.UPDATE_CLIENTS);
                     }
                 }
@@ -104,17 +105,28 @@ public class LandingPadBlock extends Block {
     /** The centre of the joined pad that {@code pos} belongs to, or null. */
     @Nullable
     public static BlockPos findCentre(Level level, BlockPos pos) {
-        if (isPad(level, pos, Pad.CENTRE)) {
+        final Block block = level.getBlockState(pos).getBlock();
+        if (!(block instanceof LandingPadBlock)) {
+            return null;
+        }
+        if (isPad(level, pos, Pad.CENTRE, block)) {
             return pos;
         }
-        if (!isPad(level, pos, Pad.PART)) {
+        if (!isPad(level, pos, Pad.PART, block)) {
             return null;
         }
         for (BlockPos candidate : square(pos)) {
-            if (isPad(level, candidate, Pad.CENTRE)) {
+            if (isPad(level, candidate, Pad.CENTRE, block)) {
                 return candidate;
             }
         }
         return null;
+    }
+
+    /** The centre of the joined Rocket Launch Pad at {@code pos} (not a Buggy Fueling Pad), or null. */
+    @Nullable
+    public static BlockPos findLaunchPadCentre(Level level, BlockPos pos) {
+        final BlockPos centre = findCentre(level, pos);
+        return centre != null && !(level.getBlockState(centre).getBlock() instanceof BuggyFuelingPadBlock) ? centre : null;
     }
 }

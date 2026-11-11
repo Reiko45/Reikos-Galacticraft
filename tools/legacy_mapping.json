@@ -286,7 +286,36 @@
     "model/parachute/yellow": "model/parachute/yellow",
     "misc/footprint": "misc/footprint",
     "model/meteor": "model/meteor",
-    "gui/planets/orbitalsun": "gui/planets/orbitalsun"
+    "gui/planets/orbitalsun": "gui/planets/orbitalsun",
+    "model/zombie": "model/zombie",
+    "model/skeleton": "model/skeleton",
+    "model/spider": "model/spider",
+    "model/spider_eyes": "model/spider_eyes",
+    "model/creeper": "model/creeper",
+    "model/evolved_enderman": "model/evolved_enderman",
+    "model/evolved_enderman_eyes": "model/evolved_enderman_eyes",
+    "model/skeletonboss": "model/skeletonboss",
+    "model/treasure": "model/treasure",
+    "item/tier_1_dungeon_key": "items/dungeon_key_t1",
+    "item/buggy_schematic": "items/schematic_buggy",
+    "item/tier_2_rocket_schematic": "items/schematic_rocket_t2",
+    "block/treasure_chest": "blocks/treasure_chest",
+    "block/buggy_pad": "blocks/buggy_pad",
+    "block/buggy_pad_full": "blocks/buggy_pad_full",
+    "gui/schematicpage": "gui/schematicpage",
+    "gui/buggybench": "gui/buggybench",
+    "gui/buggy_0": "gui/buggy_0",
+    "gui/buggy_18": "gui/buggy_18",
+    "gui/buggy_36": "gui/buggy_36",
+    "gui/buggy_54": "gui/buggy_54",
+    "model/buggy_main": "model/buggy_main",
+    "model/buggy_wheels": "model/buggy_wheels",
+    "model/buggy_storage": "model/buggy_storage"
+  },
+  "sounds": {
+    "entity/bosslaugh": "entity/bosslaugh",
+    "entity/bossdeath": "entity/bossdeath",
+    "entity/ooh": "entity/ooh"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -316,7 +345,9 @@
     "block/parachest": {
       "from": "block/parachest",
       "render_type": "minecraft:cutout"
-    }
+    },
+    "block/buggy_fueling_pad": "block/buggy_pad_model",
+    "block/buggy_fueling_pad_full": "block/buggy_pad_full_model"
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -578,7 +609,39 @@
     "key.galacticraftcore.spaceship_inventory": "keybind.spaceshipinv.name",
     "entity.galacticraftcore.meteor": "entity.meteor.name",
     "config.galacticraftcore.meteor_spawn_mod": "gc.configgui.meteor_spawn_mod",
-    "config.galacticraftcore.meteor_block_damage": "gc.configgui.meteor_block_damage"
+    "config.galacticraftcore.meteor_block_damage": "gc.configgui.meteor_block_damage",
+    "entity.galacticraftcore.evolved_zombie": "entity.evolved_zombie.name",
+    "entity.galacticraftcore.evolved_skeleton": "entity.evolved_skeleton.name",
+    "entity.galacticraftcore.evolved_spider": "entity.evolved_spider.name",
+    "entity.galacticraftcore.evolved_creeper": "entity.evolved_creeper.name",
+    "entity.galacticraftcore.evolved_enderman": "entity.evolved_enderman.name",
+    "block.galacticraftcore.treasure_chest_tier_1": "tile.treasure_chest.name",
+    "container.galacticraftcore.treasure_chest": "container.treasurechest.name",
+    "item.galacticraftcore.tier_1_dungeon_key": "item.key.t1.name",
+    "gui.galacticraftcore.chest.warning.wrong_key": "gui.chest.warning.wrongkey",
+    "entity.galacticraftcore.skeleton_boss": "entity.evolved_skeleton_boss.name",
+    "gui.galacticraftcore.skeleton_boss.message": "gui.skeleton_boss.message",
+    "item.galacticraftcore.buggy_schematic": "item.schematic.name",
+    "item.galacticraftcore.tier_2_rocket_schematic": "item.schematic.name",
+    "schematic.galacticraftcore.moon_buggy": "schematic.moonbuggy.name",
+    "schematic.galacticraftcore.rocket_t2": "schematic.rocket_t2.name",
+    "gui.galacticraftcore.button.back": "gui.button.back.name",
+    "gui.galacticraftcore.button.next": "gui.button.next.name",
+    "gui.galacticraftcore.button.unlock_schematic": "gui.button.unlockschematic.name",
+    "gui.galacticraftcore.add_new_schematic": "gui.message.addnewsch.name",
+    "gui.galacticraftcore.new_schematic.slot.desc.0": "gui.new_schematic.slot.desc.0",
+    "gui.galacticraftcore.new_schematic.slot.desc.1": "gui.new_schematic.slot.desc.1",
+    "gui.galacticraftcore.new_schematic.slot.desc.2": "gui.new_schematic.slot.desc.2",
+    "gui.galacticraftcore.new_schematic.slot.desc.3": "gui.new_schematic.slot.desc.3",
+    "entity.galacticraftcore.buggy": "entity.buggy.name",
+    "item.galacticraftcore.buggy": "item.buggy.name",
+    "gui.galacticraftcore.buggy.storage_space": "gui.buggy.storage_space",
+    "gui.galacticraftcore.buggy.accelerate": "gui.buggy.accel.name",
+    "gui.galacticraftcore.buggy.decelerate": "gui.buggy.decel.name",
+    "gui.galacticraftcore.buggy.turn": "gui.buggy.turn.name",
+    "gui.galacticraftcore.buggy.inventory": "gui.buggy.inv.name",
+    "block.galacticraftcore.buggy_fueling_pad": "tile.landing_pad.buggy_fueler.name",
+    "config.galacticraftcore.dungeon_boss_health_mod": "gc.configgui.dungeon_boss_health_mod"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -588,7 +651,19 @@
     "gui.galacticraftcore.rocket.controls": "Press %s to launch, %s for the rocket's cargo and fuel",
     "gui.galacticraftcore.message.select_destination": "Select a destination",
     "gui.galacticraftcore.message.not_reachable": "Not reachable",
-    "key.categories.galacticraftcore": "Galacticraft"
+    "key.categories.galacticraftcore": "Galacticraft",
+    "item.galacticraftcore.evolved_zombie_spawn_egg": "Evolved Zombie Spawn Egg",
+    "item.galacticraftcore.evolved_skeleton_spawn_egg": "Evolved Skeleton Spawn Egg",
+    "item.galacticraftcore.evolved_spider_spawn_egg": "Evolved Spider Spawn Egg",
+    "item.galacticraftcore.evolved_creeper_spawn_egg": "Evolved Creeper Spawn Egg",
+    "item.galacticraftcore.evolved_enderman_spawn_egg": "Evolved Enderman Spawn Egg",
+    "item.galacticraftcore.skeleton_boss_spawn_egg": "Evolved Skeleton Boss Spawn Egg",
+    "item.galacticraftcore.tier_1_dungeon_key.desc": "Opens a Tier 1 Treasure Chest",
+    "subtitles.galacticraftcore.entity.boss_laugh": "Skeleton Boss laughs",
+    "subtitles.galacticraftcore.entity.boss_death": "Skeleton Boss dies",
+    "subtitles.galacticraftcore.entity.boss_ooh": "Skeleton Boss hurts",
+    "structure.galacticraftcore.moon_dungeon": "Moon Dungeon",
+    "block.galacticraftcore.boss_spawner": "Boss Spawner"
   },
   "recipes": {
     "skip_conditions": [
@@ -774,7 +849,8 @@
       "galacticraftcore:parachute:15": "galacticraftcore:yellow_parachute",
       "galacticraftcore:landing_pad:0": "galacticraftcore:landing_pad",
       "galacticraftcore:fuel_loader": "galacticraftcore:fuel_loader",
-      "galacticraftcore:rocket_workbench": "galacticraftcore:nasa_workbench"
+      "galacticraftcore:rocket_workbench": "galacticraftcore:nasa_workbench",
+      "galacticraftcore:landing_pad:1": "galacticraftcore:buggy_fueling_pad"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -857,6 +933,14 @@
   },
   "obj_models": {
     "_comment": "1.12.2 OBJ models copied with their .mtl; texture references in the .mtl go through the textures mapping.",
-    "block/nasa_workbench": "block/workbench"
+    "block/nasa_workbench": "block/workbench",
+    "entity/buggy": {
+      "from": "buggy",
+      "default_map": "minecraft:block/white_concrete"
+    },
+    "item/buggy": {
+      "from": "buggy_inv",
+      "default_map": "minecraft:block/white_concrete"
+    }
   }
 }

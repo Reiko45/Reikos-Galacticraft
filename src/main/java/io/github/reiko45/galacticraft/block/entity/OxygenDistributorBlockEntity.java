@@ -55,7 +55,10 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void setRemoved() {
         if (this.level != null) {
-            LOADED.getOrDefault(this.level, Set.of()).remove(this);
+            final Set<OxygenDistributorBlockEntity> loaded = LOADED.get(this.level);
+            if (loaded != null) {
+                loaded.remove(this); // Set.of() would throw, even with nothing to remove
+            }
         }
         super.setRemoved();
     }
@@ -64,7 +67,10 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void onBroken() {
         if (this.level != null && !this.level.isClientSide) {
-            LOADED.getOrDefault(this.level, Set.of()).remove(this);
+            final Set<OxygenDistributorBlockEntity> loaded = LOADED.get(this.level);
+            if (loaded != null) {
+                loaded.remove(this); // Set.of() would throw, even with nothing to remove
+            }
             updateReliantBlocks(Mth.ceil(this.bubbleSize), 0.0F);
         }
     }
@@ -72,7 +78,10 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void onChunkUnloaded() {
         if (this.level != null) {
-            LOADED.getOrDefault(this.level, Set.of()).remove(this);
+            final Set<OxygenDistributorBlockEntity> loaded = LOADED.get(this.level);
+            if (loaded != null) {
+                loaded.remove(this); // Set.of() would throw, even with nothing to remove
+            }
         }
         super.onChunkUnloaded();
     }

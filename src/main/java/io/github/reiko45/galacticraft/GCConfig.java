@@ -18,6 +18,7 @@ public final class GCConfig {
     public static final ModConfigSpec SERVER_SPEC;
     public static final ModConfigSpec.DoubleValue METEOR_SPAWN_MOD;
     public static final ModConfigSpec.BooleanValue METEOR_BLOCK_DAMAGE;
+    public static final ModConfigSpec.DoubleValue DUNGEON_BOSS_HEALTH_MOD;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -36,6 +37,10 @@ public final class GCConfig {
                 .comment("Set to false to stop meteors from breaking blocks on contact.")
                 .translation("config.galacticraftcore.meteor_block_damage")
                 .define("meteorBlockDamage", true);
+        DUNGEON_BOSS_HEALTH_MOD = server
+                .comment("Change this if you wish to balance the mod (if you have more powerful weapon mods).")
+                .translation("config.galacticraftcore.dungeon_boss_health_mod")
+                .defineInRange("dungeonBossHealthMod", 1.0D, 0.25D, 10.0D);
         SERVER_SPEC = server.build();
     }
 

@@ -30,6 +30,8 @@ import net.minecraft.world.level.biome.BiomeGenerationSettings;
 import net.minecraft.world.level.biome.BiomeSpecialEffects;
 import net.minecraft.world.level.biome.FixedBiomeSource;
 import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.world.entity.MobCategory;
+import io.github.reiko45.galacticraft.registry.GCEntities;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.dimension.LevelStem;
@@ -97,6 +99,8 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.DIMENSION_TYPE, GCWorldgenProvider::dimensionTypes)
             .add(Registries.LEVEL_STEM, GCWorldgenProvider::levelStems)
             .add(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GCWorldgenProvider::biomeModifiers)
+            .add(Registries.STRUCTURE, GCWorldgenProvider::structures)
+            .add(Registries.STRUCTURE_SET, GCWorldgenProvider::structureSets)
             .add(Registries.DAMAGE_TYPE, context -> {
                 context.register(GCDamageTypes.OXYGEN_SUFFOCATION, new DamageType("oxygen_suffocation", DamageScaling.NEVER, 0.0F));
                 context.register(GCDamageTypes.SPACESHIP_CRASH, new DamageType("spaceship_crash", DamageScaling.NEVER, 0.1F));
@@ -163,6 +167,28 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 HeightRangePlacement.uniform(VerticalAnchor.absolute(minY), VerticalAnchor.absolute(maxY)), BiomeFilter.biome()));
     }
 
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> MOON_DUNGEON =
+            ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("moon_dungeon"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MOON_DUNGEONS =
+            ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("moon_dungeons"));
+
+    /** The Moon dungeon, in the Moon biome only, built after caves like 1.12.2 (no terrain adaptation: it digs its own crater). */
+    private static void structures(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context) {
+        context.register(MOON_DUNGEON, new io.github.reiko45.galacticraft.world.dungeon.MoonDungeon(
+                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
+                        net.minecraft.core.HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MOON_BIOME)),
+                        java.util.Map.of(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
+                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE)));
+    }
+
+    /** 1.12.2 MapGenDungeon: one per 704x704 block (44x44 chunk) region, at a random chunk of it. */
+    private static void structureSets(BootstrapContext<net.minecraft.world.level.levelgen.structure.StructureSet> context) {
+        context.register(MOON_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
+                context.lookup(Registries.STRUCTURE).getOrThrow(MOON_DUNGEON),
+                new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,
+                        net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340)));
+    }
+
     private static void biomes(BootstrapContext<Biome> context) {
         final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
                 context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
@@ -182,8 +208,15 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                         .waterColor(0x3F76E4)
                         .waterFogColor(0x050533)
                         .build())
-                // Evolved mobs spawn here in 1.12.2; they arrive with the entity porting phase.
-                .mobSpawnSettings(new MobSpawnSettings.Builder().build())
+                // 1.12.2 GalacticraftCore#init: moonMoon.addMobInfo(...)
+                .mobSpawnSettings(new MobSpawnSettings.Builder()
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ZOMBIE.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SPIDER.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SKELETON.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_CREEPER.get(), 8, 2, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ENDERMAN.get(), 10, 1, 4))
+                        .creatureGenerationProbability(0.1F)
+                        .build())
                 .generationSettings(generation.build())
                 .build());
     }

@@ -1,0 +1,14 @@
+{
+  "entity.boss_laugh": {
+    "subtitle": "subtitles.galacticraftcore.entity.boss_laugh",
+    "sounds": [{"name": "galacticraftcore:entity/bosslaugh", "stream": false}]
+  },
+  "entity.boss_death": {
+    "subtitle": "subtitles.galacticraftcore.entity.boss_death",
+    "sounds": [{"name": "galacticraftcore:entity/bossdeath", "stream": false}]
+  },
+  "entity.boss_ooh": {
+    "subtitle": "subtitles.galacticraftcore.entity.boss_ooh",
+    "sounds": [{"name": "galacticraftcore:entity/ooh", "stream": false}]
+  }
+}

@@ -4,7 +4,9 @@ import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.entity.CircuitFabricatorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CoalGeneratorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.DungeonSpawnerBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.TreasureChestBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.FallenMeteorBlockEntity;
@@ -103,6 +105,13 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<FallenMeteorBlockEntity>> FALLEN_METEOR = BLOCK_ENTITIES.register("fallen_meteor",
             () -> BlockEntityType.Builder.of(FallenMeteorBlockEntity::new, GCBlocks.FALLEN_METEOR.get()).build(null));
+
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<DungeonSpawnerBlockEntity>> DUNGEON_SPAWNER = BLOCK_ENTITIES.register("dungeon_spawner",
+            () -> BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<TreasureChestBlockEntity>> TREASURE_CHEST = BLOCK_ENTITIES.register("treasure_chest",
+            () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, GCBlocks.TREASURE_CHEST_TIER_1.get()).build(null));
 
     /** Every machine block entity type (for capability registration). */
     public static List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>> machineTypes() {

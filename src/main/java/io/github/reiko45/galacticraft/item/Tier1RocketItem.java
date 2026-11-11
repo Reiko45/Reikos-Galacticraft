@@ -50,7 +50,7 @@ public class Tier1RocketItem extends Item {
         final Level level = context.getLevel();
         BlockPos centre = null;
         for (BlockPos pos : BlockPos.betweenClosed(context.getClickedPos().offset(-1, 0, -1), context.getClickedPos().offset(1, 0, 1))) {
-            final BlockPos found = LandingPadBlock.findCentre(level, pos);
+            final BlockPos found = LandingPadBlock.findLaunchPadCentre(level, pos);
             if (found != null && found.equals(pos)) {
                 centre = found.immutable();
                 break;

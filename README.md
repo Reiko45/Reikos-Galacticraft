@@ -4,8 +4,9 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 5a of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
-and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Fly back and you come down by parachute, with your
+**Status: Phase 5b of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
+the Skeleton Boss and a treasure chest with the Moon Buggy schematic. Fly back and you come down by parachute, with your
 cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
 
@@ -18,6 +19,15 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
   fall distance is ×0.18, and dropped items and arrows float too, the same as 1.12.2. The black sky shows stars even
   at noon and the Earth hanging overhead. You leave footprints in the moon turf, and meteor showers rain down hot
   Fallen Meteors (they burn you while they glow, then cool down to be mined for meteoric iron).
+* **Moon mobs and dungeons**: Evolved Zombies, Skeletons, Spiders, Creepers and Endermen (wearing oxygen gear, tougher
+  than vanilla, with rare drops of Galacticraft parts) spawn on the Moon. Each 704x704 area has a dungeon under a crater:
+  corridors and rooms with spawners, cobwebs and loot chests lead to the Skeleton Boss, which grabs and throws you and
+  leaves if you run from its room. Beat it to fill the locked Tier 1 Treasure Chest next door and get the key for it.
+* **Schematics**: put a schematic from the treasure chest into the NASA Workbench's "Add New Schematic" page to unlock
+  a new page for good; Back/Next flip between pages.
+* **Moon Buggy**: built on the workbench's Moon Buggy page from heavy plates, a seat and four wheels, with up to three
+  storage boxes (18 slots each). Drive it with the movement keys (it climbs over bumps when you push on), F opens its
+  storage and fuel, and a Buggy Fueling Pad with a Fuel Loader refuels it.
 * **Items**: ingots, compressed plates, wafers, rocket/oxygen/buggy parts, canisters, Heavy Duty tools and armor.
   Food includes cheese, the cheeseburger, and canned food that gives back its tin canister.
 * **Power** (gJ, with FE compatibility at 1 FE = 1.6 gJ): Coal Generator, Basic and Advanced Solar Panels, Energy
@@ -93,7 +103,19 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
 |---|---|
 | ![Descending to the Moon in a Space Lander](docs/screenshots/lander_descent.png) | ![Coming down under a parachute](docs/screenshots/parachute_descent.png) |
 
-Buggy parts have recipes but no use yet; the Moon Buggy comes in a later phase.
+| Evolved mobs and the Skeleton Boss | The Skeleton Boss in its room |
+|---|---|
+| ![Evolved Zombie, Skeleton, Creeper, Spider, Enderman and the Skeleton Boss on the Moon](docs/screenshots/moon_evolved_mobs.png) | ![The Skeleton Boss in a Moon dungeon](docs/screenshots/moon_dungeon_boss.png) |
+
+| A Moon dungeon's crater | The treasure room |
+|---|---|
+| ![The crater above a Moon dungeon](docs/screenshots/moon_dungeon_crater.png) | ![The Tier 1 Treasure Chest](docs/screenshots/moon_dungeon_treasure.png) |
+
+![Moon Buggies on a Buggy Fueling Pad with a Fuel Loader](docs/screenshots/moon_buggies.png)
+
+| Driving the buggy | Treasure chest and schematic pages |
+|---|---|
+| ![Driving a Moon Buggy](docs/screenshots/moon_buggy_driving.png) | ![Treasure chest, Add New Schematic and Moon Buggy pages](docs/screenshots/schematic_guis.png) |
 
 ### Visiting the Moon
 
@@ -118,8 +140,10 @@ python3 tools/check_assets.py # static check of models/textures/translations
 
 `./gradlew runScreenshotTour` is a development aid. It creates a flat creative world, builds every machine, the
 solar panels, an oil processing line and the oxygen machines, opens each GUI, the Galacticraft inventory and the JEI
-categories, shows the oxygen gear on the player, goes to the Moon for the oxygen HUD, saves screenshots to
-`run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
+categories, shows the oxygen gear on the player, goes to the Moon for the oxygen HUD, footprints, meteors, the sky,
+a cave, the evolved mobs, a dungeon (placed where the structure set puts the first one, since the tour world has
+structures off), the Skeleton Boss and its treasure, the Moon Buggy and the NASA Workbench pages, then flies a rocket
+to the Moon. It saves screenshots to `run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
 
 ## Porting tools
 

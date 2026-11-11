@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:storage_blocks/iron"
+    },
+    "Y": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "YYY",
+    "XXX"
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraftcore:buggy_fueling_pad"
+  }
+}

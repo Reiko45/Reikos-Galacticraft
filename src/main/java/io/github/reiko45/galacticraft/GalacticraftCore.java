@@ -10,6 +10,8 @@ import io.github.reiko45.galacticraft.registry.GCFeatures;
 import io.github.reiko45.galacticraft.registry.GCFluids;
 import io.github.reiko45.galacticraft.registry.GCMenus;
 import io.github.reiko45.galacticraft.registry.GCRecipes;
+import io.github.reiko45.galacticraft.registry.GCSounds;
+import io.github.reiko45.galacticraft.registry.GCStructures;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCChunkGenerators;
 import io.github.reiko45.galacticraft.registry.GCCreativeTabs;
@@ -50,6 +52,9 @@ public final class GalacticraftCore {
         GCAttachments.ATTACHMENT_TYPES.register(modBus);
         GCMenus.MENUS.register(modBus);
         GCEntities.ENTITY_TYPES.register(modBus);
+        GCSounds.SOUNDS.register(modBus);
+        GCStructures.STRUCTURE_TYPES.register(modBus);
+        GCStructures.STRUCTURE_PIECES.register(modBus);
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);

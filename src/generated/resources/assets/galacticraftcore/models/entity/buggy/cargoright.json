@@ -1,0 +1,16 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/buggy.obj",
+  "visibility": {
+    "CargoLeft": false,
+    "CargoMid": false,
+    "CargoRight": true,
+    "MainBody": false,
+    "RadarDish_Dish": false,
+    "Wheel_Left": false,
+    "Wheel_Left_Cover": false,
+    "Wheel_Right": false,
+    "Wheel_Right_Cover": false
+  }
+}

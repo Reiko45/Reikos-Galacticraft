@@ -2,7 +2,9 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.AluminumWireBlock;
+import io.github.reiko45.galacticraft.block.BossSpawnerBlock;
 import io.github.reiko45.galacticraft.block.CheeseBlock;
+import io.github.reiko45.galacticraft.block.TreasureChestBlock;
 import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneTorchBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneWallTorchBlock;
@@ -185,6 +187,9 @@ public final class GCBlocks {
     /** 1.12.2: hardness 1, resistance 10, metal sound. */
     public static final DeferredBlock<LandingPadBlock> LANDING_PAD = withItem("landing_pad", () -> new LandingPadBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.BuggyFuelingPadBlock> BUGGY_FUELING_PAD = withItem("buggy_fueling_pad",
+            () -> new io.github.reiko45.galacticraft.block.BuggyFuelingPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(1.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
     public static final DeferredBlock<MachineBlock> FUEL_LOADER = withItem("fuel_loader",
             () -> new MachineBlock(machine(), FuelLoaderBlockEntity::new));
     /** 1.12.2: Material.IRON, hardness 2.5, metal sound. */
@@ -196,6 +201,16 @@ public final class GCBlocks {
     /** 1.12.2: Material.WOOD, hardness 3, wood sound. */
     public static final DeferredBlock<ParachestBlock> PARACHEST = withItem("parachest", () -> new ParachestBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
+
+    // --- Moon dungeon (1.12.2 BlockBossSpawner, BlockTier1TreasureChest) ---
+    /** Invisible, unbreakable holder of the boss room's spawner block entity. */
+    public static final DeferredBlock<BossSpawnerBlock> BOSS_SPAWNER = BLOCKS.register("boss_spawner", () -> new BossSpawnerBlock(
+            BlockBehaviour.Properties.of().strength(-1.0F, 3_600_000.0F).noLootTable().noCollission().noOcclusion()
+                    .pushReaction(PushReaction.BLOCK).isValidSpawn((state, level, pos, type) -> false)));
+    /** 1.12.2: hardness 100,000 (only the key opens it). */
+    public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_1 = withItem("treasure_chest_tier_1", () -> new TreasureChestBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(100_000.0F, 3_600_000.0F).sound(SoundType.STONE)
+                    .noOcclusion().pushReaction(PushReaction.BLOCK)));
 
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(

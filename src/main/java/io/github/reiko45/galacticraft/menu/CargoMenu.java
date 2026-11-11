@@ -30,7 +30,7 @@ import net.minecraft.world.item.ItemStack;
  */
 public class CargoMenu extends AbstractContainerMenu {
     public enum Layout {
-        ROCKET, CHEST
+        ROCKET, CHEST, BUGGY
     }
 
     private final Layout layout;
@@ -47,7 +47,15 @@ public class CargoMenu extends AbstractContainerMenu {
         this.valid = valid;
         final int size = cargo.getContainerSize();
         final int playerY;
-        if (layout == Layout.ROCKET) {
+        if (layout == Layout.BUGGY) {
+            // 1.12.2 ContainerBuggy: the storage rows, then the player's inventory below them
+            for (int row = 0; row < size / 9; row++) {
+                for (int col = 0; col < 9; col++) {
+                    addSlot(new Slot(cargo, col + row * 9, 8 + col * 18, 50 + row * 18));
+                }
+            }
+            playerY = 63 + size * 2;
+        } else if (layout == Layout.ROCKET) {
             if (size - 2 <= 0) {
                 playerY = 50;
             } else {
@@ -119,6 +127,12 @@ public class CargoMenu extends AbstractContainerMenu {
     public static void openRocket(ServerPlayer player, Tier1RocketEntity rocket) {
         open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, Tier1RocketEntity.FUEL_CAPACITY,
                 p -> rocket.isAlive() && p.getVehicle() == rocket);
+    }
+
+    /** The inventory key while driving a buggy (1.12.2 GuiBuggy). */
+    public static void openBuggy(ServerPlayer player, io.github.reiko45.galacticraft.entity.BuggyEntity buggy) {
+        open(player, buggy.getDisplayName(), Layout.BUGGY, buggy.cargo(), buggy::fuel, io.github.reiko45.galacticraft.entity.BuggyEntity.FUEL_CAPACITY,
+                p -> buggy.isAlive() && p.getVehicle() == buggy);
     }
 
     /** Using a landed lander (1.12.2 GCCoreUtil#openParachestInv with the lander). */

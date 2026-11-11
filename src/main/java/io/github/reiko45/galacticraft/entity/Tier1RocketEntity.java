@@ -41,7 +41,7 @@ import net.minecraft.world.phys.Vec3;
  * every 3 ticks. Above y 1200 the rider reaches space and picks a destination. Out of fuel it falls back and crashes
  * (explosion 5, 81 damage to the rider). Hitting it damages it; enough damage drops it as an item.
  */
-public class Tier1RocketEntity extends Entity {
+public class Tier1RocketEntity extends Entity implements Refuelable {
     public static final int FUEL_CAPACITY = 1000;
     public static final int PRE_LAUNCH_WAIT = 400;
     public static final double EXIT_HEIGHT = 1200.0D;
@@ -106,6 +106,7 @@ public class Tier1RocketEntity extends Entity {
     }
 
     /** Fill with fuel (fuel loader); returns the amount taken. */
+    @Override
     public int addFuel(int amount, boolean execute) {
         final int accepted = Math.min(amount, FUEL_CAPACITY - fuel());
         if (execute && accepted > 0) {
@@ -221,7 +222,7 @@ public class Tier1RocketEntity extends Entity {
     private void onLaunch() {
         // The rocket stands 0.4 above the pad block it was placed on.
         final BlockPos below = BlockPos.containing(getX(), getY() - 0.1D, getZ());
-        final BlockPos centre = LandingPadBlock.findCentre(this.level(), below);
+        final BlockPos centre = LandingPadBlock.findLaunchPadCentre(this.level(), below);
         boolean padTaken = false;
         if (centre != null) {
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-1, 0, -1), centre.offset(1, 0, 1))) {

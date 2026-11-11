@@ -27,7 +27,11 @@ public class GCItemModelProvider extends ItemModelProvider {
             if (item instanceof BlockItem) {
                 continue;
             }
-            if (item instanceof io.github.reiko45.galacticraft.item.Tier1RocketItem) {
+            if (item instanceof net.minecraft.world.item.SpawnEggItem) {
+                withExistingParent(holder.getId().getPath(), mcLoc("item/template_spawn_egg"));
+            } else if (item instanceof io.github.reiko45.galacticraft.item.BuggyItem) {
+                buggy(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.Tier1RocketItem) {
                 rocket(holder.getId().getPath());
             } else if (item instanceof LiquidCanisterItem) {
                 canister(holder.getId().getPath());
@@ -36,6 +40,39 @@ public class GCItemModelProvider extends ItemModelProvider {
             } else {
                 basicItem(item);
             }
+        }
+    }
+
+    /**
+     * 1.12.2 ItemModelBuggy: the four-wheeled buggy_inv OBJ, with 0-3 storage boxes picked by the "storage" item property
+     * (the transforms approximate the 1.12.2 matrices).
+     */
+    private void buggy(String name) {
+        final String[] cargo = {"CargoLeft", "CargoMid", "CargoRight"};
+        ItemModelBuilder base = null;
+        for (int storage = 3; storage >= 0; storage--) {
+            final ItemModelBuilder model = getBuilder(storage == 0 ? name : "item/" + name + "/storage_" + storage);
+            final var loader = model.customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/item/buggy.obj")).flipV(true);
+            for (int i = 0; i < cargo.length; i++) {
+                loader.visibility(cargo[i], i < storage);
+            }
+            loader.end();
+            model.texture("particle", modLoc("model/buggy_main")).transforms()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 208, 0).translation(0, -1.5F, 0).scale(0.11F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.08F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 180, 0).translation(0, -1.5F, 0).scale(0.12F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.09F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.09F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 225, 0).translation(0, 1, 0).scale(0.15F).end()
+                    .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 225, 0).translation(0, 1, 0).scale(0.15F).end()
+                    .end();
+            if (storage == 0) {
+                base = model;
+            }
+        }
+        for (int storage = 1; storage <= 3; storage++) {
+            base.override().predicate(GalacticraftCore.id("storage"), storage).model(getExistingFile(modLoc("item/" + name + "/storage_" + storage))).end();
         }
     }
 

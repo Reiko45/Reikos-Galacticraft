@@ -168,6 +168,18 @@ public final class GCNetwork {
         }
     }
 
+    /** Client: a NASA Workbench page button (Schematics.ACTION_*). */
+    public record SchematicAction(int action) implements CustomPacketPayload {
+        public static final Type<SchematicAction> TYPE = new Type<>(GalacticraftCore.id("schematic_action"));
+        public static final StreamCodec<ByteBuf, SchematicAction> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, SchematicAction::action, SchematicAction::new);
+
+        @Override
+        public Type<SchematicAction> type() {
+            return TYPE;
+        }
+    }
+
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
@@ -193,6 +205,13 @@ public final class GCNetwork {
         registrar.playToServer(OpenRocketCargo.TYPE, OpenRocketCargo.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player && player.getVehicle() instanceof Tier1RocketEntity rocket) {
                 CargoMenu.openRocket(player, rocket);
+            } else if (context.player() instanceof ServerPlayer player && player.getVehicle() instanceof io.github.reiko45.galacticraft.entity.BuggyEntity buggy) {
+                CargoMenu.openBuggy(player, buggy);
+            }
+        }));
+        registrar.playToServer(SchematicAction.TYPE, SchematicAction.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
+                io.github.reiko45.galacticraft.menu.Schematics.action(player, payload.action());
             }
         }));
         registrar.playToClient(OxygenState.TYPE, OxygenState.STREAM_CODEC,

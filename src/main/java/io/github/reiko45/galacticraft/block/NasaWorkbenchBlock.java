@@ -97,8 +97,9 @@ public class NasaWorkbenchBlock extends Block {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide) {
-            player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new NasaWorkbenchMenu(id, inventory,
-                    ContainerLevelAccess.create(level, pos)), Component.translatable("schematic.galacticraftcore.rocket_t1")));
+            // 1.12.2 opened the first unlocked page: the Tier 1 Rocket
+            io.github.reiko45.galacticraft.menu.Schematics.open((net.minecraft.server.level.ServerPlayer) player,
+                    io.github.reiko45.galacticraft.menu.Schematics.unlocked(player).get(0), level, pos);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }

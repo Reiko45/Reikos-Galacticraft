@@ -29,7 +29,38 @@
     "axolotls": [],
     "creature": [],
     "misc": [],
-    "monster": [],
+    "monster": [
+      {
+        "type": "galacticraftcore:evolved_zombie",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_spider",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_skeleton",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_creeper",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      }
+    ],
     "underground_water_creature": [],
     "water_ambient": [],
     "water_creature": []
