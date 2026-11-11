@@ -29,6 +29,9 @@ public final class GCEntityEvents {
         event.put(GCEntities.EVOLVED_CREEPER.get(), EvolvedCreeper.createAttributes().build());
         event.put(GCEntities.EVOLVED_ENDERMAN.get(), EvolvedEnderman.createAttributes().build());
         event.put(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.entity.SkeletonBossEntity.createAttributes().build());
+        event.put(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.entity.CreeperBossEntity.createAttributes().build());
+        event.put(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.entity.SludgelingEntity.createAttributes().build());
+        event.put(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.entity.SlimelingEntity.createAttributes().build());
     }
 
     @SubscribeEvent

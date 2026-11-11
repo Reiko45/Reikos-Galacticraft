@@ -53,6 +53,7 @@ public final class GalacticraftCore {
         GCMenus.MENUS.register(modBus);
         GCEntities.ENTITY_TYPES.register(modBus);
         GCSounds.SOUNDS.register(modBus);
+        io.github.reiko45.galacticraft.registry.GCParticles.PARTICLES.register(modBus);
         GCStructures.STRUCTURE_TYPES.register(modBus);
         GCStructures.STRUCTURE_PIECES.register(modBus);
         GCRecipes.TYPES.register(modBus);

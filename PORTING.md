@@ -250,11 +250,37 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       height each tick, under a parachute above y 500, then 14 bounces; afterwards they open as a chest with the cargo
 - [x] Mars on the destination screen, locked for Tier 1 rockets
 
-### Phase 7b – Mars mobs and dungeon
-- [ ] Slimelings (eggs, taming, the Slimeling inventory and its cargo item; making the Sticky Desh Pickaxe from an egg)
-- [ ] Sludgelings (spawned from bacterial sludge), Creeper Eggs
-- [ ] The Mars dungeon (MapGenDungeonMars, RoomBossMars/RoomTreasureMars), the Creeper Boss, the Tier 2 Treasure Chest
-      and Tier 2 Dungeon Key, the dungeon bricks' sludge drips
+### Phase 7b – Mars mobs and dungeon ✅
+- [x] The Mars dungeon (MapGenDungeonMars with ChunkProviderMars's DungeonConfiguration): the Moon's generator, now
+      driven by a per-planet `DungeonConfig` (Mars dungeon brick, y 30, corridors 7 high, rooms 7 high), one per 704x704
+      area in Mars biomes, under its own crater. RoomBossMars is a 24x11x24 hall of brick with a two-high doorway,
+      glowstone in the ceiling near the walls (1 in 4) and Creeper Eggs along the walls (1 in 6); RoomTreasureMars holds
+      the locked Tier 2 Treasure Chest; chest rooms and the treasure chest roll 1.12.2's `dungeon_tier_2` loot
+- [x] The Creeper Boss (EntityCreeperBoss): 200 health (times the boss health config), a yellow boss bar, three heads
+      that drop to two at two thirds and one at one third of its health, TNT lobbed every 25 ticks at players within 20
+      blocks. Only fireball damage hurts it, so its own TNT (EntityProjectileTNT: 6 + 3 per difficulty step to what it
+      hits, an explosion of power 1) has to be punched or shot back. Its spawner (TileEntityDungeonSpawnerMars) plays
+      the scary-scape sound and clears evolved skeletons, zombies and spiders from the room. Beaten, it fills the Tier 2
+      Treasure Chest with loot and a Tier 3 Rocket or Cargo Rocket schematic (1.12.2's rules about schematics you already
+      have, and the Astro Miner, included) and drops the Tier 2 Dungeon Key; a rare bow as before
+- [x] Creeper Eggs (BlockCreeperEgg): fall like dragon eggs but never teleport; only the Sticky Desh Pickaxe breaks
+      (in 5 ticks) and collects them; an explosion hatches a baby Evolved Creeper (half size, faster, 2.5x the XP)
+- [x] Bacterial Sludge spawns Sludgelings (EntitySludgeling: 7 health, speed 1.0, arthropod, silverfish sounds, no drops)
+      when anything but a flying player or a sludgeling wades in, up to three within five blocks; it drips through the
+      floor below it (ParticleDrip) and bubbles like lava now and then. Mars dungeon bricks drip and make the single-drop
+      sound
+- [x] Slimeling Eggs (BlockSlimelingEgg, TileEntitySlimelingEgg) on the fine regolith of Mars (WorldGenEggs: two tries a
+      chunk) in red, blue and yellow. Using one (or hitting it with anything but a pickaxe) cracks it, and a tame
+      Slimeling of its colour hatches for that player 0-70 ticks later. A diamond-strength pickaxe collects the egg; a
+      Desh Pickaxe with Silk Touch becomes a Sticky Desh Pickaxe (keeping its wear and enchantments)
+- [x] Slimelings (EntitySlimeling): wild ones are tamed with slime balls (1 in 3); they sit, follow, fight for their
+      owner (and hunt sludgelings while wild), grow from half to full size over 100,000 ticks with 20-50 health, and
+      count their kills. Their panel (GuiSlimeling: colour, name, owner, kills, growth, attack, favourite food, Sit /
+      Follow), the feeding screen after a meal of the favourite food (GuiSlimelingFeed: grow, breed, strengthen, heal)
+      and the inventory (GuiSlimelingInventory) with the Slimeling Inventory Bag, which carries 27 stacks and spills them
+      when taken out. Bred slimelings mix their parents' colours by hue (ColorUtil#addColorsRealistically)
+- [x] Tier 2 Treasure Chest and Tier 2 Dungeon Key; the Tier 3 Rocket, Cargo Rocket and Astro Miner schematics (their
+      workbench pages come with Phases 7c and 7d); spawn eggs for the Creeper Boss, Sludgeling and Slimeling
 
 ### Phase 7c – Mars machines and the cargo rocket
 - [ ] Terraformer, Cryogenic Chamber, Launch Controller, Gas Liquefier, Methane Synthesizer, Water Electrolyzer
@@ -341,7 +367,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Zero-g "jetpack" boosting (1.12.2 turned a jump while drifting into a push along the look direction) is not ported.
 * `/gchouston` asks for confirmation for 250 ticks after the first use, like 1.12.2, and clears the rocket cargo kept
   in transit.
-* Dungeons need "Generate Structures" like any structure; `/place structure galacticraftcore:moon_dungeon` places one.
+* Dungeons need "Generate Structures" like any structure; `/place structure galacticraftcore:moon_dungeon` (or
+  `mars_dungeon`) places one.
   Without terrain adaptation the dungeon digs its own crater, as in 1.12.2.
 * Footprints are tracked only on the server and sent to players who can see them (1.12.2 also drew your own prints
   on your own client). They are still not saved. Prints sit on top of the turf; 1.12.2's server put other players'
@@ -355,7 +382,6 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   the planets mod's `galacticraftplanets:mars` metadata block; recipes from the planets JSON files are converted too.
 * Mars Fine Regolith and Mars Regolith keep 1.12.2's Material.ROCK: they need a shovel to drop, and sound like stone.
 * Desh tools are repaired with Desh Ingots like the armour (1.12.2 gave the tools no repair item).
-* The Sticky Desh Pickaxe exists, but making it (from a Slimeling Egg) and its use (Creeper Eggs) come with Phase 7b.
 * Mars's day is vanilla's length (1.12.2: 24,660 ticks). Mars's sky colour hooks `ClientLevel#getSkyColor` (a client
   mixin) so the sky dome and vanilla's fog blending both get the 1.12.2 colours; 1.12.2's black square behind the sun
   was drawn with additive blending and hid nothing, so it is left out.
@@ -369,6 +395,27 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Cavernous Vines keep a `hanging` count (vines from here down, up to 5) in their block state, which sets their glow:
   1.12.2 counted the strand on every light query, but a 1.21 light engine thread that reads other blocks can deadlock
   chunk generation. Generated strands are recounted once all carvers have run.
+* The Moon and Mars dungeons share one structure type with a `config` field (`moon` or `mars`); the Moon's structure
+  set keeps the salt it had, and the Mars set adds Mars's 1.12.2 dimension id (-29) to it as 1.12.2 did.
+* Fire immunity in 1.21 also stops fireball damage, which 1.12.2's did not; the Creeper Boss lets fireballs through so
+  it can still be beaten with its own TNT. /kill also works on it (1.12.2: onKillCommand).
+* The TNT projectile is drawn centred on itself (1.12.2 copied the primed-TNT renderer's offsets without its rotation
+  and drew the block one block off).
+* The Tier 2 dungeon loot leaves out Carbon Fragments until the Asteroids port; the enchanted books use 1.21's
+  "on random loot" enchantments (1.12.2: treasure enchantments allowed).
+* 1.12.2 left the Mars dungeon bricks' "sludgeDrip" particle as a TODO and played their drip sound (and the sludge's
+  lava bubbling) for a null player on the client, which plays nothing. Here the bricks drip water drips from ceilings
+  and both sounds are heard.
+* Slimelings take their name from a name tag or their panel (the vanilla custom name, shown when you look at them);
+  1.12.2 kept a separate name that was never shown in the world. The feed buttons need a meal first: 1.12.2 trusted the
+  client, so any feed packet worked. The owner must be within 8 blocks to use the panel's buttons.
+* A Slimeling's panel and feeding screen are opened by the server (1.12.2 opened them on the client); its inventory's
+  27 bag slots are always in the menu but only usable while the bag is in (1.12.2 added and removed the slots).
+* The three Slimeling Egg colours are three blocks (`red_slimeling_egg`, ...) instead of one block with a colour.
+* Slimelings jump with 1.12.2's 0.48 strength but, like the evolved mobs, without its extra jump in low gravity (the
+  gravity attribute already makes every jump higher). Their size follows their age (1.12.2 only resized them when
+  vanilla's breeding age changed).
+* The Creeper Egg and Slimeling Egg tooltips, and the Treasure Chests', replace 1.12.2's shift descriptions.
 
 ## Workflow for porting more content
 

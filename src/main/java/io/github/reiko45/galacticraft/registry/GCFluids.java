@@ -83,8 +83,8 @@ public final class GCFluids {
             () -> new GCLiquidBlock(GCFluids.FUEL.get(), liquid(MapColor.COLOR_YELLOW), true));
 
     /** Mars caverns pool it on their floors. */
-    public static final DeferredBlock<LiquidBlock> BACTERIAL_SLUDGE_BLOCK = GCBlocks.BLOCKS.register("bacterial_sludge",
-            () -> new LiquidBlock(GCFluids.BACTERIAL_SLUDGE.get(), liquid(MapColor.PLANT).lightLevel(state -> 15)));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.fluid.BacterialSludgeBlock> BACTERIAL_SLUDGE_BLOCK = GCBlocks.BLOCKS.register("bacterial_sludge",
+            () -> new io.github.reiko45.galacticraft.fluid.BacterialSludgeBlock(GCFluids.BACTERIAL_SLUDGE.get(), liquid(MapColor.PLANT).lightLevel(state -> 15)));
 
     public static final DeferredItem<BucketItem> OIL_BUCKET = GCItems.ITEMS.register("oil_bucket",
             () -> new BucketItem(GCFluids.OIL.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));

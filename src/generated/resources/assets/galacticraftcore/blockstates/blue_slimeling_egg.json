@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "broken=false": {
+      "model": "galacticraftcore:block/blue_slimeling_egg"
+    },
+    "broken=true": {
+      "model": "galacticraftcore:block/blue_slimeling_egg_broken"
+    }
+  }
+}

@@ -1,6 +1,8 @@
 package io.github.reiko45.galacticraft.block;
 
+import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import io.github.reiko45.galacticraft.block.entity.TreasureChestBlockEntity;
 import io.github.reiko45.galacticraft.item.DungeonKeyItem;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
@@ -36,17 +38,27 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * Tier 1 Treasure Chest (1.12.2 BlockTier1TreasureChest): found in Moon dungeon treasure rooms. Locked until a player
- * uses a Tier 1 Dungeon Key on it (the key is used up); then it opens like a chest. Practically unbreakable.
+ * Treasure Chest (1.12.2 BlockTier1TreasureChest, BlockTier2TreasureChest): found in dungeon treasure rooms. Locked until
+ * a player uses a Dungeon Key of the chest's tier on it (the key is used up); then it opens like a chest. Practically
+ * unbreakable.
  */
 public class TreasureChestBlock extends BaseEntityBlock {
-    public static final MapCodec<TreasureChestBlock> CODEC = simpleCodec(TreasureChestBlock::new);
+    public static final MapCodec<TreasureChestBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Codec.INT.fieldOf("tier").forGetter(TreasureChestBlock::tier), propertiesCodec()).apply(instance, TreasureChestBlock::new));
     public static final DirectionProperty FACING = HorizontalDirectionalBlock.FACING;
     private static final VoxelShape SHAPE = Block.box(1.0D, 0.0D, 1.0D, 15.0D, 14.0D, 15.0D);
 
-    public TreasureChestBlock(Properties properties) {
+    private final int tier;
+
+    public TreasureChestBlock(int tier, Properties properties) {
         super(properties);
+        this.tier = tier;
         registerDefaultState(this.stateDefinition.any().setValue(FACING, Direction.NORTH));
+    }
+
+    /** The dungeon tier: which key opens it. */
+    public int tier() {
+        return this.tier;
     }
 
     @Override
@@ -100,7 +112,7 @@ public class TreasureChestBlock extends BaseEntityBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         if (stack.getItem() instanceof DungeonKeyItem key && level.getBlockEntity(pos) instanceof TreasureChestBlockEntity chest && chest.isLocked()) {
-            if (key.tier() != TreasureChestBlockEntity.TIER) {
+            if (key.tier() != this.tier) {
                 return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
             }
             if (!level.isClientSide) {
@@ -121,7 +133,7 @@ public class TreasureChestBlock extends BaseEntityBlock {
         }
         if (level.getBlockEntity(pos) instanceof TreasureChestBlockEntity chest) {
             if (chest.isLocked()) {
-                player.displayClientMessage(Component.translatable("gui.galacticraftcore.chest.warning.wrong_key", TreasureChestBlockEntity.TIER), true);
+                player.displayClientMessage(Component.translatable("gui.galacticraftcore.chest.warning.wrong_key", this.tier), true);
             } else if (!level.getBlockState(pos.above()).isRedstoneConductor(level, pos.above())) {
                 player.openMenu(chest);
             }
@@ -142,5 +154,12 @@ public class TreasureChestBlock extends BaseEntityBlock {
             Containers.dropContents(level, pos, chest);
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
+    /** 1.12.2 ItemBlockDesc: tile.treasure_chest.description / tile.treasure_t2.description. */
+    @Override
+    public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context,
+                                java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
+        tooltip.add(net.minecraft.network.chat.Component.translatable(getDescriptionId() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY));
     }
 }

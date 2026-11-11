@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:diamond"
+    },
+    "X": {
+      "item": "minecraft:leather"
+    },
+    "Y": {
+      "tag": "c:slime_balls"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "XWX",
+    "XYX",
+    " Z "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:slimeling_cargo"
+  }
+}

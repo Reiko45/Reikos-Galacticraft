@@ -23,6 +23,6 @@ public class DungeonKeyItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("item.galacticraftcore.tier_1_dungeon_key.desc").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(getDescriptionId() + ".desc").withStyle(ChatFormatting.GRAY));
     }
 }

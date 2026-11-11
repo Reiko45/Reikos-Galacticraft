@@ -1,0 +1,7 @@
+{
+  "parent": "galacticraftcore:block/yellow_slimeling_egg",
+  "textures": {
+    "particle": "galacticraftcore:block/yellow_slimeling_egg_broken",
+    "texture": "galacticraftcore:block/yellow_slimeling_egg_broken"
+  }
+}

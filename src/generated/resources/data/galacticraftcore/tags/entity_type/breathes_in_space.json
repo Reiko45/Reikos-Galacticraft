@@ -1,6 +1,9 @@
 {
   "values": [
     "galacticraftcore:skeleton_boss",
+    "galacticraftcore:creeper_boss",
+    "galacticraftcore:sludgeling",
+    "galacticraftcore:slimeling",
     "galacticraftcore:evolved_zombie",
     "galacticraftcore:evolved_skeleton",
     "galacticraftcore:evolved_spider",

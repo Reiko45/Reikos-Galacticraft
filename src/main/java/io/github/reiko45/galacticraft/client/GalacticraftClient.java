@@ -83,6 +83,9 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::addPlayerLayers);
         modBus.addListener(VehicleControls::registerKeys);
         modBus.addListener(GalacticraftClient::registerBlockColors);
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> event.registerSpriteSet(
+                io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
+                io.github.reiko45.galacticraft.client.particle.BacterialDripParticle.Provider::new));
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
@@ -107,6 +110,12 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(EvolvedMobModels.ENDERMAN, EvolvedMobModels::enderman);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SludgelingModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.SludgelingModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SlimelingModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.SlimelingModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.LAYER,
                 io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::createLayer);
         event.registerLayerDefinition(ParachestRenderer.CHEST, ParachestRenderer::createChest);
@@ -134,6 +143,10 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.EVOLVED_ENDERMAN.get(), EvolvedRenderers.Endermen::new);
         event.registerEntityRenderer(GCEntities.BUGGY.get(), io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer::new);
         event.registerEntityRenderer(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.SkeletonBossRenderer::new);
+        event.registerEntityRenderer(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.CreeperBossRenderer::new);
+        event.registerEntityRenderer(GCEntities.TNT_PROJECTILE.get(), io.github.reiko45.galacticraft.client.render.entity.TntProjectileRenderer::new);
+        event.registerEntityRenderer(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.client.render.entity.SludgelingRenderer::new);
+        event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.TREASURE_CHEST.get(), io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::new);
     }
 
@@ -215,7 +228,7 @@ public final class GalacticraftClient {
                 }
                 return this.renderer;
             }
-        }, GCBlocks.TREASURE_CHEST_TIER_1.asItem());
+        }, GCBlocks.TREASURE_CHEST_TIER_1.asItem(), GCBlocks.TREASURE_CHEST_TIER_2.asItem());
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         event.registerFluidType(liquid("bacterial_sludge"), GCFluids.BACTERIAL_SLUDGE_TYPE.get());
@@ -276,6 +289,7 @@ public final class GalacticraftClient {
         event.register(GCMenus.EXTENDED_INVENTORY.get(), ExtendedInventoryScreen::new);
         event.register(GCMenus.FUEL_LOADER.get(), FuelLoaderScreen::new);
         event.register(GCMenus.CARGO.get(), CargoScreen::new);
+        event.register(GCMenus.SLIMELING.get(), io.github.reiko45.galacticraft.client.screen.SlimelingInventoryScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);
         event.register(GCMenus.TIER_2_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.Tier2RocketBenchScreen::new);

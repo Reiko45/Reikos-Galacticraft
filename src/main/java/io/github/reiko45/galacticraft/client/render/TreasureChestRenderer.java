@@ -32,6 +32,12 @@ import net.minecraft.world.item.ItemStack;
 public class TreasureChestRenderer implements BlockEntityRenderer<TreasureChestBlockEntity> {
     public static final ModelLayerLocation LAYER = new ModelLayerLocation(GalacticraftCore.id("treasure_chest"), "main");
     public static final ResourceLocation TEXTURE = GalacticraftCore.id("textures/model/treasure.png");
+    /** The Tier 2 (Mars) chest's own texture (planets textures/model/treasure.png). */
+    public static final ResourceLocation TEXTURE_TIER_2 = GalacticraftCore.id("textures/model/treasure_tier_2.png");
+
+    public static ResourceLocation texture(int tier) {
+        return tier >= 2 ? TEXTURE_TIER_2 : TEXTURE;
+    }
     private static final String[] KEY_PARTS = {"key0", "key1", "key2", "key3", "key4"};
     private final ModelPart model;
 
@@ -59,11 +65,12 @@ public class TreasureChestRenderer implements BlockEntityRenderer<TreasureChestB
     @Override
     public void render(TreasureChestBlockEntity chest, float partialTick, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay) {
         final Direction facing = chest.getBlockState().hasProperty(TreasureChestBlock.FACING) ? chest.getBlockState().getValue(TreasureChestBlock.FACING) : Direction.SOUTH;
-        draw(this.model, poseStack, buffers, light, overlay, facing, chest.getOpenNess(partialTick), !chest.isLocked());
+        draw(this.model, poseStack, buffers, light, overlay, facing, chest.getOpenNess(partialTick), !chest.isLocked(), chest.tier());
     }
 
     /** 1.12.2 render(): flip into model space, turn to face the front, open the lid, draw. */
-    static void draw(ModelPart model, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay, Direction facing, float openness, boolean withKey) {
+    static void draw(ModelPart model, PoseStack poseStack, MultiBufferSource buffers, int light, int overlay, Direction facing, float openness,
+                     boolean withKey, int tier) {
         poseStack.pushPose();
         poseStack.translate(0.0F, 1.0F, 1.0F);
         poseStack.scale(1.0F, -1.0F, -1.0F);
@@ -84,7 +91,7 @@ public class TreasureChestRenderer implements BlockEntityRenderer<TreasureChestB
         lid.xRot = lidAngle;
         model.getChild("knob").xRot = lidAngle;
 
-        final VertexConsumer consumer = buffers.getBuffer(RenderType.entityCutout(TEXTURE));
+        final VertexConsumer consumer = buffers.getBuffer(RenderType.entityCutout(texture(tier)));
         for (String key : KEY_PARTS) {
             final ModelPart part = model.getChild(key);
             part.visible = withKey;
@@ -114,7 +121,9 @@ public class TreasureChestRenderer implements BlockEntityRenderer<TreasureChestB
             if (this.model == null) {
                 this.model = Minecraft.getInstance().getEntityModels().bakeLayer(LAYER);
             }
-            draw(this.model, poseStack, buffers, light, overlay, Direction.NORTH, 0.0F, false);
+            final int tier = stack.getItem() instanceof net.minecraft.world.item.BlockItem block
+                    && block.getBlock() instanceof io.github.reiko45.galacticraft.block.TreasureChestBlock chest ? chest.tier() : 1;
+            draw(this.model, poseStack, buffers, light, overlay, Direction.NORTH, 0.0F, false, tier);
         }
     }
 }

@@ -14,6 +14,8 @@ public final class GCFeatures {
 
     public static final Supplier<OilPocketFeature> OIL_POCKET = FEATURES.register("oil_pocket",
             () -> new OilPocketFeature(NoneFeatureConfiguration.CODEC));
+    public static final Supplier<io.github.reiko45.galacticraft.world.SlimelingEggFeature> SLIMELING_EGGS = FEATURES.register("slimeling_eggs",
+            () -> new io.github.reiko45.galacticraft.world.SlimelingEggFeature(NoneFeatureConfiguration.CODEC));
 
     private GCFeatures() {
     }

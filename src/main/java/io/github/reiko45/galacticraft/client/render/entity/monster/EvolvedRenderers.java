@@ -116,7 +116,9 @@ public final class EvolvedRenderers {
         @Override
         protected void scale(Creeper entity, PoseStack poseStack, float partialTick) {
             super.scale(entity, poseStack, partialTick);
-            poseStack.scale(SCALE, SCALE, SCALE);
+            // 1.12.2 EntityEvolvedCreeper#setChildSize: babies (hatched from Creeper Eggs) are half size.
+            final float scale = SCALE * entity.getAgeScale();
+            poseStack.scale(scale, scale, scale);
         }
     }
 

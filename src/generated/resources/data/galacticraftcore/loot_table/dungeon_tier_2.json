@@ -1,0 +1,176 @@
+{
+  "type": "minecraft:chest",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "galacticraftcore:dehydrated_apple",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "galacticraftcore:dehydrated_carrot",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "galacticraftcore:dehydrated_melon",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "galacticraftcore:dehydrated_potato",
+          "weight": 6
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:oil_canister",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:desh_boots",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:desh_chestplate",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:desh_helmet",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:desh_leggings",
+          "weight": 2
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 7.0,
+                "min": 2.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "minecraft:redstone",
+          "weight": 10
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_mall",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "name": "minecraft:music_disc_mellohi",
+          "weight": 4
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 2.0,
+                "min": 1.0
+              },
+              "function": "minecraft:set_count"
+            }
+          ],
+          "name": "galacticraftcore:raw_desh",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "name": "galacticraftcore:desh_stick",
+          "weight": 5
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 22.0,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "minecraft:book",
+          "weight": 8
+        },
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "function": "minecraft:enchant_with_levels",
+              "levels": 24.0,
+              "options": "#minecraft:on_random_loot"
+            }
+          ],
+          "name": "minecraft:book",
+          "weight": 8
+        }
+      ],
+      "rolls": {
+        "type": "minecraft:uniform",
+        "max": 9.0,
+        "min": 6.0
+      }
+    }
+  ],
+  "random_sequence": "galacticraftcore:dungeon_tier_2"
+}

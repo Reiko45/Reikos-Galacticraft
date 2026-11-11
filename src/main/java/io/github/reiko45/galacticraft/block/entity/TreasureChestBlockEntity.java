@@ -26,11 +26,11 @@ import net.minecraft.world.level.block.entity.RandomizableContainerBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 /**
- * 1.12.2 TileEntityTreasureChest: a 27-slot chest that stays locked until opened with a Tier 1 Dungeon Key. When the
- * Skeleton Boss dies it refills the chest with Moon dungeon loot and a schematic.
+ * 1.12.2 TileEntityTreasureChest / TileEntityTreasureChestMars: a 27-slot chest that stays locked until opened with a
+ * Dungeon Key of its block's tier. When the dungeon's boss dies it refills the chest with the dungeon's loot and a
+ * schematic.
  */
 public class TreasureChestBlockEntity extends RandomizableContainerBlockEntity implements LidBlockEntity {
-    public static final int TIER = 1;
 
     private NonNullList<ItemStack> items = NonNullList.withSize(27, ItemStack.EMPTY);
     private boolean locked = true;
@@ -61,6 +61,11 @@ public class TreasureChestBlockEntity extends RandomizableContainerBlockEntity i
         super(GCBlockEntities.TREASURE_CHEST.get(), pos, state);
     }
 
+    /** The chest's tier (its block's): 1 on the Moon, 2 on Mars. */
+    public int tier() {
+        return getBlockState().getBlock() instanceof io.github.reiko45.galacticraft.block.TreasureChestBlock chest ? chest.tier() : 1;
+    }
+
     public boolean isLocked() {
         return this.locked;
     }
@@ -87,7 +92,8 @@ public class TreasureChestBlockEntity extends RandomizableContainerBlockEntity i
     /** 1.12.2 EntityBossBase death: relock, roll the loot table now, and hide the guaranteed loot in a random slot. */
     public void refill(ItemStack guaranteed, long seed) {
         clearContent();
-        setLootTable(io.github.reiko45.galacticraft.world.dungeon.MoonDungeonPiece.MOON_CHEST, seed);
+        setLootTable(tier() >= 2 ? io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MARS.loot()
+                : io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MOON.loot(), seed);
         unpackLootTable(null);
         if (!guaranteed.isEmpty()) {
             setItem(this.level != null ? this.level.random.nextInt(getContainerSize()) : 0, guaranteed);
@@ -165,7 +171,7 @@ public class TreasureChestBlockEntity extends RandomizableContainerBlockEntity i
             ContainerHelper.saveAllItems(tag, this.items, registries);
         }
         tag.putBoolean("IsLocked", this.locked);
-        tag.putInt("Tier", TIER);
+        tag.putInt("Tier", tier());
     }
 
     @Override

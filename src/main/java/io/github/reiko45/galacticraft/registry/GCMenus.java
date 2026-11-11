@@ -58,6 +58,8 @@ public final class GCMenus {
             () -> IMenuTypeExtension.create(FuelLoaderMenu::new));
     public static final Supplier<MenuType<CargoMenu>> CARGO = MENUS.register("cargo",
             () -> IMenuTypeExtension.create(CargoMenu::client));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.SlimelingMenu>> SLIMELING = MENUS.register("slimeling",
+            () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.SlimelingMenu::client));
     public static final Supplier<MenuType<NasaWorkbenchMenu>> NASA_WORKBENCH = MENUS.register("nasa_workbench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new NasaWorkbenchMenu(id, inventory)));
 

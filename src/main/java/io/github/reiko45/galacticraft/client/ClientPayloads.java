@@ -55,6 +55,16 @@ public final class ClientPayloads {
     }
 
     /** Forget everything when leaving a world. */
+    /** The slimeling's panel or, after a meal, its feeding screen. */
+    public static void openSlimeling(GCNetwork.OpenSlimelingScreen payload) {
+        final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (minecraft.level != null && minecraft.level.getEntity(payload.entity()) instanceof io.github.reiko45.galacticraft.entity.SlimelingEntity slimeling) {
+            minecraft.setScreen(payload.screen() == io.github.reiko45.galacticraft.entity.SlimelingEntity.SCREEN_FEED
+                    ? new io.github.reiko45.galacticraft.client.screen.SlimelingFeedScreen(slimeling)
+                    : new io.github.reiko45.galacticraft.client.screen.SlimelingScreen(slimeling));
+        }
+    }
+
     public static void reset() {
         io.github.reiko45.galacticraft.world.station.StationSpin.Client.reset();
         GEAR.clear();

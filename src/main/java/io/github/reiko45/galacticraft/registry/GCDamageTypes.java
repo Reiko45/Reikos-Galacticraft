@@ -15,7 +15,14 @@ public final class GCDamageTypes {
     /** 1.12.2 DamageSourceGC.spaceshipCrash: "%1$s was in a spaceship crash!". */
     public static final ResourceKey<DamageType> SPACESHIP_CRASH = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("spaceship_crash"));
 
+    /** 1.12.2 EntitySlimeling#attackEntityAsMob: new EntityDamageSource("slimeling", slimeling). */
+    public static final ResourceKey<DamageType> SLIMELING = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("slimeling"));
+
     private GCDamageTypes() {
+    }
+
+    public static DamageSource slimeling(net.minecraft.world.entity.Entity slimeling) {
+        return slimeling.level().damageSources().source(SLIMELING, slimeling);
     }
 
     public static DamageSource crash(Level level) {

@@ -107,11 +107,15 @@ public final class GCBlockEntities {
             () -> BlockEntityType.Builder.of(FallenMeteorBlockEntity::new, GCBlocks.FALLEN_METEOR.get()).build(null));
 
     @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity>> SLIMELING_EGG = BLOCK_ENTITIES.register("slimeling_egg",
+            () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity::new, GCBlocks.RED_SLIMELING_EGG.get(),
+                    GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get()).build(null));
     public static final Supplier<BlockEntityType<DungeonSpawnerBlockEntity>> DUNGEON_SPAWNER = BLOCK_ENTITIES.register("dungeon_spawner",
-            () -> BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER.get()).build(null));
+            () -> BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER.get(), GCBlocks.MARS_BOSS_SPAWNER.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<TreasureChestBlockEntity>> TREASURE_CHEST = BLOCK_ENTITIES.register("treasure_chest",
-            () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, GCBlocks.TREASURE_CHEST_TIER_1.get()).build(null));
+            () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, GCBlocks.TREASURE_CHEST_TIER_1.get(),
+                    GCBlocks.TREASURE_CHEST_TIER_2.get()).build(null));
 
     /** Every machine block entity type (for capability registration). */
     public static List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>> machineTypes() {

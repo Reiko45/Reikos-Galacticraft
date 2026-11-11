@@ -22,6 +22,12 @@
       "galacticraftcore:mars_ore_copper",
       "galacticraftcore:mars_ore_tin",
       "galacticraftcore:mars_ore_iron"
+    ],
+    [],
+    [],
+    [],
+    [
+      "galacticraftcore:slimeling_eggs"
     ]
   ],
   "has_precipitation": false,

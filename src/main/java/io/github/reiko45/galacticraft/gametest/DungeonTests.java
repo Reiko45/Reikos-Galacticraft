@@ -8,8 +8,9 @@ import io.github.reiko45.galacticraft.item.SchematicItem;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCEntities;
 import io.github.reiko45.galacticraft.registry.GCItems;
-import io.github.reiko45.galacticraft.world.dungeon.MoonDungeon;
-import io.github.reiko45.galacticraft.world.dungeon.MoonDungeonPiece;
+import io.github.reiko45.galacticraft.world.dungeon.Dungeon;
+import io.github.reiko45.galacticraft.world.dungeon.DungeonConfig;
+import io.github.reiko45.galacticraft.world.dungeon.DungeonPiece;
 import java.util.List;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
@@ -52,7 +53,7 @@ public final class DungeonTests {
             helper.assertTrue(helper.getLevel().getServer().reloadableRegistries().getLootTable(type.getDefaultLootTable()) != LootTable.EMPTY,
                     type.getDescriptionId() + " has a loot table");
         }
-        helper.assertTrue(helper.getLevel().getServer().reloadableRegistries().getLootTable(MoonDungeonPiece.MOON_CHEST) != LootTable.EMPTY,
+        helper.assertTrue(helper.getLevel().getServer().reloadableRegistries().getLootTable(DungeonPiece.MOON_CHEST) != LootTable.EMPTY,
                 "dungeon_tier_1 loot table exists");
         helper.succeed();
     }
@@ -63,35 +64,47 @@ public final class DungeonTests {
         mob.discard();
     }
 
-    /** 1.12.2 DungeonStart: within 10 attempts every layout ends boss room, corridor, treasure room; rooms never overlap. */
+    /**
+     * 1.12.2 DungeonStart: within 10 attempts every layout ends boss room, corridor, treasure room; rooms never overlap.
+     * Both the Moon's and Mars's (with its fixed 24x11x24 boss room) layouts.
+     */
     @GameTest(template = "empty")
     public static void dungeonLayoutsEndInBossAndTreasure(GameTestHelper helper) {
+        for (DungeonConfig config : DungeonConfig.values()) {
+            layouts(helper, config);
+        }
+        helper.succeed();
+    }
+
+    private static void layouts(GameTestHelper helper, DungeonConfig config) {
         int complete = 0;
         for (long seed = 0; seed < 200; seed++) {
-            final List<MoonDungeon.Node> layout = MoonDungeon.plan(RandomSource.create(seed), 1000, 1000);
+            final List<Dungeon.Node> layout = Dungeon.plan(config, RandomSource.create(seed), 1000, 1000);
             final int n = layout.size();
-            if (n >= 5 && layout.get(n - 1).kind() == MoonDungeonPiece.Kind.TREASURE && layout.get(n - 2).kind() == MoonDungeonPiece.Kind.CORRIDOR
-                    && layout.get(n - 3).kind() == MoonDungeonPiece.Kind.BOSS) {
+            if (n >= 5 && layout.get(n - 1).kind() == DungeonPiece.Kind.TREASURE && layout.get(n - 2).kind() == DungeonPiece.Kind.CORRIDOR
+                    && layout.get(n - 3).kind() == DungeonPiece.Kind.BOSS) {
                 complete++;
             }
-            helper.assertTrue(layout.get(0).kind() == MoonDungeonPiece.Kind.CRATER && layout.get(1).kind() == MoonDungeonPiece.Kind.ENTRANCE,
+            helper.assertTrue(layout.get(0).kind() == DungeonPiece.Kind.CRATER && layout.get(1).kind() == DungeonPiece.Kind.ENTRANCE,
                     "starts with crater and entrance");
             for (int i = 1; i < n; i++) {
-                final MoonDungeon.Node node = layout.get(i);
-                helper.assertTrue(node.box().minY() >= MoonDungeon.Y && node.box().maxY() <= MoonDungeon.Y + 12, "piece at dungeon depth: " + node);
-                if (node.kind() == MoonDungeonPiece.Kind.CORRIDOR) {
+                final Dungeon.Node node = layout.get(i);
+                helper.assertTrue(node.box().minY() >= config.y() && node.box().maxY() <= config.y() + 12, config + " piece at dungeon depth: " + node);
+                if (config == DungeonConfig.MARS && node.kind() == DungeonPiece.Kind.BOSS) {
+                    helper.assertTrue(node.sizeX() == 24 && node.sizeY() == 11 && node.sizeZ() == 24, "RoomBossMars is 24x11x24: " + node);
+                }
+                if (node.kind() == DungeonPiece.Kind.CORRIDOR) {
                     continue;
                 }
                 for (int j = i + 1; j < n; j++) {
-                    final MoonDungeon.Node other = layout.get(j);
-                    if (other.kind() != MoonDungeonPiece.Kind.CORRIDOR) {
+                    final Dungeon.Node other = layout.get(j);
+                    if (other.kind() != DungeonPiece.Kind.CORRIDOR) {
                         helper.assertFalse(node.box().intersects(other.box()), "rooms overlap (seed " + seed + "): " + node + " / " + other);
                     }
                 }
             }
         }
-        helper.assertTrue(complete >= 196, "complete layouts: " + complete + "/200");
-        helper.succeed();
+        helper.assertTrue(complete >= 196, config + " complete layouts: " + complete + "/200");
     }
 
     /** The structure set places a Moon dungeon in each 44x44 chunk region, and the structure builds a full layout there. */
@@ -128,10 +141,10 @@ public final class DungeonTests {
         final BlockPos origin = helper.absolutePos(new BlockPos(0, 1, 0));
         final BoundingBox bossBox = new BoundingBox(origin.getX(), origin.getY(), origin.getZ(), origin.getX() + 11, origin.getY() + 4, origin.getZ() + 5);
         final BlockPos chestAt = origin.offset(6, 1, 9);
-        final MoonDungeonPiece boss = new MoonDungeonPiece(new MoonDungeon.Node(MoonDungeonPiece.Kind.BOSS, bossBox,
+        final DungeonPiece boss = new DungeonPiece(DungeonConfig.MOON, new Dungeon.Node(DungeonPiece.Kind.BOSS, bossBox,
                 net.minecraft.core.Direction.SOUTH, 11, 4, 5), 0, chestAt);
         final BoundingBox treasureBox = new BoundingBox(origin.getX() + 2, origin.getY(), origin.getZ() + 7, origin.getX() + 10, origin.getY() + 4, origin.getZ() + 11);
-        final MoonDungeonPiece treasure = new MoonDungeonPiece(new MoonDungeon.Node(MoonDungeonPiece.Kind.TREASURE, treasureBox,
+        final DungeonPiece treasure = new DungeonPiece(DungeonConfig.MOON, new Dungeon.Node(DungeonPiece.Kind.TREASURE, treasureBox,
                 net.minecraft.core.Direction.SOUTH, 8, 4, 4), 0, null);
         final BoundingBox all = new BoundingBox(origin.getX() - 1, origin.getY() - 1, origin.getZ() - 1, origin.getX() + 12, origin.getY() + 6, origin.getZ() + 12);
         boss.postProcess(helper.getLevel(), helper.getLevel().structureManager(), helper.getLevel().getChunkSource().getGenerator(),

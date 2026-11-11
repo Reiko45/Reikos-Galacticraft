@@ -20,11 +20,15 @@ public class GCEntityTypeTagsProvider extends IntrinsicHolderTagsProvider<Entity
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
-        tag(GCModTags.BREATHES_IN_SPACE).add(GCEntities.SKELETON_BOSS.get(), GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(), GCEntities.EVOLVED_SPIDER.get(),
+        tag(GCModTags.BREATHES_IN_SPACE).add(GCEntities.SKELETON_BOSS.get(), GCEntities.CREEPER_BOSS.get(), GCEntities.SLUDGELING.get(), GCEntities.SLIMELING.get(), GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(), GCEntities.EVOLVED_SPIDER.get(),
                 GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get());
         tag(EntityTypeTags.SKELETONS).add(GCEntities.EVOLVED_SKELETON.get());
         tag(EntityTypeTags.ZOMBIES).add(GCEntities.EVOLVED_ZOMBIE.get());
         tag(EntityTypeTags.UNDEAD).add(GCEntities.EVOLVED_SKELETON.get(), GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.SKELETON_BOSS.get());
-        tag(EntityTypeTags.ARTHROPOD).add(GCEntities.EVOLVED_SPIDER.get());
+        tag(EntityTypeTags.ARTHROPOD).add(GCEntities.EVOLVED_SPIDER.get(), GCEntities.SLUDGELING.get());
+        // 1.12.2 canBreatheUnderwater (LivingEntity's is now final and reads this tag)
+        tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER).add(GCEntities.SLUDGELING.get(), GCEntities.SLIMELING.get());
+        // 1.12.2 EntityProjectileTNT was a fireball: punching or shooting it sends it back.
+        tag(EntityTypeTags.REDIRECTABLE_PROJECTILE).add(GCEntities.TNT_PROJECTILE.get());
     }
 }

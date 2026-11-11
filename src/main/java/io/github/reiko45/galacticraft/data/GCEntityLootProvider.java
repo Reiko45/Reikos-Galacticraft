@@ -70,6 +70,12 @@ public class GCEntityLootProvider extends EntityLootSubProvider {
         // 1.12.2 EntitySkeletonBoss#dropFewItems: a bow, (5 + looting) in 200 (its key and treasure come at the end of the death)
         add(GCEntities.SKELETON_BOSS.get(), LootTable.lootTable().withPool(LootPool.lootPool().add(LootItem.lootTableItem(Items.BOW))
                 .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.005F))));
+        // 1.12.2 EntitySlimeling#getDropItem: 0-2 slime balls (plus looting); EntitySludgeling drops nothing
+        add(GCEntities.SLIMELING.get(), LootTable.lootTable().withPool(common(Items.SLIME_BALL, 0, 2)));
+        add(GCEntities.SLUDGELING.get(), LootTable.lootTable());
+        // 1.12.2 EntityCreeperBoss#dropFewItems: the same rare bow
+        add(GCEntities.CREEPER_BOSS.get(), LootTable.lootTable().withPool(LootPool.lootPool().add(LootItem.lootTableItem(Items.BOW))
+                .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.005F))));
     }
 
     private LootPool.Builder common(Item item, int min, int max) {

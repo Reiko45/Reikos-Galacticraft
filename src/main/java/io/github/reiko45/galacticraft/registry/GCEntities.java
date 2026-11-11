@@ -70,6 +70,24 @@ public final class GCEntities {
             () -> EntityType.Builder.<SkeletonBossEntity>of(SkeletonBossEntity::new, MobCategory.MONSTER).sized(1.5F, 4.0F).eyeHeight(3.5F)
                     .fireImmune().clientTrackingRange(10).build("skeleton_boss"));
 
+    /** 1.12.2 EntityCreeperBoss setSize(2.0, 7.0), immune to fire. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.CreeperBossEntity>> CREEPER_BOSS = ENTITY_TYPES.register("creeper_boss",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.CreeperBossEntity>of(io.github.reiko45.galacticraft.entity.CreeperBossEntity::new,
+                    MobCategory.MONSTER).sized(2.0F, 7.0F).fireImmune().clientTrackingRange(10).build("creeper_boss"));
+    /** 1.12.2 EntityProjectileTNT setSize(1.0, 1.0); "projectile_tnt", tracked every tick. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.TntProjectileEntity>> TNT_PROJECTILE = ENTITY_TYPES.register("tnt_projectile",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.TntProjectileEntity>of(io.github.reiko45.galacticraft.entity.TntProjectileEntity::new,
+                    MobCategory.MISC).sized(1.0F, 1.0F).clientTrackingRange(10).updateInterval(1).build("tnt_projectile"));
+
+    /** 1.12.2 EntitySludgeling setSize(0.3, 0.2). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.SludgelingEntity>> SLUDGELING = ENTITY_TYPES.register("sludgeling",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.SludgelingEntity>of(io.github.reiko45.galacticraft.entity.SludgelingEntity::new,
+                    MobCategory.MONSTER).sized(0.3F, 0.2F).clientTrackingRange(8).build("sludgeling"));
+    /** 1.12.2 EntitySlimeling setSize(0.45, 0.7) at half size, eyes at 0.8 of its height; it grows to twice that. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.SlimelingEntity>> SLIMELING = ENTITY_TYPES.register("slimeling",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.SlimelingEntity>of(io.github.reiko45.galacticraft.entity.SlimelingEntity::new,
+                    MobCategory.CREATURE).sized(0.45F, 0.7F).eyeHeight(0.56F).clientTrackingRange(10).build("slimeling"));
+
     private GCEntities() {
     }
 }

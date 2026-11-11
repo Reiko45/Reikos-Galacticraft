@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.block.entity;
 
-import io.github.reiko45.galacticraft.entity.SkeletonBossEntity;
+import io.github.reiko45.galacticraft.block.BossSpawnerBlock;
+import io.github.reiko45.galacticraft.entity.DungeonBossEntity;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
 import io.github.reiko45.galacticraft.registry.GCEntities;
 import io.github.reiko45.galacticraft.registry.GCSounds;
@@ -24,9 +25,9 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.Nullable;
 
 /**
- * 1.12.2 TileEntityDungeonSpawner (TileEntityDungeonSpawner&lt;EntitySkeletonBoss&gt;): the invisible block in the
- * middle of the boss room. When a player steps into the room it summons the Skeleton Boss (unless it has been
- * beaten in the last 15 minutes), keeps other monsters out of the room, and tells the boss where the treasure is.
+ * 1.12.2 TileEntityDungeonSpawner: the invisible block in the middle of the boss room. When a player steps into the
+ * room it summons its block's boss (the Skeleton Boss on the Moon, the Creeper Boss on Mars) unless that has been beaten
+ * in the last 15 minutes, keeps other monsters out of the room, and tells the boss where the treasure is.
  */
 public class DungeonSpawnerBlockEntity extends BlockEntity {
     /** 1.12.2: the boss can be fought again 15 minutes after it was killed. */
@@ -70,8 +71,10 @@ public class DungeonSpawnerBlockEntity extends BlockEntity {
             spawner.lastKillTime = 0;
             spawner.bossDefeated = false;
         }
-        final List<SkeletonBossEntity> bosses = level.getEntitiesOfClass(SkeletonBossEntity.class, new AABB(pos).inflate(15.0D), SkeletonBossEntity::isAlive);
-        for (SkeletonBossEntity boss : bosses) {
+        final BossSpawnerBlock.Boss kind = state.getBlock() instanceof BossSpawnerBlock block ? block.boss() : BossSpawnerBlock.Boss.SKELETON;
+        final List<DungeonBossEntity> bosses = level.getEntitiesOfClass(DungeonBossEntity.class, new AABB(pos).inflate(15.0D),
+                boss -> boss.isAlive() && boss.getType() == kind.type());
+        for (DungeonBossEntity boss : bosses) {
             boss.setSpawner(pos);
             spawner.spawned = true;
             spawner.bossDefeated = false;
@@ -80,28 +83,24 @@ public class DungeonSpawnerBlockEntity extends BlockEntity {
             spawner.spawned = false;
         }
         // 1.12.2 getDisabledCreatures: no other monsters in the boss fight
-        for (Monster mob : level.getEntitiesOfClass(Monster.class, room.inflate(3.0D), mob -> !(mob instanceof SkeletonBossEntity)
-                && DISABLED.contains(mob.getType()))) {
+        for (Monster mob : level.getEntitiesOfClass(Monster.class, room.inflate(3.0D), mob -> !(mob instanceof DungeonBossEntity)
+                && kind.disabled().contains(mob.getType()))) {
             mob.discard();
         }
         final boolean playerInRange = !level.getEntitiesOfClass(Player.class, room, player -> !player.isSpectator()).isEmpty();
         if (playerInRange && !spawner.lastPlayerInRange && !spawner.spawned && !spawner.bossDefeated && level instanceof ServerLevel serverLevel) {
-            final SkeletonBossEntity boss = GCEntities.SKELETON_BOSS.get().create(serverLevel);
+            final DungeonBossEntity boss = kind.type().create(serverLevel);
             if (boss != null) {
                 boss.moveTo(pos.getX() + 0.5D, pos.getY() + 1.0D, pos.getZ() + 0.5D, 0.0F, 0.0F);
                 boss.finalizeSpawn(serverLevel, serverLevel.getCurrentDifficultyAt(pos), MobSpawnType.SPAWNER, null);
                 boss.setSpawner(pos);
                 serverLevel.addFreshEntity(boss);
-                serverLevel.playSound(null, pos, GCSounds.BOSS_LAUGH.get(), SoundSource.HOSTILE, 10.0F, 1.0F);
+                serverLevel.playSound(null, pos, kind.sound(), SoundSource.HOSTILE, kind.volume(), kind.pitch());
                 spawner.spawned = true;
             }
         }
         spawner.lastPlayerInRange = playerInRange;
     }
-
-    private static final Set<EntityType<?>> DISABLED = Set.of(GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(),
-            GCEntities.EVOLVED_SPIDER.get(), GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get(),
-            EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER, EntityType.ENDERMAN);
 
     /** The boss died (it fills the treasure chest itself). */
     public void onBossDefeated() {

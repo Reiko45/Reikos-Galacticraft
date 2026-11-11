@@ -216,12 +216,32 @@ public class GCBlockStateProvider extends BlockStateProvider {
         }
     }
 
-    /** Boss spawner (invisible) and the Tier 1 Treasure Chest, drawn by TreasureChestRenderer (block and item). */
+    /**
+     * Boss spawners (invisible) and the Treasure Chests, drawn by TreasureChestRenderer (block and item); the Creeper
+     * Egg and the Slimeling Eggs (1.12.2 models), cracked eggs with their cracked texture.
+     */
     private void dungeon() {
         simpleBlock(GCBlocks.BOSS_SPAWNER.get(), models().getBuilder("boss_spawner").texture("particle", tex("moon_dungeon_brick")));
-        simpleBlock(GCBlocks.TREASURE_CHEST_TIER_1.get(), models().getBuilder("treasure_chest_tier_1").texture("particle", tex("treasure_chest")));
-        itemModels().getBuilder("treasure_chest_tier_1").parent(new ModelFile.UncheckedModelFile("builtin/entity"))
-                .texture("particle", tex("treasure_chest")).transforms()
+        simpleBlock(GCBlocks.MARS_BOSS_SPAWNER.get(), models().getBuilder("mars_boss_spawner").texture("particle", tex("mars_dungeon_brick")));
+        simpleBlockWithItem(GCBlocks.CREEPER_EGG.get(), models().getExistingFile(modLoc("block/creeper_egg")));
+        for (DeferredBlock<io.github.reiko45.galacticraft.block.SlimelingEggBlock> egg : java.util.List.of(
+                GCBlocks.RED_SLIMELING_EGG, GCBlocks.BLUE_SLIMELING_EGG, GCBlocks.YELLOW_SLIMELING_EGG)) {
+            final String name = egg.getId().getPath();
+            final ModelFile whole = models().getExistingFile(modLoc("block/" + name));
+            final ModelFile cracked = models().withExistingParent(name + "_broken", modLoc("block/" + name))
+                    .texture("particle", tex(name + "_broken")).texture("texture", tex(name + "_broken"));
+            getVariantBuilder(egg.get()).forAllStates(state -> net.neoforged.neoforge.client.model.generators.ConfiguredModel.builder()
+                    .modelFile(state.getValue(io.github.reiko45.galacticraft.block.SlimelingEggBlock.BROKEN) ? cracked : whole).build());
+            simpleBlockItem(egg.get(), whole);
+        }
+        treasureChest(GCBlocks.TREASURE_CHEST_TIER_1.get(), "treasure_chest_tier_1", tex("treasure_chest"));
+        treasureChest(GCBlocks.TREASURE_CHEST_TIER_2.get(), "treasure_chest_tier_2", tex("treasure_chest_tier_2"));
+    }
+
+    private void treasureChest(Block block, String name, ResourceLocation particle) {
+        simpleBlock(block, models().getBuilder(name).texture("particle", particle));
+        itemModels().getBuilder(name).parent(new ModelFile.UncheckedModelFile("builtin/entity"))
+                .texture("particle", particle).transforms()
                 .transform(ItemDisplayContext.GUI).rotation(30, 45, 0).scale(0.625F).end()
                 .transform(ItemDisplayContext.GROUND).translation(0, 3, 0).scale(0.25F).end()
                 .transform(ItemDisplayContext.HEAD).rotation(0, 180, 0).end()

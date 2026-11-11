@@ -49,6 +49,8 @@ public final class GCItems {
     public static final DeferredItem<Item> DESH_INGOT = simple("desh_ingot");
     public static final DeferredItem<Item> DESH_STICK = simple("desh_stick");
     public static final DeferredItem<Item> COMPRESSED_DESH = simple("compressed_desh");
+    /** 1.12.2 item_basic_mars:4, the Slimeling Inventory Bag: in a Slimeling's bag slot it carries 27 stacks. */
+    public static final DeferredItem<Item> SLIMELING_CARGO = simple("slimeling_cargo");
     /** 1.12.2 reinforced_plate_t2 ("Heavy-Duty Plate"), the Tier 2 Rocket's hull. */
     public static final DeferredItem<Item> HEAVY_DUTY_PLATE = simple("heavy_duty_plate");
 
@@ -124,15 +126,29 @@ public final class GCItems {
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_CREEPER_SPAWN_EGG = egg("evolved_creeper", GCEntities.EVOLVED_CREEPER, 894731, 0);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_ENDERMAN_SPAWN_EGG = egg("evolved_enderman", GCEntities.EVOLVED_ENDERMAN, 1447446, 0);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SKELETON_BOSS_SPAWN_EGG = egg("skeleton_boss", GCEntities.SKELETON_BOSS, 12698049, 4802889);
+    // 1.12.2 MarsModule#registerCreatures: all three Mars creatures share these egg colours.
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> CREEPER_BOSS_SPAWN_EGG = egg("creeper_boss", GCEntities.CREEPER_BOSS, 0x003200, 0x009600);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLUDGELING_SPAWN_EGG = egg("sludgeling", GCEntities.SLUDGELING, 0x003200, 0x009600);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLIMELING_SPAWN_EGG = egg("slimeling", GCEntities.SLIMELING, 0x003200, 0x009600);
 
     // --- Dungeon loot (1.12.2 ItemKey, ItemSchematic) ---
     public static final DeferredItem<DungeonKeyItem> TIER_1_DUNGEON_KEY = ITEMS.register("tier_1_dungeon_key",
             () -> new DungeonKeyItem(new Item.Properties(), 1));
     public static final DeferredItem<SchematicItem> BUGGY_SCHEMATIC = ITEMS.register("buggy_schematic",
             () -> new SchematicItem(new Item.Properties(), "moon_buggy"));
-    /** Found in Moon dungeons; its workbench page arrives with the Tier 2 Rocket (Mars phase). */
+    /** Found in Moon dungeons; unlocks the Tier 2 Rocket page. */
     public static final DeferredItem<SchematicItem> TIER_2_ROCKET_SCHEMATIC = ITEMS.register("tier_2_rocket_schematic",
             () -> new SchematicItem(new Item.Properties(), "rocket_t2"));
+    /** 1.12.2 key:0 of the planets module: dropped by the Creeper Boss, opens the Tier 2 Treasure Chest. */
+    public static final DeferredItem<DungeonKeyItem> TIER_2_DUNGEON_KEY = ITEMS.register("tier_2_dungeon_key",
+            () -> new DungeonKeyItem(new Item.Properties(), 2));
+    // 1.12.2 ItemSchematicTier2 (planets schematic:0-2), the Creeper Boss's reward; their pages come with later phases.
+    public static final DeferredItem<SchematicItem> TIER_3_ROCKET_SCHEMATIC = ITEMS.register("tier_3_rocket_schematic",
+            () -> new SchematicItem(new Item.Properties(), "rocket_t3"));
+    public static final DeferredItem<SchematicItem> CARGO_ROCKET_SCHEMATIC = ITEMS.register("cargo_rocket_schematic",
+            () -> new SchematicItem(new Item.Properties(), "cargo_rocket"));
+    public static final DeferredItem<SchematicItem> ASTRO_MINER_SCHEMATIC = ITEMS.register("astro_miner_schematic",
+            () -> new SchematicItem(new Item.Properties(), "astro_miner"));
 
     // --- Vehicles ---
     public static final DeferredItem<io.github.reiko45.galacticraft.item.BuggyItem> BUGGY = ITEMS.register("buggy",

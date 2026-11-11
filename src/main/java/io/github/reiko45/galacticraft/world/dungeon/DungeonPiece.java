@@ -36,15 +36,19 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.storage.loot.LootTable;
 import org.jetbrains.annotations.Nullable;
 
-/** One piece of the Moon dungeon: the surface crater, a corridor or one of the rooms (1.12.2 Room*, Corridor, EntranceCrater). */
-public class MoonDungeonPiece extends StructurePiece {
-    /** 1.12.2 RoomTreasure.MOONCHEST: chests in chest rooms and the treasure chest. */
-    public static final ResourceKey<LootTable> MOON_CHEST = ResourceKey.create(Registries.LOOT_TABLE, GalacticraftCore.id("dungeon_tier_1"));
+/**
+ * One piece of a dungeon: the surface crater, a corridor or one of the rooms (1.12.2 Room*, Corridor, EntranceCrater,
+ * and on Mars RoomBossMars and RoomTreasureMars).
+ */
+public class DungeonPiece extends StructurePiece {
+    /** 1.12.2 RoomTreasure.MOONCHEST: chests in Moon chest rooms and the Tier 1 treasure chest. */
+    public static final ResourceKey<LootTable> MOON_CHEST = DungeonConfig.MOON.loot();
 
     public enum Kind {
         CRATER, ENTRANCE, CORRIDOR, EMPTY, SPAWNER, CHEST, BOSS, TREASURE
     }
 
+    private final DungeonConfig config;
     private final Kind kind;
     private final Direction direction;
     private final int sizeX;
@@ -56,8 +60,9 @@ public class MoonDungeonPiece extends StructurePiece {
     @Nullable
     private final BlockPos chestPos;
 
-    public MoonDungeonPiece(MoonDungeon.Node node, int surface, @Nullable BlockPos chestPos) {
-        super(GCStructures.MOON_DUNGEON_PIECE.get(), 0, node.box());
+    public DungeonPiece(DungeonConfig config, Dungeon.Node node, int surface, @Nullable BlockPos chestPos) {
+        super(GCStructures.DUNGEON_PIECE.get(), 0, node.box());
+        this.config = config;
         this.kind = node.kind();
         this.direction = node.direction();
         this.sizeX = node.sizeX();
@@ -68,8 +73,9 @@ public class MoonDungeonPiece extends StructurePiece {
         setOrientation(Direction.SOUTH); // 1.12.2 setCoordBaseMode(SOUTH): no rotation, block states mirrored north/south
     }
 
-    public MoonDungeonPiece(StructurePieceSerializationContext context, CompoundTag tag) {
-        super(GCStructures.MOON_DUNGEON_PIECE.get(), tag);
+    public DungeonPiece(StructurePieceSerializationContext context, CompoundTag tag) {
+        super(GCStructures.DUNGEON_PIECE.get(), tag);
+        this.config = DungeonConfig.values()[Math.min(tag.getInt("Config"), DungeonConfig.values().length - 1)];
         this.kind = Kind.values()[tag.getInt("Kind")];
         this.direction = Direction.from3DDataValue(tag.getInt("Direction"));
         this.sizeX = tag.getInt("SizeX");
@@ -82,6 +88,7 @@ public class MoonDungeonPiece extends StructurePiece {
 
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext context, CompoundTag tag) {
+        tag.putInt("Config", this.config.ordinal());
         tag.putInt("Kind", this.kind.ordinal());
         tag.putInt("Direction", this.direction.get3DDataValue());
         tag.putInt("SizeX", this.sizeX);
@@ -97,8 +104,12 @@ public class MoonDungeonPiece extends StructurePiece {
         return this.kind;
     }
 
-    private static BlockState brick() {
-        return GCBlocks.MOON_DUNGEON_BRICK.get().defaultBlockState();
+    public DungeonConfig config() {
+        return this.config;
+    }
+
+    private BlockState brick() {
+        return this.config.brick();
     }
 
     @Override
@@ -108,17 +119,21 @@ public class MoonDungeonPiece extends StructurePiece {
             case CRATER -> crater(level, chunkBox);
             case ENTRANCE -> entrance(level, chunkBox);
             case CORRIDOR -> corridor(level, chunkBox);
-            case EMPTY -> room(level, chunkBox, MoonDungeon.HALL_HEIGHT, null);
+            case EMPTY -> room(level, chunkBox, this.config.hallHeight(), null);
             case SPAWNER -> {
-                room(level, chunkBox, MoonDungeon.HALL_HEIGHT, null);
+                room(level, chunkBox, this.config.hallHeight(), null);
                 spawners(level, random, chunkBox);
             }
             case CHEST -> {
-                room(level, chunkBox, MoonDungeon.HALL_HEIGHT, null);
+                room(level, chunkBox, this.config.hallHeight(), null);
                 chest(level, random, chunkBox);
             }
             case BOSS -> {
-                room(level, chunkBox, 3, Blocks.LAVA.defaultBlockState());
+                if (this.config == DungeonConfig.MARS) {
+                    marsBossRoom(level, random, chunkBox);
+                } else {
+                    room(level, chunkBox, 3, Blocks.LAVA.defaultBlockState());
+                }
                 bossSpawner(level, chunkBox);
             }
             case TREASURE -> {
@@ -130,7 +145,7 @@ public class MoonDungeonPiece extends StructurePiece {
 
     /** 1.12.2 EntranceCrater: a funnel from just above the surface down towards the entrance room. */
     private void crater(WorldGenLevel level, BoundingBox chunkBox) {
-        final int range = MoonDungeon.CRATER_RANGE;
+        final int range = Dungeon.CRATER_RANGE;
         final int centreX = this.boundingBox.minX() + range;
         final int centreZ = this.boundingBox.minZ() + range;
         final int top = this.surface + 2;
@@ -226,6 +241,38 @@ public class MoonDungeonPiece extends StructurePiece {
         }
     }
 
+    /**
+     * 1.12.2 RoomBossMars: brick walls and floor with a doorway 2 high, a ceiling of brick with a scatter of glowstone
+     * near the walls, and Creeper Eggs dotted round the edge of the floor.
+     */
+    private void marsBossRoom(WorldGenLevel level, RandomSource random, BoundingBox chunkBox) {
+        final boolean alongZ = this.direction.getAxis() == Direction.Axis.Z;
+        final int doorStart = (alongZ ? this.boundingBox.maxX() - this.boundingBox.minX() : this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2 - 1;
+        final int doorEnd = doorStart + 2;
+        for (int i = 0; i <= this.sizeX; i++) {
+            for (int j = 0; j <= this.sizeY; j++) {
+                for (int k = 0; k <= this.sizeZ; k++) {
+                    final BlockState state;
+                    final boolean nearWall = i <= 2 || k <= 2 || i >= this.sizeX - 2 || k >= this.sizeZ - 2;
+                    if (i == 0 || i == this.sizeX || j == 0 || k == 0 || k == this.sizeZ) {
+                        final int across = alongZ ? i : k;
+                        boolean door = across > doorStart && across <= doorEnd && j > 0 && j < 3;
+                        door &= this.direction == Direction.SOUTH && k == 0 || this.direction == Direction.NORTH && k == this.sizeZ
+                                || this.direction == Direction.EAST && i == 0 || this.direction == Direction.WEST && i == this.sizeX;
+                        state = door ? Blocks.AIR.defaultBlockState() : brick();
+                    } else if (j == this.sizeY) {
+                        state = nearWall && random.nextInt(4) == 0 ? Blocks.GLOWSTONE.defaultBlockState() : brick();
+                    } else if (j == 1 && nearWall && random.nextInt(6) == 0) {
+                        state = GCBlocks.CREEPER_EGG.get().defaultBlockState();
+                    } else {
+                        state = Blocks.AIR.defaultBlockState();
+                    }
+                    placeBlock(level, state, i, j, k, chunkBox);
+                }
+            }
+        }
+    }
+
     /** 1.12.2 RoomBoss: iron bars ringing the lava pillars and, every third layer, the walls. */
     private boolean bossBars(int i, int j, int k) {
         final int x = this.sizeX;
@@ -268,12 +315,12 @@ public class MoonDungeonPiece extends StructurePiece {
         };
     }
 
-    /** 1.12.2 RoomChest: a chest of Moon dungeon loot in the middle. */
+    /** 1.12.2 RoomChest: a chest of the planet's dungeon loot in the middle. */
     private void chest(WorldGenLevel level, RandomSource random, BoundingBox chunkBox) {
         placeBlock(level, Blocks.CHEST.defaultBlockState().setValue(ChestBlock.FACING, this.direction.getOpposite()), this.sizeX / 2, 1, this.sizeZ / 2, chunkBox);
         final BlockPos pos = getWorldPos(this.sizeX / 2, 1, this.sizeZ / 2);
         if (chunkBox.isInside(pos)) {
-            RandomizableContainer.setBlockEntityLootTable(level, random, pos, MOON_CHEST);
+            RandomizableContainer.setBlockEntityLootTable(level, random, pos, this.config.loot());
         }
     }
 
@@ -281,7 +328,7 @@ public class MoonDungeonPiece extends StructurePiece {
     private void bossSpawner(WorldGenLevel level, BoundingBox chunkBox) {
         final BlockPos pos = getWorldPos(this.sizeX / 2, 1, this.sizeZ / 2);
         if (chunkBox.isInside(pos)) {
-            level.setBlock(pos, GCBlocks.BOSS_SPAWNER.get().defaultBlockState(), 2);
+            level.setBlock(pos, this.config.bossSpawner().defaultBlockState(), 2);
             if (level.getBlockEntity(pos) instanceof DungeonSpawnerBlockEntity spawner) {
                 spawner.setRoom(new BoundingBox(this.boundingBox.minX() + 1, this.boundingBox.minY() + 1, this.boundingBox.minZ() + 1,
                         this.boundingBox.minX() + this.sizeX - 1, this.boundingBox.minY() + this.sizeY - 1, this.boundingBox.minZ() + this.sizeZ - 1),
@@ -290,14 +337,14 @@ public class MoonDungeonPiece extends StructurePiece {
         }
     }
 
-    /** 1.12.2 RoomTreasure: the locked Tier 1 Treasure Chest. */
+    /** 1.12.2 RoomTreasure / RoomTreasureMars: the locked treasure chest of the planet's tier. */
     private void treasure(WorldGenLevel level, RandomSource random, BoundingBox chunkBox) {
         final BlockPos pos = getWorldPos(this.sizeX / 2, 1, this.sizeZ / 2);
         if (chunkBox.isInside(pos)) {
-            level.setBlock(pos, GCBlocks.TREASURE_CHEST_TIER_1.get().defaultBlockState()
+            level.setBlock(pos, this.config.treasureChest().defaultBlockState()
                     .setValue(TreasureChestBlock.FACING, this.direction.getOpposite()), 2);
             if (level.getBlockEntity(pos) instanceof TreasureChestBlockEntity chest) {
-                chest.setLootTable(MOON_CHEST, random.nextLong());
+                chest.setLootTable(this.config.loot(), random.nextLong());
             }
         }
     }

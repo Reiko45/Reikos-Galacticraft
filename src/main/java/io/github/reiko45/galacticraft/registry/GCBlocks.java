@@ -121,7 +121,8 @@ public final class GCBlocks {
     public static final DeferredBlock<Block> MARS_REGOLITH = withItem("mars_regolith", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
     public static final DeferredBlock<Block> MARS_STONE = withItem("mars_stone", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
     public static final DeferredBlock<Block> MARS_COBBLESTONE = withItem("mars_cobblestone", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 2.2F)));
-    public static final DeferredBlock<Block> MARS_DUNGEON_BRICK = withItem("mars_dungeon_brick", () -> new Block(marsRock(MapColor.COLOR_GREEN, 4.0F, 40.0F)));
+    public static final DeferredBlock<Block> MARS_DUNGEON_BRICK = withItem("mars_dungeon_brick",
+            () -> new io.github.reiko45.galacticraft.block.MarsDungeonBrickBlock(marsRock(MapColor.COLOR_GREEN, 4.0F, 40.0F)));
     public static final DeferredBlock<Block> DESH_BLOCK = withItem("desh_block", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 60.0F)
             .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
 
@@ -246,12 +247,30 @@ public final class GCBlocks {
     // --- Moon dungeon (1.12.2 BlockBossSpawner, BlockTier1TreasureChest) ---
     /** Invisible, unbreakable holder of the boss room's spawner block entity. */
     public static final DeferredBlock<BossSpawnerBlock> BOSS_SPAWNER = BLOCKS.register("boss_spawner", () -> new BossSpawnerBlock(
-            BlockBehaviour.Properties.of().strength(-1.0F, 3_600_000.0F).noLootTable().noCollission().noOcclusion()
-                    .pushReaction(PushReaction.BLOCK).isValidSpawn((state, level, pos, type) -> false)));
+            BossSpawnerBlock.Boss.SKELETON, bossSpawner()));
     /** 1.12.2: hardness 100,000 (only the key opens it). */
-    public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_1 = withItem("treasure_chest_tier_1", () -> new TreasureChestBlock(
-            BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(100_000.0F, 3_600_000.0F).sound(SoundType.STONE)
-                    .noOcclusion().pushReaction(PushReaction.BLOCK)));
+    public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_1 = withItem("treasure_chest_tier_1", () -> new TreasureChestBlock(1,
+            treasureChest()));
+
+    // --- Mars dungeon (1.12.2 BlockBossSpawnerMars, BlockTier2TreasureChest, BlockCreeperEgg) ---
+    public static final DeferredBlock<BossSpawnerBlock> MARS_BOSS_SPAWNER = BLOCKS.register("mars_boss_spawner", () -> new BossSpawnerBlock(
+            BossSpawnerBlock.Boss.CREEPER, bossSpawner()));
+    public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_2 = withItem("treasure_chest_tier_2", () -> new TreasureChestBlock(2,
+            treasureChest()));
+    /**
+     * 1.12.2 BlockCreeperEgg (a dragon egg that doesn't teleport): falls, can't be broken except with the Sticky Desh
+     * Pickaxe, and hatches a baby Evolved Creeper when an explosion breaks it.
+     */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CreeperEggBlock> CREEPER_EGG = withItem("creeper_egg",
+            () -> new io.github.reiko45.galacticraft.block.CreeperEggBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN)
+                    .strength(-1.0F, 0.0F).sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.BLOCK)));
+    // 1.12.2 BlockSlimelingEgg (Material.ROCK, hardness 0.75, pickaxe level 3), one block per egg colour
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SlimelingEggBlock> RED_SLIMELING_EGG = slimelingEgg("red_slimeling_egg",
+            io.github.reiko45.galacticraft.block.SlimelingEggBlock.Color.RED);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SlimelingEggBlock> BLUE_SLIMELING_EGG = slimelingEgg("blue_slimeling_egg",
+            io.github.reiko45.galacticraft.block.SlimelingEggBlock.Color.BLUE);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SlimelingEggBlock> YELLOW_SLIMELING_EGG = slimelingEgg("yellow_slimeling_egg",
+            io.github.reiko45.galacticraft.block.SlimelingEggBlock.Color.YELLOW);
 
     // --- Misc ---
     public static final DeferredBlock<CheeseBlock> CHEESE_BLOCK = withItem("cheese_block", () -> new CheeseBlock(
@@ -280,6 +299,12 @@ public final class GCBlocks {
     /** Blocks that have a plain {@link net.minecraft.world.item.BlockItem}, in registration order. */
     public static List<DeferredBlock<?>> blocksWithItems() {
         return Collections.unmodifiableList(BLOCKS_WITH_ITEMS);
+    }
+
+    private static DeferredBlock<io.github.reiko45.galacticraft.block.SlimelingEggBlock> slimelingEgg(String name,
+            io.github.reiko45.galacticraft.block.SlimelingEggBlock.Color color) {
+        return withItem(name, () -> new io.github.reiko45.galacticraft.block.SlimelingEggBlock(color, BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
+                .strength(0.75F).requiresCorrectToolForDrops().sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.DESTROY)));
     }
 
     private static <B extends Block> DeferredBlock<B> withItem(String name, Supplier<B> factory) {
@@ -335,6 +360,16 @@ public final class GCBlocks {
     private static BlockBehaviour.Properties marsRock(MapColor color, float hardness, float resistance) {
         return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
+    }
+
+    private static BlockBehaviour.Properties bossSpawner() {
+        return BlockBehaviour.Properties.of().strength(-1.0F, 3_600_000.0F).noLootTable().noCollission().noOcclusion()
+                .pushReaction(PushReaction.BLOCK).isValidSpawn((state, level, pos, type) -> false);
+    }
+
+    private static BlockBehaviour.Properties treasureChest() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(100_000.0F, 3_600_000.0F).sound(SoundType.STONE)
+                .noOcclusion().pushReaction(PushReaction.BLOCK);
     }
 
     private static BlockBehaviour.Properties machine() {

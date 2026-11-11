@@ -54,6 +54,10 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
         tag(GCTags.block("ores/desh")).add(GCBlocks.DESH_ORE.get());
         tag(Tags.Blocks.ORES_IRON).add(GCBlocks.MARS_IRON_ORE.get());
         tag(GCTags.block("storage_blocks/desh")).add(GCBlocks.DESH_BLOCK.get());
+        // 1.12.2 setHarvestLevel(MarsBlocks.rock, "pickaxe", 3): slimeling eggs need a diamond-strength pickaxe to collect
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_2.get(), GCBlocks.RED_SLIMELING_EGG.get(),
+                GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());
+        tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.RED_SLIMELING_EGG.get(), GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_1.get(),
                 GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(), GCBlocks.SILICON_ORE.get(),
                 GCBlocks.TIN_BLOCK.get(), GCBlocks.ALUMINUM_BLOCK.get(), GCBlocks.METEORIC_IRON_BLOCK.get(), GCBlocks.SILICON_BLOCK.get(),

@@ -1,14 +1,69 @@
 {
   "entity.boss_laugh": {
     "subtitle": "subtitles.galacticraftcore.entity.boss_laugh",
-    "sounds": [{"name": "galacticraftcore:entity/bosslaugh", "stream": false}]
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/bosslaugh",
+        "stream": false
+      }
+    ]
   },
   "entity.boss_death": {
     "subtitle": "subtitles.galacticraftcore.entity.boss_death",
-    "sounds": [{"name": "galacticraftcore:entity/bossdeath", "stream": false}]
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/bossdeath",
+        "stream": false
+      }
+    ]
   },
   "entity.boss_ooh": {
     "subtitle": "subtitles.galacticraftcore.entity.boss_ooh",
-    "sounds": [{"name": "galacticraftcore:entity/ooh", "stream": false}]
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/ooh",
+        "stream": false
+      }
+    ]
+  },
+  "entity.boss_ouch": {
+    "subtitle": "subtitles.galacticraftcore.entity.boss_ouch",
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/ouch",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.scary_scape": {
+    "subtitle": "subtitles.galacticraftcore.ambient.scary_scape",
+    "sounds": [
+      {
+        "name": "galacticraftcore:ambience/scaryscape",
+        "stream": false
+      }
+    ]
+  },
+  "ambient.single_drip": {
+    "subtitle": "subtitles.galacticraftcore.ambient.single_drip",
+    "sounds": [
+      "galacticraftcore:ambience/singledrip1",
+      "galacticraftcore:ambience/singledrip2",
+      "galacticraftcore:ambience/singledrip3",
+      "galacticraftcore:ambience/singledrip4",
+      "galacticraftcore:ambience/singledrip5",
+      "galacticraftcore:ambience/singledrip6",
+      "galacticraftcore:ambience/singledrip7",
+      "galacticraftcore:ambience/singledrip8"
+    ]
+  },
+  "entity.slime_death": {
+    "subtitle": "subtitles.galacticraftcore.entity.slime_death",
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/slime_death",
+        "stream": false
+      }
+    ]
   }
 }

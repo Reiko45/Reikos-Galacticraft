@@ -99,6 +99,8 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
 
     // Overworld crude oil pockets
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_POCKET = configured("oil_pocket");
+    public static final ResourceKey<ConfiguredFeature<?, ?>> SLIMELING_EGGS = configured("slimeling_eggs");
+    public static final ResourceKey<PlacedFeature> SLIMELING_EGGS_PLACED = placed("slimeling_eggs");
     public static final ResourceKey<PlacedFeature> OIL_POCKET_PLACED = placed("oil_pocket");
     public static final ResourceKey<BiomeModifier> ADD_OVERWORLD_OIL =
             ResourceKey.create(NeoForgeRegistries.Keys.BIOME_MODIFIERS, GalacticraftCore.id("add_overworld_oil"));
@@ -118,6 +120,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             .add(Registries.DAMAGE_TYPE, context -> {
                 context.register(GCDamageTypes.OXYGEN_SUFFOCATION, new DamageType("oxygen_suffocation", DamageScaling.NEVER, 0.0F));
                 context.register(GCDamageTypes.SPACESHIP_CRASH, new DamageType("spaceship_crash", DamageScaling.NEVER, 0.1F));
+                context.register(GCDamageTypes.SLIMELING, new DamageType("slimeling", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1F));
             });
 
     public GCWorldgenProvider(PackOutput output, CompletableFuture<HolderLookup.Provider> registries) {
@@ -143,6 +146,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
 
         // The pocket feature rolls its own (biome-dependent) chance, like 1.12.2 EventHandlerGC#oilPresent.
         FeatureUtils.register(context, OIL_POCKET, GCFeatures.OIL_POCKET.get(), NoneFeatureConfiguration.INSTANCE);
+        FeatureUtils.register(context, SLIMELING_EGGS, GCFeatures.SLIMELING_EGGS.get(), NoneFeatureConfiguration.INSTANCE);
 
         // BiomeDecoratorMoon: WorldGenMinableMeta vein sizes.
         FeatureUtils.register(context, MOON_DIRT_BLOB, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_DIRT.get().defaultBlockState(), 32));
@@ -171,6 +175,9 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         ore(context, ORE_SILICON_PLACED, configured, ORE_SILICON, 3, 0, 24);
 
         PlacementUtils.register(context, OIL_POCKET_PLACED, configured.getOrThrow(OIL_POCKET), List.of(BiomeFilter.biome()));
+        // 1.12.2 EventHandlerMars#onPlanetDecorated: 2 a chunk at y 24 + nextInt(104)
+        PlacementUtils.register(context, SLIMELING_EGGS_PLACED, configured.getOrThrow(SLIMELING_EGGS), List.of(CountPlacement.of(2),
+                InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(24), VerticalAnchor.absolute(127)), BiomeFilter.biome()));
 
         ore(context, MOON_DIRT_BLOB_PLACED, configured, MOON_DIRT_BLOB, 20, 0, 199);
         ore(context, MOON_ORE_COPPER_PLACED, configured, MOON_ORE_COPPER, 26, 0, 59);
@@ -200,22 +207,44 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("moon_dungeon"));
     public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MOON_DUNGEONS =
             ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("moon_dungeons"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> MARS_DUNGEON =
+            ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("mars_dungeon"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MARS_DUNGEONS =
+            ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("mars_dungeons"));
 
-    /** The Moon dungeon, in the Moon biome only, built after caves like 1.12.2 (no terrain adaptation: it digs its own crater). */
+    /**
+     * The Moon and Mars dungeons, each in its planet's biome only, built after caves like 1.12.2 (no terrain adaptation:
+     * they dig their own crater).
+     */
     private static void structures(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context) {
-        context.register(MOON_DUNGEON, new io.github.reiko45.galacticraft.world.dungeon.MoonDungeon(
-                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
-                        net.minecraft.core.HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MOON_BIOME)),
-                        java.util.Map.of(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
-                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE)));
+        dungeon(context, MOON_DUNGEON, GCDimensions.MOON_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MOON);
+        dungeon(context, MARS_DUNGEON, GCDimensions.MARS_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MARS);
     }
 
-    /** 1.12.2 MapGenDungeon: one per 704x704 block (44x44 chunk) region, at a random chunk of it. */
+    private static void dungeon(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context,
+                                ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> key, ResourceKey<Biome> biome,
+                                io.github.reiko45.galacticraft.world.dungeon.DungeonConfig config) {
+        context.register(key, new io.github.reiko45.galacticraft.world.dungeon.Dungeon(
+                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
+                        net.minecraft.core.HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(biome)),
+                        java.util.Map.of(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
+                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE), config));
+    }
+
+    /**
+     * 1.12.2 MapGenDungeon: one per 704x704 block (44x44 chunk) region, at a random chunk of it. 1.12.2 salted the
+     * position with 10387340 plus the dimension id; Mars takes its 1.12.2 id (-29) so its dungeons fall elsewhere than
+     * the Moon's (which keeps the plain salt it was given in phase 5b).
+     */
     private static void structureSets(BootstrapContext<net.minecraft.world.level.levelgen.structure.StructureSet> context) {
         context.register(MOON_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
                 context.lookup(Registries.STRUCTURE).getOrThrow(MOON_DUNGEON),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,
                         net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340)));
+        context.register(MARS_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
+                context.lookup(Registries.STRUCTURE).getOrThrow(MARS_DUNGEON),
+                new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,
+                        net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340 - 29)));
     }
 
     private static void biomes(BootstrapContext<Biome> context) {
@@ -265,6 +294,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_COPPER_PLACED);
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_TIN_PLACED);
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MARS_ORE_IRON_PLACED);
+        generation.addFeature(GenerationStep.Decoration.TOP_LAYER_MODIFICATION, SLIMELING_EGGS_PLACED);
         context.register(GCDimensions.MARS_BIOME, new Biome.BiomeBuilder()
                 .hasPrecipitation(false)
                 .temperature(0.5F)

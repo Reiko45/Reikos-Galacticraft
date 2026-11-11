@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.client;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.entity.SlimelingEntity;
 import io.github.reiko45.galacticraft.block.FluidPipeBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
 import io.github.reiko45.galacticraft.block.ParachestBlock;
@@ -531,9 +532,9 @@ public final class ScreenshotTour {
                 start.placeInChunk(moon, moon.structureManager(), generator, moon.getRandom(), new net.minecraft.world.level.levelgen.structure.BoundingBox(
                         pos.getMinBlockX(), moon.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(), moon.getMaxBuildHeight(), pos.getMaxBlockZ()), pos);
             });
-            final BlockPos found = chunk.getMiddleBlockPosition(io.github.reiko45.galacticraft.world.dungeon.MoonDungeon.Y);
+            final BlockPos found = chunk.getMiddleBlockPosition(io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MOON.y());
             for (var piece : start.getPieces()) {
-                if (piece instanceof io.github.reiko45.galacticraft.world.dungeon.MoonDungeonPiece room) {
+                if (piece instanceof io.github.reiko45.galacticraft.world.dungeon.DungeonPiece room) {
                     final BlockPos centre = room.getBoundingBox().getCenter();
                     switch (room.kind()) {
                         case CRATER -> this.dungeonCrater = centre;
@@ -1187,6 +1188,288 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> {
         }); // chunks arrive
         this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_cavern"));
+        marsMobSteps();
+    }
+
+    private BlockPos marsZoo;
+    private int tourSlimeling = -1;
+    private BlockPos marsDungeonCrater;
+    private BlockPos marsDungeonBoss;
+    private BlockPos marsDungeonTreasure;
+
+    /**
+     * Phase 7b: slimelings, their eggs, a sludgeling, creeper eggs and the Tier 2 chest; the Mars dungeon, its Creeper
+     * Boss (whole, then down to one head) and treasure; and a slimeling's panel, feeding screen and inventory.
+     */
+    private void marsMobSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null) {
+                return;
+            }
+            srv.setDifficulty(Difficulty.NORMAL, true); // monsters vanish on Peaceful
+            srv.overworld().setDayTime(5000L);
+            this.marsZoo = new BlockPos(-100, surface(mars, -100, -100) + 1, -100);
+            buildMarsZoo(mars, this.marsZoo);
+            final ServerPlayer p = tourPlayer(srv);
+            p.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
+            p.teleportTo(mars, this.marsZoo.getX() + 0.5D, this.marsZoo.getY() + 2.6D, this.marsZoo.getZ() + 7.5D, 180.0F, 18.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_slimelings_and_eggs"));
+        // The Mars dungeon of the first 44x44 chunk region, built as on the Moon (structures are off in the tour world)
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null) {
+                return;
+            }
+            final var structure = mars.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                    .getHolderOrThrow(io.github.reiko45.galacticraft.data.GCWorldgenProvider.MARS_DUNGEON);
+            final var generator = mars.getChunkSource().getGenerator();
+            final var placements = mars.getChunkSource().getGeneratorState().getPlacementsForStructure(structure);
+            if (placements.isEmpty()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Mars dungeon placement");
+                return;
+            }
+            final var placement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement) placements.get(0);
+            final net.minecraft.world.level.ChunkPos chunk = placement.getPotentialStructureChunk(mars.getSeed(), 0, 0);
+            final net.minecraft.world.level.levelgen.structure.StructureStart start = structure.value().generate(mars.registryAccess(), generator,
+                    generator.getBiomeSource(), mars.getChunkSource().randomState(), mars.getStructureManager(), mars.getSeed(), chunk, 0, mars,
+                    biome -> true);
+            if (!start.isValid()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Mars dungeon start at {}", chunk);
+                return;
+            }
+            final var box = start.getBoundingBox();
+            net.minecraft.world.level.ChunkPos.rangeClosed(new net.minecraft.world.level.ChunkPos(box.minX() >> 4, box.minZ() >> 4),
+                    new net.minecraft.world.level.ChunkPos(box.maxX() >> 4, box.maxZ() >> 4)).forEach(pos -> {
+                mars.getChunk(pos.x, pos.z);
+                start.placeInChunk(mars, mars.structureManager(), generator, mars.getRandom(), new net.minecraft.world.level.levelgen.structure.BoundingBox(
+                        pos.getMinBlockX(), mars.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(), mars.getMaxBuildHeight(), pos.getMaxBlockZ()), pos);
+            });
+            for (var piece : start.getPieces()) {
+                if (piece instanceof io.github.reiko45.galacticraft.world.dungeon.DungeonPiece room) {
+                    final BlockPos centre = room.getBoundingBox().getCenter();
+                    switch (room.kind()) {
+                        case CRATER -> this.marsDungeonCrater = centre;
+                        case BOSS -> this.marsDungeonBoss = new BlockPos(centre.getX(), room.getBoundingBox().minY() + 1, centre.getZ());
+                        case TREASURE -> {
+                            for (BlockPos pos : BlockPos.betweenClosed(room.getBoundingBox().minX(), room.getBoundingBox().minY(), room.getBoundingBox().minZ(),
+                                    room.getBoundingBox().maxX(), room.getBoundingBox().maxY(), room.getBoundingBox().maxZ())) {
+                                if (mars.getBlockState(pos).is(GCBlocks.TREASURE_CHEST_TIER_2.get())) {
+                                    this.marsDungeonTreasure = pos.immutable();
+                                }
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+                }
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: Mars dungeon in {} ({} pieces), boss room {}, treasure {}", chunk, start.getPieces().size(),
+                    this.marsDungeonBoss, this.marsDungeonTreasure);
+            if (this.marsDungeonCrater != null) {
+                final int camX = this.marsDungeonCrater.getX() + 20;
+                int top = 0;
+                for (int dx = -2; dx <= 2; dx++) {
+                    top = Math.max(top, surface(mars, camX + dx, this.marsDungeonCrater.getZ()));
+                }
+                tourPlayer(srv).teleportTo(mars, camX + 0.5D, top + 10.0D, this.marsDungeonCrater.getZ() + 0.5D, 90.0F, 35.0F);
+            }
+        }));
+        for (int i = 0; i < 4; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // chunks around the dungeon load and generate
+        }
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_dungeon_crater"));
+        // Into the boss room, which wakes the Creeper Boss
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null || this.marsDungeonBoss == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 1200, 0, false, false));
+            p.teleportTo(mars, this.marsDungeonBoss.getX() + 0.5D, this.marsDungeonBoss.getY() + 1.0D, this.marsDungeonBoss.getZ() + 10.5D, 180.0F, -8.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null || this.marsDungeonBoss == null) {
+                return;
+            }
+            // Hold the boss still facing the camera, with one of its TNT on the way
+            for (var boss : mars.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.CreeperBossEntity.class,
+                    new net.minecraft.world.phys.AABB(this.marsDungeonBoss).inflate(20.0D))) {
+                boss.setNoAi(true);
+                boss.moveTo(this.marsDungeonBoss.getX() + 0.5D, this.marsDungeonBoss.getY(), this.marsDungeonBoss.getZ() - 2.5D, 0.0F, 0.0F);
+                boss.setYHeadRot(0.0F);
+                boss.setYBodyRot(0.0F);
+                for (var tnt : mars.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.TntProjectileEntity.class, boss.getBoundingBox().inflate(30.0D))) {
+                    tnt.discard();
+                }
+                final io.github.reiko45.galacticraft.entity.TntProjectileEntity tnt = new io.github.reiko45.galacticraft.entity.TntProjectileEntity(mars, boss,
+                        this.marsDungeonBoss.getX() + 1.5D, this.marsDungeonBoss.getY() + 4.0D, this.marsDungeonBoss.getZ() + 4.0D, net.minecraft.world.phys.Vec3.ZERO);
+                tnt.setDeltaMovement(net.minecraft.world.phys.Vec3.ZERO);
+                mars.addFreshEntity(tnt);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_dungeon_boss"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars != null && this.marsDungeonBoss != null) {
+                for (var boss : mars.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.CreeperBossEntity.class,
+                        new net.minecraft.world.phys.AABB(this.marsDungeonBoss).inflate(20.0D))) {
+                    boss.setHealth(boss.getMaxHealth() * 0.3F); // punched-back TNT has taken two of its heads
+                }
+                for (var tnt : mars.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.TntProjectileEntity.class,
+                        new net.minecraft.world.phys.AABB(this.marsDungeonBoss).inflate(30.0D))) {
+                    tnt.discard();
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_dungeon_boss_one_head"));
+        // It dies and fills the Tier 2 Treasure Chest
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null || this.marsDungeonBoss == null) {
+                return;
+            }
+            for (var boss : mars.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.CreeperBossEntity.class,
+                    new net.minecraft.world.phys.AABB(this.marsDungeonBoss).inflate(20.0D))) {
+                boss.setNoAi(false);
+                boss.kill();
+            }
+        }));
+        for (int i = 0; i < 7; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // 200 ticks of dying
+        }
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars != null && this.marsDungeonTreasure != null) {
+                tourPlayer(srv).teleportTo(mars, this.marsDungeonTreasure.getX() + 0.5D, this.marsDungeonTreasure.getY() + 0.5D,
+                        this.marsDungeonTreasure.getZ() + 3.0D, 180.0F, 25.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_dungeon_treasure"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null || this.marsDungeonTreasure == null) {
+                return;
+            }
+            if (mars.getBlockEntity(this.marsDungeonTreasure) instanceof io.github.reiko45.galacticraft.block.entity.TreasureChestBlockEntity chest) {
+                boolean schematic = false;
+                for (int slot = 0; slot < chest.getContainerSize(); slot++) {
+                    schematic |= chest.getItem(slot).getItem() instanceof io.github.reiko45.galacticraft.item.SchematicItem;
+                }
+                GalacticraftCore.LOGGER.info("Screenshot tour: Tier 2 treasure chest locked {}, schematic inside {}", chest.isLocked(), schematic);
+                chest.setLocked(false); // what the Tier 2 Dungeon Key does
+                final ServerPlayer p = tourPlayer(srv);
+                p.teleportTo(mars, this.marsDungeonTreasure.getX() + 0.5D, this.marsDungeonTreasure.getY(), this.marsDungeonTreasure.getZ() + 2.5D, 180.0F, 30.0F);
+                p.openMenu(chest);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_treasure_chest_tier_2"));
+        // Back with the slimelings: the grown one's panel, a meal, and its bag
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (mars == null || this.marsZoo == null || !(mars.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling)) {
+                return;
+            }
+            p.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
+            p.teleportTo(mars, slimeling.getX() + 0.5D, this.marsZoo.getY() + 1.0D, slimeling.getZ() + 3.5D, 180.0F, 20.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.level != null && minecraft.level.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+                minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.SlimelingScreen(slimeling));
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_slimeling"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.level != null && minecraft.level.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+                minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.SlimelingFeedScreen(slimeling));
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_slimeling_feed"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+                if (mars != null && mars.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+                    io.github.reiko45.galacticraft.menu.SlimelingMenu.open(tourPlayer(srv), slimeling);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_slimeling_inventory"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            tourPlayer(srv).closeContainer();
+            srv.setDifficulty(Difficulty.PEACEFUL, true);
+            srv.overworld().setDayTime(6000L);
+        }));
+    }
+
+    /**
+     * Slimeling eggs (one cracked), a Creeper Egg and a Tier 2 Treasure Chest behind three hatchlings and a grown, bred
+     * orange slimeling, a sludgeling by its pool, and a baby Evolved Creeper.
+     */
+    private void buildMarsZoo(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-8, 0, -4), origin.offset(8, 8, 9))) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-8, -1, -4), origin.offset(8, -1, 9))) {
+            level.setBlockAndUpdate(pos, GCBlocks.MARS_FINE_REGOLITH.get().defaultBlockState());
+        }
+        final BlockState[] row = {GCBlocks.RED_SLIMELING_EGG.get().defaultBlockState(), GCBlocks.BLUE_SLIMELING_EGG.get().defaultBlockState(),
+                GCBlocks.YELLOW_SLIMELING_EGG.get().defaultBlockState().setValue(io.github.reiko45.galacticraft.block.SlimelingEggBlock.BROKEN, true),
+                GCBlocks.CREEPER_EGG.get().defaultBlockState(), GCBlocks.TREASURE_CHEST_TIER_2.get().defaultBlockState()};
+        for (int i = 0; i < row.length; i++) {
+            level.setBlockAndUpdate(origin.offset(-4 + i * 2, 0, -2), row[i]);
+        }
+        level.setBlockAndUpdate(origin.offset(6, -1, 0), GCBlocks.MARS_STONE.get().defaultBlockState());
+        level.setBlockAndUpdate(origin.offset(6, 0, 0), io.github.reiko45.galacticraft.registry.GCFluids.BACTERIAL_SLUDGE_BLOCK.get().defaultBlockState());
+        final float[][] colors = {{1.0F, 0.0F, 0.0F}, {0.0F, 0.0F, 1.0F}, {1.0F, 1.0F, 0.0F}};
+        for (int i = 0; i < colors.length; i++) {
+            final SlimelingEntity hatchling = SlimelingEntity.hatch(level, colors[i][0], colors[i][1], colors[i][2]);
+            zooMob(level, hatchling, origin.offset(-5 + i * 2, 0, 1));
+        }
+        final SlimelingEntity red = SlimelingEntity.hatch(level, 1.0F, 0.0F, 0.0F);
+        final SlimelingEntity yellow = SlimelingEntity.hatch(level, 1.0F, 1.0F, 0.0F);
+        final SlimelingEntity grown = (SlimelingEntity) red.getBreedOffspring(level, yellow);
+        if (grown != null) {
+            final ServerPlayer p = tourPlayer(level.getServer());
+            grown.tame(p);
+            grown.setOwnerName(p.getGameProfile().getName());
+            grown.setSlimelingAge(SlimelingEntity.MAX_AGE * 3 / 4);
+            grown.setCustomName(net.minecraft.network.chat.Component.literal("Marmalade"));
+            grown.inventory().setItem(io.github.reiko45.galacticraft.entity.SlimelingInventory.BAG_SLOT, new ItemStack(GCItems.SLIMELING_CARGO.get()));
+            grown.inventory().setItem(io.github.reiko45.galacticraft.entity.SlimelingInventory.CARGO_START, new ItemStack(GCItems.RAW_DESH.get(), 12));
+            grown.inventory().setItem(io.github.reiko45.galacticraft.entity.SlimelingInventory.CARGO_START + 1, new ItemStack(Items.SLIME_BALL, 5));
+            zooMob(level, grown, origin.offset(2, 0, 1));
+            this.tourSlimeling = grown.getId();
+        }
+        final net.minecraft.world.entity.Entity sludgeling = GCEntities.SLUDGELING.get().create(level);
+        if (sludgeling instanceof net.minecraft.world.entity.Mob mob) {
+            zooMob(level, mob, origin.offset(5, 0, 1));
+        }
+        final io.github.reiko45.galacticraft.entity.monster.EvolvedCreeper baby = GCEntities.EVOLVED_CREEPER.get().create(level);
+        if (baby != null) {
+            baby.setBaby(true);
+            zooMob(level, baby, origin.offset(-7, 0, 1));
+        }
+    }
+
+    private static void zooMob(ServerLevel level, net.minecraft.world.entity.Mob mob, BlockPos pos) {
+        mob.moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 0.0F, 0.0F);
+        mob.setYHeadRot(0.0F);
+        mob.setYBodyRot(0.0F);
+        mob.setNoAi(true);
+        mob.setPersistenceRequired();
+        level.addFreshEntity(mob);
     }
 
     private static void logBalloons(MinecraftServer server, String when) {

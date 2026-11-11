@@ -1,21 +1,11 @@
 package io.github.reiko45.galacticraft.entity;
 
-import io.github.reiko45.galacticraft.block.entity.DungeonSpawnerBlockEntity;
-import io.github.reiko45.galacticraft.block.entity.TreasureChestBlockEntity;
 import io.github.reiko45.galacticraft.registry.GCItems;
 import io.github.reiko45.galacticraft.registry.GCSounds;
 import java.util.List;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.NbtUtils;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
-import net.minecraft.server.level.ServerBossEvent;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.util.Mth;
@@ -25,7 +15,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ExperienceOrb;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;
 import net.minecraft.world.entity.SpawnGroupData;
@@ -38,7 +27,6 @@ import net.minecraft.world.entity.ai.goal.RandomStrollGoal;
 import net.minecraft.world.entity.ai.goal.RangedAttackGoal;
 import net.minecraft.world.entity.ai.goal.target.HurtByTargetGoal;
 import net.minecraft.world.entity.ai.goal.target.NearestAttackableTargetGoal;
-import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.entity.monster.RangedAttackMob;
 import net.minecraft.world.entity.player.Player;
@@ -48,7 +36,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -58,23 +45,32 @@ import org.jetbrains.annotations.Nullable;
  * is left in its room. Dying takes 200 ticks of explosions; then it refills the dungeon's treasure chest (loot plus a
  * schematic), drops a Tier 1 Dungeon Key and, rarely, its bow.
  */
-public class SkeletonBossEntity extends Monster implements RangedAttackMob {
+public class SkeletonBossEntity extends DungeonBossEntity implements RangedAttackMob {
     private static final EntityDataAccessor<Integer> THROW = SynchedEntityData.defineId(SkeletonBossEntity.class, EntityDataSerializers.INT);
-    public static final int DEATH_TICKS = 200;
 
-    private final ServerBossEvent bossEvent = (ServerBossEvent) new ServerBossEvent(getDisplayName(), BossEvent.BossBarColor.GREEN,
-            BossEvent.BossBarOverlay.PROGRESS).setDarkenScreen(false);
     private int throwTimer;
     private int postThrowDelay = 20;
     @Nullable
     private Entity thrownEntity;
-    @Nullable
-    private BlockPos spawnerPos;
-    private int playersWithinLast;
 
     public SkeletonBossEntity(EntityType<? extends SkeletonBossEntity> type, Level level) {
-        super(type, level);
+        super(type, level, BossEvent.BossBarColor.GREEN);
         this.xpReward = 50;
+    }
+
+    @Override
+    public int chestTier() {
+        return 1;
+    }
+
+    @Override
+    protected ItemStack key() {
+        return new ItemStack(GCItems.TIER_1_DUNGEON_KEY.get());
+    }
+
+    @Override
+    protected ItemStack guaranteedLoot() {
+        return guaranteedLoot(this.random);
     }
 
     public static AttributeSupplier.Builder createAttributes() {
@@ -121,18 +117,9 @@ public class SkeletonBossEntity extends Monster implements RangedAttackMob {
         return super.finalizeSpawn(level, difficulty, spawnType, data);
     }
 
-    public void setSpawner(BlockPos pos) {
-        this.spawnerPos = pos;
-    }
-
     /** Ticks left of the current grab and throw, for the model (1.12.2 throwTimer + postThrowDelay). */
     public int throwTicks() {
         return this.entityData.get(THROW);
-    }
-
-    @Nullable
-    private DungeonSpawnerBlockEntity spawner() {
-        return this.spawnerPos != null && level().getBlockEntity(this.spawnerPos) instanceof DungeonSpawnerBlockEntity spawner ? spawner : null;
     }
 
     /** 1.12.2 onCollideWithPlayer: grab the target. */
@@ -198,7 +185,6 @@ public class SkeletonBossEntity extends Monster implements RangedAttackMob {
                 this.thrownEntity = null;
             }
             this.entityData.set(THROW, this.throwTimer + this.postThrowDelay);
-            checkRoom();
         }
         super.aiStep();
     }
@@ -221,43 +207,6 @@ public class SkeletonBossEntity extends Monster implements RangedAttackMob {
         entity.hasImpulse = true;
     }
 
-    /** 1.12.2 EntityBossBase#onLivingUpdate: everyone left the room, so the boss goes. */
-    private void checkRoom() {
-        final DungeonSpawnerBlockEntity spawner = spawner();
-        final AABB room = spawner == null ? null : spawner.roomBounds();
-        if (room == null || this.deathTime > 0) {
-            return;
-        }
-        final int within = level().getEntitiesOfClass(Player.class, room, player -> !player.isSpectator()).size();
-        if (within == 0 && this.playersWithinLast != 0) {
-            for (Player player : level().getEntitiesOfClass(Player.class, room.inflate(11.0D))) {
-                player.sendSystemMessage(Component.translatable("gui.galacticraftcore.skeleton_boss.message"));
-            }
-            spawner.onBossGone();
-            discard();
-            return;
-        }
-        this.playersWithinLast = within;
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        this.bossEvent.setProgress(getHealth() / getMaxHealth());
-    }
-
-    @Override
-    public void startSeenByPlayer(ServerPlayer player) {
-        super.startSeenByPlayer(player);
-        this.bossEvent.addPlayer(player);
-    }
-
-    @Override
-    public void stopSeenByPlayer(ServerPlayer player) {
-        super.stopSeenByPlayer(player);
-        this.bossEvent.removePlayer(player);
-    }
-
     /** 1.12.2 attackEntityWithRangedAttack. */
     @Override
     public void performRangedAttack(LivingEntity target, float velocity) {
@@ -275,98 +224,18 @@ public class SkeletonBossEntity extends Monster implements RangedAttackMob {
         level().addFreshEntity(arrow);
     }
 
-    /** 1.12.2 EntityBossBase#onDeathUpdate: 200 ticks of explosions and experience, then the reward. */
+    /** 1.12.2: the boss's death cry halfway through dying. */
     @Override
-    protected void tickDeath() {
-        ++this.deathTime;
-        if (this.deathTime >= 180 && this.deathTime <= 200) {
-            final float x = (this.random.nextFloat() - 0.5F) * getBbWidth();
-            final float y = (this.random.nextFloat() - 0.5F) * (getBbHeight() / 2.0F);
-            final float z = (this.random.nextFloat() - 0.5F) * getBbWidth();
-            level().addParticle(ParticleTypes.EXPLOSION_EMITTER, getX() + x, getY() + 2.0D + y, getZ() + z, 0.0D, 0.0D, 0.0D);
-        }
-        if (!(level() instanceof ServerLevel serverLevel)) {
-            return;
-        }
-        if (this.deathTime == 100) {
+    protected void deathSound(int deathTime) {
+        if (deathTime == 100) {
             playSound(GCSounds.BOSS_DEATH.get(), 10.0F, 1.5F);
         }
-        if (this.deathTime >= 180 && this.deathTime % 5 == 0) {
-            playSound(SoundEvents.GENERIC_EXPLODE.value(), 10.0F, 1.0F);
-        }
-        if (this.deathTime > 150 && this.deathTime % 5 == 0) {
-            ExperienceOrb.award(serverLevel, position(), 30);
-        }
-        if (this.deathTime >= DEATH_TICKS) {
-            ExperienceOrb.award(serverLevel, position(), 20);
-            rewardTreasure();
-            final ItemEntity key = new ItemEntity(serverLevel, getX(), getY() + 0.5D, getZ(), new ItemStack(GCItems.TIER_1_DUNGEON_KEY.get()));
-            key.setDeltaMovement(0.0D, -2.0D, 0.0D);
-            key.setDefaultPickUpDelay();
-            serverLevel.addFreshEntity(key);
-            final DungeonSpawnerBlockEntity spawner = spawner();
-            if (spawner != null) {
-                spawner.onBossDefeated();
-            }
-            remove(RemovalReason.KILLED);
-        }
-    }
-
-    /** Fill the dungeon's treasure chest (or the closest Tier 1 chest within 1,000 blocks) with loot and a schematic. */
-    private void rewardTreasure() {
-        TreasureChestBlockEntity chest = null;
-        final DungeonSpawnerBlockEntity spawner = spawner();
-        if (spawner != null && spawner.chestPos() != null && level().getBlockEntity(spawner.chestPos()) instanceof TreasureChestBlockEntity found) {
-            chest = found;
-        }
-        if (chest == null) {
-            chest = closestChest();
-        }
-        if (chest != null) {
-            chest.refill(guaranteedLoot(this.random), this.random.nextLong());
-        }
-    }
-
-    @Nullable
-    private TreasureChestBlockEntity closestChest() {
-        TreasureChestBlockEntity best = null;
-        double bestDistance = 100.0D * 100.0D;
-        final BlockPos centre = blockPosition();
-        for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-32, -8, -32), centre.offset(32, 8, 32))) {
-            if (level().getBlockEntity(pos) instanceof TreasureChestBlockEntity found) {
-                final double distance = pos.distSqr(centre);
-                if (distance < bestDistance) {
-                    best = found;
-                    bestDistance = distance;
-                }
-            }
-        }
-        return best;
     }
 
     /** 1.12.2 getGuaranteedLoot: one of GalacticraftRegistry#getDungeonLoot(1), the Moon Buggy or Tier 2 Rocket schematic. */
     public static ItemStack guaranteedLoot(net.minecraft.util.RandomSource random) {
         final List<ItemStack> loot = List.of(new ItemStack(GCItems.BUGGY_SCHEMATIC.get()), new ItemStack(GCItems.TIER_2_ROCKET_SCHEMATIC.get()));
         return loot.get(random.nextInt(loot.size())).copy();
-    }
-
-    @Override
-    public boolean causeFallDamage(float distance, float multiplier, DamageSource source) {
-        return false;
-    }
-
-    @Override
-    public void knockback(double strength, double x, double z) {
-    }
-
-    @Override
-    public boolean isPushable() {
-        return false;
-    }
-
-    @Override
-    public boolean removeWhenFarAway(double distance) {
-        return false;
     }
 
     @Override
@@ -383,22 +252,5 @@ public class SkeletonBossEntity extends Monster implements RangedAttackMob {
     @Override
     protected SoundEvent getAmbientSound() {
         return SoundEvents.SKELETON_AMBIENT;
-    }
-
-    @Override
-    public void addAdditionalSaveData(CompoundTag tag) {
-        super.addAdditionalSaveData(tag);
-        if (this.spawnerPos != null) {
-            tag.put("SpawnerPos", NbtUtils.writeBlockPos(this.spawnerPos));
-        }
-    }
-
-    @Override
-    public void readAdditionalSaveData(CompoundTag tag) {
-        super.readAdditionalSaveData(tag);
-        this.spawnerPos = tag.contains("SpawnerPos") ? NbtUtils.readBlockPos(tag, "SpawnerPos").orElse(null) : null;
-        if (hasCustomName()) {
-            this.bossEvent.setName(getDisplayName());
-        }
     }
 }

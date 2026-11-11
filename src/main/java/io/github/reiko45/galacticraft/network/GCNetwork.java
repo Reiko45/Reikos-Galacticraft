@@ -234,6 +234,31 @@ public final class GCNetwork {
         }
     }
 
+    /** Client: a Slimeling panel button or name edit (1.12.2 S_UPDATE_SLIMELING_DATA: SlimelingEntity.ACTION_*). */
+    public record SlimelingAction(int entity, int action, String text) implements CustomPacketPayload {
+        public static final Type<SlimelingAction> TYPE = new Type<>(GalacticraftCore.id("slimeling_action"));
+        public static final StreamCodec<ByteBuf, SlimelingAction> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, SlimelingAction::entity, ByteBufCodecs.VAR_INT, SlimelingAction::action,
+                ByteBufCodecs.stringUtf8(io.github.reiko45.galacticraft.entity.SlimelingEntity.MAX_NAME_LENGTH * 4), SlimelingAction::text, SlimelingAction::new);
+
+        @Override
+        public Type<SlimelingAction> type() {
+            return TYPE;
+        }
+    }
+
+    /** Server: open a Slimeling's panel or feeding screen (1.12.2 MarsModuleClient#openSlimelingGui). */
+    public record OpenSlimelingScreen(int entity, int screen) implements CustomPacketPayload {
+        public static final Type<OpenSlimelingScreen> TYPE = new Type<>(GalacticraftCore.id("open_slimeling_screen"));
+        public static final StreamCodec<ByteBuf, OpenSlimelingScreen> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, OpenSlimelingScreen::entity, ByteBufCodecs.VAR_INT, OpenSlimelingScreen::screen, OpenSlimelingScreen::new);
+
+        @Override
+        public Type<OpenSlimelingScreen> type() {
+            return TYPE;
+        }
+    }
+
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
@@ -286,6 +311,14 @@ public final class GCNetwork {
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.render.FootprintRenderer.add(payload.chunk(), payload.print())));
         registrar.playToClient(FootprintChunk.TYPE, FootprintChunk.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.render.FootprintRenderer.set(payload.chunk(), payload.prints())));
+        registrar.playToServer(SlimelingAction.TYPE, SlimelingAction.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player
+                    && player.level().getEntity(payload.entity()) instanceof io.github.reiko45.galacticraft.entity.SlimelingEntity slimeling) {
+                slimeling.handleAction(player, payload.action(), payload.text());
+            }
+        }));
+        registrar.playToClient(OpenSlimelingScreen.TYPE, OpenSlimelingScreen.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.openSlimeling(payload)));
         registrar.playToClient(GearSync.TYPE, GearSync.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.gearSync(payload)));
     }

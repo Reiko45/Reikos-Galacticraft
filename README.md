@@ -4,10 +4,11 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7a of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 7b of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
-Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine. From a rocket
+Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
+Slimeling and take on the three-headed Creeper Boss in the Mars dungeons. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
 back and you come down by parachute, with your cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
@@ -30,6 +31,17 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
   Mars regolith, stone, cobblestone and dungeon bricks; copper, tin, iron and desh ores; ice pockets. Gravity is about
   27% of Earth's, there is no air, and the butterscotch sky only dims at night. Desh makes the best tools (they mine
   anything) and armour, and the Heavy-Duty Plate for the Tier 2 Rocket.
+* **Mars mobs and dungeons**: each 704x704 area of Mars has a dungeon under a crater, its rooms of Mars dungeon brick
+  leading to a great hall lined with Creeper Eggs, where the Creeper Boss waits. It lobs TNT at you and nothing hurts
+  it but its own TNT, punched or shot back; it loses a head at two thirds and at one third of its health. Beat it to
+  fill the Tier 2 Treasure Chest (with a Tier 3 Rocket or Cargo Rocket schematic for later) and get the Tier 2 Dungeon
+  Key. Creeper Eggs hatch baby Evolved Creepers when blown up, and only a Sticky Desh Pickaxe collects them. Wading into
+  Bacterial Sludge stirs up quick little Sludgelings.
+* **Slimelings**: red, blue and yellow Slimeling Eggs lie on the Martian surface. Crack one with your hand (or use it)
+  and a tame Slimeling hatches for you; wild ones can be tamed with slime balls. Use yours to open its panel (rename it,
+  make it sit or follow), feed it its favourite food to grow, breed, strengthen or heal it, and give it a Slimeling
+  Inventory Bag to carry 27 stacks for you. It grows to twice its hatching size, and bred Slimelings mix their parents'
+  colours. A Desh Pickaxe with Silk Touch used on an egg comes away as a Sticky Desh Pickaxe.
 * **Tier 2 Rocket**: unlock its NASA Workbench page with the schematic from a Moon dungeon, then build it from a nose
   cone, ten heavy-duty plates, two boosters, four fins and an engine (plus chests for cargo). It holds 1,500 mB, climbs
   twice as fast as the Tier 1, and can reach Mars. You land on Mars in Landing Balloons, which drop from y 900 and
