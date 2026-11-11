@@ -2,6 +2,7 @@ package io.github.reiko45.galacticraft.network;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
+import io.github.reiko45.galacticraft.footprint.Footprint;
 import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
 import io.github.reiko45.galacticraft.menu.CargoMenu;
 import io.github.reiko45.galacticraft.menu.ExtendedInventoryMenu;
@@ -142,6 +143,31 @@ public final class GCNetwork {
         }
     }
 
+    /** A new footprint in a chunk the player can see. */
+    public record FootprintAdded(long chunk, Footprint print) implements CustomPacketPayload {
+        public static final Type<FootprintAdded> TYPE = new Type<>(GalacticraftCore.id("footprint_added"));
+        public static final StreamCodec<ByteBuf, FootprintAdded> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_LONG, FootprintAdded::chunk, Footprint.STREAM_CODEC, FootprintAdded::print, FootprintAdded::new);
+
+        @Override
+        public Type<FootprintAdded> type() {
+            return TYPE;
+        }
+    }
+
+    /** All footprints of a chunk the player starts to see (1.12.2 C_UPDATE_FOOTPRINT_LIST). */
+    public record FootprintChunk(long chunk, java.util.List<Footprint> prints) implements CustomPacketPayload {
+        public static final Type<FootprintChunk> TYPE = new Type<>(GalacticraftCore.id("footprint_chunk"));
+        public static final StreamCodec<ByteBuf, FootprintChunk> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_LONG, FootprintChunk::chunk, Footprint.STREAM_CODEC.apply(ByteBufCodecs.list()), FootprintChunk::prints,
+                FootprintChunk::new);
+
+        @Override
+        public Type<FootprintChunk> type() {
+            return TYPE;
+        }
+    }
+
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
@@ -171,6 +197,10 @@ public final class GCNetwork {
         }));
         registrar.playToClient(OxygenState.TYPE, OxygenState.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.oxygenState(payload)));
+        registrar.playToClient(FootprintAdded.TYPE, FootprintAdded.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.render.FootprintRenderer.add(payload.chunk(), payload.print())));
+        registrar.playToClient(FootprintChunk.TYPE, FootprintChunk.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.render.FootprintRenderer.set(payload.chunk(), payload.prints())));
         registrar.playToClient(GearSync.TYPE, GearSync.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.gearSync(payload)));
     }

@@ -4,6 +4,8 @@ import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
 import io.github.reiko45.galacticraft.travel.SpaceTravel;
+import io.github.reiko45.galacticraft.world.MeteorShowers;
+import io.github.reiko45.galacticraft.footprint.Footprints;
 import io.github.reiko45.galacticraft.item.gear.GearSlot;
 import io.github.reiko45.galacticraft.item.gear.OxygenTankItem;
 import io.github.reiko45.galacticraft.network.GCNetwork;
@@ -54,6 +56,8 @@ public final class GCPlayerHandler {
         }
         swapTorches(player);
         SpaceTravel.tick(player, data);
+        MeteorShowers.tick(player);
+        Footprints.updateFeet(player, data);
         checkOxygen(player, data, needsOxygen(player, data));
         sendState(player, data);
         if (data.takeGearChanged()) {

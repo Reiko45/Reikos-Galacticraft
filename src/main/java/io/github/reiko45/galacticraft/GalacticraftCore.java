@@ -54,6 +54,7 @@ public final class GalacticraftCore {
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
         container.registerConfig(ModConfig.Type.CLIENT, GCConfig.CLIENT_SPEC);
+        container.registerConfig(ModConfig.Type.SERVER, GCConfig.SERVER_SPEC);
     }
 
     public static ResourceLocation id(String path) {

@@ -1,8 +1,13 @@
 package io.github.reiko45.galacticraft.client;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.client.render.FootprintRenderer;
+import io.github.reiko45.galacticraft.client.render.MoonSkyRenderer;
 import io.github.reiko45.galacticraft.client.render.RocketItemRenderer;
+import io.github.reiko45.galacticraft.block.FallenMeteorBlock;
 import io.github.reiko45.galacticraft.client.render.entity.LanderRenderer;
+import io.github.reiko45.galacticraft.client.render.entity.MeteorRenderer;
+import net.neoforged.neoforge.client.event.RegisterColorHandlersEvent;
 import io.github.reiko45.galacticraft.client.render.entity.ParachestRenderer;
 import io.github.reiko45.galacticraft.client.render.entity.Tier1RocketRenderer;
 import io.github.reiko45.galacticraft.client.screen.CargoScreen;
@@ -75,7 +80,10 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::registerGuiLayers);
         modBus.addListener(GalacticraftClient::addPlayerLayers);
         modBus.addListener(VehicleControls::registerKeys);
+        modBus.addListener(GalacticraftClient::registerBlockColors);
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
+        NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
+        NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
         ScreenshotTour.registerIfEnabled();
@@ -88,6 +96,7 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(GearLayer.PARACHUTE, GearLayer::createParachute);
         event.registerLayerDefinition(Tier1RocketRenderer.LAYER, Tier1RocketRenderer::createLayer);
         event.registerLayerDefinition(LanderRenderer.LAYER, LanderRenderer::createLayer);
+        event.registerLayerDefinition(MeteorRenderer.LAYER, MeteorRenderer::createLayer);
         event.registerLayerDefinition(ParachestRenderer.CHEST, ParachestRenderer::createChest);
         event.registerLayerDefinition(ParachestRenderer.CHUTE, ParachestRenderer::createChute);
     }
@@ -101,6 +110,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
         event.registerEntityRenderer(GCEntities.PARACHEST.get(), ParachestRenderer::new);
+        event.registerEntityRenderer(GCEntities.METEOR.get(), MeteorRenderer::new);
     }
 
     private static void addPlayerLayers(EntityRenderersEvent.AddLayers event) {
@@ -109,6 +119,11 @@ public final class GalacticraftClient {
                 renderer.addLayer(new GearLayer(renderer, event.getEntityModels()));
             }
         }
+    }
+
+    /** 1.12.2 ClientProxyCore block colours: the Fallen Meteor glows orange while hot. */
+    private static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
+        event.register((state, level, pos, tintIndex) -> FallenMeteorBlock.tint(level, pos), GCBlocks.FALLEN_METEOR.get());
     }
 
     private static void registerGuiLayers(RegisterGuiLayersEvent event) {
@@ -214,13 +229,24 @@ public final class GalacticraftClient {
         event.register(GCDimensions.MOON_EFFECTS, new MoonEffects());
     }
 
-    /**
-     * Airless sky: no clouds, black fog. The 1.12.2 SkyProviderMoon (Earth in the sky, always-visible stars)
-     * is a later porting phase; until then the vanilla sun/moon/stars render over a black sky colour.
-     */
+    /** Airless sky: no clouds, black fog, no sunrise glow, and the 1.12.2 Moon sky (stars by day, Earth overhead). */
     static final class MoonEffects extends DimensionSpecialEffects {
+        private final MoonSkyRenderer sky = new MoonSkyRenderer();
+
         MoonEffects() {
             super(Float.NaN, true, SkyType.NORMAL, false, false);
+        }
+
+        @Override
+        public boolean renderSky(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, org.joml.Matrix4f modelViewMatrix,
+                                 net.minecraft.client.Camera camera, org.joml.Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+            return this.sky.render(level, partialTick, modelViewMatrix, camera, projectionMatrix, setupFog);
+        }
+
+        @Override
+        public boolean renderClouds(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack,
+                                    double camX, double camY, double camZ, org.joml.Matrix4f modelViewMatrix, org.joml.Matrix4f projectionMatrix) {
+            return true;
         }
 
         @Override

@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 4 of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 5a of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Fly back and you come down by parachute, with your
 cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
@@ -13,9 +13,11 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
 
 * **Overworld**: tin, aluminum and silicon ores (1.12.2 vein sizes and heights), metal storage blocks, tin
   decoration blocks with stairs/slabs/walls, Glowstone Torch.
-* **Moon dimension** (`galacticraftcore:moon`): terrain and craters ported from the 1.12.2 generator; moon turf,
-  dirt and rock; copper, tin, cheese and sapphire ores; dungeon bricks. Gravity is 0.018 (≈ 22% of Earth) and
-  fall distance is ×0.18, the same as 1.12.2.
+* **Moon dimension** (`galacticraftcore:moon`): terrain, craters and caves ported from the 1.12.2 generator; moon
+  turf, dirt and rock; copper, tin, cheese and sapphire ores; dungeon bricks. Gravity is 0.018 (≈ 22% of Earth),
+  fall distance is ×0.18, and dropped items and arrows float too, the same as 1.12.2. The black sky shows stars even
+  at noon and the Earth hanging overhead. You leave footprints in the moon turf, and meteor showers rain down hot
+  Fallen Meteors (they burn you while they glow, then cool down to be mined for meteoric iron).
 * **Items**: ingots, compressed plates, wafers, rocket/oxygen/buggy parts, canisters, Heavy Duty tools and armor.
   Food includes cheese, the cheeseburger, and canned food that gives back its tin canister.
 * **Power** (gJ, with FE compatibility at 1 FE = 1.6 gJ): Coal Generator, Basic and Advanced Solar Panels, Energy
@@ -78,6 +80,14 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
 | Lift-off | Choosing a destination |
 |---|---|
 | ![A Tier 1 Rocket lifting off](docs/screenshots/rocket_launch.png) | ![The destination screen with the Moon selected](docs/screenshots/celestial_selection.png) |
+
+![The Moon sky at noon and at midnight](docs/screenshots/moon_sky.png)
+
+![A meteor coming down, and its crater with the hot Fallen Meteor; a cooled one beside](docs/screenshots/moon_meteors.png)
+
+| Footprints | A Moon cave |
+|---|---|
+| ![Footprints across a crater](docs/screenshots/moon_footprints.png) | ![A cave under the Moon's surface](docs/screenshots/moon_cave.png) |
 
 | Landing on the Moon | Back on Earth |
 |---|---|

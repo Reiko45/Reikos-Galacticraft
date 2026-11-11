@@ -41,7 +41,7 @@ import net.minecraft.world.level.levelgen.blending.Blender;
  * <ul>
  *     <li>noise generators are seeded from the world seed through {@link RandomState}, and are immutable
  *     so chunks can generate in parallel;</li>
- *     <li>caves, moon villages and the boss dungeon are not generated yet (later porting phases);</li>
+ *     <li>moon villages and the boss dungeon are not generated yet (later porting phases);</li>
  *     <li>ores are not hard-coded here but come from the biome's placed features (see datagen).</li>
  * </ul>
  */
@@ -264,10 +264,13 @@ public final class MoonChunkGenerator extends ChunkGenerator {
         return new NoiseColumn(minY, states);
     }
 
+    /** 1.12.2 ChunkProviderMoon ran MapGenCavesMoon right after the terrain, before ores were placed. */
     @Override
     public void applyCarvers(WorldGenRegion level, long seed, RandomState random, BiomeManager biomeManager,
                              StructureManager structureManager, ChunkAccess chunk, GenerationStep.Carving step) {
-        // TODO(phase 2): port MapGenCavesMoon.
+        if (step == GenerationStep.Carving.AIR) {
+            new MoonCaves(state -> state == this.topBlock || state == this.fillerBlock || state == this.stoneBlock).generate(seed, chunk);
+        }
     }
 
     @Override

@@ -295,6 +295,7 @@ public final class ScreenshotTour {
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_oxygen_warning"));
         this.extras.add((minecraft, srv) -> srv.execute(() -> srv.getPlayerList().getPlayers().get(0).setGameMode(GameType.CREATIVE)));
+        moonSteps();
         rocketSteps();
         // JEI recipe categories, when JEI is installed.
         if (ModList.get().isLoaded("jei")) {
@@ -360,6 +361,119 @@ public final class ScreenshotTour {
         lander.setOnGround(true);
         lander.setYRot(200.0F);
         level.addFreshEntity(lander);
+    }
+
+    private static int surface(ServerLevel level, int x, int z) {
+        return level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, x, z);
+    }
+
+    /**
+     * On the Moon: a footprint trail walked by the real stepping code, a hot and a cold Fallen Meteor, a meteor coming
+     * down, the sky at noon and at midnight, and a cave.
+     */
+    private void moonSteps() {
+        // Footprints: walk east across the turf
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            if (moon == null) {
+                return;
+            }
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = false;
+            final GCPlayerData data = GCPlayerData.get(p);
+            final double z = 9.5D;
+            double x = 8.5D;
+            p.teleportTo(moon, x, surface(moon, (int) x, (int) z), z, -90.0F, 0.0F);
+            data.lastFootX = p.getX();
+            data.lastFootZ = p.getZ();
+            for (int i = 0; i < 45; i++) {
+                x += 0.3D;
+                p.teleportTo(moon, x, surface(moon, (int) Math.floor(x), (int) z), z + Math.sin(i / 6.0D) * 0.6D, -90.0F, 0.0F);
+                io.github.reiko45.galacticraft.footprint.Footprints.step(p, data);
+            }
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            p.teleportTo(moon, 6.5D, surface(moon, 6, 12) + 2.5D, 12.5D, -125.0F, 38.0F);
+            // Items fall slowly here (logged as a check of the gravity mixin)
+            final net.minecraft.world.entity.item.ItemEntity item = new net.minecraft.world.entity.item.ItemEntity(moon, 0, 100, 0, new ItemStack(Items.STONE));
+            GalacticraftCore.LOGGER.info("Screenshot tour: item gravity on the Moon {}, arrow gravity {}", item.getGravity(),
+                    new net.minecraft.world.entity.projectile.Arrow(net.minecraft.world.entity.EntityType.ARROW, moon).getGravity());
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_footprints"));
+        // Fallen meteors: one hot from the sky, one placed by hand (cold); and a meteor on its way down
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            if (moon == null) {
+                return;
+            }
+            final BlockPos hot = new BlockPos(14, surface(moon, 14, -12), -12);
+            final BlockPos cold = new BlockPos(16, surface(moon, 16, -12), -12);
+            moon.setBlockAndUpdate(hot, GCBlocks.FALLEN_METEOR.get().defaultBlockState());
+            moon.setBlockAndUpdate(cold, GCBlocks.FALLEN_METEOR.get().defaultBlockState());
+            GCBlocks.FALLEN_METEOR.get().setPlacedBy(moon, cold, moon.getBlockState(cold), p, new ItemStack(GCBlocks.FALLEN_METEOR.get()));
+            p.teleportTo(moon, 15.0D, hot.getY() + 2.0D, -8.5D, 180.0F, 20.0F);
+            // 30 ticks from now it has fallen 18 blocks to about eye level, 9 blocks ahead
+            moon.addFreshEntity(io.github.reiko45.galacticraft.entity.MeteorEntity.create(moon, 12.5D, hot.getY() + 2.0D + 18.0D, -17.5D,
+                    0.0D, 0.0D, 0.0D, 6));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_meteors"));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_meteor_crater"));
+        // The sky: Earth overhead to the south, the sun, and stars even at noon
+        final long[] times = {6000L, 18000L};
+        final String[] names = {"moon_sky_noon", "moon_sky_midnight"};
+        for (int i = 0; i < times.length; i++) {
+            final long time = times[i];
+            final String name = names[i];
+            this.extras.add((minecraft, srv) -> srv.execute(() -> {
+                final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+                if (moon != null) {
+                    srv.overworld().setDayTime(time); // other worlds share the Overworld's clock
+                    final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+                    p.teleportTo(moon, 2.5D, surface(moon, 2, 20) + 2.0D, 20.5D, 10.0F, -55.0F);
+                }
+            }));
+            this.extras.add((minecraft, srv) -> shoot(minecraft, name));
+        }
+        // A cave, lit by night vision
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            final ServerPlayer p = srv.getPlayerList().getPlayers().get(0);
+            if (moon == null) {
+                return;
+            }
+            srv.overworld().setDayTime(6000L);
+            final BlockPos cave = findCave(moon);
+            if (cave == null) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Moon cave found near spawn");
+                return;
+            }
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 200, 0, false, false));
+            p.teleportTo(moon, cave.getX() + 0.5D, cave.getY(), cave.getZ() + 0.5D, 45.0F, 10.0F);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_cave"));
+    }
+
+    /** The cave space closest to the Moon's spawn with room to stand: air with rock below and air above, under the surface. */
+    @org.jetbrains.annotations.Nullable
+    private static BlockPos findCave(ServerLevel moon) {
+        BlockPos best = null;
+        for (int x = -48; x <= 48; x++) {
+            for (int z = -48; z <= 48; z++) {
+                final int top = surface(moon, x, z) - 6;
+                for (int y = 8; y < top; y++) {
+                    final BlockPos pos = new BlockPos(x, y, z);
+                    if (moon.getBlockState(pos).isAir() && moon.getBlockState(pos.above()).isAir() && moon.getBlockState(pos.above(2)).isAir()
+                            && !moon.getBlockState(pos.below()).isAir() && (best == null || x * x + z * z < best.getX() * best.getX() + best.getZ() * best.getZ())) {
+                        best = pos;
+                    }
+                }
+            }
+        }
+        return best;
     }
 
     /** The scene's rocket (looked up again: its chunk may have been unloaded while the tour was on the Moon). */

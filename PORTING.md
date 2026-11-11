@@ -39,9 +39,11 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `EnumHelper.addToolMaterial/ArmorMaterial` | `SimpleTier`; `ArmorMaterial` registry entry | done |
 | `IWorldGenerator` ore generation | Configured/placed features + NeoForge biome modifier | done |
 | `WorldProvider` + `ChunkProvider` + numeric dimension IDs | Datapack `dimension_type` + `dimension`; custom `ChunkGenerator` with a `MapCodec` | Moon done |
-| Gravity via ASM (`TransformerHooks.getGravityForEntity`) | `generic.gravity` attribute modifier (vanilla since 1.20.5) | done (living entities) |
+| Gravity via ASM (`TransformerHooks.getGravityForEntity`, `getItemGravity`, `getArrowGravity`) | `generic.gravity` attribute modifier (vanilla since 1.20.5) for living entities; two Mixins on `ItemEntity`/`AbstractArrow#getDefaultGravity` | done |
 | `LivingFallEvent` distance scaling | Same event in NeoForge | done |
-| `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` (+ `renderSky` override) | Moon: black sky only; Earth/stars renderer pending |
+| `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` + NeoForge `renderSky`/`renderClouds` overrides (`MoonSkyRenderer`) | Moon done |
+| `MapGenBaseMeta` / `MapGenCavesMoon` | `ChunkGenerator#applyCarvers` (AIR step) running the 1.12.2 worm carver (`MoonCaves`) | done |
+| `TileEntityAdvanced` networked fields (`@NetworkedField`) | Block entity update tag + `ClientboundBlockEntityDataPacket`, sent when needed | Fallen Meteor heat done |
 | `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` (`MachineBlockEntity`) | done |
 | `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` (`MachineMenu`/`MachineScreen`, 1.12.2 GUI sheets reused) | done |
 | `ISidedInventory` | `IItemHandler` capability per side (`SidedItemHandler`, rules evaluated per insert) | done |
@@ -75,11 +77,11 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 
 | Hook (1.12.2) | Plan in 1.21.1 |
 |---|---|
-| `EntityLivingBase.travel` gravity, `EntityItem`/`EntityArrow` gravity | `generic.gravity` attribute (living, done). Items and projectiles need a small mixin on `getDefaultGravity` (pending) |
+| `EntityLivingBase.travel` gravity, `EntityItem`/`EntityArrow` gravity | `generic.gravity` attribute (living) and Mixins on `getDefaultGravity` (`galacticraftcore.mixins.json`) — done |
 | Replace `EntityPlayerMP`/`EntityPlayerSP` with GC subclasses | Not needed: player state lives in data attachments, logic in tick events |
 | Fog/sky colour, lightmap, rain strength hooks | `DimensionSpecialEffects`, `ViewportEvent.ComputeFogColor`, biome effects |
 | `ModelBiped` rotation (oxygen gear on player) | `RenderLivingEvent` / render layers for worn gear |
-| Footprints on the Moon (`ParticleManager`) | Client tick + custom particle or decal renderer |
+| Footprints on the Moon (`ParticleManager` / `EntityRenderer` hook) | Server-side tracker + payloads, decals drawn in `RenderLevelStageEvent` (`FootprintRenderer`) — done |
 | Camera orientation in rockets | `ViewportEvent.ComputeCameraAngles` |
 | `Chunk.populate` (block other mods' worldgen on GC planets) | Biome tags / biome modifiers (other mods target `#c:is_overworld` etc.) |
 | `World.getRainStrength` | Biome `has_precipitation: false` |
@@ -163,9 +165,19 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [ ] Deferred: Moon Buggy + Buggy Fueling Pad + buggy schematic (moon dungeon loot, Phase 5), the schematic page
       system (only the Tier 1 page exists), the full galaxy map (zoom, catalogue panels, space stations)
 
-### Phase 5 – Finish the Moon
-- [ ] Caves (`MapGenCavesMoon`), moon villages, dungeon + Skeleton Boss + Tier 1 treasure chest
-- [ ] Evolved mobs and their spawns, meteor showers + hot Fallen Meteor block entity, sky renderer with Earth, footprints
+### Phase 5a – The Moon as a place ✅
+- [x] Moon caves (1.12.2 MapGenCavesMoon worm carver, through moon blocks only)
+- [x] Moon sky (1.12.2 SkyProviderMoon): stars by day and night, the orbital sun, Earth fixed overhead, no clouds
+- [x] Footprints on moon turf: alternate feet every 0.35 blocks, fade over 3,200 ticks, gone when the turf is dug up
+- [x] Meteor showers (1 in 3,750 per tick per player for a small one, a third of that for a large one), meteor
+      entity and model, impact explosion, hot Fallen Meteor block entity (cools over 5,000 ticks, glows orange, burns
+      and pushes whatever touches it, falls like sand); `meteorSpawnMod` and `meteorBlockDamage` server config
+- [x] Low gravity for dropped items (0.0046) and arrows (0.005) on the Moon
+
+### Phase 5b – Things to fight and find
+- [ ] Evolved mobs and their spawns, moon villages, dungeon + Skeleton Boss + Tier 1 treasure chest
+- [ ] Schematic items, the "unlock schematic" slot and page switching in the NASA Workbench
+- [ ] Moon Buggy (schematic, entity, model, cargo) and Buggy Fueling Pad
 
 ### Phase 6 – Space stations
 - [ ] Station creation/ownership, orbit dimension(s), Spin Thruster, docking, Space Race teams
@@ -185,7 +197,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * Copper ore, copper ingot and copper block are vanilla's. Galacticraft's copper items map to them.
 * Ores drop themselves, as in 1.12.2 (no raw ore items). Deepslate variants don't exist yet, so overworld ores
   only generate in stone (y 0–60).
-* Moon day length is vanilla's. 1.12.2 used an 8× longer day, which data-driven dimension types can't express.
+* Moon day length is vanilla's. 1.12.2 used an 8× longer day, which data-driven dimension types can't express. Like
+  every non-Overworld world, the Moon also shares the Overworld's clock.
 * Added for modern parity: blasting, smoker/campfire and stonecutter recipes, `c:` tags, and the Heavy Duty set
   in the enchantability tags.
 * Both tin stair and slab variants keep their duplicate 1.12.2 English names ("Tin Decoration Stairs").
@@ -229,6 +242,14 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * The Fuel Loader takes power on its left face and fuel on its right; the sneak + wrench side configuration of 1.12.2
   is not ported for it yet. Fuel Loaders take any fluid in the `c:fuel` tag.
 * Buggy Fueling Pads (`landing_pad:1`) are not ported, so their recipe is skipped.
+* Footprints are tracked only on the server and sent to players who can see them (1.12.2 also drew your own prints
+  on your own client). They are still not saved. Prints sit on top of the turf; 1.12.2's server put other players'
+  prints one block lower.
+* The Moon sky leaves out 1.12.2's live picture of the Overworld (`S_REQUEST_OVERWORLD_IMAGE`) and always shows the
+  Earth icon. The "more stars" client option is not ported.
+* Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
+  within the simulation distance rather than the view distance so that they actually move.
+* The Fallen Meteor's mining speed bonus for better pickaxes (1.12.2 divided by 30 instead of 100) is not ported.
 
 ## Workflow for porting more content
 

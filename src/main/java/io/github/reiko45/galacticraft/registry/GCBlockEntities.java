@@ -7,6 +7,7 @@ import io.github.reiko45.galacticraft.block.entity.CompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricCompressorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ElectricFurnaceBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.EnergyStorageBlockEntity;
+import io.github.reiko45.galacticraft.block.entity.FallenMeteorBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.FluidPipeBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.FuelLoaderBlockEntity;
 import io.github.reiko45.galacticraft.block.entity.ParachestBlockEntity;
@@ -98,6 +99,10 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<ParachestBlockEntity>> PARACHEST = BLOCK_ENTITIES.register("parachest",
             () -> BlockEntityType.Builder.of(ParachestBlockEntity::new, GCBlocks.PARACHEST.get()).build(null));
+
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<FallenMeteorBlockEntity>> FALLEN_METEOR = BLOCK_ENTITIES.register("fallen_meteor",
+            () -> BlockEntityType.Builder.of(FallenMeteorBlockEntity::new, GCBlocks.FALLEN_METEOR.get()).build(null));
 
     /** Every machine block entity type (for capability registration). */
     public static List<Supplier<? extends BlockEntityType<? extends MachineBlockEntity>>> machineTypes() {

@@ -7,6 +7,7 @@ import io.github.reiko45.galacticraft.block.ConfigurableMachineBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneTorchBlock;
 import io.github.reiko45.galacticraft.block.GlowstoneWallTorchBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
+import io.github.reiko45.galacticraft.block.FallenMeteorBlock;
 import io.github.reiko45.galacticraft.block.LandingPadBlock;
 import io.github.reiko45.galacticraft.block.NasaWorkbenchBlock;
 import io.github.reiko45.galacticraft.block.ParachestBlock;
@@ -201,8 +202,8 @@ public final class GCBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_YELLOW).strength(0.5F).sound(SoundType.WOOL)
                     .forceSolidOn().pushReaction(PushReaction.DESTROY)));
 
-    /** Hardness 40 like 1.12.2; drops raw meteoric iron. The hot/cooling tile-entity behaviour is a later phase. */
-    public static final DeferredBlock<Block> FALLEN_METEOR = withItem("fallen_meteor", () -> new Block(
+    /** Hardness 40 like 1.12.2; drops raw meteoric iron; lands hot from meteor showers. */
+    public static final DeferredBlock<FallenMeteorBlock> FALLEN_METEOR = withItem("fallen_meteor", () -> new FallenMeteorBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK).instrument(NoteBlockInstrument.BASEDRUM)
                     .requiresCorrectToolForDrops().strength(40.0F, 40.0F).sound(SoundType.STONE).noOcclusion()));
 

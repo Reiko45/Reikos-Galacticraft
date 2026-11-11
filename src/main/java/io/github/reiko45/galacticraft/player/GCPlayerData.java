@@ -59,6 +59,12 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int chestSpawnCooldown;
     public net.minecraft.world.phys.Vec3 chestSpawnPos;
 
+    // --- Footprints (1.12.2 distanceSinceLastStep / lastStep; not saved) ---
+    public double lastFootX;
+    public double lastFootZ;
+    public double distanceSinceLastStep;
+    public int lastStep;
+
     /** Last HUD state sent to the client (not saved). */
     io.github.reiko45.galacticraft.network.GCNetwork.OxygenState lastSentState;
     /** Set when the gear changes, so the server sends the new look to everyone watching this player. */

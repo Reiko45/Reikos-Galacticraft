@@ -2,6 +2,7 @@ package io.github.reiko45.galacticraft.registry;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
+import io.github.reiko45.galacticraft.entity.MeteorEntity;
 import io.github.reiko45.galacticraft.entity.ParachestEntity;
 import io.github.reiko45.galacticraft.entity.Tier1RocketEntity;
 import java.util.function.Supplier;
@@ -23,6 +24,10 @@ public final class GCEntities {
     public static final Supplier<EntityType<ParachestEntity>> PARACHEST = ENTITY_TYPES.register("parachest",
             () -> EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(10).updateInterval(2).build("parachest"));
+
+    public static final Supplier<EntityType<MeteorEntity>> METEOR = ENTITY_TYPES.register("meteor",
+            () -> EntityType.Builder.<MeteorEntity>of(MeteorEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
+                    .clientTrackingRange(16).updateInterval(1).fireImmune().noSave().build("meteor"));
 
     private GCEntities() {
     }
