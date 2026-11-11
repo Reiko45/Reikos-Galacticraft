@@ -116,6 +116,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         simpleBlockWithItem(GCBlocks.FALLEN_METEOR.get(), models().getExistingFile(modLoc("block/fallen_meteor")));
         rockets();
         dungeon();
+        stations();
 
         final ResourceLocation torchTexture = tex("glowstone_torch");
         simpleBlock(GCBlocks.GLOWSTONE_TORCH.get(), models().torch("glowstone_torch", torchTexture).renderType("cutout"));
@@ -157,6 +158,24 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .rotationY(((int) state.getValue(ParachestBlock.FACING).toYRot()) % 360)
                 .build());
         itemModels().withExistingParent("parachest", modLoc("block/parachest"));
+    }
+
+    /** Space Station Arrival Block (a plain cube) and the Spin Thruster (1.12.2 blockstate: rev turns it upside down). */
+    private void stations() {
+        simpleBlock(GCBlocks.SPACE_STATION_BASE.get(), models().cubeBottomTop("space_station_base", tex("space_station_side"),
+                tex("space_station_side"), tex("space_station_top")));
+        final ModelFile thruster = models().getExistingFile(modLoc("block/spin_thruster"));
+        getVariantBuilder(GCBlocks.SPIN_THRUSTER.get()).forAllStates(state -> {
+            final boolean reversed = state.getValue(io.github.reiko45.galacticraft.block.SpinThrusterBlock.REVERSED);
+            final int y = switch (state.getValue(io.github.reiko45.galacticraft.block.SpinThrusterBlock.FACING)) {
+                case NORTH -> reversed ? 0 : 180;
+                case EAST -> reversed ? 90 : 270;
+                case WEST -> reversed ? 270 : 90;
+                default -> reversed ? 180 : 0;
+            };
+            return ConfiguredModel.builder().modelFile(thruster).rotationX(reversed ? 180 : 0).rotationY(y).build();
+        });
+        itemModels().withExistingParent("spin_thruster", modLoc("block/spin_thruster"));
     }
 
     /** One standalone model per part of the 1.12.2 buggy OBJ, drawn by BuggyRenderer (1.12.2 RenderBuggy baked them the same way). */

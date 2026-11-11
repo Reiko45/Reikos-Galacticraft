@@ -4,10 +4,11 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 5b of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 6 of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
-the Skeleton Boss and a treasure chest with the Moon Buggy schematic. Fly back and you come down by parachute, with your
-cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
+the Skeleton Boss and a treasure chest with the Moon Buggy schematic. From a rocket you can build your own space station
+in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly back and you come down by parachute,
+with your cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
 
 ## What works
@@ -54,6 +55,13 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
 * **Travel**: on the Moon you arrive at y 900 in a Space Lander holding your cargo, launch pads and rocket; steer it with
   the movement keys, Jump to brake and Sneak to dive, and land gently or it explodes. Back on Earth you arrive at y 250
   and fall slowly under your parachute, and a Para-chest with the cargo, the rocket and the leftover fuel lands nearby.
+* **Space stations**: on the destination screen, select Earth and build a station for 32 tin, 16 aluminum, an advanced
+  wafer and 24 iron (free in Creative). It circles Earth on the screen; launch there and you step out in its room while
+  your cargo drifts down into its bay in a Para-chest. Earth orbit has the Earth below you, almost no gravity (touch
+  nothing and you drift: Forward pushes you on, Jump and Sneak move you up and down), no air, doubled solar power and a
+  zero-g bonus in the Circuit Fabricator. Rockets launched there need only half the fuel. Fall below y 30 and you land
+  back on Earth. Rename your station on the screen; `/ssinvite`, `/ssuninvite` and `/ssnewowner` control who may come,
+  and `/gchouston` takes you home from anywhere in space. Spin Thrusters fixed to the station make it spin.
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
 * Recipes: 117 crafting recipes converted from 1.12.2, compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
@@ -117,10 +125,19 @@ cargo following in a Para-chest. Galacticraft's power system, machines, solar pa
 |---|---|
 | ![Driving a Moon Buggy](docs/screenshots/moon_buggy_driving.png) | ![Treasure chest, Add New Schematic and Moon Buggy pages](docs/screenshots/schematic_guis.png) |
 
+![Building a space station on the destination screen, and the station circling Earth](docs/screenshots/station_selection.png)
+
+| Inside the starter station | Spin Thrusters on its wall |
+|---|---|
+| ![The station's room with the arrival block; a para-chest drifts into the bay](docs/screenshots/station_inside.png) | ![The station from outside, with two Spin Thrusters](docs/screenshots/station_spinning.png) |
+
+![The Earth below the station's bay](docs/screenshots/orbit_earth_below.png)
+
 ### Visiting the Moon
 
 Fly there in a Tier 1 Rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
-(right-click them, or use the Galacticraft tab of the inventory):
+(right-click them, or use the Galacticraft tab of the inventory). Earth orbit is `galacticraftcore:overworld_orbit`
+(the first space station is at 0, 64, 0):
 
 ```
 /execute in galacticraftcore:moon run tp @s 0 120 0

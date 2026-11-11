@@ -1,0 +1,38 @@
+{
+  "variants": {
+    "facing=east,rev=false": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "y": 270
+    },
+    "facing=east,rev=true": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "x": 180,
+      "y": 90
+    },
+    "facing=north,rev=false": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "y": 180
+    },
+    "facing=north,rev=true": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "x": 180
+    },
+    "facing=south,rev=false": {
+      "model": "galacticraftcore:block/spin_thruster"
+    },
+    "facing=south,rev=true": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "x": 180,
+      "y": 180
+    },
+    "facing=west,rev=false": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "y": 90
+    },
+    "facing=west,rev=true": {
+      "model": "galacticraftcore:block/spin_thruster",
+      "x": 180,
+      "y": 270
+    }
+  }
+}

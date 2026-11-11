@@ -23,8 +23,10 @@ public final class ClientPayloads {
 
     public static void openCelestialSelection(GCNetwork.OpenCelestialSelection payload) {
         final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
-        if (!(minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen)) {
-            minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen(payload.tier()));
+        if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen screen) {
+            screen.update(payload);
+        } else {
+            minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen(payload));
         }
     }
 
@@ -54,6 +56,7 @@ public final class ClientPayloads {
 
     /** Forget everything when leaving a world. */
     public static void reset() {
+        io.github.reiko45.galacticraft.world.station.StationSpin.Client.reset();
         GEAR.clear();
         air1 = 90;
         air2 = 90;

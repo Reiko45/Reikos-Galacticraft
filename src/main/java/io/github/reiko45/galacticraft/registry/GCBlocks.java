@@ -202,6 +202,17 @@ public final class GCBlocks {
     public static final DeferredBlock<ParachestBlock> PARACHEST = withItem("parachest", () -> new ParachestBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).strength(3.0F).sound(SoundType.WOOD).noOcclusion()));
 
+    // --- Space stations (1.12.2 BlockSpaceStationBase) ---
+    /** Unbreakable (hardness -1), no item. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceStationBaseBlock> SPACE_STATION_BASE = BLOCKS.register("space_station_base",
+            () -> new io.github.reiko45.galacticraft.block.SpaceStationBaseBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(-1.0F, 3_600_000.0F).sound(SoundType.METAL).noLootTable().pushReaction(PushReaction.BLOCK)));
+
+    /** 1.12.2: Material.CIRCUITS, hardness 0.1, metal sound. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpinThrusterBlock> SPIN_THRUSTER = withItem("spin_thruster",
+            () -> new io.github.reiko45.galacticraft.block.SpinThrusterBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(0.1F).sound(SoundType.METAL).noOcclusion().pushReaction(PushReaction.DESTROY)));
+
     // --- Moon dungeon (1.12.2 BlockBossSpawner, BlockTier1TreasureChest) ---
     /** Invisible, unbreakable holder of the boss room's spawner block entity. */
     public static final DeferredBlock<BossSpawnerBlock> BOSS_SPAWNER = BLOCKS.register("boss_spawner", () -> new BossSpawnerBlock(

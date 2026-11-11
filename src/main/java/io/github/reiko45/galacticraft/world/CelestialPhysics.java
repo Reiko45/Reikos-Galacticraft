@@ -18,12 +18,39 @@ import org.jetbrains.annotations.Nullable;
  * @param arrowGravity       arrow gravity per tick (1.12.2 {@code getArrowGravity()}, 0.005 on every space world; vanilla 0.05)
  * @param meteorFrequency    1.12.2 {@code getMeteorFrequency()}: 5 on airless worlds, 0 for none; a small meteor falls
  *                           near each player with chance 1 in (750 x frequency) per tick, a large one 1 in 3x that
+ * @param fuelUsage          1.12.2 {@code getFuelUsageMultiplier()}: a climbing rocket burns 1 mB every floor(3 / this)
+ *                           ticks (Moon 0.7, orbit 0.5)
+ * @param exitHeight         1.12.2 {@code IExitHeight#getYCoordinateToTeleport()}: where a rocket reaches space
  */
 public record CelestialPhysics(double gravityReduction, float fallDamageModifier, float solarMultiplier, boolean breathable,
-                               float arrowGravity, double meteorFrequency) {
+                               float arrowGravity, double meteorFrequency, double fuelUsage, double exitHeight) {
+    /** Earth orbit (1.12.2 WorldProviderOverworldOrbit); its solar multiplier is the spaceStationEnergyScalar config. */
+    public static final CelestialPhysics ORBIT = new CelestialPhysics(0.075D, 0.4F, 2.0F, false, 0.005F, 0.0D, 0.5D, 750.0D);
     private static final Map<ResourceKey<Level>, CelestialPhysics> BY_DIMENSION = Map.of(
-            GCDimensions.MOON, new CelestialPhysics(0.062D, 0.18F, 1.4F, false, 0.005F, 5.0D)
+            GCDimensions.MOON, new CelestialPhysics(0.062D, 0.18F, 1.4F, false, 0.005F, 5.0D, 0.7D, 1200.0D),
+            GCDimensions.ORBIT, ORBIT
     );
+
+    /** Where a rocket launched in this world reaches space (1200 outside Galacticraft worlds). */
+    public static double exitHeight(Level level) {
+        final CelestialPhysics physics = of(level.dimension());
+        return physics == null ? 1200.0D : physics.exitHeight();
+    }
+
+    /** Ticks between each mB a climbing rocket burns (3 outside Galacticraft worlds). */
+    public static int fuelInterval(Level level) {
+        final CelestialPhysics physics = of(level.dimension());
+        return physics == null || physics.fuelUsage() <= 0.0D ? 3 : Math.max(1, (int) Math.floor(3.0D / physics.fuelUsage()));
+    }
+
+    /** 1.12.2 WorldProviderOverworldOrbit#isDaytime: in orbit the planet only hides the sun for a sixth of the day. */
+    public static boolean isDaytime(Level level) {
+        if (level.dimension().equals(GCDimensions.ORBIT)) {
+            final float angle = level.getTimeOfDay(1.0F); // celestial angle: 0 at noon, 0.5 at midnight
+            return angle < 0.42F || angle > 0.58F;
+        }
+        return level.isDay();
+    }
 
     /** 1.12.2 TransformerHooks#getItemGravity: max(0.002, 0.04 - gravity / 1.75). */
     public double itemGravity() {

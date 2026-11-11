@@ -1,0 +1,13 @@
+{
+  "type": "galacticraftcore:overworld_orbit",
+  "generator": {
+    "type": "minecraft:flat",
+    "settings": {
+      "biome": "galacticraftcore:space",
+      "features": false,
+      "lakes": false,
+      "layers": [],
+      "structure_overrides": []
+    }
+  }
+}

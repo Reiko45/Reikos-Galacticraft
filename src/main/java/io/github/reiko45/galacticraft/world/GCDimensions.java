@@ -24,6 +24,17 @@ public final class GCDimensions {
     /** Client sky/fog renderer id, see {@code GalacticraftClient}. */
     public static final ResourceLocation MOON_EFFECTS = MOON_ID;
 
+    /**
+     * Earth orbit, where every space station of Earth lives (1.12.2 gave each station its own runtime dimension, which
+     * 1.21 can't create; here station n sits in its own region of one shared dimension, see SpaceStations).
+     */
+    public static final ResourceLocation ORBIT_ID = GalacticraftCore.id("overworld_orbit");
+    public static final ResourceKey<Level> ORBIT = ResourceKey.create(Registries.DIMENSION, ORBIT_ID);
+    public static final ResourceKey<LevelStem> ORBIT_STEM = ResourceKey.create(Registries.LEVEL_STEM, ORBIT_ID);
+    public static final ResourceKey<DimensionType> ORBIT_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, ORBIT_ID);
+    public static final ResourceKey<Biome> ORBIT_BIOME = ResourceKey.create(Registries.BIOME, GalacticraftCore.id("space"));
+    public static final ResourceLocation ORBIT_EFFECTS = ORBIT_ID;
+
     private GCDimensions() {
     }
 }

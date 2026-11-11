@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "galacticraftcore:block/space_station_side",
+    "side": "galacticraftcore:block/space_station_side",
+    "top": "galacticraftcore:block/space_station_top"
+  }
+}

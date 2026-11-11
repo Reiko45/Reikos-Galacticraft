@@ -176,7 +176,7 @@ public class Tier1RocketEntity extends Entity implements Refuelable {
         if (this.shipDamage > 0) {
             this.shipDamage--;
         }
-        if (getY() > EXIT_HEIGHT && phase() != Phase.LANDING) {
+        if (getY() > CelestialPhysics.exitHeight(this.level()) && phase() != Phase.LANDING) {
             reachSpace();
             return;
         }
@@ -203,7 +203,7 @@ public class Tier1RocketEntity extends Entity implements Refuelable {
                 double speed = this.timeSinceLaunch / 150.0D;
                 speed = CelestialPhysics.isAirless(this.level()) ? Math.min(speed * 1.2D, 1.6D) : Math.min(speed, 1.0D);
                 motionY = speed;
-                if (this.timeSinceLaunch % 3 == 0) {
+                if (this.timeSinceLaunch % CelestialPhysics.fuelInterval(this.level()) == 0) {
                     setFuel(fuel() - 1);
                 }
             } else {
@@ -238,7 +238,7 @@ public class Tier1RocketEntity extends Entity implements Refuelable {
         playSound(SoundEvents.ITEM_PICKUP, 0.2F, 2.0F);
     }
 
-    /** Above y 1200: the riders go to the destination screen and the rocket travels with them as cargo. */
+    /** Above y 1200 (750 in orbit): the riders go to the destination screen and the rocket travels with them as cargo. */
     private void reachSpace() {
         for (Entity passenger : getPassengers()) {
             if (passenger instanceof ServerPlayer player) {

@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "tag": "c:plates/steel"
+    },
+    "W": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "X": {
+      "tag": "c:ingots/meteoric_iron"
+    },
+    "Y": {
+      "item": "galacticraftcore:fuel_canister"
+    },
+    "Z": {
+      "item": "galacticraftcore:tier_1_rocket_engine"
+    }
+  },
+  "pattern": [
+    "   ",
+    "YWZ",
+    "PXP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:spin_thruster"
+  }
+}

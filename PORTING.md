@@ -92,7 +92,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * **Space stations need dimensions created at runtime.** NeoForge 1.21.1 has no public API for adding levels
   while the server is running. Options: (a) a fixed pool of pre-declared station dimensions, (b) one shared
   "orbit" dimension where each station is a far-apart region (simplest, keeps saves small), or (c) a
-  dynamic-dimension library. Recommendation: (b).
+  dynamic-dimension library. Done in Phase 6 with (b): station n lives at x = n x 4096 in `galacticraftcore:overworld_orbit`.
 * **Oxygen sealing** (`ThreadFindSeal`) is a threaded flood fill over loaded chunks. Running it on a worker
   thread is not safe against 1.21 chunk access. Port it as an incremental, budgeted flood fill on the server thread.
 * **Rendering**: 53 OBJ models (rockets, buggy, landers, machines). NeoForge's OBJ loader covers static models.
@@ -198,8 +198,27 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 ### Phase 5c – Moon villages
 - [ ] Moon village structure and pieces, Alien Villager with its trades
 
-### Phase 6 – Space stations
-- [ ] Station creation/ownership, orbit dimension(s), Spin Thruster, docking, Space Race teams
+### Phase 6 – Space stations ✅
+- [x] Earth orbit dimension (`galacticraftcore:overworld_orbit`, 1.12.2 WorldProviderOverworldOrbit): empty space, the
+      1.12.2 orbit sky (close stars, the sun and the Moon, the Earth below, smaller the higher you are), gravity 0.005,
+      fall distance x0.4, no meteors, no air; solar panels x2 (`spaceStationEnergyScalar`) and lit for 5/6 of the day;
+      rockets leave at y 750 and burn half as much fuel (the Moon's 0.7 fuel factor is now ported too); anything that
+      drops below y 30 falls back to Earth (players under their parachute, above where they last launched from)
+- [x] Space stations: built from the destination screen (Earth selected, from a rocket) for 32 tin, 16 aluminum,
+      1 advanced wafer and 24 iron; one per player; the 1.12.2 starter station (tin hull, glass, the unbreakable Space
+      Station Arrival Block); stations circle Earth on the screen and LAUNCH flies there (no lander: a para-chest with
+      the cargo drifts down into the station's bay); owners rename them there; `disableSpaceStationCreation` config
+- [x] Ownership and access: `/ssinvite <player>|+all|-all`, `/ssuninvite <player>`, `/ssnewowner <station#> <player>`
+      (operators), and `/gchouston` to abandon a mission and go home (typed twice)
+- [x] Zero-g freefall (1.12.2 FreefallHandler): a player touching nothing keeps drifting, Forward thrusts gently,
+      Jump/Sneak move up and down, 0.7 blocks/tick at most; floating items and mobs keep their momentum; servers don't
+      kick floating players for flying
+- [x] Spin Thruster (1.12.2 BlockSpinThruster + SpinManager): fixed to the station, reversed with the wrench, off with
+      redstone; the station's shape, centre of mass and moment of inertia come from a flood fill from its arrival
+      block; unbalanced thrusters spin it up (balanced ones stop it); the sky turns and anything floating is carried
+      round the centre, with the 1.12.2 centrifugal push against the walls
+- [x] Circuit Fabricator zero-g bonus in orbit (5 basic wafers, 15 solar wafers, other wafers doubled)
+- [ ] Deferred to Phase 6b: Space Race teams (team GUI, the flag designer, invites, shared stats)
 
 ### Phase 7 – Planets
 - [ ] Mars (desh, Tier 2 and cargo rockets, slimelings, Creeper Boss, gas liquefier/methane synthesizer/electrolyzer, launch controller)
@@ -226,7 +245,6 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 * Coal Generator heat now survives a world reload (1.12.2 saved and loaded it under different NBT keys).
 * Compressor recipes for steel/bronze ingots load only when some mod puts items in `c:ingots/steel` or
   `c:ingots/bronze` (the 1.12.2 OreDictionary check). Hard/quick/adventure mode recipe variants are not ported.
-* The Circuit Fabricator's bonus output in zero-gravity dimensions waits for space stations.
 * Fluid Pipe and Pull Fluid Pipe are one block with a `pull` state that the wrench toggles; there is no separate
   pull pipe item. Pipes only take fluid in; they can't be drained by other blocks, as in 1.12.2.
 * The amount of liquid drawn inside a pipe is synced in 5% steps, and only when it changes.
@@ -273,6 +291,17 @@ translation won't work: almost every vanilla and Forge API it touched changed be
   nearest Tier 1 chest within 1,000 blocks; that search is kept, within 32 blocks, as a fallback). The boss respawns
   15 minutes after a kill when a player enters again. Its rare bow drop is a plain bow (1.12.2 enchanted it when the
   kill used Looting).
+* All of Earth's space stations share one orbit dimension: station n is at x = n x 4096 (2,048 blocks of room each way)
+  instead of in its own dimension at 0, 64, 0. Station data lives in one `galacticraftcore_space_stations` file.
+  Stations are only built around Earth so far (1.12.2 had one station type per planet).
+* The Space Station Arrival Block is a single block (1.12.2 stacked two invisible blocks on top of it); arriving players
+  stand beside it on the room floor.
+* The spin maths (mass centre, moment of inertia) is done relative to the arrival block in doubles: 1.12.2's float
+  sums of absolute coordinates fail at the distances stations sit at here. In freefall, the reach towards the wall a
+  player faces now points the way they look (1.12.2's east/west reach pointed backwards).
+* Zero-g "jetpack" boosting (1.12.2 turned a jump while drifting into a push along the look direction) is not ported.
+* `/gchouston` asks for confirmation for 250 ticks after the first use, like 1.12.2, and clears the rocket cargo kept
+  in transit.
 * Dungeons need "Generate Structures" like any structure; `/place structure galacticraftcore:moon_dungeon` places one.
   Without terrain adaptation the dungeon digs its own crater, as in 1.12.2.
 * Footprints are tracked only on the server and sent to players who can see them (1.12.2 also drew your own prints

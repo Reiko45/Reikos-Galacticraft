@@ -79,7 +79,26 @@ public class CircuitFabricatorBlockEntity extends ProcessingMachineBlockEntity {
         }
         final CircuitFabricatorRecipe.Input input = input();
         return this.level.getRecipeManager().getRecipeFor(GCRecipes.CIRCUIT_FABRICATING.get(), input, this.level)
-                .map(holder -> holder.value().assemble(input, this.level.registryAccess()));
+                .map(holder -> zeroGravityBonus(this.level, holder.value().assemble(input, this.level.registryAccess())));
+    }
+
+    /**
+     * 1.12.2 TileEntityCircuitFabricator#smeltItem in a zero-g world (Earth orbit): basic wafers come out 5 at a time,
+     * solar wafers 15, and the other wafers and the frequency module double.
+     */
+    public static ItemStack zeroGravityBonus(Level level, ItemStack result) {
+        if (!level.dimension().equals(io.github.reiko45.galacticraft.world.GCDimensions.ORBIT)) {
+            return result;
+        }
+        if (result.is(io.github.reiko45.galacticraft.registry.GCItems.BASIC_WAFER.get())) {
+            result.setCount(5);
+        } else if (result.is(io.github.reiko45.galacticraft.registry.GCItems.SOLAR_WAFER.get())) {
+            result.setCount(15);
+        } else if (result.is(io.github.reiko45.galacticraft.registry.GCItems.ADVANCED_WAFER.get())
+                || result.is(io.github.reiko45.galacticraft.registry.GCItems.FREQUENCY_MODULE.get())) {
+            result.setCount(result.getCount() * 2);
+        }
+        return result;
     }
 
     @Override

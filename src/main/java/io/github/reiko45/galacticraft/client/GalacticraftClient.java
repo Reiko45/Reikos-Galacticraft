@@ -84,6 +84,7 @@ public final class GalacticraftClient {
         modBus.addListener(VehicleControls::registerKeys);
         modBus.addListener(GalacticraftClient::registerBlockColors);
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
+        NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
@@ -261,8 +262,59 @@ public final class GalacticraftClient {
         event.register(GCMenus.SCHEMATIC_INPUT.get(), io.github.reiko45.galacticraft.client.screen.SchematicInputScreen::new);
     }
 
+    /** In orbit: turn the sky with the station's spin, and carry a floating player round with it. */
+    private static void orbitTick(net.neoforged.neoforge.client.event.ClientTickEvent.Post event) {
+        final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (minecraft.player == null || minecraft.isPaused()
+                || !io.github.reiko45.galacticraft.world.station.StationSpin.Client.inOrbit(minecraft.player.level())) {
+            io.github.reiko45.galacticraft.client.render.OrbitSkyRenderer.spinDegreesPerTick = 0.0F;
+            return;
+        }
+        final var spin = io.github.reiko45.galacticraft.world.station.StationSpin.Client.at(minecraft.player.blockPosition());
+        io.github.reiko45.galacticraft.client.render.OrbitSkyRenderer.spinDegreesPerTick = spin == null ? 0.0F
+                : spin.angularVelocity() * net.minecraft.util.Mth.RAD_TO_DEG;
+        io.github.reiko45.galacticraft.world.station.Freefall.spin(minecraft.player);
+    }
+
     private static void registerDimensionEffects(RegisterDimensionSpecialEffectsEvent event) {
         event.register(GCDimensions.MOON_EFFECTS, new MoonEffects());
+        event.register(GCDimensions.ORBIT_EFFECTS, new OrbitEffects());
+    }
+
+    /** Earth orbit: no clouds or fog, the 1.12.2 orbit sky with the Earth below. */
+    static final class OrbitEffects extends DimensionSpecialEffects {
+        private final io.github.reiko45.galacticraft.client.render.OrbitSkyRenderer sky = new io.github.reiko45.galacticraft.client.render.OrbitSkyRenderer();
+
+        OrbitEffects() {
+            super(Float.NaN, false, SkyType.NORMAL, false, false);
+        }
+
+        @Override
+        public boolean renderSky(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, org.joml.Matrix4f modelViewMatrix,
+                                 net.minecraft.client.Camera camera, org.joml.Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+            return this.sky.render(level, partialTick, modelViewMatrix, camera, projectionMatrix, setupFog);
+        }
+
+        @Override
+        public boolean renderClouds(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack,
+                                    double camX, double camY, double camZ, org.joml.Matrix4f modelViewMatrix, org.joml.Matrix4f projectionMatrix) {
+            return true;
+        }
+
+        @Override
+        public Vec3 getBrightnessDependentFogColor(Vec3 fogColor, float brightness) {
+            return Vec3.ZERO;
+        }
+
+        @Override
+        public boolean isFoggyAt(int x, int y) {
+            return false;
+        }
+
+        @Override
+        public float[] getSunriseColor(float timeOfDay, float partialTicks) {
+            return null;
+        }
     }
 
     /** Airless sky: no clouds, black fog, no sunrise glow, and the 1.12.2 Moon sky (stars by day, Earth overhead). */

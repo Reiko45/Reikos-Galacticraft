@@ -74,6 +74,9 @@ public class SolarPanelBlockEntity extends MachineBlockEntity {
     }
 
     public static float solarBoost(Level level) {
+        if (level.dimension().equals(io.github.reiko45.galacticraft.world.GCDimensions.ORBIT)) {
+            return io.github.reiko45.galacticraft.GCConfig.SPACE_STATION_ENERGY_SCALAR.get().floatValue();
+        }
         final CelestialPhysics physics = CelestialPhysics.of(level.dimension());
         return physics != null ? physics.solarMultiplier() : 1.0F;
     }
@@ -83,7 +86,7 @@ public class SolarPanelBlockEntity extends MachineBlockEntity {
             return;
         }
         final float sun = sunAngle(this.level, 0.7845194F);
-        final boolean day = this.level.isDay() && (sun < 180.5F || sun > 359.5F);
+        final boolean day = CelestialPhysics.isDaytime(this.level) && (sun < 180.5F || sun > 359.5F);
         final boolean raining = this.level.isRaining() || this.level.isThundering();
         if (!day || raining) {
             this.targetAngle = 77.5F + 180.0F;
@@ -102,7 +105,7 @@ public class SolarPanelBlockEntity extends MachineBlockEntity {
     private int computeStrength() {
         final Level level = this.level;
         final boolean gcWorld = CelestialPhysics.of(level.dimension()) != null;
-        if (!level.isDay() || !gcWorld && (level.isRaining() || level.isThundering())) {
+        if (!CelestialPhysics.isDaytime(level) || !gcWorld && (level.isRaining() || level.isThundering())) {
             return 0;
         }
         int strength = 0;

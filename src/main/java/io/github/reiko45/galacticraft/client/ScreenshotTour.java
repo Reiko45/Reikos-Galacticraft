@@ -915,6 +915,111 @@ public final class ScreenshotTour {
         }));
         this.extras.add((minecraft, srv) -> shoot(minecraft, "parachute_descent"));
         this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.FIRST_PERSON));
+        stationSteps();
+    }
+
+    /**
+     * Phase 6: from the destination screen, build a space station (the Create panel), fly to it, look round inside and
+     * outside with the Earth below, then fix two Spin Thrusters to it and let it spin up.
+     */
+    private void stationSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.usingParachute = false;
+            data.inSpace = true;
+            data.spacePos = p.position();
+            data.launchedFromX = this.rocketScene.getX() + 0.5D;
+            data.launchedFromZ = this.rocketScene.getZ() + 0.5D;
+            GCNetwork.sendToPlayer(p, SpaceTravel.selectionPayload(p));
+        }));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(net.minecraft.world.level.Level.OVERWORLD);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_station_create"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> SpaceTravel.createStation(tourPlayer(srv))));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(GCDimensions.ORBIT);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_station"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final var station = io.github.reiko45.galacticraft.world.station.SpaceStations.get(srv).ownedBy(p.getUUID());
+                if (station == null) {
+                    GalacticraftCore.LOGGER.warn("Screenshot tour: no space station was built");
+                    return;
+                }
+                this.stationBase = station.base();
+                SpaceTravel.choose(p, GCDimensions.ORBIT, station.id());
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        // Inside: the arrival block in the room, the bay beyond
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel orbit = srv.getLevel(GCDimensions.ORBIT);
+            if (orbit != null && this.stationBase != null) {
+                tourPlayer(srv).teleportTo(orbit, this.stationBase.getX() + 3.5D, this.stationBase.getY(), this.stationBase.getZ() + 0.5D, 90.0F, 10.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "station_inside"));
+        // Outside, floating off the station's south side with the Earth below
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel orbit = srv.getLevel(GCDimensions.ORBIT);
+            if (orbit != null && this.stationBase != null) {
+                tourPlayer(srv).teleportTo(orbit, this.stationBase.getX() - 1.5D, this.stationBase.getY() + 5.0D, this.stationBase.getZ() + 16.5D, 180.0F, 30.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+            logFreefall(minecraft, "exterior");
+            shoot(minecraft, "station_outside");
+        });
+        // Two Spin Thrusters on the south wall, both the same way: the station spins up
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel orbit = srv.getLevel(GCDimensions.ORBIT);
+            if (orbit == null || this.stationBase == null) {
+                return;
+            }
+            final BlockPos corner = this.stationBase.offset(io.github.reiko45.galacticraft.world.station.StationStructure.HULL_OFFSET);
+            for (BlockPos pos : new BlockPos[]{corner.offset(7, 3, 7), corner.offset(13, 3, 7)}) {
+                orbit.setBlockAndUpdate(pos, GCBlocks.SPIN_THRUSTER.get().defaultBlockState()
+                        .setValue(io.github.reiko45.galacticraft.block.SpinThrusterBlock.FACING, Direction.SOUTH));
+            }
+            tourPlayer(srv).getInventory().setItem(2, new ItemStack(GCBlocks.SPIN_THRUSTER.get()));
+        }));
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // spinning up
+        }
+        this.extras.add((minecraft, srv) -> {
+            final var spin = io.github.reiko45.galacticraft.world.station.StationSpin.Client.at(this.stationBase == null ? BlockPos.ZERO : this.stationBase);
+            GalacticraftCore.LOGGER.info("Screenshot tour: station spin {} rad/tick (firing {}), sky turned to {}", spin == null ? null : spin.angularVelocity(),
+                    spin == null ? null : spin.firing(), io.github.reiko45.galacticraft.client.render.OrbitSkyRenderer.spinAngle());
+            shoot(minecraft, "station_spinning");
+        });
+        // The Earth below, past the station's open bay
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel orbit = srv.getLevel(GCDimensions.ORBIT);
+            if (orbit != null && this.stationBase != null) {
+                tourPlayer(srv).teleportTo(orbit, this.stationBase.getX() - 4.5D, this.stationBase.getY() + 6.0D, this.stationBase.getZ() + 9.5D, 160.0F, 62.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "orbit_earth_below"));
+    }
+
+    private BlockPos stationBase;
+
+    private static void logFreefall(Minecraft minecraft, String when) {
+        if (minecraft.player != null) {
+            GalacticraftCore.LOGGER.info("Screenshot tour ({}): player at {} in freefall {}, motion {}", when, minecraft.player.position(),
+                    io.github.reiko45.galacticraft.world.station.Freefall.inFreefall(minecraft.player), minecraft.player.getDeltaMovement());
+        }
     }
 
     /**

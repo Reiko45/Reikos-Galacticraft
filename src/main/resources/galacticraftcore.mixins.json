@@ -5,7 +5,9 @@
   "compatibilityLevel": "JAVA_21",
   "mixins": [
     "AbstractArrowMixin",
-    "ItemEntityMixin"
+    "ItemEntityMixin",
+    "LivingEntityMixin",
+    "ServerGamePacketListenerImplAccessor"
   ],
   "injectors": {
     "defaultRequire": 1

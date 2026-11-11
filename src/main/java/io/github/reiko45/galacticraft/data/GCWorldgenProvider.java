@@ -190,6 +190,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     }
 
     private static void biomes(BootstrapContext<Biome> context) {
+        orbitBiome(context);
         final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
                 context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MOON_DIRT_BLOB_PLACED);
@@ -221,6 +222,23 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 .build());
     }
 
+    /** 1.12.2 BiomeOrbit.space: black sky, nothing spawns. */
+    private static void orbitBiome(BootstrapContext<Biome> context) {
+        context.register(GCDimensions.ORBIT_BIOME, new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .temperature(0.8F)
+                .downfall(0.0F)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .skyColor(0x000000)
+                        .fogColor(0x000000)
+                        .waterColor(0x3F76E4)
+                        .waterFogColor(0x050533)
+                        .build())
+                .mobSpawnSettings(MobSpawnSettings.EMPTY)
+                .generationSettings(BiomeGenerationSettings.EMPTY)
+                .build());
+    }
+
     private static void dimensionTypes(BootstrapContext<DimensionType> context) {
         context.register(GCDimensions.MOON_TYPE, new DimensionType(
                 OptionalLong.empty(),   // day/night cycle (1.12.2 used an 8x longer day; vanilla cannot express that)
@@ -238,6 +256,11 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 GCDimensions.MOON_EFFECTS,
                 0.0F,                   // ambient light
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
+        // 1.12.2 WorldProviderOverworldOrbit: 24,000 tick day, worlds from y 0 to 256, no weather
+        context.register(GCDimensions.ORBIT_TYPE, new DimensionType(
+                OptionalLong.empty(), true, false, false, false, 1.0D, false, false, 0, 256, 256,
+                BlockTags.INFINIBURN_OVERWORLD, GCDimensions.ORBIT_EFFECTS, 0.0F,
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
     }
 
     private static void levelStems(BootstrapContext<LevelStem> context) {
@@ -248,6 +271,11 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.MOON_TYPE),
                 new MoonChunkGenerator(new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MOON_BIOME)),
                         turf, dirt, rock)));
+        // 1.12.2 ChunkProviderOrbit: empty space (stations are built when they are created)
+        context.register(GCDimensions.ORBIT_STEM, new LevelStem(
+                context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ORBIT_TYPE),
+                new net.minecraft.world.level.levelgen.FlatLevelSource(new net.minecraft.world.level.levelgen.flat.FlatLevelGeneratorSettings(
+                        java.util.Optional.of(HolderSet.direct()), context.lookup(Registries.BIOME).getOrThrow(GCDimensions.ORBIT_BIOME), List.of()))));
     }
 
     private static void biomeModifiers(BootstrapContext<BiomeModifier> context) {

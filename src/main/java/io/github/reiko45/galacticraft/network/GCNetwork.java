@@ -85,11 +85,22 @@ public final class GCNetwork {
         }
     }
 
-    /** Server: open the destination screen for a rocket of this tier. */
-    public record OpenCelestialSelection(int tier) implements CustomPacketPayload {
+    /** A space station on the destination screen. */
+    public record StationInfo(int id, String name, String owner, boolean owned) {
+        public static final StreamCodec<ByteBuf, StationInfo> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, StationInfo::id, ByteBufCodecs.STRING_UTF8, StationInfo::name, ByteBufCodecs.STRING_UTF8, StationInfo::owner,
+                ByteBufCodecs.BOOL, StationInfo::owned, StationInfo::new);
+    }
+
+    /**
+     * Server: open (or refresh) the destination screen for a rocket of this tier, with the space stations the player
+     * may visit and whether they may build one now.
+     */
+    public record OpenCelestialSelection(int tier, java.util.List<StationInfo> stations, boolean canCreateStation) implements CustomPacketPayload {
         public static final Type<OpenCelestialSelection> TYPE = new Type<>(GalacticraftCore.id("open_celestial_selection"));
         public static final StreamCodec<ByteBuf, OpenCelestialSelection> STREAM_CODEC = StreamCodec.composite(
-                ByteBufCodecs.VAR_INT, OpenCelestialSelection::tier, OpenCelestialSelection::new);
+                ByteBufCodecs.VAR_INT, OpenCelestialSelection::tier, StationInfo.STREAM_CODEC.apply(ByteBufCodecs.list()), OpenCelestialSelection::stations,
+                ByteBufCodecs.BOOL, OpenCelestialSelection::canCreateStation, OpenCelestialSelection::new);
 
         @Override
         public Type<OpenCelestialSelection> type() {
@@ -97,11 +108,15 @@ public final class GCNetwork {
         }
     }
 
-    /** Client: fly to this dimension. */
-    public record ChooseDestination(ResourceLocation dimension) implements CustomPacketPayload {
+    /** Client: fly to this dimension (and in orbit, to this space station; -1 for none). */
+    public record ChooseDestination(ResourceLocation dimension, int station) implements CustomPacketPayload {
         public static final Type<ChooseDestination> TYPE = new Type<>(GalacticraftCore.id("choose_destination"));
         public static final StreamCodec<ByteBuf, ChooseDestination> STREAM_CODEC = StreamCodec.composite(
-                ResourceLocation.STREAM_CODEC, ChooseDestination::dimension, ChooseDestination::new);
+                ResourceLocation.STREAM_CODEC, ChooseDestination::dimension, ByteBufCodecs.VAR_INT, ChooseDestination::station, ChooseDestination::new);
+
+        public ChooseDestination(ResourceLocation dimension) {
+            this(dimension, -1);
+        }
 
         @Override
         public Type<ChooseDestination> type() {
@@ -168,6 +183,45 @@ public final class GCNetwork {
         }
     }
 
+    /** A space station's spin (1.12.2 C_UPDATE_STATION_SPIN, C_UPDATE_STATION_DATA and C_UPDATE_STATION_BOX). */
+    public record StationSpinSync(int station, float angularVelocity, boolean firing, double centreX, double centreZ, int[] bounds)
+            implements CustomPacketPayload {
+        public static final Type<StationSpinSync> TYPE = new Type<>(GalacticraftCore.id("station_spin"));
+        public static final StreamCodec<ByteBuf, StationSpinSync> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, StationSpinSync::station, ByteBufCodecs.FLOAT, StationSpinSync::angularVelocity,
+                ByteBufCodecs.BOOL, StationSpinSync::firing, ByteBufCodecs.DOUBLE, StationSpinSync::centreX, ByteBufCodecs.DOUBLE, StationSpinSync::centreZ,
+                ByteBufCodecs.VAR_INT.apply(ByteBufCodecs.list()).map(list -> list.stream().mapToInt(Integer::intValue).toArray(),
+                        array -> java.util.Arrays.stream(array).boxed().toList()), StationSpinSync::bounds, StationSpinSync::new);
+
+        @Override
+        public Type<StationSpinSync> type() {
+            return TYPE;
+        }
+    }
+
+    /** Client: build a space station around Earth (1.12.2 S_BIND_SPACE_STATION_ID). */
+    public record CreateStation() implements CustomPacketPayload {
+        public static final Type<CreateStation> TYPE = new Type<>(GalacticraftCore.id("create_station"));
+        public static final StreamCodec<ByteBuf, CreateStation> STREAM_CODEC = StreamCodec.unit(new CreateStation());
+
+        @Override
+        public Type<CreateStation> type() {
+            return TYPE;
+        }
+    }
+
+    /** Client: rename an owned station (1.12.2 S_RENAME_SPACE_STATION). */
+    public record RenameStation(int station, String name) implements CustomPacketPayload {
+        public static final Type<RenameStation> TYPE = new Type<>(GalacticraftCore.id("rename_station"));
+        public static final StreamCodec<ByteBuf, RenameStation> STREAM_CODEC = StreamCodec.composite(
+                ByteBufCodecs.VAR_INT, RenameStation::station, ByteBufCodecs.stringUtf8(32), RenameStation::name, RenameStation::new);
+
+        @Override
+        public Type<RenameStation> type() {
+            return TYPE;
+        }
+    }
+
     /** Client: a NASA Workbench page button (Schematics.ACTION_*). */
     public record SchematicAction(int action) implements CustomPacketPayload {
         public static final Type<SchematicAction> TYPE = new Type<>(GalacticraftCore.id("schematic_action"));
@@ -189,7 +243,17 @@ public final class GCNetwork {
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.openCelestialSelection(payload)));
         registrar.playToServer(ChooseDestination.TYPE, ChooseDestination.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
             if (context.player() instanceof ServerPlayer player) {
-                SpaceTravel.choose(player, ResourceKey.create(Registries.DIMENSION, payload.dimension()));
+                SpaceTravel.choose(player, ResourceKey.create(Registries.DIMENSION, payload.dimension()), payload.station());
+            }
+        }));
+        registrar.playToServer(CreateStation.TYPE, CreateStation.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
+                SpaceTravel.createStation(player);
+            }
+        }));
+        registrar.playToServer(RenameStation.TYPE, RenameStation.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
+            if (context.player() instanceof ServerPlayer player) {
+                SpaceTravel.renameStation(player, payload.station(), payload.name());
             }
         }));
         registrar.playToServer(IgniteRocket.TYPE, IgniteRocket.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
@@ -214,6 +278,8 @@ public final class GCNetwork {
                 io.github.reiko45.galacticraft.menu.Schematics.action(player, payload.action());
             }
         }));
+        registrar.playToClient(StationSpinSync.TYPE, StationSpinSync.STREAM_CODEC,
+                (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.world.station.StationSpin.Client.update(payload)));
         registrar.playToClient(OxygenState.TYPE, OxygenState.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.oxygenState(payload)));
         registrar.playToClient(FootprintAdded.TYPE, FootprintAdded.STREAM_CODEC,

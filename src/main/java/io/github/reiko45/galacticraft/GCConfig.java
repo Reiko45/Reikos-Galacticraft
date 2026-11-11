@@ -19,6 +19,8 @@ public final class GCConfig {
     public static final ModConfigSpec.DoubleValue METEOR_SPAWN_MOD;
     public static final ModConfigSpec.BooleanValue METEOR_BLOCK_DAMAGE;
     public static final ModConfigSpec.DoubleValue DUNGEON_BOSS_HEALTH_MOD;
+    public static final ModConfigSpec.DoubleValue SPACE_STATION_ENERGY_SCALAR;
+    public static final ModConfigSpec.BooleanValue DISABLE_SPACE_STATION_CREATION;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -41,6 +43,14 @@ public final class GCConfig {
                 .comment("Change this if you wish to balance the mod (if you have more powerful weapon mods).")
                 .translation("config.galacticraftcore.dungeon_boss_health_mod")
                 .defineInRange("dungeonBossHealthMod", 1.0D, 0.25D, 10.0D);
+        SPACE_STATION_ENERGY_SCALAR = server
+                .comment("Solar panels will work (default 2x) more effective on space stations.")
+                .translation("config.galacticraftcore.space_station_energy_scalar")
+                .defineInRange("spaceStationEnergyScalar", 2.0D, 0.0D, 100.0D);
+        DISABLE_SPACE_STATION_CREATION = server
+                .comment("If set to true on a server, players will be unable to create space stations.")
+                .translation("config.galacticraftcore.disable_space_station_creation")
+                .define("disableSpaceStationCreation", false);
         SERVER_SPEC = server.build();
     }
 

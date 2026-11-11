@@ -10,6 +10,9 @@ import io.github.reiko45.galacticraft.network.GCNetwork;
 import io.github.reiko45.galacticraft.player.GCPlayerData;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.world.GCDimensions;
+import io.github.reiko45.galacticraft.world.station.SpaceStations;
+import io.github.reiko45.galacticraft.world.station.StationRecipe;
+import net.minecraft.core.BlockPos;
 import java.util.List;
 import net.minecraft.core.NonNullList;
 import net.minecraft.network.chat.Component;
@@ -37,7 +40,8 @@ public final class SpaceTravel {
 
     public static final List<Destination> DESTINATIONS = List.of(
             new Destination(Level.OVERWORLD, "planet.galacticraftcore.overworld", 1),
-            new Destination(GCDimensions.MOON, "moon.galacticraftcore.moon", 1));
+            new Destination(GCDimensions.MOON, "moon.galacticraftcore.moon", 1),
+            new Destination(GCDimensions.ORBIT, "satellite.galacticraftcore.overworld_station", 1));
 
     private SpaceTravel() {
     }
@@ -77,15 +81,66 @@ public final class SpaceTravel {
     }
 
     private static void openSelection(ServerPlayer player) {
-        GCNetwork.sendToPlayer(player, new GCNetwork.OpenCelestialSelection(1));
+        GCNetwork.sendToPlayer(player, selectionPayload(player));
+    }
+
+    /** The destination screen's contents for this player: their reachable stations and whether they may build one. */
+    public static GCNetwork.OpenCelestialSelection selectionPayload(ServerPlayer player) {
+        final SpaceStations stations = SpaceStations.get(player.server);
+        final List<GCNetwork.StationInfo> visible = new java.util.ArrayList<>();
+        for (SpaceStations.Station station : stations.visitableBy(player)) {
+            visible.add(new GCNetwork.StationInfo(station.id(), station.name(), station.ownerName(), station.isOwner(player)));
+        }
+        return new GCNetwork.OpenCelestialSelection(1, visible, canCreateStation(player, stations));
+    }
+
+    /** 1.12.2 GuiCelestialSelection#canCreateSpaceStation: one per player, from a rocket, unless the server forbids it. */
+    private static boolean canCreateStation(ServerPlayer player, SpaceStations stations) {
+        return GCPlayerData.get(player).inSpace && !io.github.reiko45.galacticraft.GCConfig.DISABLE_SPACE_STATION_CREATION.get()
+                && stations.ownedBy(player.getUUID()) == null;
+    }
+
+    /** 1.12.2 S_BIND_SPACE_STATION_ID: pay for and build a station around Earth, then show it on the screen. */
+    public static void createStation(ServerPlayer player) {
+        final SpaceStations stations = SpaceStations.get(player.server);
+        final ServerLevel orbit = player.server.getLevel(GCDimensions.ORBIT);
+        if (orbit == null || !canCreateStation(player, stations) || !StationRecipe.consume(player)) {
+            return;
+        }
+        final SpaceStations.Station station = stations.create(orbit, player);
+        io.github.reiko45.galacticraft.GalacticraftCore.LOGGER.info("{} built space station {} at {}", player.getGameProfile().getName(), station.id(), station.base());
+        openSelection(player);
+    }
+
+    /** 1.12.2 S_RENAME_SPACE_STATION: the owner names their station. */
+    public static void renameStation(ServerPlayer player, int id, String name) {
+        final SpaceStations stations = SpaceStations.get(player.server);
+        final SpaceStations.Station station = stations.byId(id);
+        final String trimmed = name.strip();
+        if (station == null || !station.isOwner(player) || trimmed.isEmpty() || trimmed.length() > 32) {
+            return;
+        }
+        stations.rename(station, trimmed);
+        if (GCPlayerData.get(player).inSpace) {
+            openSelection(player);
+        }
     }
 
     /** The player picked a world on the selection screen. */
     public static void choose(ServerPlayer player, ResourceKey<Level> dimension) {
+        choose(player, dimension, -1);
+    }
+
+    /** The player picked a world (and in orbit, a station) on the selection screen. */
+    public static void choose(ServerPlayer player, ResourceKey<Level> dimension, int stationId) {
         final GCPlayerData data = GCPlayerData.get(player);
         final Destination destination = destination(dimension);
         final ServerLevel target = player.server.getLevel(dimension);
         if (!data.inSpace || destination == null || destination.tier() > 1 || target == null) {
+            return;
+        }
+        final SpaceStations.Station station = dimension.equals(GCDimensions.ORBIT) ? SpaceStations.get(player.server).byId(stationId) : null;
+        if (dimension.equals(GCDimensions.ORBIT) && (station == null || !station.canVisit(player))) {
             return;
         }
         data.inSpace = false;
@@ -100,7 +155,15 @@ public final class SpaceTravel {
         data.rocketCargo = NonNullList.create();
         data.rocketFuel = 0;
         data.launchpadCount = 0;
-        if (dimension.equals(GCDimensions.MOON)) {
+        if (station != null) {
+            // TeleportTypeOrbit: step out beside the arrival block; a para-chest with the cargo drifts down into the bay
+            final BlockPos arrival = station.arrival();
+            player.teleportTo(target, arrival.getX() + 0.5D, arrival.getY(), arrival.getZ() + 0.5D, player.getYRot(), player.getXRot());
+            data.rocketCargo = cargo;
+            data.rocketFuel = fuel;
+            data.chestSpawnPos = Vec3.atLowerCornerOf(station.base()).add(-8.5D, 26.0D, -1.5D);
+            data.chestSpawnCooldown = 200;
+        } else if (dimension.equals(GCDimensions.MOON)) {
             // TeleportTypeMoon: arrive at y 900 in a lander (within the Moon's world border)
             final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
             final double x = Math.max(-limit, Math.min(limit, data.launchedFromX));

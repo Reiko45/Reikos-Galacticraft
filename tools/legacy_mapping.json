@@ -310,7 +310,11 @@
     "gui/buggy_54": "gui/buggy_54",
     "model/buggy_main": "model/buggy_main",
     "model/buggy_wheels": "model/buggy_wheels",
-    "model/buggy_storage": "model/buggy_storage"
+    "model/buggy_storage": "model/buggy_storage",
+    "gui/celestialbodies/space_station": "gui/celestialbodies/space_station",
+    "block/space_station_side": "blocks/space_station_side",
+    "block/space_station_top": "blocks/space_station_top",
+    "block/spin_thruster": "blocks/thruster"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -347,7 +351,8 @@
       "render_type": "minecraft:cutout"
     },
     "block/buggy_fueling_pad": "block/buggy_pad_model",
-    "block/buggy_fueling_pad_full": "block/buggy_pad_full_model"
+    "block/buggy_fueling_pad_full": "block/buggy_pad_full_model",
+    "block/spin_thruster": "block/spin_thruster_model"
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -641,7 +646,36 @@
     "gui.galacticraftcore.buggy.turn": "gui.buggy.turn.name",
     "gui.galacticraftcore.buggy.inventory": "gui.buggy.inv.name",
     "block.galacticraftcore.buggy_fueling_pad": "tile.landing_pad.buggy_fueler.name",
-    "config.galacticraftcore.dungeon_boss_health_mod": "gc.configgui.dungeon_boss_health_mod"
+    "config.galacticraftcore.dungeon_boss_health_mod": "gc.configgui.dungeon_boss_health_mod",
+    "block.galacticraftcore.space_station_base": "tile.space_station_base.name",
+    "block.galacticraftcore.spin_thruster": "tile.spin_thruster.name",
+    "block.galacticraftcore.spin_thruster.desc": "tile.spin_thruster.description",
+    "satellite.galacticraftcore.overworld_station": "satellite.spacestation.overworld",
+    "gui.galacticraftcore.message.can_create_space_station": "gui.message.can_create_space_station.name",
+    "gui.galacticraftcore.message.cannot_create_space_station": "gui.message.cannot_create_space_station.name",
+    "gui.galacticraftcore.message.create_ss": "gui.message.create_ss.name",
+    "gui.galacticraftcore.message.rename": "gui.message.rename.name",
+    "gui.galacticraftcore.message.ss_owner": "gui.message.ss_owner.name",
+    "gui.galacticraftcore.message.select_ss": "gui.message.select_ss.name",
+    "commands.galacticraftcore.gchouston.confirm.1": "commands.gchouston.confirm.1",
+    "commands.galacticraftcore.gchouston.confirm.2": "commands.gchouston.confirm.2",
+    "commands.galacticraftcore.gchouston.fail": "commands.gchouston.fail",
+    "commands.galacticraftcore.gchouston.help.1": "commands.gchouston.help.1",
+    "commands.galacticraftcore.gchouston.help.2": "commands.gchouston.help.2",
+    "commands.galacticraftcore.gchouston.noop": "commands.gchouston.noop",
+    "commands.galacticraftcore.gchouston.success": "commands.gchouston.success",
+    "commands.galacticraftcore.ssinvite.not_found": "commands.ssinvite.not_found",
+    "commands.galacticraftcore.ssinvite.wrong_usage": "commands.ssinvite.wrong_usage",
+    "commands.galacticraftcore.ssnewowner.wrong_usage": "commands.ssnewowner.wrong_usage",
+    "commands.galacticraftcore.ssuninvite.no_player": "commands.ssuninvite.no_player",
+    "gui.galacticraftcore.spacestation.added": "gui.spacestation.added",
+    "gui.galacticraftcore.spacestation.addsuccess": "gui.spacestation.addsuccess",
+    "gui.galacticraftcore.spacestation.allow_all_false": "gui.spacestation.allow_all_false",
+    "gui.galacticraftcore.spacestation.allow_all_true": "gui.spacestation.allow_all_true",
+    "gui.galacticraftcore.spacestation.changesuccess": "gui.spacestation.changesuccess",
+    "gui.galacticraftcore.spacestation.removesuccess": "gui.spacestation.removesuccess",
+    "config.galacticraftcore.space_station_energy_scalar": "gc.configgui.space_station_energy_scalar",
+    "config.galacticraftcore.disable_space_station_creation": "gc.configgui.disable_space_station_creation"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -663,7 +697,8 @@
     "subtitles.galacticraftcore.entity.boss_death": "Skeleton Boss dies",
     "subtitles.galacticraftcore.entity.boss_ooh": "Skeleton Boss hurts",
     "structure.galacticraftcore.moon_dungeon": "Moon Dungeon",
-    "block.galacticraftcore.boss_spawner": "Boss Spawner"
+    "block.galacticraftcore.boss_spawner": "Boss Spawner",
+    "biome.galacticraftcore.space": "Space"
   },
   "recipes": {
     "skip_conditions": [
@@ -850,7 +885,8 @@
       "galacticraftcore:landing_pad:0": "galacticraftcore:landing_pad",
       "galacticraftcore:fuel_loader": "galacticraftcore:fuel_loader",
       "galacticraftcore:rocket_workbench": "galacticraftcore:nasa_workbench",
-      "galacticraftcore:landing_pad:1": "galacticraftcore:buggy_fueling_pad"
+      "galacticraftcore:landing_pad:1": "galacticraftcore:buggy_fueling_pad",
+      "galacticraftcore:spin_thruster": "galacticraftcore:spin_thruster"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
