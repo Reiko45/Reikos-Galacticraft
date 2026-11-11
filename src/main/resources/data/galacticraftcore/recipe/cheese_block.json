@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "X": {
+      "item": "minecraft:milk_bucket"
+    },
+    "Y": {
+      "item": "galacticraftcore:cheese_curd"
+    }
+  },
+  "pattern": [
+    "YYY",
+    "YXY",
+    "YYY"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:cheese_block"
+  }
+}

@@ -1,0 +1,11 @@
+{
+  "values": [
+    "#c:plates/copper",
+    "#c:plates/tin",
+    "#c:plates/aluminum",
+    "#c:plates/steel",
+    "#c:plates/bronze",
+    "#c:plates/iron",
+    "#c:plates/meteoric_iron"
+  ]
+}

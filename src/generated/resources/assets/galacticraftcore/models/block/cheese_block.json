@@ -1,0 +1,9 @@
+{
+  "parent": "minecraft:block/cake",
+  "textures": {
+    "bottom": "galacticraftcore:block/cheese_block_top",
+    "particle": "galacticraftcore:block/cheese_block_side",
+    "side": "galacticraftcore:block/cheese_block_side",
+    "top": "galacticraftcore:block/cheese_block_top"
+  }
+}

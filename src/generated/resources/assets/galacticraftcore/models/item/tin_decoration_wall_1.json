@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "galacticraftcore:block/tin_decoration_block_1_side"
+  }
+}

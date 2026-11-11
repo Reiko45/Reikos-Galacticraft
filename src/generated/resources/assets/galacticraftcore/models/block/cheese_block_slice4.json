@@ -1,0 +1,10 @@
+{
+  "parent": "minecraft:block/cake_slice4",
+  "textures": {
+    "bottom": "galacticraftcore:block/cheese_block_top",
+    "inside": "galacticraftcore:block/cheese_block_inner",
+    "particle": "galacticraftcore:block/cheese_block_side",
+    "side": "galacticraftcore:block/cheese_block_side",
+    "top": "galacticraftcore:block/cheese_block_top"
+  }
+}

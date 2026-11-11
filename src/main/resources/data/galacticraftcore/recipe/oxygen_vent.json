@@ -1,0 +1,22 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:plates/tin"
+    },
+    {
+      "tag": "c:plates/tin"
+    },
+    {
+      "tag": "c:plates/tin"
+    },
+    {
+      "tag": "c:plates/steel"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_vent"
+  }
+}

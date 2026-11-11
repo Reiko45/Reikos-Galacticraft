@@ -1,0 +1,37 @@
+name: Build
+
+on:
+  push:
+  pull_request:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: 21
+
+      - uses: gradle/actions/setup-gradle@v4
+
+      - name: Build
+        run: ./gradlew build --console=plain
+
+      - name: Check generated resources are up to date
+        run: |
+          ./gradlew runData --console=plain
+          git diff --exit-code -- src/generated
+
+      - name: Check client assets
+        run: python3 tools/check_assets.py
+
+      - name: GameTests
+        run: ./gradlew runGameTestServer --console=plain
+
+      - uses: actions/upload-artifact@v4
+        with:
+          name: reikos-galacticraft
+          path: build/libs/*.jar

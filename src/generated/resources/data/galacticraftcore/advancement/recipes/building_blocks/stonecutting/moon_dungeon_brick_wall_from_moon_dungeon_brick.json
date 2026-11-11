@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_moon_dungeon_brick": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:moon_dungeon_brick"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:stonecutting/moon_dungeon_brick_wall_from_moon_dungeon_brick"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_moon_dungeon_brick"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:stonecutting/moon_dungeon_brick_wall_from_moon_dungeon_brick"
+    ]
+  }
+}

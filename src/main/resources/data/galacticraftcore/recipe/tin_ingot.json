@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_block"
+    }
+  },
+  "pattern": [
+    "X"
+  ],
+  "result": {
+    "count": 9,
+    "id": "galacticraftcore:tin_ingot"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "tag": "c:plates/steel"
+    },
+    "Z": {
+      "tag": "c:plates/iron"
+    }
+  },
+  "pattern": [
+    "  Y",
+    " ZY",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:buggy_seat"
+  }
+}

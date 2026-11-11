@@ -1,0 +1,151 @@
+# Porting Galacticraft 1.12.2 → NeoForge 1.21.1
+
+This is the plan and the running log for the port. The source is **Galacticraft Legacy** by Team Galacticraft
+(`TeamGalacticraft/Galacticraft-Legacy`, branch `master-1.12`, commit `acec442`), which is MIT-licensed.
+
+> **Why Legacy and not `micdoodle8/Galacticraft`?** The original micdoodle8 repository uses the custom
+> "Galacticraft License". Its section 28(e) explicitly prohibits ports to other Minecraft/Forge versions
+> without written permission. Team Galacticraft's Legacy repository is the maintained 1.12.2 version. It was
+> relicensed under MIT (every source file carries `Copyright (c) 2023 Team Galacticraft, Licensed under the MIT
+> license`). Port from Legacy only, and keep `LICENSE-GALACTICRAFT-LEGACY` in the repository and the jar.
+
+## Size of the job
+
+Legacy is about 1,190 Java files (~211k lines) plus about 2,200 resource files:
+
+| Area | 1.12.2 contents |
+|---|---|
+| Core | ~134k lines: 73 tile entities (incl. planets), ~56 GUIs, 43 containers, 16 core entities, 78 `PacketSimple` message types |
+| Planets | ~62k lines: Mars, Asteroids and Venus (each with its own blocks, machines, mobs and boss) |
+| API | ~14.5k lines: galaxy registry, power/oxygen interfaces, rocket prefabs |
+| MicdoodleCore | ASM coremod with about 25 bytecode hooks into vanilla (see below) |
+| Assets | ~776 PNG, 53 OBJ models, 29 sounds, 25 languages, 262 JSON recipes, 28 advancements |
+
+Treat it as a rewrite onto modern APIs that keeps Galacticraft's gameplay, numbers and assets. A mechanical
+translation won't work: almost every vanilla and Forge API it touched changed between 1.12 and 1.21.
+
+## How 1.12.2 concepts map to NeoForge 1.21.1
+
+| 1.12.2 (Forge 14.23) | NeoForge 1.21.1 | Status |
+|---|---|---|
+| `@Mod` + `CommonProxy`/`ClientProxy` + FML lifecycle events | `@Mod` constructor with `IEventBus`, `@Mod(dist = CLIENT)` class, `@EventBusSubscriber` | done |
+| Metadata sub-blocks/items (`basic_block_core:6`) | One registry entry per variant (`tin_ore`); mapping in `tools/legacy_mapping.json` | done for Phase 1 |
+| `GameRegistry.register` / `RegistryEvent` | `DeferredRegister` (`GCBlocks`, `GCItems`, ...) | done |
+| `setHarvestLevel(tool, level)` | `mineable/*` and `needs_*_tool` block tags (datagen) | done |
+| OreDictionary | `c:` convention tags (`compressedSteel` → `c:plates/steel`) | done |
+| JSON recipes with `forge:ore_dict`/metadata | Converted by `tools/port_legacy_assets.py` | 60 of 166 converted; the rest need unported items |
+| Code-registered smelting (`RecipeManagerGC`) | Datagen (`GCRecipeProvider`) | done |
+| Machine recipes (compressor, circuit fabricator, refinery...) | Custom `RecipeType` + `RecipeSerializer`, JSON recipes | Phase 2 |
+| `EnumHelper.addToolMaterial/ArmorMaterial` | `SimpleTier`; `ArmorMaterial` registry entry | done |
+| `IWorldGenerator` ore generation | Configured/placed features + NeoForge biome modifier | done |
+| `WorldProvider` + `ChunkProvider` + numeric dimension IDs | Datapack `dimension_type` + `dimension`; custom `ChunkGenerator` with a `MapCodec` | Moon done |
+| Gravity via ASM (`TransformerHooks.getGravityForEntity`) | `generic.gravity` attribute modifier (vanilla since 1.20.5) | done (living entities) |
+| `LivingFallEvent` distance scaling | Same event in NeoForge | done |
+| `IRenderHandler` sky/cloud providers | `DimensionSpecialEffects` (+ `renderSky` override) | Moon: black sky only; Earth/stars renderer pending |
+| `TileEntity` + `ITickable` | `BlockEntity` + `BlockEntityType` + `BlockEntityTicker` | Phase 2 |
+| `IGuiHandler`, `Container`, `GuiContainer` | `MenuType`, `AbstractContainerMenu`, `AbstractContainerScreen`, `RegisterMenuScreensEvent` | Phase 2 |
+| Forge capabilities (energy, fluids, items) | NeoForge 1.21 capabilities: `BlockCapability`, `RegisterCapabilitiesEvent` | Phase 2 |
+| `GCPlayerStats` capability (~54 fields) | Data attachments (`AttachmentType`) with codecs + sync payloads | Phase 3 |
+| Item NBT (oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`DataComponentType`) | Phase 2–4 |
+| `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` | Phase 2+ |
+| Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | Phase 2 |
+| TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer`, NeoForge OBJ loader (`neoforge:obj`) | Phase 2–5 |
+| Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler` | Phase 2 |
+| Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
+| Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
+| JEI 4.x plugin | JEI 19.x (1.21.1) and/or EMI | Phase 2+ |
+| gJ energy with RF/IC2/BC/Mekanism conversion | FE (`IEnergyStorage`) as the storage unit, gJ shown via a configurable display ratio | Phase 2 |
+
+### MicdoodleCore ASM hooks → replacements
+
+| Hook (1.12.2) | Plan in 1.21.1 |
+|---|---|
+| `EntityLivingBase.travel` gravity, `EntityItem`/`EntityArrow` gravity | `generic.gravity` attribute (living, done). Items and projectiles need a small mixin on `getDefaultGravity` (pending) |
+| Replace `EntityPlayerMP`/`EntityPlayerSP` with GC subclasses | Not needed: player state lives in data attachments, logic in tick events |
+| Fog/sky colour, lightmap, rain strength hooks | `DimensionSpecialEffects`, `ViewportEvent.ComputeFogColor`, biome effects |
+| `ModelBiped` rotation (oxygen gear on player) | `RenderLivingEvent` / render layers for worn gear |
+| Footprints on the Moon (`ParticleManager`) | Client tick + custom particle or decal renderer |
+| Camera orientation in rockets | `ViewportEvent.ComputeCameraAngles` |
+| `Chunk.populate` (block other mods' worldgen on GC planets) | Biome tags / biome modifiers (other mods target `#c:is_overworld` etc.) |
+| `World.getRainStrength` | Biome `has_precipitation: false` |
+| IC2/AE2/Optifine/SyncMod patches | Dropped (mods no longer exist on 1.21.1) |
+
+### Known design risks
+
+* **Space stations need dimensions created at runtime.** NeoForge 1.21.1 has no public API for adding levels
+  while the server is running. Options: (a) a fixed pool of pre-declared station dimensions, (b) one shared
+  "orbit" dimension where each station is a far-apart region (simplest, keeps saves small), or (c) a
+  dynamic-dimension library. Recommendation: (b).
+* **Oxygen sealing** (`ThreadFindSeal`) is a threaded flood fill over loaded chunks. Running it on a worker
+  thread is not safe against 1.21 chunk access. Port it as an incremental, budgeted flood fill on the server thread.
+* **Rendering**: 53 OBJ models (rockets, buggy, landers, machines). NeoForge's OBJ loader covers static models.
+  Animated parts (rocket flames, buggy wheels) need code renderers.
+* **GameTest server** ignores datapack dimensions, so the Moon tests in `PortSmokeTests` run the generator on
+  in-memory chunks. Check the real dimension by hand (see the README).
+
+## Phases
+
+### Phase 1 – Foundation and the Moon (this commit) ✅
+- [x] NeoForge 1.21.1 ModDevGradle build, Parchment mappings, GitHub Actions CI
+- [x] Overworld: tin, aluminum and silicon ores with the 1.12.2 vein sizes, counts and heights; copper is vanilla
+- [x] Storage blocks (tin, aluminum, meteoric iron, silicon) and the tin decoration family (blocks, stairs, slabs, walls)
+- [x] Moon blocks: turf, dirt, rock, dungeon brick, copper/tin/cheese/sapphire ores, stairs/slabs/walls
+- [x] Block of Cheese, Fallen Meteor (plain block for now), Glowstone Torch
+- [x] Materials and parts: ingots, compressed plates, wafers, solar modules, rocket/oxygen/buggy parts, canisters
+- [x] Food (1.12.2 nutrition values; canned food returns a tin canister) and Heavy Duty tools and armor
+- [x] Moon dimension: ported `ChunkProviderMoon` terrain and craters, ores, low gravity (0.018), fall distance × 0.18
+- [x] 60 crafting recipes converted, smelting/blasting/stonecutting, loot tables, tags, translations in 25 languages
+- [x] GameTests + static asset check
+
+### Phase 2 – Energy, machines, fluids
+- [ ] FE-based energy API, gJ display, aluminum wire (+ heavy wire, switches) as a cable network
+- [ ] Coal Generator, Basic/Advanced Solar Panel, Energy Storage Module/Cluster
+- [ ] Compressor + Electric Compressor (compressed plates become craftable), Electric Furnace, Circuit Fabricator (wafers)
+- [ ] Fluids: oil, fuel (+ buckets, canisters), Refinery, Fluid Tank, Fluid Pipe
+- [ ] Machine block entities, menus, screens (port `GuiContainerGC` layouts and textures), config, JEI categories
+
+### Phase 3 – Oxygen and survival
+- [ ] Player data attachment (port of `GCPlayerStats`) + sync payloads
+- [ ] Extended inventory: mask, gear, 2 tanks, parachute, frequency module, thermal slots
+- [ ] Oxygen Collector/Compressor/Decompressor/Storage, Distributor (bubble), Sealer (budgeted flood fill), Detector
+- [ ] Suffocation on airless bodies, breathable air blocks, unlit torches, oxygen HUD overlay
+
+### Phase 4 – Rockets and travel
+- [ ] NASA Workbench + schematic system, Tier 1 rocket entity (OBJ renderer), Launch Pad, Fuel Loader
+- [ ] Launch sequence, celestial selection screen (galaxy map), teleport types, lander, parachest, buggy + Buggy Pad
+
+### Phase 5 – Finish the Moon
+- [ ] Caves (`MapGenCavesMoon`), moon villages, dungeon + Skeleton Boss + Tier 1 treasure chest
+- [ ] Evolved mobs and their spawns, meteor showers + hot Fallen Meteor block entity, sky renderer with Earth, footprints
+
+### Phase 6 – Space stations
+- [ ] Station creation/ownership, orbit dimension(s), Spin Thruster, docking, Space Race teams
+
+### Phase 7 – Planets
+- [ ] Mars (desh, Tier 2 and cargo rockets, slimelings, Creeper Boss, gas liquefier/methane synthesizer/electrolyzer, launch controller)
+- [ ] Asteroids (Tier 3 rocket, Astro Miner, telepads, beam power, thermal gear)
+- [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
+
+### Phase 8 – Polish
+- [ ] Advancements, sounds/music (check the provenance of the `*_jc.ogg` tracks first), manual, Jade/EMI integration
+
+## Intentional differences from 1.12.2 (so far)
+
+* Mod id `galacticraftcore` is kept so that asset paths and translation keys map 1:1. The display name marks
+  the mod as an unofficial port, and it doesn't clash with Galacticraft 5's `galacticraft` id.
+* Copper ore, copper ingot and copper block are vanilla's. Galacticraft's copper items map to them.
+* Ores drop themselves, as in 1.12.2 (no raw ore items). Deepslate variants don't exist yet, so overworld ores
+  only generate in stone (y 0–60).
+* Moon day length is vanilla's. 1.12.2 used an 8× longer day, which data-driven dimension types can't express.
+* Added for modern parity: blasting, smoker/campfire and stonecutter recipes, `c:` tags, and the Heavy Duty set
+  in the enchantability tags.
+* Both tin stair and slab variants keep their duplicate 1.12.2 English names ("Tin Decoration Stairs").
+
+## Workflow for porting more content
+
+1. Register the block/item in `GCBlocks`/`GCItems` (flatten metadata variants).
+2. Add `textures`, `lang` and `recipes.items` entries to `tools/legacy_mapping.json`.
+3. `python3 tools/port_legacy_assets.py --legacy /path/to/Galacticraft-Legacy`. It copies textures, converts
+   translations and re-converts recipes, and lists every recipe still blocked on unmapped items.
+4. Add block states/models/loot/tags to the datagen providers, then run `./gradlew runData`.
+5. `python3 tools/check_assets.py` and `./gradlew runGameTestServer`.

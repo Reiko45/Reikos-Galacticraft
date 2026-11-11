@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:strings"
+    },
+    "Y": {
+      "tag": "c:rods/wooden"
+    }
+  },
+  "pattern": [
+    " XY",
+    "XXX",
+    "YX "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:canvas"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "tag": "c:plates/iron"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "YZY",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:buggy_storage_box"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:smelting",
+  "category": "food",
+  "cookingtime": 200,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "galacticraftcore:raw_beef_patty"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:cooked_beef_patty"
+  }
+}

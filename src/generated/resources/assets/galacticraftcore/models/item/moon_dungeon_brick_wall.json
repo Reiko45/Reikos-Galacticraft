@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/wall_inventory",
+  "textures": {
+    "wall": "galacticraftcore:block/moon_dungeon_brick"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "minecraft:glass_pane"
+    },
+    "Y": {
+      "tag": "c:plates/meteoric_iron"
+    },
+    "Z": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    "ZXZ",
+    "XYX",
+    "ZXZ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:sensor_lens"
+  }
+}

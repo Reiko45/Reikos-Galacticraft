@@ -1,0 +1,19 @@
+{
+  "type": "galacticraftcore:moon",
+  "generator": {
+    "type": "galacticraftcore:moon",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "galacticraftcore:moon"
+    },
+    "filler_block": {
+      "Name": "galacticraftcore:moon_dirt"
+    },
+    "stone_block": {
+      "Name": "galacticraftcore:moon_rock"
+    },
+    "top_block": {
+      "Name": "galacticraftcore:moon_turf"
+    }
+  }
+}

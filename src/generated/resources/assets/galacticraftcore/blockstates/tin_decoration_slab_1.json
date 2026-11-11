@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraftcore:block/tin_decoration_slab_1"
+    },
+    "type=double": {
+      "model": "galacticraftcore:block/tin_decoration_block_1"
+    },
+    "type=top": {
+      "model": "galacticraftcore:block/tin_decoration_slab_1_top"
+    }
+  }
+}

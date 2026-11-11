@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:leathers"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    " W ",
+    "WXW",
+    " W "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:buggy_wheel"
+  }
+}

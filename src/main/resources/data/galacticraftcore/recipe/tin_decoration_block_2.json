@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "X": {
+      "tag": "c:stones"
+    },
+    "Y": {
+      "tag": "c:plates/tin"
+    }
+  },
+  "pattern": [
+    "XX ",
+    "XX ",
+    " Y "
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraftcore:tin_decoration_block_2"
+  }
+}

@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "building",
+  "key": {
+    "X": {
+      "tag": "c:rods/wooden"
+    },
+    "Y": {
+      "tag": "c:dusts/glowstone"
+    }
+  },
+  "pattern": [
+    "Y",
+    "X"
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraftcore:glowstone_torch"
+  }
+}

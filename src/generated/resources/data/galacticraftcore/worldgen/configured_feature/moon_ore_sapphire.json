@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:replace_single_block",
+  "config": {
+    "targets": [
+      {
+        "state": {
+          "Name": "galacticraftcore:moon_sapphire_ore"
+        },
+        "target": {
+          "block": "galacticraftcore:moon_rock",
+          "predicate_type": "minecraft:block_match"
+        }
+      }
+    ]
+  }
+}

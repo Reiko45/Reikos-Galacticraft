@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab",
+  "textures": {
+    "bottom": "galacticraftcore:block/tin_decoration_block_1_bottom",
+    "side": "galacticraftcore:block/tin_decoration_block_1_side",
+    "top": "galacticraftcore:block/tin_decoration_block_1_top"
+  }
+}

@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:dusts/redstone"
+    },
+    "Y": {
+      "item": "galacticraftcore:basic_wafer"
+    },
+    "Z": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "Z Z",
+    " Y ",
+    "ZXZ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_fan"
+  }
+}

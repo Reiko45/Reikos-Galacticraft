@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraftcore:moon_dungeon_brick"
+  },
+  "result": {
+    "count": 2,
+    "id": "galacticraftcore:moon_dungeon_brick_slab"
+  }
+}

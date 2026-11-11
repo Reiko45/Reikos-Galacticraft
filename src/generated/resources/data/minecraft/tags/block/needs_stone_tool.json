@@ -1,0 +1,24 @@
+{
+  "values": [
+    "galacticraftcore:tin_ore",
+    "galacticraftcore:aluminum_ore",
+    "galacticraftcore:moon_copper_ore",
+    "galacticraftcore:moon_tin_ore",
+    "galacticraftcore:moon_cheese_ore",
+    "galacticraftcore:tin_block",
+    "galacticraftcore:aluminum_block",
+    "galacticraftcore:meteoric_iron_block",
+    "galacticraftcore:silicon_block",
+    "galacticraftcore:tin_decoration_block_1",
+    "galacticraftcore:tin_decoration_block_2",
+    "galacticraftcore:tin_decoration_stairs_1",
+    "galacticraftcore:tin_decoration_stairs_2",
+    "galacticraftcore:tin_decoration_slab_1",
+    "galacticraftcore:tin_decoration_slab_2",
+    "galacticraftcore:tin_decoration_wall_1",
+    "galacticraftcore:tin_decoration_wall_2",
+    "galacticraftcore:moon_rock_stairs",
+    "galacticraftcore:moon_rock_slab",
+    "galacticraftcore:moon_rock_wall"
+  ]
+}

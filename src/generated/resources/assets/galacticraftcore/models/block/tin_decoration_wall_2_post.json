@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/template_wall_post",
+  "textures": {
+    "wall": "galacticraftcore:block/tin_decoration_block_2"
+  }
+}

@@ -1,0 +1,13 @@
+{
+  "type": "minecraft:blasting",
+  "category": "misc",
+  "cookingtime": 100,
+  "experience": 1.0,
+  "ingredient": {
+    "item": "galacticraftcore:moon_cheese_ore"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:cheese_curd"
+  }
+}

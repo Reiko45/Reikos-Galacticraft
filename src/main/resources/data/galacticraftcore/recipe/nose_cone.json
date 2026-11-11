@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:heavy_plating"
+    },
+    "Y": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " Y ",
+    " X ",
+    "X X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:nose_cone"
+  }
+}

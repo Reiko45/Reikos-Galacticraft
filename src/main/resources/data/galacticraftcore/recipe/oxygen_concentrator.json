@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:plates/tin"
+    },
+    "X": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "Y": {
+      "item": "galacticraftcore:tin_canister"
+    },
+    "Z": {
+      "tag": "c:plates/steel"
+    }
+  },
+  "pattern": [
+    "ZWZ",
+    "WYW",
+    "ZXZ"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:oxygen_concentrator"
+  }
+}
