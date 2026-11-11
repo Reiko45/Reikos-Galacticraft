@@ -169,6 +169,18 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 
 ![The Tier 2 Rocket workbench page, and a player in desh armour](docs/screenshots/tier_2_bench_and_desh.png)
 
+![Hatchling slimelings in red, blue and yellow, a grown orange one, their eggs, a Creeper Egg, a Tier 2 Treasure Chest and a baby Evolved Creeper on Mars](docs/screenshots/mars_slimelings_and_eggs.png)
+
+| The Creeper Boss and one of its TNT | Down to its last head |
+|---|---|
+| ![The three-headed Creeper Boss in its hall, lined with Creeper Eggs, with a TNT on the way](docs/screenshots/mars_dungeon_boss.png) | ![The Creeper Boss with one head left](docs/screenshots/mars_dungeon_boss_one_head.png) |
+
+| A Mars dungeon's crater | The Tier 2 Treasure Chest |
+|---|---|
+| ![The crater over a Mars dungeon](docs/screenshots/mars_dungeon_crater.png) | ![The Tier 2 Treasure Chest between glowstone pillars](docs/screenshots/mars_dungeon_treasure.png) |
+
+![A slimeling's panel, its feeding screen and its inventory with the bag](docs/screenshots/slimeling_screens.png)
+
 ### Visiting the Moon and Mars
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
