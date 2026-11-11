@@ -63,6 +63,7 @@ public abstract class DungeonBossEntity extends Monster {
     public void aiStep() {
         if (!level().isClientSide) {
             checkRoom();
+            this.bossEvent.setProgress(getHealth() / getMaxHealth());
         }
         super.aiStep();
     }
@@ -84,12 +85,6 @@ public abstract class DungeonBossEntity extends Monster {
             return;
         }
         this.playersWithinLast = within;
-    }
-
-    @Override
-    protected void customServerAiStep() {
-        super.customServerAiStep();
-        this.bossEvent.setProgress(getHealth() / getMaxHealth());
     }
 
     @Override

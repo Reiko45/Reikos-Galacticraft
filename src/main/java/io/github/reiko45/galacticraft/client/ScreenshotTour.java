@@ -1192,7 +1192,7 @@ public final class ScreenshotTour {
     }
 
     private BlockPos marsZoo;
-    private int tourSlimeling = -1;
+    private java.util.UUID tourSlimeling;
     private BlockPos marsDungeonCrater;
     private BlockPos marsDungeonBoss;
     private BlockPos marsDungeonTreasure;
@@ -1378,20 +1378,26 @@ public final class ScreenshotTour {
             final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
             final ServerPlayer p = tourPlayer(srv);
             p.closeContainer();
-            if (mars == null || this.marsZoo == null || !(mars.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling)) {
+            if (mars == null || this.marsZoo == null) {
                 return;
             }
             p.removeEffect(net.minecraft.world.effect.MobEffects.NIGHT_VISION);
-            p.teleportTo(mars, slimeling.getX() + 0.5D, this.marsZoo.getY() + 1.0D, slimeling.getZ() + 3.5D, 180.0F, 20.0F);
+            p.teleportTo(mars, this.marsZoo.getX() + 2.5D, this.marsZoo.getY() + 1.0D, this.marsZoo.getZ() + 4.5D, 180.0F, 20.0F);
         }));
         this.extras.add((minecraft, srv) -> {
-            if (minecraft.level != null && minecraft.level.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+        }); // the zoo's chunks (and the slimeling, reloaded with a new entity id) arrive
+        this.extras.add((minecraft, srv) -> {
+            final SlimelingEntity slimeling = clientSlimeling(minecraft);
+            if (slimeling != null) {
                 minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.SlimelingScreen(slimeling));
+            } else {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: the tour slimeling is not loaded");
             }
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_slimeling"));
         this.extras.add((minecraft, srv) -> {
-            if (minecraft.level != null && minecraft.level.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+            final SlimelingEntity slimeling = clientSlimeling(minecraft);
+            if (slimeling != null) {
                 minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.SlimelingFeedScreen(slimeling));
             }
         });
@@ -1400,7 +1406,7 @@ public final class ScreenshotTour {
             minecraft.setScreen(null);
             srv.execute(() -> {
                 final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
-                if (mars != null && mars.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
+                if (mars != null && this.tourSlimeling != null && mars.getEntity(this.tourSlimeling) instanceof SlimelingEntity slimeling) {
                     io.github.reiko45.galacticraft.menu.SlimelingMenu.open(tourPlayer(srv), slimeling);
                 }
             });
@@ -1411,6 +1417,18 @@ public final class ScreenshotTour {
             srv.setDifficulty(Difficulty.PEACEFUL, true);
             srv.overworld().setDayTime(6000L);
         }));
+    }
+
+    private SlimelingEntity clientSlimeling(Minecraft minecraft) {
+        if (minecraft.level == null || this.tourSlimeling == null) {
+            return null;
+        }
+        for (var entity : minecraft.level.entitiesForRendering()) {
+            if (entity instanceof SlimelingEntity slimeling && this.tourSlimeling.equals(slimeling.getUUID())) {
+                return slimeling;
+            }
+        }
+        return null;
     }
 
     /**
@@ -1450,7 +1468,7 @@ public final class ScreenshotTour {
             grown.inventory().setItem(io.github.reiko45.galacticraft.entity.SlimelingInventory.CARGO_START, new ItemStack(GCItems.RAW_DESH.get(), 12));
             grown.inventory().setItem(io.github.reiko45.galacticraft.entity.SlimelingInventory.CARGO_START + 1, new ItemStack(Items.SLIME_BALL, 5));
             zooMob(level, grown, origin.offset(2, 0, 1));
-            this.tourSlimeling = grown.getId();
+            this.tourSlimeling = grown.getUUID();
         }
         final net.minecraft.world.entity.Entity sludgeling = GCEntities.SLUDGELING.get().create(level);
         if (sludgeling instanceof net.minecraft.world.entity.Mob mob) {
