@@ -1082,7 +1082,9 @@
     "item.galacticraftcore.titanium_boots": "planets:item.titanium_boots.name",
     "item.galacticraftcore.tier_3_rocket": "planets:item.rocket_t3.t3Rocket.name",
     "entity.galacticraftcore.tier_3_rocket": "planets:entity.rocket_t3.name",
-    "entity.galacticraftcore.entry_pod": "planets:entity.entry_pod.name"
+    "entity.galacticraftcore.entry_pod": "planets:entity.entry_pod.name",
+    "death.attack.thermal": "death.attack.thermal",
+    "gui.galacticraftcore.invalid_thermal": "gui.warning.invalid_thermal"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",

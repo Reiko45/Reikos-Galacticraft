@@ -59,6 +59,7 @@ public final class GCPlayerHandler {
         MeteorShowers.tick(player);
         Footprints.updateFeet(player, data);
         checkOxygen(player, data, needsOxygen(player, data));
+        Thermal.check(player, data);
         sendState(player, data);
         if (data.takeGearChanged()) {
             broadcastGear(player, data);
@@ -155,7 +156,7 @@ public final class GCPlayerHandler {
     private static void sendState(ServerPlayer player, GCPlayerData data) {
         final int air1 = scaled(data.airRemaining(), data.gear(GearSlot.LEFT_TANK));
         final int air2 = scaled(data.airRemaining2(), data.gear(GearSlot.RIGHT_TANK));
-        final GCNetwork.OxygenState state = new GCNetwork.OxygenState(air1, air2, data.oxygenSetupValid());
+        final GCNetwork.OxygenState state = new GCNetwork.OxygenState(air1, air2, data.oxygenSetupValid(), data.thermalLevel, data.thermalNormalising);
         if (!state.equals(data.lastSentState) || player.tickCount % 100 == 0) {
             data.lastSentState = state;
             GCNetwork.sendToPlayer(player, state);

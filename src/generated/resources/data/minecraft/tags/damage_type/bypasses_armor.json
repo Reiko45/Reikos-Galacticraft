@@ -1,6 +1,7 @@
 {
   "values": [
     "galacticraftcore:oxygen_suffocation",
-    "galacticraftcore:spaceship_crash"
+    "galacticraftcore:spaceship_crash",
+    "galacticraftcore:thermal"
   ]
 }

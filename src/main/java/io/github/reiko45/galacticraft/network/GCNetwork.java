@@ -60,11 +60,15 @@ public final class GCNetwork {
         }
     }
 
-    /** The player's tank levels scaled to 0..90 for the HUD, and whether their oxygen setup works. */
-    public record OxygenState(int air1, int air2, boolean valid) implements CustomPacketPayload {
+    /**
+     * The player's tank levels scaled to 0..90 for the HUD, whether their oxygen setup works, and their thermal level
+     * (-22 to 22) and whether their padding is bringing it back (1.12.2 S_UPDATE_THERMAL_LEVEL).
+     */
+    public record OxygenState(int air1, int air2, boolean valid, int thermalLevel, boolean thermalNormalising) implements CustomPacketPayload {
         public static final Type<OxygenState> TYPE = new Type<>(GalacticraftCore.id("oxygen_state"));
         public static final StreamCodec<ByteBuf, OxygenState> STREAM_CODEC = StreamCodec.composite(
                 ByteBufCodecs.VAR_INT, OxygenState::air1, ByteBufCodecs.VAR_INT, OxygenState::air2, ByteBufCodecs.BOOL, OxygenState::valid,
+                ByteBufCodecs.VAR_INT, OxygenState::thermalLevel, ByteBufCodecs.BOOL, OxygenState::thermalNormalising,
                 OxygenState::new);
 
         @Override

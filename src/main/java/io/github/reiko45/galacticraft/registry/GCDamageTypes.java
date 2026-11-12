@@ -18,6 +18,9 @@ public final class GCDamageTypes {
     /** 1.12.2 EntitySlimeling#attackEntityAsMob: new EntityDamageSource("slimeling", slimeling). */
     public static final ResourceKey<DamageType> SLIMELING = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("slimeling"));
 
+    /** 1.12.2 DamageSourceGC.thermal: bypasses armour, absolute. "%1$s forgot thermal protection". */
+    public static final ResourceKey<DamageType> THERMAL = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("thermal"));
+
     private GCDamageTypes() {
     }
 
@@ -27,6 +30,10 @@ public final class GCDamageTypes {
 
     public static DamageSource crash(Level level) {
         return level.damageSources().source(SPACESHIP_CRASH);
+    }
+
+    public static DamageSource thermal(Level level) {
+        return level.damageSources().source(THERMAL);
     }
 
     public static DamageSource suffocation(Level level) {

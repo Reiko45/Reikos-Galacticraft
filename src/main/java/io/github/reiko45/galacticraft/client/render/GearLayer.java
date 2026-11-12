@@ -7,6 +7,7 @@ import io.github.reiko45.galacticraft.client.ClientPayloads;
 import io.github.reiko45.galacticraft.item.gear.ParachuteItem;
 import io.github.reiko45.galacticraft.player.GearData;
 import net.minecraft.client.model.PlayerModel;
+import net.minecraft.client.model.geom.builders.CubeDeformation;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -26,7 +27,7 @@ import net.minecraft.resources.ResourceLocation;
 /**
  * Oxygen gear on players (1.12.2 LayerOxygenMask, LayerOxygenTanks, LayerOxygenGear, LayerOxygenParachute): a glass
  * helmet over the head, two tanks on the back (green light, orange medium, red heavy/infinite), the tubes running up to
- * the mask, and an open parachute in the worn parachute's colour.
+ * the mask, an open parachute in the worn parachute's colour, and Thermal Padding (1.12.2 LayerThermalPadding).
  * Positions are the 1.12.2 values after its GL translations, in model units relative to the body.
  */
 public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> {
@@ -40,6 +41,13 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
     private final ModelPart[] tanks;
     private final ModelPart tube;
     private final ModelPart parachute;
+    /** 1.12.2 LayerThermalPadding#initArmor: ModelPlayerGC(0.55) for the head, ModelPlayerGC(0.05) for the rest. */
+    public static final ModelLayerLocation THERMAL_HEAD = new ModelLayerLocation(GalacticraftCore.id("thermal_padding"), "head");
+    public static final ModelLayerLocation THERMAL_BODY = new ModelLayerLocation(GalacticraftCore.id("thermal_padding"), "body");
+    private static final ResourceLocation THERMAL_TEXTURE = GalacticraftCore.id("textures/misc/thermal_padding_1.png");
+    private static final ResourceLocation THERMAL_GLOW = GalacticraftCore.id("textures/misc/thermal_padding_0.png");
+    private final PlayerModel<AbstractClientPlayer> thermalHead;
+    private final PlayerModel<AbstractClientPlayer> thermalBody;
 
     public GearLayer(RenderLayerParent<AbstractClientPlayer, PlayerModel<AbstractClientPlayer>> parent, EntityModelSet models) {
         super(parent);
@@ -48,6 +56,61 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
         this.tanks = new ModelPart[]{gear.getChild("tank_light"), gear.getChild("tank_medium"), gear.getChild("tank_heavy")};
         this.tube = gear.getChild("tube");
         this.parachute = models.bakeLayer(PARACHUTE);
+        this.thermalHead = new PlayerModel<>(models.bakeLayer(THERMAL_HEAD), false);
+        this.thermalBody = new PlayerModel<>(models.bakeLayer(THERMAL_BODY), false);
+    }
+
+    public static LayerDefinition createThermalHead() {
+        return LayerDefinition.create(PlayerModel.createMesh(new CubeDeformation(0.55F), false), 64, 64);
+    }
+
+    public static LayerDefinition createThermalBody() {
+        return LayerDefinition.create(PlayerModel.createMesh(new CubeDeformation(0.05F), false), 64, 64);
+    }
+
+    /**
+     * 1.12.2 LayerThermalPadding: each piece over its part of the body, then the glow texture over it pulsing every
+     * ~6 seconds: green on worlds with no temperature, red on cold ones, blue on hot ones.
+     */
+    private void renderThermal(PoseStack poseStack, MultiBufferSource buffers, int light, AbstractClientPlayer player, int pieces) {
+        final float pulse = (float) Math.sin(player.tickCount / 10.0F) * 0.5F + 0.5F;
+        float r = 0.2F * pulse;
+        float g = 1.0F * pulse;
+        float b = 0.2F * pulse;
+        final float modifier = io.github.reiko45.galacticraft.world.Atmosphere.thermalLevel(player.level().dimension());
+        if (modifier > 0.0F) {
+            b = g;
+            g = r;
+        } else if (modifier < 0.0F) {
+            r = g;
+            g = b;
+        }
+        final int glow = net.minecraft.util.FastColor.ARGB32.colorFromFloat(0.4F * pulse, r, g, b);
+        for (int piece = 0; piece < 4; piece++) {
+            if ((pieces & 1 << piece) == 0) {
+                continue;
+            }
+            final PlayerModel<AbstractClientPlayer> model = piece == 0 ? this.thermalHead : this.thermalBody;
+            getParentModel().copyPropertiesTo(model);
+            model.setAllVisible(false);
+            switch (piece) {
+                case 0 -> {
+                    model.head.visible = true;
+                    model.hat.visible = true;
+                }
+                case 1 -> {
+                    model.body.visible = true;
+                    model.rightArm.visible = true;
+                    model.leftArm.visible = true;
+                }
+                default -> {
+                    model.rightLeg.visible = true;
+                    model.leftLeg.visible = true;
+                }
+            }
+            model.renderToBuffer(poseStack, buffers.getBuffer(RenderType.armorCutoutNoCull(THERMAL_TEXTURE)), light, OverlayTexture.NO_OVERLAY);
+            model.renderToBuffer(poseStack, buffers.getBuffer(RenderType.entityTranslucent(THERMAL_GLOW)), light, OverlayTexture.NO_OVERLAY, glow);
+        }
     }
 
     /** LayerOxygenParachute: three canopy panels and four strings, 256x256 parachute texture. */
@@ -95,6 +158,9 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
             return;
         }
         final PlayerModel<AbstractClientPlayer> model = getParentModel();
+        if (gear.thermalPadding() != 0) {
+            renderThermal(poseStack, buffers, light, player, gear.thermalPadding());
+        }
         if (gear.parachuteOpen() && gear.parachute() >= 0) {
             final ResourceLocation texture = GalacticraftCore.id("textures/model/parachute/"
                     + ParachuteItem.LEGACY_COLORS[Math.min(gear.parachute(), ParachuteItem.LEGACY_COLORS.length - 1)] + ".png");

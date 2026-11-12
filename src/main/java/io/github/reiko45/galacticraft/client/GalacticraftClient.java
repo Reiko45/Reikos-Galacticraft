@@ -102,6 +102,8 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(GearLayer.MASK, GearLayer::createMask);
         event.registerLayerDefinition(GearLayer.GEAR, GearLayer::createGear);
         event.registerLayerDefinition(GearLayer.PARACHUTE, GearLayer::createParachute);
+        event.registerLayerDefinition(GearLayer.THERMAL_HEAD, GearLayer::createThermalHead);
+        event.registerLayerDefinition(GearLayer.THERMAL_BODY, GearLayer::createThermalBody);
         event.registerLayerDefinition(Tier1RocketRenderer.LAYER, Tier1RocketRenderer::createLayer);
         event.registerLayerDefinition(LanderRenderer.LAYER, LanderRenderer::createLayer);
         event.registerLayerDefinition(MeteorRenderer.LAYER, MeteorRenderer::createLayer);

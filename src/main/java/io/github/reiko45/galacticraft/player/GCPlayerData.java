@@ -59,6 +59,9 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int launchAttempts;
     public boolean usingParachute;
     public int chestSpawnCooldown;
+    /** 1.12.2 GCPlayerStats thermalLevel (-22 freezing to 22 overheating) and thermalLevelNormalising. */
+    public int thermalLevel;
+    public boolean thermalNormalising = true;
     /** Ticks until a Cryogenic Chamber can be used again (1.12.2 GCPlayerStats#cryogenicChamberCooldown). */
     public int cryogenicChamberCooldown;
     public net.minecraft.world.phys.Vec3 chestSpawnPos;
@@ -199,6 +202,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         tag.putInt("AirRemaining2", this.airRemaining2);
         tag.putInt("DamageCounter", this.damageCounter);
         tag.putInt("CryogenicChamberCooldown", this.cryogenicChamberCooldown);
+        tag.putInt("ThermalLevel", this.thermalLevel);
         final CompoundTag travel = new CompoundTag();
         travel.putInt("CargoSize", this.rocketCargo.size());
         net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
@@ -237,6 +241,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.airRemaining2 = tag.getInt("AirRemaining2");
         this.damageCounter = tag.getInt("DamageCounter");
         this.cryogenicChamberCooldown = tag.getInt("CryogenicChamberCooldown");
+        this.thermalLevel = tag.getInt("ThermalLevel");
         final CompoundTag travel = tag.getCompound("Travel");
         this.rocketCargo = NonNullList.withSize(travel.getInt("CargoSize"), ItemStack.EMPTY);
         net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);

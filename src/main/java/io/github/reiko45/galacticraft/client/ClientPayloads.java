@@ -11,6 +11,8 @@ public final class ClientPayloads {
     private static int air1 = 90;
     private static int air2 = 90;
     private static boolean oxygenValid = true;
+    private static int thermalLevel;
+    private static boolean thermalNormalising = true;
 
     private ClientPayloads() {
     }
@@ -19,6 +21,16 @@ public final class ClientPayloads {
         air1 = payload.air1();
         air2 = payload.air2();
         oxygenValid = payload.valid();
+        thermalLevel = payload.thermalLevel();
+        thermalNormalising = payload.thermalNormalising();
+    }
+
+    public static int thermalLevel() {
+        return thermalLevel;
+    }
+
+    public static boolean thermalNormalising() {
+        return thermalNormalising;
     }
 
     public static void openCelestialSelection(GCNetwork.OpenCelestialSelection payload) {
@@ -71,5 +83,7 @@ public final class ClientPayloads {
         air1 = 90;
         air2 = 90;
         oxygenValid = true;
+        thermalLevel = 0;
+        thermalNormalising = true;
     }
 }

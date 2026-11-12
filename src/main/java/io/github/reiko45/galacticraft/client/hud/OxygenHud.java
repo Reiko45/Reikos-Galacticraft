@@ -13,8 +13,8 @@ import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 
 /**
- * Oxygen HUD on airless worlds (1.12.2 OverlayOxygenTanks and OverlayOxygenWarning): two tank gauges in the top right
- * corner and a flashing warning while the oxygen setup does not work.
+ * Oxygen HUD on airless worlds (1.12.2 OverlayOxygenTanks and OverlayOxygenWarning): two tank gauges and the
+ * thermometer in the top right corner, and a flashing warning while the oxygen setup does not work.
  */
 public final class OxygenHud {
     public static final ResourceLocation TANKS_LAYER = GalacticraftCore.id("oxygen_tanks");
@@ -43,6 +43,35 @@ public final class OxygenHud {
         // 1.12.2 passes 90 - air (the empty part, in half pixels), or 90 when the tank is empty
         drawTank(graphics, left, top, ClientPayloads.air1() <= 0 ? 90 : 90 - ClientPayloads.air1());
         drawTank(graphics, right, top, ClientPayloads.air2() <= 0 ? 90 : 90 - ClientPayloads.air2());
+        final int thermal = ClientPayloads.thermalLevel();
+        drawThermal(minecraft, graphics, width - 59, top, thermal + 22, Math.abs(thermal) >= 10 && !ClientPayloads.thermalNormalising());
+    }
+
+    /**
+     * 1.12.2 renderOxygenTankIndicator's thermometer left of the tanks: a 9 x 47 bar (drawn upside down from the
+     * texture) with a 2-pixel marker at the thermal level + 22, and while the level is 10 or more from 0 and the padding
+     * isn't bringing it back, a red arrow and "Invalid Thermal Protection!".
+     */
+    private static void drawThermal(Minecraft minecraft, GuiGraphics graphics, int x, int top, int heat, boolean invalid) {
+        final int bottom = top + 47;
+        graphics.pose().pushPose();
+        graphics.pose().translate(x, bottom, 0.0F);
+        graphics.pose().scale(1.0F, -1.0F, 1.0F);
+        graphics.blit(TEXTURE, 0, 0, 66, 47, 9, 47);
+        graphics.pose().popPose();
+        final int scaled = Mth.clamp(heat, 1, 45);
+        final int max = Math.min(scaled + 2, 45);
+        final int min = Math.max(max - 2, 0);
+        // one texture row, the colour for this heat, stretched over the marker
+        graphics.blit(TEXTURE, x + 1, bottom - max, 7, max - min, 76.0F, 48 + 45 - scaled, 7, 1, 256, 256);
+        if (invalid) {
+            graphics.setColor(1.0F, 0.0F, 0.0F, 1.0F);
+            graphics.blit(TEXTURE, x - 5, bottom - max - 3, 4, max - min + 6, 84.0F, 47.0F, 5, 9, 256, 256);
+            graphics.setColor(1.0F, 1.0F, 1.0F, 1.0F);
+            final Component warning = Component.translatable("gui.galacticraftcore.invalid_thermal");
+            graphics.drawString(minecraft.font, warning, x - 8 - minecraft.font.width(warning), bottom - scaled - minecraft.font.lineHeight / 2 - 1,
+                    FastColor.ARGB32.color(255, 255, 10, 10), false);
+        }
     }
 
     private static void drawTank(GuiGraphics graphics, int x, int y, int empty) {

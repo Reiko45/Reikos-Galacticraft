@@ -91,6 +91,33 @@ public final class OxygenUtil {
                 entity.getX() + half, y + half, entity.getZ() + half));
     }
 
+    /**
+     * 1.12.2 OxygenUtil#isAABBInBreathableAirBlock(entity, true) / isInOxygenAndThermalBlock: the box around the eyes
+     * touches breathable air from a sealer with an Ambient Thermal Controller (a Distributor's bubble doesn't count).
+     */
+    public static boolean isInThermalAir(LivingEntity entity) {
+        final AABB box = entity.getBoundingBox();
+        final double half = Math.min(box.getXsize(), Math.min(box.getYsize(), box.getZsize())) / 2.0D;
+        final double y = entity.getEyeY();
+        final int x0 = Mth.floor(entity.getX() - half + 0.001D);
+        final int x1 = Mth.floor(entity.getX() + half - 0.001D);
+        final int y0 = Mth.floor(y - half + 0.001D);
+        final int y1 = Mth.floor(y + half - 0.001D);
+        final int z0 = Mth.floor(entity.getZ() - half + 0.001D);
+        final int z1 = Mth.floor(entity.getZ() + half - 0.001D);
+        final Level level = entity.level();
+        if (!level.hasChunksAt(x0, y0, z0, x1, y1, z1)) {
+            return false;
+        }
+        final Set<BlockPos> checked = new HashSet<>();
+        for (BlockPos pos : BlockPos.betweenClosed(x0, y0, z0, x1, y1, z1)) {
+            if (touchesBreathableAir(level, pos.immutable(), 0, checked, true)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     public static boolean isInBreathableAir(Level level, AABB box) {
         if (inOxygenBubble(level, (box.minX + box.maxX) / 2.0D, (box.minY + box.maxY) / 2.0D, (box.minZ + box.maxZ) / 2.0D)) {
             return true;
@@ -106,7 +133,7 @@ public final class OxygenUtil {
         }
         final Set<BlockPos> checked = new HashSet<>();
         for (BlockPos pos : BlockPos.betweenClosed(x0, y0, z0, x1, y1, z1)) {
-            if (touchesBreathableAir(level, pos.immutable(), 0, checked)) {
+            if (touchesBreathableAir(level, pos.immutable(), 0, checked, false)) {
                 return true;
             }
         }
@@ -132,7 +159,7 @@ public final class OxygenUtil {
         checked.add(pos);
         for (Direction side : Direction.values()) {
             final BlockPos next = pos.relative(side);
-            if (level.isLoaded(next) && touchesBreathableAir(level, next, 1, checked)) {
+            if (level.isLoaded(next) && touchesBreathableAir(level, next, 1, checked, false)) {
                 return true;
             }
         }
@@ -143,11 +170,12 @@ public final class OxygenUtil {
      * 1.12.2 OxygenUtil#testContactWithBreathableAir: breathable air itself, or an air-permeable block (torch, fence,
      * leaves...) with breathable air reachable through it within 5 steps. Plain air and sealing blocks are not.
      */
-    private static boolean touchesBreathableAir(Level level, BlockPos pos, int depth, Set<BlockPos> checked) {
+    private static boolean touchesBreathableAir(Level level, BlockPos pos, int depth, Set<BlockPos> checked, boolean thermal) {
         checked.add(pos);
         final BlockState state = level.getBlockState(pos);
         if (state.getBlock() instanceof BreathableAirBlock) {
-            return true;
+            // 1.12.2 reported the air's metadata, 1 for thermal air
+            return !thermal || state.getValue(BreathableAirBlock.THERMAL);
         }
         if (state.isAir() || state.getBlock() instanceof LiquidBlock || isSealingFullBlock(level, pos, state)) {
             return false;
@@ -157,7 +185,7 @@ public final class OxygenUtil {
             for (Direction side : Direction.values()) {
                 if (permeable || canPassAirOut(level, state, pos, side)) {
                     final BlockPos next = pos.relative(side);
-                    if (!checked.contains(next) && level.isLoaded(next) && touchesBreathableAir(level, next, depth + 1, checked)) {
+                    if (!checked.contains(next) && level.isLoaded(next) && touchesBreathableAir(level, next, depth + 1, checked, thermal)) {
                         return true;
                     }
                 }
