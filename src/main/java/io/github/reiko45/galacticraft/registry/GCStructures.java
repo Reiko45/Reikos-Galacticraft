@@ -25,6 +25,18 @@ public final class GCStructures {
     public static final Supplier<StructurePieceType> MOON_VILLAGE_PIECE = STRUCTURE_PIECES.register("moon_village_piece",
             () -> io.github.reiko45.galacticraft.world.village.MoonVillagePiece::new);
 
+    /** 1.12.2 MapGenAbandonedBase and its pieces. */
+    public static final Supplier<StructureType<io.github.reiko45.galacticraft.world.base.AbandonedBase>> ABANDONED_BASE = STRUCTURE_TYPES.register(
+            "abandoned_base", () -> () -> io.github.reiko45.galacticraft.world.base.AbandonedBase.CODEC);
+    public static final Supplier<StructurePieceType> BASE_DECK = STRUCTURE_PIECES.register("abandoned_base_deck",
+            () -> io.github.reiko45.galacticraft.world.base.BaseDeck::new);
+    public static final Supplier<StructurePieceType> BASE_ROOM = STRUCTURE_PIECES.register("abandoned_base_room",
+            () -> io.github.reiko45.galacticraft.world.base.BaseRoom::new);
+    public static final Supplier<StructurePieceType> BASE_HANGAR = STRUCTURE_PIECES.register("abandoned_base_hangar",
+            () -> io.github.reiko45.galacticraft.world.base.BaseHangar::new);
+    public static final Supplier<StructurePieceType> BASE_PLATE = STRUCTURE_PIECES.register("abandoned_base_plate",
+            () -> io.github.reiko45.galacticraft.world.base.BasePlate::new);
+
     private GCStructures() {
     }
 }

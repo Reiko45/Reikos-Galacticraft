@@ -483,7 +483,6 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
 
     @Override
     public void applyBiomeDecoration(WorldGenLevel level, ChunkAccess chunk, StructureManager structureManager) {
-        super.applyBiomeDecoration(level, chunk, structureManager);
         final int chunkX = chunk.getPos().x;
         final int chunkZ = chunk.getPos().z;
         int x = chunkX << 4;
@@ -567,6 +566,8 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
                 lake(level, random, new BlockPos(i, terrainHeightAt(i - x, k - z, asteroid), k), Blocks.WATER.defaultBlockState());
             }
         }
+        // 1.12.2 populate: the abandoned base (the only structure here) goes in last, over the asteroid's decoration
+        super.applyBiomeDecoration(level, chunk, structureManager);
     }
 
     /** 1.12.2 WorldGenTallGrass / WorldGenFlowers: tries around the spot, keeping those that can grow there. */

@@ -34,6 +34,8 @@ public abstract class CargoMachineBlockEntity extends MachineBlockEntity {
     public static final int SLOTS = 15;
 
     protected boolean disabled;
+    /** 1.12.2 TileEntityCargoLoader#locked (abandoned bases): slots 1-14 can't be taken from, and are lost when it breaks. */
+    protected boolean locked;
     protected int disableCooldown;
     protected boolean hasEnoughEnergyToRun;
     @Nullable
@@ -50,6 +52,27 @@ public abstract class CargoMachineBlockEntity extends MachineBlockEntity {
 
     /** Move one item (or just check whether one could move, when {@code doMove} is false); the status to show. */
     protected abstract MachineStatus transfer(CargoCarrier carrier, boolean doMove);
+
+    public boolean isLocked() {
+        return this.locked;
+    }
+
+    /** Lock the items in (only Cargo Loaders keep the flag, as in 1.12.2). */
+    public void lock() {
+        this.locked = loads();
+        setChanged();
+    }
+
+    /** 1.12.2 BlockAdvancedTile#dropEntireInventory: clearLockedInventory first, so a locked loader drops its battery only. */
+    @Override
+    public void dropContents(net.minecraft.world.level.Level level, BlockPos pos) {
+        if (this.locked) {
+            for (int i = 1; i < SLOTS; i++) {
+                this.inventory.setStackInSlot(i, ItemStack.EMPTY);
+            }
+        }
+        super.dropContents(level, pos);
+    }
 
     public boolean isDisabled() {
         return this.disabled;
@@ -143,6 +166,7 @@ public abstract class CargoMachineBlockEntity extends MachineBlockEntity {
         data.addShort(() -> status().ordinal());
         data.addShort(() -> this.disabled ? 1 : 0);
         data.addShort(() -> this.disableCooldown);
+        data.addShort(() -> this.locked ? 1 : 0);
     }
 
     @Override
@@ -182,11 +206,15 @@ public abstract class CargoMachineBlockEntity extends MachineBlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);
         tag.putBoolean("Disabled", this.disabled);
+        if (this.locked) {
+            tag.putBoolean("Locked", true);
+        }
     }
 
     @Override
     protected void loadAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.loadAdditional(tag, registries);
         this.disabled = tag.getBoolean("Disabled");
+        this.locked = tag.getBoolean("Locked");
     }
 }

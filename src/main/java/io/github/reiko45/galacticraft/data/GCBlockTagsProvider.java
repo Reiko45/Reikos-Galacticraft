@@ -54,7 +54,7 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
         // Asteroids (1.12.2 AsteroidBlocks#setHarvestLevels: rock 0, aluminium and iron 2, ilmenite 3)
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.ASTEROID_ROCK_0.get(), GCBlocks.ASTEROID_ROCK_1.get(), GCBlocks.ASTEROID_ROCK_2.get(),
                 GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ILMENITE_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get(), GCBlocks.DARK_DECORATION_BLOCK.get(),
-                GCBlocks.TITANIUM_BLOCK.get(), GCBlocks.DENSE_ICE.get());
+                GCBlocks.DARK_DECORATION_SLAB.get(), GCBlocks.TITANIUM_BLOCK.get(), GCBlocks.DENSE_ICE.get());
         tag(BlockTags.NEEDS_IRON_TOOL).add(GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.WALKWAY.get(), GCBlocks.WALKWAY_WIRE.get(), GCBlocks.WALKWAY_PIPE.get(),
                 GCBlocks.MINER_BASE.get(), GCBlocks.MINER_BASE_FULL.get(), GCBlocks.BEAM_REFLECTOR.get(), GCBlocks.BEAM_RECEIVER.get(),

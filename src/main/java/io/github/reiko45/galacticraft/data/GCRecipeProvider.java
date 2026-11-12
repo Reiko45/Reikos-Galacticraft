@@ -88,6 +88,7 @@ public class GCRecipeProvider extends RecipeProvider {
         cutting(output, GCBlocks.MOON_ROCK.get(), GCBlocks.MOON_ROCK_STAIRS.get(), GCBlocks.MOON_ROCK_SLAB.get(), GCBlocks.MOON_ROCK_WALL.get());
         cutting(output, GCBlocks.MOON_DUNGEON_BRICK.get(), GCBlocks.MOON_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MOON_DUNGEON_BRICK_SLAB.get(), GCBlocks.MOON_DUNGEON_BRICK_WALL.get());
         cutting(output, GCBlocks.MARS_COBBLESTONE.get(), GCBlocks.MARS_COBBLESTONE_STAIRS.get(), GCBlocks.MARS_COBBLESTONE_SLAB.get(), GCBlocks.MARS_COBBLESTONE_WALL.get());
+        cut(output, GCBlocks.DARK_DECORATION_BLOCK.get(), GCBlocks.DARK_DECORATION_SLAB.get(), 2);
         cutting(output, GCBlocks.MARS_DUNGEON_BRICK.get(), GCBlocks.MARS_DUNGEON_BRICK_STAIRS.get(), GCBlocks.MARS_DUNGEON_BRICK_SLAB.get(), GCBlocks.MARS_DUNGEON_BRICK_WALL.get());
     }
 

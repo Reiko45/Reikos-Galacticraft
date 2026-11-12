@@ -368,9 +368,41 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       (-1.5) chill you down to -22, slowed by each piece of padding and held off by a full set or a sealer's Ambient
       Thermal Controller; at the limit it hurts, below -15 it slows you; the HUD thermometer and its warning
 
-### Phase 7e – Asteroid machines
-- [ ] Astro Miner and its base, beam power (reflectors and receivers), short-range telepads, walkways, the abandoned
-      base, the grapple, strange seed and space wart, small floating asteroids
+### Phase 7e – Asteroid machines ✅
+- [x] Walkways (BlockWalkway, plain, with an Aluminium Wire or a Fluid Pipe through it) with their 1.12.2 model pieces:
+      rails on the sides that meet no walkway or solid face
+- [x] Space Wart (BlockSpaceWart, nether wart rules) and the two Strange Seeds (treasure of the abandoned bases)
+- [x] Grapple (ItemGrapple, EntityGrapple): draw and let go to fire a hook on a string from your inventory; it reels
+      you in once it holds, and the string comes back; 384 uses
+- [x] Small asteroids (EntitySmallAsteroid) drifting past players in the belt, one in 50 ticks, 30-89 blocks off
+- [x] Beam power (TileEntityBeamReflector, TileEntityBeamReceiver): a receiver on a machine's energy output beams it
+      to the nearest node within 15 blocks, through reflectors (right-click cycles the target), into a receiver on an
+      energy input (1,500 gJ a tick from other mods' machines); the turrets aim at their targets and the beams spin
+- [x] Short Range Telepads (BlockShortRangeTelepad): a 3 x 3 pad under a canopy, an address and a target address (saved
+      with the world, unique on the server), 256 blocks' range on the same world; whoever stands on it 150 ticks goes to
+      the target pad for 2,500 gJ at each end; GUI, owner, enable / disable, particles
+- [x] Astro Miner Base (BlockMinerBase / BlockMinerBaseFull): eight blocks in a cube join into the base, turned with the
+      wrench; the dock GUI with its 72-slot store, battery, status and Recall; the miner charges from it and unloads
+      into it
+- [x] Astro Miner (EntityAstroMiner, ItemAstroMiner, RenderAstroMiner, SoundUpdaterMiner): docked from the item (at
+      most `maximumAstroMiners` per player, not on space stations), it flies out to the nearest asteroids (straight
+      ahead elsewhere), mines tunnels in its 1.12.2 pattern into its 227-slot hold, returns to unload and recharge, and
+      keeps its chunk loaded; lasers, scanning glow and engine hum; its NASA Workbench page and schematic
+- [x] Abandoned asteroid bases (MapGenAbandonedBase, BaseDeck, BaseRoom, BaseHangar, BasePlate): one per 576 x 576
+      blocks, built into the nearest asteroid in one of three alien designs (humanoid, avian, tunneler): three decks of
+      corridors and rooms, or two over a 26 x 42 hangar open to space; engineering rooms with NASA Workbenches and the
+      Moon Buggy and Tier 2 Rocket schematics hung on the wall, power rooms of storage modules and wires, a store with a
+      launch pad and a locked Cargo Loader holding the base's treasure (ghast tears or a Strange Seed, freed by loading
+      it into a rocket), medical rooms with tanks of Bacterial Sludge and brewing stands of poison, crew quarters,
+      control rooms, Cryogenic Chambers, and Space Wart growing in the empty rooms
+- [x] Hanging schematics (EntityHangingSchematic): any schematic hangs on a wall like a 2 x 2 painting and drops again
+- [x] Locked Cargo Loaders (TileEntityCargoLoader#locked), and the Dark Decoration Slab (BlockSlabGC asteroids_slab,
+      missed in phase 7d)
+
+### Phase 7g – Core blocks still missing
+- [ ] Air Lock Frame and Controller, Space Glass (clear, vanilla, strong, each plain or tin-framed), Arc Lamp, Concealed
+      Redstone, Repeater and Detector, Magnetic Crafting Table, Telemetry Unit, Display Screen, sealable (enclosed)
+      wires and pipes; then put them in place of their stand-ins in the abandoned bases (`world/base/BaseBlocks`)
 
 ### Phase 7f – Venus
 - [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
@@ -569,6 +601,34 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   GUI). The flag's cloth ripples on render time rather than whole ticks.
 * Holding a flag doesn't raise both arms (1.12.2 IHoldableItem) and the first-person view doesn't tip it forward while
   charging (ItemModelFlag); the hand transforms approximate 1.12.2's.
+
+* Walkway Pipes can't be dyed or switched to pull mode (1.12.2 had no way to reach them either). Space Wart follows
+  vanilla nether wart's rules (it needs soul sand). The grapple's arm poses (1.12.2 IHoldableItem) are not ported.
+* Small asteroids drift past the player they spawned for (1.12.2 looked for a closer player, but always found the same
+  one).
+* A Beam Receiver also takes from other mods' machines that only give power (1.12.2 attached only to ones that could
+  take it). A telepad jump costs each pad 2,500 gJ (1.12.2 set the target pad's energy to the sending pad's, less 2,500)
+  and lands on the centre of the target block.
+* Astro Miners are kept loaded with NeoForge chunk tickets (1.12.2 ticked their chunks by hand); its "out of range"
+  state is not shown in the dock (no 1.12.2 code set it). Its laser beams are drawn as a pink haze over the blocks
+  being cut rather than 1.12.2's line rendering. A blocked dock names the block in the way (1.12.2 said "air"). The
+  Astro Miner item doesn't spin slowly in GUIs, and in first person it is held in a plainer pose (1.12.2's first-person
+  matrix, four times the size and 6.8 blocks up, is beyond what a model file allows).
+* An abandoned base is built into the nearest asteroid within 64 blocks of its chunk (1.12.2: the nearest asteroid
+  generated so far, however far; a 1.21 structure can't reach more than 8 chunks), or floats at y 148 with none, as in
+  1.12.2 before any asteroid had generated. Its blocks are placed after the asteroid's own decoration, as in 1.12.2.
+* Blocks not ported yet stand in for 1.12.2's in the abandoned bases: dark decoration blocks for air lock frames and
+  controllers and for display screens, glass for space glass, sea lanterns for arc lamps, tin decoration blocks (or
+  moon rock) for the concealed redstone, repeaters and detectors they were disguised as, a tin block for telemetry
+  units, a crafting table for the magnetic one (its iron and heads are lost), and heavy aluminium wire for the sealable
+  one. See phase 7g.
+* The bases' NASA Workbenches and Cryogenic Chambers are whole (1.12.2 placed their parts, then overwrote most with
+  the rest of the room); the store's launch pad is joined from the start (1.12.2's single pads joined on their first
+  tick). Walls, stairs, bars, walkways and wires settle against their neighbours when the chunk is finished (1.12.2
+  drew their connections as it rendered).
+* Only a locked Cargo Loader loses its items when broken (1.12.2 cleared every Cargo Loader's items on breaking it).
+* The Dark Decoration Slab is named in English (1.12.2 had no name for it) and cut from the block in a stonecutter
+  (1.12.2 had no recipe).
 
 ## Workflow for porting more content
 

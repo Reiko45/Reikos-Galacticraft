@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/slab_top",
+  "textures": {
+    "bottom": "galacticraftcore:block/dark_decoration_block",
+    "side": "galacticraftcore:block/dark_decoration_block",
+    "top": "galacticraftcore:block/dark_decoration_block"
+  }
+}

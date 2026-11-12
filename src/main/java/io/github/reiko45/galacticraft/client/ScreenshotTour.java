@@ -1771,8 +1771,289 @@ public final class ScreenshotTour {
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "hollow_asteroid"));
         addVillageSteps();
-        this.lastGroup = this.extras.size();
         addSpaceRaceSteps();
+        this.lastGroup = this.extras.size();
+        addAsteroidMachineSteps();
+    }
+
+    /** Teleport the tour player to {@code from}, looking at {@code to}. */
+    private static void lookFrom(ServerPlayer player, ServerLevel level, net.minecraft.world.phys.Vec3 from, net.minecraft.world.phys.Vec3 to) {
+        final double dx = to.x - from.x;
+        final double dy = to.y - from.y;
+        final double dz = to.z - from.z;
+        final float yaw = (float) Math.toDegrees(Math.atan2(-dx, dz));
+        final float pitch = (float) -Math.toDegrees(Math.atan2(dy, Math.sqrt(dx * dx + dz * dz)));
+        player.teleportTo(level, from.x, from.y - player.getEyeHeight(), from.z, yaw, pitch);
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private java.util.List<io.github.reiko45.galacticraft.world.base.BasePiece> basePieces;
+
+    /**
+     * Phase 7e: walkways, beam power, short-range telepads, a docked Astro Miner, Space Wart and a hung schematic on
+     * flat ground, with the telepad, dock and Astro Miner schematic GUIs; then a hangar base built out among the
+     * asteroids, from outside and from within (hangar, corridor, store, engineering room).
+     */
+    private void addAsteroidMachineSteps() {
+        final int sx = 240;
+        final int sz = 160;
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel level = srv.overworld();
+            final int y = surface(level, sx, sz);
+            final BlockPos o = new BlockPos(sx, y, sz);
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-18, -1, -8), o.offset(18, -1, 8))) {
+                level.setBlockAndUpdate(pos, Blocks.SMOOTH_STONE.defaultBlockState());
+            }
+            // Beam power: a charged storage module beams through a reflector on a pole into a second one
+            level.setBlockAndUpdate(o.offset(-7, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+            level.setBlockAndUpdate(o.offset(3, 0, 0), GCBlocks.ENERGY_STORAGE_MODULE.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+            if (level.getBlockEntity(o.offset(-7, 0, 0)) instanceof MachineBlockEntity source) {
+                source.energy().setStored(400_000.0F);
+            }
+            // a module facing south puts out to the west and takes in from the east
+            level.setBlockAndUpdate(o.offset(-8, 0, 0), GCBlocks.BEAM_RECEIVER.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.BeamReceiverBlock.FACING, Direction.EAST));
+            level.setBlockAndUpdate(o.offset(4, 0, 0), GCBlocks.BEAM_RECEIVER.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.BeamReceiverBlock.FACING, Direction.WEST));
+            for (int i = 0; i < 3; i++) {
+                level.setBlockAndUpdate(o.offset(-1, i, -2), GCBlocks.TIN_DECORATION_WALL_1.get().defaultBlockState());
+            }
+            level.setBlockAndUpdate(o.offset(-1, 3, -2), GCBlocks.BEAM_REFLECTOR.get().defaultBlockState());
+            // Walkways: a bridge of each kind over a gap, between two tin pillars
+            for (int i = 0; i < 3; i++) {
+                level.setBlockAndUpdate(o.offset(-16, i, -3), GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+                level.setBlockAndUpdate(o.offset(-10, i, -3), GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+            }
+            for (int x = -15; x <= -11; x++) {
+                final net.minecraft.world.level.block.Block walkway = x == -13 ? GCBlocks.WALKWAY_WIRE.get() : x == -12 ? GCBlocks.WALKWAY_PIPE.get()
+                        : GCBlocks.WALKWAY.get();
+                level.setBlockAndUpdate(o.offset(x, 2, -3), walkway.defaultBlockState());
+                level.setBlockAndUpdate(o.offset(x, 2, -4), GCBlocks.WALKWAY.get().defaultBlockState());
+            }
+            // Short-range telepads, linked to each other and powered
+            final BlockPos padA = o.offset(9, 0, -1);
+            final BlockPos padB = o.offset(14, 0, -1);
+            for (BlockPos pad : new BlockPos[]{padA, padB}) {
+                level.setBlockAndUpdate(pad, GCBlocks.SHORT_RANGE_TELEPAD.get().defaultBlockState());
+                io.github.reiko45.galacticraft.block.ShortRangeTelepadBlock.buildParts(level, pad);
+            }
+            if (level.getBlockEntity(padA) instanceof io.github.reiko45.galacticraft.block.entity.ShortRangeTelepadBlockEntity a
+                    && level.getBlockEntity(padB) instanceof io.github.reiko45.galacticraft.block.entity.ShortRangeTelepadBlockEntity b) {
+                a.setOwner(p);
+                b.setOwner(p);
+                a.setAddress(1);
+                b.setAddress(2);
+                a.setTargetAddress(2);
+                b.setTargetAddress(1);
+                a.energy().setStored(16_000.0F);
+                b.energy().setStored(16_000.0F);
+            }
+            // Space Wart at every age on soul sand
+            for (int age = 0; age <= 3; age++) {
+                level.setBlockAndUpdate(o.offset(-4 + age, 0, 4), Blocks.SOUL_SAND.defaultBlockState());
+                level.setBlockAndUpdate(o.offset(-4 + age, 1, 4), GCBlocks.SPACE_WART.get().defaultBlockState()
+                        .setValue(io.github.reiko45.galacticraft.block.SpaceWartBlock.AGE, age));
+            }
+            // An Astro Miner Base, turned to face the camera, with a miner docked at it
+            final BlockPos corner = o.offset(-14, 0, 2);
+            io.github.reiko45.galacticraft.block.MinerBaseBlock.build(level, corner);
+            if (level.getBlockEntity(corner) instanceof io.github.reiko45.galacticraft.block.entity.MinerBaseBlockEntity base) {
+                base.rotate();
+                base.rotate();
+                base.energy().setStored(base.energy().getCapacityGJ());
+                base.spawnMiner(p);
+            }
+            // and an empty one beside it
+            final BlockPos emptyCorner = o.offset(-17, 0, 2);
+            io.github.reiko45.galacticraft.block.MinerBaseBlock.build(level, emptyCorner);
+            if (level.getBlockEntity(emptyCorner) instanceof io.github.reiko45.galacticraft.block.entity.MinerBaseBlockEntity empty) {
+                empty.rotate();
+                empty.rotate();
+            }
+            // A Tier 3 Rocket schematic hung on the south face of a tin wall
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(1, 0, 6), o.offset(4, 3, 6))) {
+                level.setBlockAndUpdate(pos, GCBlocks.TIN_DECORATION_BLOCK_2.get().defaultBlockState());
+            }
+            level.addFreshEntity(new io.github.reiko45.galacticraft.entity.HangingSchematicEntity(level, o.offset(3, 1, 7), Direction.SOUTH, 2));
+            level.setDayTime(5000L);
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(GCItems.GRAPPLE.get()));
+            lookFrom(p, level, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-2, 7, 16)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-2, 0, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // beams find their targets
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "asteroid_machines"));
+        // Beam power up close
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos o = new BlockPos(sx, surface(srv.overworld(), sx, sz + 6) , sz);
+            lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-2, 3, 7)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-2, 1, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "beam_power"));
+        // Telepads, their particles, and the GUI
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos o = new BlockPos(sx, surface(srv.overworld(), sx, sz + 6), sz);
+            lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(11, 3, 5)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(o.offset(11, 1, -1)));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "short_range_telepads"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos pad = new BlockPos(sx + 9, surface(srv.overworld(), sx, sz + 6), sz - 1);
+            if (srv.overworld().getBlockEntity(pad) instanceof io.github.reiko45.galacticraft.block.entity.ShortRangeTelepadBlockEntity telepad) {
+                telepad.openMenu(tourPlayer(srv));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_short_range_telepad"));
+        // The docked Astro Miner, its dock's GUI and its schematic page
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final BlockPos o = new BlockPos(sx, surface(srv.overworld(), sx, sz + 6), sz);
+            lookFrom(p, srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-11, 4, 9)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-15, 1, 3)));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "astro_miner_docked"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos corner = new BlockPos(sx - 14, surface(srv.overworld(), sx, sz + 6), sz + 2);
+            if (srv.overworld().getBlockEntity(corner) instanceof io.github.reiko45.galacticraft.block.entity.MinerBaseBlockEntity base) {
+                tourPlayer(srv).openMenu(base, corner);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_astro_miner_dock"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            GCPlayerData.get(p).unlockSchematic(io.github.reiko45.galacticraft.menu.Schematics.ASTRO_MINER.id());
+            final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+            p.teleportTo(srv.overworld(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+            io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.ASTRO_MINER, srv.overworld(), bench);
+            if (p.containerMenu instanceof io.github.reiko45.galacticraft.menu.AstroMinerBenchMenu menu) {
+                for (int i = 1; i < io.github.reiko45.galacticraft.menu.AstroMinerBenchMenu.MATRIX_SIZE; i++) {
+                    final Item part = switch (menu.getSlot(i).getContainerSlot()) {
+                        case 1, 3, 5, 11 -> GCItems.HEAVY_PLATING.get();
+                        case 2, 4, 9, 10, 12 -> GCItems.ORION_DRIVE.get();
+                        case 6 -> GCItems.ADVANCED_WAFER.get();
+                        case 7, 8 -> Items.CHEST;
+                        case 13 -> GCItems.BEAM_CORE.get();
+                        case 14 -> GCItems.STEEL_POLE.get();
+                        default -> null;
+                    };
+                    if (part != null) {
+                        menu.getSlot(i).set(new ItemStack(part));
+                    }
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_astro_miner_bench"));
+        // Walkways, Space Wart, a hung schematic and the grapple in hand
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                final BlockPos o = new BlockPos(sx, surface(srv.overworld(), sx, sz + 6), sz);
+                // standing in front of the walkway bridge, facing the front camera
+                p.teleportTo(srv.overworld(), o.getX() - 12.5D, o.getY(), o.getZ() + 0.5D, 0.0F, 10.0F);
+            });
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "walkways_and_grapple"));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.FIRST_PERSON));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos o = new BlockPos(sx, surface(srv.overworld(), sx, sz + 6), sz);
+            lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 3, 13)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 1, 5)));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "space_wart_and_schematic"));
+        // An abandoned hangar base out among the asteroids
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            final ServerLevel asteroids = srv.getLevel(GCDimensions.ASTEROIDS);
+            if (asteroids == null) {
+                return;
+            }
+            java.util.List<io.github.reiko45.galacticraft.world.base.BasePiece> pieces = null;
+            for (long seed = 1; pieces == null; seed++) {
+                final java.util.List<io.github.reiko45.galacticraft.world.base.BasePiece> candidate = io.github.reiko45.galacticraft.world.base.AbandonedBase.plan(
+                        net.minecraft.util.RandomSource.create(seed), 3000, 3000, null);
+                final java.util.Set<io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType> types =
+                        java.util.EnumSet.noneOf(io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType.class);
+                for (io.github.reiko45.galacticraft.world.base.BasePiece piece : candidate) {
+                    if (piece instanceof io.github.reiko45.galacticraft.world.base.BaseRoom room) {
+                        types.add(room.type());
+                    }
+                }
+                if (candidate.get(0).configuration().isHangarDeck() && candidate.get(0).configuration().deckType()
+                        == io.github.reiko45.galacticraft.world.base.BaseConfiguration.BaseType.HUMANOID
+                        && types.contains(io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType.ENGINEERING)) {
+                    pieces = candidate;
+                    GalacticraftCore.LOGGER.info("Screenshot tour: abandoned base from seed {}", seed);
+                }
+            }
+            final net.minecraft.world.level.levelgen.structure.BoundingBox box = net.minecraft.world.level.levelgen.structure.BoundingBox
+                    .encapsulatingBoxes(pieces.stream().map(io.github.reiko45.galacticraft.world.base.BasePiece::getBoundingBox).toList()).orElseThrow()
+                    .inflatedBy(1);
+            for (io.github.reiko45.galacticraft.world.base.BasePiece piece : pieces) {
+                piece.postProcess(asteroids, asteroids.structureManager(), asteroids.getChunkSource().getGenerator(), net.minecraft.util.RandomSource.create(7L),
+                        box, new net.minecraft.world.level.ChunkPos(new BlockPos(3000, 0, 3000)), new BlockPos(3000, 0, 3000));
+            }
+            this.basePieces = pieces;
+            p.addEffect(new net.minecraft.world.effect.MobEffectInstance(net.minecraft.world.effect.MobEffects.NIGHT_VISION, 20 * 120, 0, false, false));
+            final io.github.reiko45.galacticraft.world.base.BasePiece hangar = pieces.stream()
+                    .filter(piece -> piece instanceof io.github.reiko45.galacticraft.world.base.BaseHangar).findFirst().orElseThrow();
+            lookFrom(p, asteroids, net.minecraft.world.phys.Vec3.atCenterOf(hangar.localToWorld(20, 12, -22)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(hangar.localToWorld(13, 5, 30)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "abandoned_base_outside"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.basePieces == null) {
+                return;
+            }
+            final io.github.reiko45.galacticraft.world.base.BasePiece hangar = this.basePieces.stream()
+                    .filter(piece -> piece instanceof io.github.reiko45.galacticraft.world.base.BaseHangar).findFirst().orElseThrow();
+            lookFrom(tourPlayer(srv), srv.getLevel(GCDimensions.ASTEROIDS), net.minecraft.world.phys.Vec3.atCenterOf(hangar.localToWorld(13, 6, 12)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(hangar.localToWorld(13, 3, 42)));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "abandoned_base_hangar"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.basePieces == null) {
+                return;
+            }
+            final io.github.reiko45.galacticraft.world.base.BaseDeck deck = (io.github.reiko45.galacticraft.world.base.BaseDeck) this.basePieces.get(0);
+            final net.minecraft.world.level.levelgen.structure.BoundingBox box = deck.getBoundingBox();
+            final Direction along = deck.direction();
+            final int half = (along.getAxis() == Direction.Axis.X ? box.getXSpan() : box.getZSpan()) / 2 - 2;
+            final BlockPos centre = new BlockPos(box.getCenter().getX(), box.minY() + 2, box.getCenter().getZ());
+            lookFrom(tourPlayer(srv), srv.getLevel(GCDimensions.ASTEROIDS), net.minecraft.world.phys.Vec3.atCenterOf(centre.relative(along, half)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(centre.relative(along, -half).below()));
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "abandoned_base_corridor"));
+        for (io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType type : new io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType[]{
+                io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType.STORE, io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType.ENGINEERING}) {
+            this.extras.add((minecraft, srv) -> srv.execute(() -> {
+                if (this.basePieces == null) {
+                    return;
+                }
+                for (io.github.reiko45.galacticraft.world.base.BasePiece piece : this.basePieces) {
+                    if (piece instanceof io.github.reiko45.galacticraft.world.base.BaseRoom room && room.type() == type && room.localMaxX() >= 8) {
+                        final int maxX = room.localMaxX();
+                        final int maxZ = room.localMaxZ();
+                        final BlockPos eye = room.localToWorld(maxX - 1, 4, 1);
+                        final BlockPos target = type == io.github.reiko45.galacticraft.world.base.BaseRoom.RoomType.STORE ? room.localToWorld(2, 1, 3)
+                                : room.localToWorld(maxX / 2, 3, maxZ - 1);
+                        lookFrom(tourPlayer(srv), srv.getLevel(GCDimensions.ASTEROIDS), net.minecraft.world.phys.Vec3.atCenterOf(eye),
+                                net.minecraft.world.phys.Vec3.atCenterOf(target));
+                        return;
+                    }
+                }
+            }));
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "abandoned_base_" + type.name().toLowerCase(java.util.Locale.ROOT)));
+        }
     }
 
     /** Where the newest group of steps starts: -Dgalacticraftcore.screenshotTour.lastOnly=true runs only those. */

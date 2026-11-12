@@ -1,0 +1,6 @@
+{
+  "type": "galacticraftcore:abandoned_base",
+  "biomes": "galacticraftcore:asteroids",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

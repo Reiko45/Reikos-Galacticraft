@@ -1265,7 +1265,9 @@
     "commands.galacticraftcore.joinrace.no_team": "You haven't been invited to a space race team!",
     "block.galacticraftcore.space_wart": "Space Wart",
     "gui.galacticraftcore.astro_miner.offline_owner": "WARNING: that Astro Miner belonged to an offline player, cannot reset player's Astro Miner count.",
-    "subtitles.galacticraftcore.entity.astro_miner": "Astro Miner hums"
+    "subtitles.galacticraftcore.entity.astro_miner": "Astro Miner hums",
+    "block.galacticraftcore.dark_decoration_slab": "Dark Decoration Slab",
+    "entity.galacticraftcore.hanging_schematic": "Hanging Schematic"
   },
   "recipes": {
     "skip_conditions": [

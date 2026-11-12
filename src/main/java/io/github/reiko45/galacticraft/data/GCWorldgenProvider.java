@@ -222,7 +222,17 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MOON_VILLAGES =
             ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("moon_villages"));
 
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> ABANDONED_BASE =
+            ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("abandoned_base"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> ABANDONED_BASES =
+            ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("abandoned_bases"));
+
     private static void structures(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context) {
+        context.register(ABANDONED_BASE, new io.github.reiko45.galacticraft.world.base.AbandonedBase(
+                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
+                        net.minecraft.core.HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.ASTEROIDS_BIOME)),
+                        java.util.Map.of(), GenerationStep.Decoration.SURFACE_STRUCTURES,
+                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE)));
         // 1.12.2 MapGenVillageMoon: on the surface, settling its pieces onto the ground as they are built
         context.register(MOON_VILLAGE, new io.github.reiko45.galacticraft.world.village.MoonVillage(
                 new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
@@ -259,6 +269,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.STRUCTURE).getOrThrow(MOON_DUNGEON),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,
                         net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340)));
+        // 1.12.2 MapGenAbandonedBase: MapGenDungeon's rule with WorldProviderAsteroids#getDungeonSpacing (576 blocks,
+        // 36 chunks) and the asteroids' dimension id (-30) in the salt
+        context.register(ABANDONED_BASES, new net.minecraft.world.level.levelgen.structure.StructureSet(
+                context.lookup(Registries.STRUCTURE).getOrThrow(ABANDONED_BASE),
+                new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(36, 0,
+                        net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340 - 30)));
         context.register(MARS_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
                 context.lookup(Registries.STRUCTURE).getOrThrow(MARS_DUNGEON),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,

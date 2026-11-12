@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10387310,
+    "separation": 0,
+    "spacing": 36
+  },
+  "structures": [
+    {
+      "structure": "galacticraftcore:abandoned_base",
+      "weight": 1
+    }
+  ]
+}

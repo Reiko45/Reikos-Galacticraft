@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "type=bottom": {
+      "model": "galacticraftcore:block/dark_decoration_slab"
+    },
+    "type=double": {
+      "model": "galacticraftcore:block/dark_decoration_block"
+    },
+    "type=top": {
+      "model": "galacticraftcore:block/dark_decoration_slab_top"
+    }
+  }
+}

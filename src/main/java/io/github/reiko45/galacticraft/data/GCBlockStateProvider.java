@@ -306,6 +306,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 GCBlocks.DARK_DECORATION_BLOCK.get(), GCBlocks.TITANIUM_BLOCK.get()}) {
             simpleBlockWithItem(block, cubeAll(block));
         }
+        slab(GCBlocks.DARK_DECORATION_SLAB, GCBlocks.DARK_DECORATION_BLOCK, tex("dark_decoration_block"), tex("dark_decoration_block"),
+                tex("dark_decoration_block"));
         simpleBlockWithItem(GCBlocks.DENSE_ICE.get(), models().cubeAll("dense_ice", tex("dense_ice")).renderType("translucent"));
         // Invisible; the model only gives particles a texture.
         simpleBlock(GCBlocks.BRIGHT_AIR.get(), models().getBuilder("bright_air").texture("particle", mcLoc("block/glass")));
@@ -549,11 +551,15 @@ public class GCBlockStateProvider extends BlockStateProvider {
             inactive.visibility(group, group.equals("Hull") || group.equals("Lasers_Main_Laser_Base") || group.equals("HoverPad"));
         }
         inactive.end();
-        // 1.12.2 spacewart.json: the vanilla nether wart models
+        // 1.12.2 spacewart.json: the vanilla nether wart models (as cutout crops: a modded block that borrows vanilla's
+        // models doesn't get vanilla's render type with them)
+        final ModelFile[] wartStages = new ModelFile[3];
+        for (int stage = 0; stage < 3; stage++) {
+            wartStages[stage] = models().crop("space_wart_stage" + stage, mcLoc("block/nether_wart_stage" + stage)).renderType("cutout");
+        }
         getVariantBuilder(GCBlocks.SPACE_WART.get()).forAllStates(state -> {
             final int age = state.getValue(net.minecraft.world.level.block.NetherWartBlock.AGE);
-            return ConfiguredModel.builder().modelFile(new ModelFile.UncheckedModelFile(mcLoc("block/nether_wart_stage" + (age == 0 ? 0 : age == 3 ? 2 : 1))))
-                    .build();
+            return ConfiguredModel.builder().modelFile(wartStages[age == 0 ? 0 : age == 3 ? 2 : 1]).build();
         });
     }
 

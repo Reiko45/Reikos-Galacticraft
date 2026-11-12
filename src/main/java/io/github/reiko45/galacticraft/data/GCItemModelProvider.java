@@ -49,18 +49,24 @@ public class GCItemModelProvider extends ItemModelProvider {
         }
     }
 
-    /** 1.12.2 ItemModelAstroMiner: the astro_miner_inv OBJ (the transforms approximate the 1.12.2 matrices). */
+    /**
+     * 1.12.2 ItemModelAstroMiner: the astro_miner_inv OBJ with its 1.12.2 matrices, decomposed into translation, rotation
+     * and scale (the GUI one without its slow spin). Its first-person matrix (four times the size, 6.8 blocks up) can't
+     * be expressed in a model file, so first person is a plainer view.
+     */
     private void astroMiner(String name) {
         getBuilder(name).customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
                 .modelLocation(modLoc("models/item/astro_miner.obj")).flipV(true).end()
                 .texture("particle", modLoc("model/astro_miner_off")).transforms()
-                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, 0, 0).scale(0.03F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.015F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 180, 0).scale(0.03F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.02F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.02F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 225, 0).translation(0, 2, 0).scale(0.03F).end()
-                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 225, 0).translation(0, 2, 0).scale(0.03F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(-3.462F, 1.802F, 5.038F).scale(0.255F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(1.6F, 3.2F, 1.6F).scale(0.2F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 85.94F, 0).translation(3.043F, 2.4F, -2.19F).scale(0.3F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(-131.43F, 63.81F, 25.78F)
+                .translation(-1.685F, -6.558F, -12.607F).scale(0.8F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(-131.43F, 63.81F, 25.78F)
+                .translation(-1.685F, -6.558F, -12.607F).scale(0.8F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(1.0F, 4.0F, 0.0F).scale(0.4F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 45, 0).translation(1.0F, 4.0F, 0.0F).scale(0.4F).end()
                 .end();
     }
 

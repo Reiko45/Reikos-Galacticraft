@@ -171,6 +171,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
         event.registerEntityRenderer(GCEntities.ALIEN_VILLAGER.get(), io.github.reiko45.galacticraft.client.render.entity.AlienVillagerRenderer::new);
         event.registerEntityRenderer(GCEntities.FLAG.get(), io.github.reiko45.galacticraft.client.render.entity.FlagRenderer::new);
+        event.registerEntityRenderer(GCEntities.HANGING_SCHEMATIC.get(), io.github.reiko45.galacticraft.client.render.entity.HangingSchematicRenderer::new);
         event.registerEntityRenderer(GCEntities.GRAPPLE.get(), io.github.reiko45.galacticraft.client.render.entity.GrappleRenderer::new);
         event.registerEntityRenderer(GCEntities.ASTRO_MINER.get(), io.github.reiko45.galacticraft.client.render.entity.AstroMinerRenderer::new);
         event.registerEntityRenderer(GCEntities.SMALL_ASTEROID.get(), io.github.reiko45.galacticraft.client.render.entity.SmallAsteroidRenderer::new);

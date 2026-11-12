@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7d of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 7e of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -12,7 +12,9 @@ Slimeling and take on the three-headed Creeper Boss in the Mars dungeons. Build 
 and hydrogen, make methane and liquefy it into fuel, green the regolith with a Terraformer, sleep in a Cryogenic
 Chamber, and send Cargo Rockets between Launch Controllers on any world. Beat the Creeper Boss for the Tier 3 Rocket
 and ride an Entry Pod down into the asteroid belt, where titanium waits in the rock and the cold seeps in unless you
-wear Thermal Padding. From a rocket
+wear Thermal Padding. Out there, send Astro Miners to tunnel through the asteroids for you, beam power between
+machines, hop between Short Range Telepads, swing across on a grapple, and explore abandoned alien bases for their
+treasure. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
 back and you come down by parachute, with your cargo following in a Para-chest. Team up in the Space Race: name your
 team, draw its flag, share unlocked schematics and plant your flag wherever you land. Galacticraft's power system,
@@ -69,6 +71,16 @@ machines, solar panels and oil processing work. See
 * **Tier 3 Rocket and Entry Pod**: the Creeper Boss's schematic unlocks the Tier 3 page (a heavy nose cone, ten Tier 3
   plates, two boosters, four heavy fins and a heavy engine). It is the only rocket that reaches the asteroids, where
   you drop from y 310 in an Entry Pod onto the nearest asteroid; it opens as a chest with your cargo.
+* **Asteroid machines**: dock an Astro Miner at an Astro Miner Base (eight base blocks in a cube) and it flies off to
+  the nearest asteroids, tunnels through them, and comes back to unload into the base's 72-slot store and recharge,
+  keeping its chunk loaded on the way. Energy Beam Receivers on machines and Reflectors on poles carry power through the
+  air for 15 blocks a hop. Short Range Telepads send whoever stands on one to a linked pad up to 256 blocks away.
+  Walkways (with a wire or a pipe through them if you like), the Grapple, and small asteroids drifting past.
+* **Abandoned bases**: one in each 576x576 area of the belt, built into an asteroid in one of three alien designs, some
+  with a vast hangar open to space. Engineering rooms hang the Moon Buggy and Tier 2 Rocket schematics on the wall;
+  the store's locked Cargo Loader holds the base's treasure (and rotten supplies) until you load it into a rocket.
+  Medical rooms, crew quarters, power rooms, cryogenic chambers and Space Wart make up the rest. (A few blocks they use
+  aren't ported yet, so look-alikes stand in for them; see PORTING.md.)
 * **Temperature**: on Mars and among the asteroids your body cools down, faster without Thermal Padding (four pieces
   in the Galacticraft inventory, worn over your body with a pulsing glow). A full set, or a sealed room with an Ambient
   Thermal Controller, keeps you warm; otherwise the HUD thermometer warns you, then you slow down and freeze.
@@ -77,7 +89,7 @@ machines, solar panels and oil processing work. See
   twice as fast as the Tier 1, and can reach Mars. You land on Mars in Landing Balloons, which drop from y 900 and
   bounce fourteen times before letting you out; then they open as a chest with your cargo.
 * **Schematics**: put a schematic from the treasure chest into the NASA Workbench's "Add New Schematic" page to unlock
-  a new page for good; Back/Next flip between pages.
+  a new page for good; Back/Next flip between pages. Any schematic can also hang on a wall like a painting.
 * **Moon Buggy**: built on the workbench's Moon Buggy page from heavy plates, a seat and four wheels, with up to three
   storage boxes (18 slots each). Drive it with the movement keys (it climbs over bumps when you push on), F opens its
   storage and fuel, and a Buggy Fueling Pad with a Fuel Loader refuels it.
@@ -242,6 +254,18 @@ machines, solar panels and oil processing work. See
 | ![The destination screen with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
 
 ![An Entry Pod settled on an asteroid, lit by its Bright Air](docs/screenshots/entry_pod_landed.png)
+
+![An abandoned alien base's hangar, open to space, with the control room window over the airlock](docs/screenshots/abandoned_base_hangar.png)
+
+| A base's corridor | Its store and engineering room |
+|---|---|
+| ![A deck's corridor with doorways into the rooms and the hangar at its end](docs/screenshots/abandoned_base_corridor.png) | ![The store's launch pad and locked Cargo Loader, and NASA Workbenches before two hung schematics](docs/screenshots/abandoned_base_rooms.png) |
+
+![Walkways, a beam of power through a reflector, Space Wart, Short Range Telepads and an Astro Miner at its base](docs/screenshots/asteroid_machines.png)
+
+| An Astro Miner docked | The dock and the telepad |
+|---|---|
+| ![An Astro Miner hovering at its base](docs/screenshots/astro_miner_docked.png) | ![The Astro Miner Base dock GUI and the Short Range Telepad GUI](docs/screenshots/astro_miner_and_telepad_screens.png) |
 
 ![A Moon village from above: domed houses along plank paths, fields and lamp posts](docs/screenshots/moon_village.png)
 

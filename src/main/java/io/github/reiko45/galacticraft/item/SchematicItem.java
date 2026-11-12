@@ -25,6 +25,30 @@ public class SchematicItem extends Item {
         return this.schematic;
     }
 
+    /** 1.12.2 ItemSchematic#onItemUse: hang it on the side of a block, like a painting. */
+    @Override
+    public net.minecraft.world.InteractionResult useOn(net.minecraft.world.item.context.UseOnContext context) {
+        final net.minecraft.core.Direction face = context.getClickedFace();
+        final net.minecraft.core.BlockPos pos = context.getClickedPos().relative(face);
+        final net.minecraft.world.entity.player.Player player = context.getPlayer();
+        final int index = io.github.reiko45.galacticraft.entity.HangingSchematicEntity.indexOf(context.getItemInHand());
+        if (face.getAxis().isVertical() || index < 0 || player != null && !player.mayUseItemAt(pos, face, context.getItemInHand())) {
+            return net.minecraft.world.InteractionResult.FAIL;
+        }
+        final net.minecraft.world.level.Level level = context.getLevel();
+        final io.github.reiko45.galacticraft.entity.HangingSchematicEntity hanging =
+                new io.github.reiko45.galacticraft.entity.HangingSchematicEntity(level, pos, face, index);
+        if (hanging.survives()) {
+            if (!level.isClientSide) {
+                hanging.playPlacementSound();
+                level.gameEvent(player, net.minecraft.world.level.gameevent.GameEvent.ENTITY_PLACE, hanging.position());
+                level.addFreshEntity(hanging);
+            }
+            context.getItemInHand().shrink(1);
+        }
+        return net.minecraft.world.InteractionResult.sidedSuccess(level.isClientSide);
+    }
+
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         tooltip.add(Component.translatable("schematic.galacticraftcore." + this.schematic).withStyle(ChatFormatting.GRAY));

@@ -18,7 +18,8 @@ public class CargoLoaderMenu extends MachineMenu {
     public static final int STATUS = EXTRA;
     public static final int DISABLED = EXTRA + 1;
     public static final int COOLDOWN = EXTRA + 2;
-    public static final int DATA_COUNT = EXTRA + 3;
+    public static final int LOCKED = EXTRA + 3;
+    public static final int DATA_COUNT = EXTRA + 4;
     public static final int BUTTON_TOGGLE = 0;
 
     private final boolean loads;
@@ -59,6 +60,28 @@ public class CargoLoaderMenu extends MachineMenu {
             return true;
         }
         return false;
+    }
+
+    /** 1.12.2 ContainerCargoLoader#slotClick: a locked loader's item slots can't be clicked. */
+    @Override
+    public void clicked(int slotId, int button, net.minecraft.world.inventory.ClickType clickType, Player player) {
+        if (isLocked() && slotId > 0 && slotId < CargoMachineBlockEntity.SLOTS) {
+            return;
+        }
+        super.clicked(slotId, button, clickType, player);
+    }
+
+    /** 1.12.2 transferStackInSlot: nor shift-clicked out. */
+    @Override
+    public net.minecraft.world.item.ItemStack quickMoveStack(Player player, int index) {
+        if (isLocked() && index > 0 && index < CargoMachineBlockEntity.SLOTS) {
+            return net.minecraft.world.item.ItemStack.EMPTY;
+        }
+        return super.quickMoveStack(player, index);
+    }
+
+    public boolean isLocked() {
+        return this.machine != null ? this.machine.isLocked() : value(LOCKED) != 0;
     }
 
     public boolean loads() {

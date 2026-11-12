@@ -907,7 +907,8 @@ public class AstroMinerEntity extends Entity {
         double xs = C_WIDTH;
         double ys = C_WIDTH;
         double zs = C_WIDTH;
-        switch (this.facing) {
+        // Entity's constructor asks for a box before this class has set its facing
+        switch (this.facing == null ? Direction.NORTH : this.facing) {
             case DOWN, UP -> ys = C_LENGTH;
             case NORTH, SOUTH -> {
                 ys = C_HEIGHT;

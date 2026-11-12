@@ -138,6 +138,8 @@ public final class GCBlocks {
     public static final DeferredBlock<Block> ASTEROID_IRON_ORE = withItem("asteroid_iron_ore", () -> new Block(asteroidRock()));
     /** 1.12.2 "Dark Decoration Block", drawn with the screen side texture. */
     public static final DeferredBlock<Block> DARK_DECORATION_BLOCK = withItem("dark_decoration_block", () -> new Block(asteroidRock()));
+    /** 1.12.2 BlockSlabGC asteroids_slab (in the creative tab, with no recipe and no English name). */
+    public static final DeferredBlock<SlabBlock> DARK_DECORATION_SLAB = slab("dark_decoration_slab", DARK_DECORATION_BLOCK);
     public static final DeferredBlock<Block> TITANIUM_BLOCK = withItem("titanium_block", () -> new Block(asteroidRock()
             .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
     /** 1.12.2 BlockIceAsteroids: Material.ICE, slipperiness 0.98, hardness 0.5, glass sounds, translucent. */
