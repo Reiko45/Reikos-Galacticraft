@@ -62,6 +62,8 @@ neoForge {
         screenshotTour {
             client()
             systemProperty 'galacticraftcore.screenshotTour', 'true'
+            // -PtourLastOnly=true: only the newest group of steps (quicker while working on it)
+            systemProperty 'galacticraftcore.screenshotTour.lastOnly', project.findProperty('tourLastOnly') ?: 'false'
             programArguments.addAll '--width', '1280', '--height', '720'
         }
 

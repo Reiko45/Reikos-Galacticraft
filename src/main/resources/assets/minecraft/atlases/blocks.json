@@ -36,6 +36,10 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/entry_pod"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/flag0"
     }
   ]
 }

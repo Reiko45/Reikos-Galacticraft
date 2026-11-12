@@ -226,7 +226,28 @@ translation won't work: almost every vanilla and Forge API it touched changed be
       block; unbalanced thrusters spin it up (balanced ones stop it); the sky turns and anything floating is carried
       round the centre, with the 1.12.2 centrifugal push against the walls
 - [x] Circuit Fabricator zero-g bonus in orbit (5 basic wafers, 15 solar wafers, other wafers doubled)
-- [ ] Deferred to Phase 6b: Space Race teams (team GUI, the flag designer, invites, shared stats)
+- [x] Space Race teams: done in Phase 6b
+
+### Phase 6b – Space Race teams ✅
+- [x] Teams (SpaceRaceManager, SpaceRace, WorldDataSpaceRaces): one per player, made the first time they open the Space
+      Race Manager; a name (up to 25 characters), a 48x32 flag and a team colour, all set by the owner; saved with the
+      world and sent to every player
+- [x] Space Race Manager (GuiNewSpaceRace), from the box in the pause menu's corner (and, with
+      `enableSpaceRaceManagerPopup`, once at first login): the flag and colour, renaming, Add Player(s) (players within
+      25 blocks; invited names turn orange for a minute), Remove Player(s), and "View Server / Global Stats", which say
+      "Coming Soon" as in 1.12.2; changes go to the server every 5 seconds and on closing
+- [x] Flag designer: paintbrush and eraser (radius 1-11), a rectangle selection to paint within, a colour picker, a
+      grid, red/green/blue sliders and the paint colour; the team colour page with its own sliders
+- [x] Invitations and joining: the invited player gets the 1.12.2 chat message and joins with `/joinrace`
+      (GuiJoinSpaceRace: flag, name, owner, size, Join); removed members get a team of their own
+- [x] Shared schematics (SpaceRaceManager#teamUnlockSchematic): a page one member unlocks is unlocked for the team,
+      for offline members at their next login
+- [x] The team's clock (time with a member online) and the first visit to each world, kept as 1.12.2 kept them
+- [x] Flag (ItemFlag, EntityFlag, RenderFlag, ModelFlag): hold right-click about a second, let go looking at a block;
+      one flag per block; it flies its owner's team flag and ripples with the world's wind (Overworld 1, Mars 0.3,
+      orbit 0.1, asteroids 0.05, the Moon still); right-click turns it, hits break it (creative at once), it falls over
+      air; the OBJ item model with its green default flag; recipe from steel poles and canvas
+- [x] The Tier 3 Rocket's nose cone in the viewer's team colour (white without a team)
 
 ### Phase 7a – Mars ✅
 Ported from the Legacy repository's planets module (`micdoodle8.mods.galacticraft.planets.mars`); its assets come in
@@ -518,8 +539,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * The asteroid belt sits at a fixed phase on the celestial map (1.12.2 chose a random one each time the game started).
 * Titanium tools are repaired with titanium ingots; the titanium axe (1.12.2: the TOOL_STEEL material, 768 uses) with
   compressed steel. Asteroid rock has no blast resistance, as in 1.12.2.
-* The Tier 3 Rocket's nose cone is always drawn with its texture (1.12.2 tinted it with the player's team colour), and
-  its recipe takes one to three chests in any chest slots, like the Tier 2's.
+* The Tier 3 Rocket's recipe takes one to three chests in any chest slots, like the Tier 2's.
 * The Entry Pod falls under its own rules on the server (1.12.2 moved it on the client and sent its position up); the
   1.12.2 camera zoom and default third-person view in the pod are not ported.
 * The thermal check spares spectators as well as creative players. Thermal padding pieces sync with the rest of the
@@ -536,6 +556,19 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   appends a second copy of the whole trade list each time (1.12.2's populateBuyingList added the list again).
   The canned carrot trade accepts any oil canister (1.12.2: only an empty one). Struck by lightning they turn into a
   vanilla witch until the Evolved Witch is ported. The Sensor Glasses' mob texture isn't drawn (no Sensor Glasses yet).
+
+* Space Race members are kept by UUID (with the name last seen, updated at login); 1.12.2 kept names only, so a renamed
+  player lost their team. Team ids come from a saved counter (1.12.2 counted from 1 again after every restart, so a
+  pending /joinrace could point at a different team).
+* Joining a team takes the player out of their old team, which is deleted only once empty (1.12.2 deleted every team
+  the joining player was in, with its other members). The server keeps its own member list and ignores the one the
+  client sends (1.12.2 took the owner's list as sent).
+* Every team is sent to every player at login and when it changes (1.12.2 sent them on request, and the client asked
+  again for each flag it saw); there is no client-side flag cache file.
+* The flag in the manager and join screens is drawn flat, cell by cell (1.12.2 drew the 3D pole and flag model in the
+  GUI). The flag's cloth ripples on render time rather than whole ticks.
+* Holding a flag doesn't raise both arms (1.12.2 IHoldableItem) and the first-person view doesn't tip it forward while
+  charging (ItemModelFlag); the hand transforms approximate 1.12.2's.
 
 ## Workflow for porting more content
 

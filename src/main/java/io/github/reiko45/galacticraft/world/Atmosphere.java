@@ -31,12 +31,23 @@ public final class Atmosphere {
             GCDimensions.MARS, -1.0F,
             GCDimensions.ASTEROIDS, -1.5F);
 
+    /** 1.12.2 AtmosphereInfo#windLevel: how hard flags wave; 1 off Galacticraft worlds (ModelFlag's default). */
+    private static final Map<ResourceKey<Level>, Float> WIND = Map.of(
+            GCDimensions.MOON, 0.0F,
+            GCDimensions.ORBIT, 0.1F,
+            GCDimensions.MARS, 0.3F,
+            GCDimensions.ASTEROIDS, 0.05F);
+
     private Atmosphere() {
     }
 
     /** How hot (positive) or cold (negative) a world is: 0 for the Moon, orbit and every non-Galacticraft world. */
     public static float thermalLevel(ResourceKey<Level> dimension) {
         return THERMAL.getOrDefault(dimension, 0.0F);
+    }
+
+    public static float windLevel(ResourceKey<Level> dimension) {
+        return WIND.getOrDefault(dimension, 1.0F);
     }
 
     /** The gases of a Galacticraft world, in 1.12.2's order; null for other worlds (the Overworld, the Nether...). */

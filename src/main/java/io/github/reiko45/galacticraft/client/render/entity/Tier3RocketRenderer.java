@@ -22,13 +22,14 @@ import net.neoforged.neoforge.client.event.ModelEvent;
 
 /**
  * 1.12.2 RenderTier3Rocket: the tier3rocket OBJ at 0.8 scale in three parts (models/entity/tier_3_rocket/*.json): the
- * body and boosters, the nose cone, and a small light that blinks red and green every half second, unlit. It rocks when
+ * body and boosters, the nose cone (untextured, in the viewer's Space Race team colour), and a small light that blinks red and green every half second, unlit. It rocks when
  * hit, and harder as the launch countdown runs down.
  */
 public class Tier3RocketRenderer extends EntityRenderer<Tier3RocketEntity> {
     public static final ModelResourceLocation BODY = BakedModels.location("entity/tier_3_rocket/body");
     public static final ModelResourceLocation NOSE_CONE = BakedModels.location("entity/tier_3_rocket/nose_cone");
     public static final ModelResourceLocation LIGHT = BakedModels.location("entity/tier_3_rocket/light");
+    private static final net.minecraft.resources.ResourceLocation WHITE = net.minecraft.resources.ResourceLocation.withDefaultNamespace("textures/misc/white.png");
     /** 1.12.2 EntityTier3Rocket#getRenderOffsetY. */
     private static final float RENDER_OFFSET_Y = -1.0F;
 
@@ -49,7 +50,11 @@ public class Tier3RocketRenderer extends EntityRenderer<Tier3RocketEntity> {
         poseStack.scale(-1.0F, -1.0F, 1.0F);
         poseStack.scale(0.8F, 0.8F, 0.8F);
         BakedModels.draw(poseStack, buffers.getBuffer(RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS)), BODY, light);
-        BakedModels.draw(poseStack, buffers.getBuffer(RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS)), NOSE_CONE, light);
+        // 1.12.2: the nose cone untextured, in the viewer's Space Race team colour (white without a team)
+        final int team = Minecraft.getInstance().player == null ? 0xFFFFFF
+                : io.github.reiko45.galacticraft.client.race.ClientSpaceRaces.teamColor(Minecraft.getInstance().player.getUUID());
+        BakedModels.drawTinted(poseStack, buffers.getBuffer(RenderType.entityCutout(WHITE)), NOSE_CONE, light,
+                (team >> 16 & 255) / 255.0F, (team >> 8 & 255) / 255.0F, (team & 255) / 255.0F);
         // 1.12.2: drawn untextured and unlit, red or green by turns of 10 of the player's ticks
         final boolean red = Minecraft.getInstance().player == null || Minecraft.getInstance().player.tickCount / 10 % 2 < 1;
         BakedModels.drawTinted(poseStack, buffers.getBuffer(RenderType.entityCutout(TextureAtlas.LOCATION_BLOCKS)), LIGHT, LightTexture.FULL_BRIGHT,

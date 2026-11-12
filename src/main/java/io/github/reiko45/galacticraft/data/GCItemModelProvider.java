@@ -31,6 +31,8 @@ public class GCItemModelProvider extends ItemModelProvider {
                 withExistingParent(holder.getId().getPath(), mcLoc("item/template_spawn_egg"));
             } else if (item instanceof io.github.reiko45.galacticraft.item.BuggyItem) {
                 buggy(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.FlagItem) {
+                flag(holder.getId().getPath());
             } else if (item instanceof io.github.reiko45.galacticraft.item.RocketItem) {
                 rocket(holder.getId().getPath());
             } else if (item instanceof LiquidCanisterItem) {
@@ -41,6 +43,25 @@ public class GCItemModelProvider extends ItemModelProvider {
                 basicItem(item);
             }
         }
+    }
+
+    /**
+     * 1.12.2 ItemModelFlag: the flag OBJ (a 4.1 block pole with the default green flag, textures/model/flag0), turned to
+     * three quarters in the inventory and carried upright with the cloth out to the side (the transforms approximate the 1.12.2
+     * matrices).
+     */
+    private void flag(String name) {
+        getBuilder(name).customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/item/flag.obj")).flipV(true).end()
+                .texture("particle", modLoc("model/flag0")).transforms()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(20, -45, 0).translation(-2.34F, -5.18F, -1.73F).scale(0.22F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(-0.84F, -3.04F, 0.96F).scale(0.12F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 180, 0).translation(1.41F, -4.96F, -1.6F).scale(0.2F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(90, 0, 0).translation(4.0F, -3.2F, -5.6F).scale(0.5F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(90, 0, 0).translation(4.0F, -3.2F, -5.6F).scale(0.5F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 20, 0).translation(-0.28F, -4.16F, -3.05F).scale(0.3F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 20, 0).translation(-0.28F, -4.16F, -3.05F).scale(0.3F).end()
+                .end();
     }
 
     /**

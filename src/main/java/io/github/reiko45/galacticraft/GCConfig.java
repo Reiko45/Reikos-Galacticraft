@@ -21,6 +21,7 @@ public final class GCConfig {
     public static final ModConfigSpec.DoubleValue DUNGEON_BOSS_HEALTH_MOD;
     public static final ModConfigSpec.DoubleValue SPACE_STATION_ENERGY_SCALAR;
     public static final ModConfigSpec.BooleanValue DISABLE_SPACE_STATION_CREATION;
+    public static final ModConfigSpec.BooleanValue ENABLE_SPACE_RACE_MANAGER_POPUP;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -51,6 +52,10 @@ public final class GCConfig {
                 .comment("If set to true on a server, players will be unable to create space stations.")
                 .translation("config.galacticraftcore.disable_space_station_creation")
                 .define("disableSpaceStationCreation", false);
+        ENABLE_SPACE_RACE_MANAGER_POPUP = server
+                .comment("Enable this if you want the Space Race Manager to pop up when a player first logs in.")
+                .translation("config.galacticraftcore.enable_space_race_manager_popup")
+                .define("enableSpaceRaceManagerPopup", false);
         SERVER_SPEC = server.build();
     }
 

@@ -57,9 +57,21 @@ public final class GCCommands {
         dispatcher.register(Commands.literal("ssnewowner").requires(source -> source.hasPermission(2))
                 .then(Commands.argument("station", IntegerArgumentType.integer(0))
                         .then(Commands.argument("player", EntityArgument.player()).executes(GCCommands::newOwner))));
+        // 1.12.2 CommandJoinSpaceRace: open the join screen for the team that last invited you
+        dispatcher.register(Commands.literal("joinrace").executes(GCCommands::joinRace));
         dispatcher.register(Commands.literal("gchouston").executes(context -> houston(context, null))
                 .then(Commands.argument("player", EntityArgument.player()).requires(source -> source.hasPermission(2))
                         .executes(context -> houston(context, EntityArgument.getPlayer(context, "player")))));
+    }
+
+    private static int joinRace(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
+        final ServerPlayer player = context.getSource().getPlayerOrException();
+        final int invite = io.github.reiko45.galacticraft.player.GCPlayerData.get(player).spaceRaceInvite;
+        if (invite <= 0 || io.github.reiko45.galacticraft.race.SpaceRaces.get(player.server).byId(invite) == null) {
+            throw fail(Component.translatable("commands.galacticraftcore.joinrace.no_team"));
+        }
+        io.github.reiko45.galacticraft.race.RaceNetwork.openJoin(player, invite);
+        return 1;
     }
 
     private static CommandSyntaxException fail(Component message) {

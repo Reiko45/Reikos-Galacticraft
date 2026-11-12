@@ -141,6 +141,9 @@ public final class ScreenshotTour {
         } else if (this.ticks == 160) {
             shoot(minecraft, "galacticraft_machines");
         } else if (this.ticks > 160 && (this.ticks - 160) % 30 == 0) {
+            if (this.step == 0 && this.lastGroup >= 0 && Boolean.getBoolean(PROPERTY + ".lastOnly")) {
+                this.step = this.machines.size() + this.lastGroup;
+            }
             if (this.step < this.machines.size()) {
                 final BlockPos pos = this.machines.get(this.step);
                 server.execute(() -> {
@@ -1768,6 +1771,135 @@ public final class ScreenshotTour {
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "hollow_asteroid"));
         addVillageSteps();
+        this.lastGroup = this.extras.size();
+        addSpaceRaceSteps();
+    }
+
+    /** Where the newest group of steps starts: -Dgalacticraftcore.screenshotTour.lastOnly=true runs only those. */
+    private int lastGroup = -1;
+
+    /** A team flag for the tour: a night-blue field, a crescent Moon and an orange stripe (in 0xRRGGBB). */
+    private static int tourFlag(int x, int y) {
+        final double dx = x - 17.0D;
+        final double dy = y - 15.5D;
+        final double ox = x - 21.0D;
+        final double oy = y - 13.0D;
+        if (y >= 26) {
+            return 0xE07020;
+        }
+        if (dx * dx + dy * dy <= 81.0D && ox * ox + oy * oy > 64.0D) {
+            return 0xF0F0E0;
+        }
+        return (x * 7 + y * 3) % 23 == 0 && y < 24 ? 0xFFFFFF : 0x14286E;
+    }
+
+    /**
+     * Phase 6b: the Space Race Manager (main page, flag designer, team colour), an invitation from another team and
+     * the Join Space Race screen, a planted flag waving in Overworld wind beside a Tier 3 Rocket whose nose cone wears
+     * the team colour, the flag in hand, and the pause menu's Space Race Manager box.
+     */
+    private void addSpaceRaceSteps() {
+        final int sceneX = 160;
+        final int sceneZ = 160;
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            final ServerLevel level = srv.overworld();
+            final int y = surface(level, sceneX, sceneZ);
+            final io.github.reiko45.galacticraft.race.SpaceRaces races = io.github.reiko45.galacticraft.race.SpaceRaces.get(srv);
+            races.ensure(p);
+            final io.github.reiko45.galacticraft.race.FlagData flag = new io.github.reiko45.galacticraft.race.FlagData();
+            for (int x = 0; x < flag.width(); x++) {
+                for (int fy = 0; fy < flag.height(); fy++) {
+                    flag.setColorAt(x, fy, tourFlag(x, fy));
+                }
+            }
+            races.update(p, "Lunar Pioneers", flag, 0xE07020);
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            srv.overworld().setDayTime(6000L);
+            p.teleportTo(level, sceneX + 0.5D, y + 1.0D, sceneZ + 6.5D, 180.0F, 10.0F);
+        }));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(new io.github.reiko45.galacticraft.client.race.SpaceRaceManagerScreen()));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_space_race_manager"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.race.SpaceRaceManagerScreen screen) {
+                screen.showDesigner();
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_space_race_flag_designer"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.race.SpaceRaceManagerScreen screen) {
+                screen.showTeamColor();
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_space_race_team_color"));
+        // Another team, owned by a stand-in player nearby, sends an invitation; the Join screen it leads to
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final net.neoforged.neoforge.common.util.FakePlayer rival = net.neoforged.neoforge.common.util.FakePlayerFactory.get(srv.overworld(),
+                        new com.mojang.authlib.GameProfile(java.util.UUID.nameUUIDFromBytes("tour-rival".getBytes()), "Valentina"));
+                rival.setPos(p.getX() + 3.0D, p.getY(), p.getZ());
+                final io.github.reiko45.galacticraft.race.SpaceRaces races = io.github.reiko45.galacticraft.race.SpaceRaces.get(srv);
+                races.ensure(rival);
+                final io.github.reiko45.galacticraft.race.FlagData flag = new io.github.reiko45.galacticraft.race.FlagData();
+                for (int x = 0; x < flag.width(); x++) {
+                    for (int fy = 0; fy < flag.height(); fy++) {
+                        flag.setColorAt(x, fy, fy < 11 ? 0xC81E1E : fy < 22 ? 0xFFFFFF : 0x1E8C3C);
+                    }
+                }
+                races.update(rival, "Vostok Crew", flag, 0xC81E1E);
+                races.invite(rival, p.getGameProfile().getName());
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "space_race_invite"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            io.github.reiko45.galacticraft.race.RaceNetwork.openJoin(p, GCPlayerData.get(p).spaceRaceInvite);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_join_space_race"));
+        // A planted flag and a Tier 3 Rocket in the team's colours
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final ServerLevel level = srv.overworld();
+                final int y = surface(level, sceneX, sceneZ);
+                final BlockPos ground = new BlockPos(sceneX, y - 1, sceneZ);
+                level.addFreshEntity(io.github.reiko45.galacticraft.entity.FlagEntity.create(level, ground.getX() + 0.5D, ground.getY() + 1.0D,
+                        ground.getZ() + 0.5D, 0, p));
+                for (BlockPos pos : BlockPos.betweenClosed(ground.offset(-5, 0, -2), ground.offset(-3, 0, 0))) {
+                    level.setBlockAndUpdate(pos, GCBlocks.LANDING_PAD.get().defaultBlockState());
+                }
+                final io.github.reiko45.galacticraft.entity.Tier3RocketEntity rocket = io.github.reiko45.galacticraft.entity.Tier3RocketEntity.create(level,
+                        ground.getX() - 3.5D, ground.getY() + 1.4D, ground.getZ() - 0.5D, 0, 0);
+                rocket.setYRot(180.0F);
+                level.addFreshEntity(rocket);
+                p.teleportTo(level, sceneX - 0.5D, y + 1.5D, sceneZ + 6.5D, 165.0F, 5.0F);
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "space_race_flag"));
+        // The flag item: in the hotbar and held, seen from the front
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(GCItems.FLAG.get()));
+                p.teleportTo(srv.overworld(), sceneX + 3.5D, surface(srv.overworld(), sceneX + 3, sceneZ + 4), sceneZ + 4.5D, 150.0F, 10.0F);
+            });
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "flag_in_hand"));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.FIRST_PERSON));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "flag_first_person"));
+        this.extras.add((minecraft, srv) -> minecraft.pauseGame(false));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_pause_space_race"));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
     }
 
     @org.jetbrains.annotations.Nullable

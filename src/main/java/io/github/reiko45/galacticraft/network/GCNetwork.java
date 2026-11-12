@@ -266,6 +266,7 @@ public final class GCNetwork {
     @SubscribeEvent
     public static void register(RegisterPayloadHandlersEvent event) {
         final PayloadRegistrar registrar = event.registrar("1");
+        io.github.reiko45.galacticraft.race.RaceNetwork.register(registrar);
         registrar.playToServer(OpenExtendedInventory.TYPE, OpenExtendedInventory.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> ExtendedInventoryMenu.open(context.player())));
         registrar.playToClient(OpenCelestialSelection.TYPE, OpenCelestialSelection.STREAM_CODEC,

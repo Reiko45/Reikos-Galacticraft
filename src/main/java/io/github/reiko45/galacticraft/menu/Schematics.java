@@ -120,13 +120,19 @@ public final class Schematics {
         }
     }
 
-    /** 1.12.2 SchematicRegistry#unlockNewPage: unlocks the schematic's page (using it up) unless already unlocked. */
+    /**
+     * 1.12.2 SchematicRegistry#unlockNewPage: unlocks the schematic's page (using it up) unless already unlocked, and
+     * for the player's Space Race teammates (SpaceRaceManager#teamUnlockSchematic).
+     */
     public static boolean unlock(Player player, ItemStack stack) {
         final Page page = forItem(stack);
         if (page == null || page.unlockedBy() == null || !GCPlayerData.get(player).unlockSchematic(page.id())) {
             return false;
         }
         stack.shrink(1);
+        if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer) {
+            io.github.reiko45.galacticraft.race.SpaceRaces.get(serverPlayer.server).teamUnlock(serverPlayer, page.id());
+        }
         return true;
     }
 }

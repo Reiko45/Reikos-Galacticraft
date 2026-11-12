@@ -94,6 +94,7 @@ public final class GalacticraftClient {
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::pre);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::post);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
+        io.github.reiko45.galacticraft.client.race.SpaceRaceClient.register();
         ScreenshotTour.registerIfEnabled();
     }
 
@@ -120,6 +121,8 @@ public final class GalacticraftClient {
                 io.github.reiko45.galacticraft.client.render.entity.SludgelingModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.AlienVillagerModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.AlienVillagerModel::createBodyLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.FlagRenderer.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.FlagRenderer::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SlimelingModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SlimelingModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.LAYER,
@@ -158,6 +161,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.client.render.entity.SludgelingRenderer::new);
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
         event.registerEntityRenderer(GCEntities.ALIEN_VILLAGER.get(), io.github.reiko45.galacticraft.client.render.entity.AlienVillagerRenderer::new);
+        event.registerEntityRenderer(GCEntities.FLAG.get(), io.github.reiko45.galacticraft.client.render.entity.FlagRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.TREASURE_CHEST.get(), io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::new);
     }
 

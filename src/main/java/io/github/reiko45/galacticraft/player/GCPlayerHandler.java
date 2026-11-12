@@ -55,6 +55,7 @@ public final class GCPlayerHandler {
             data.setDamageCounter(data.damageCounter() - 1);
         }
         swapTorches(player);
+        spaceRacePopup(player, data);
         SpaceTravel.tick(player, data);
         MeteorShowers.tick(player);
         Footprints.updateFeet(player, data);
@@ -204,6 +205,29 @@ public final class GCPlayerHandler {
     @SubscribeEvent
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         GCPlayerData.get(event.getEntity()).markGearChanged();
+        if (event.getEntity() instanceof ServerPlayer player) {
+            io.github.reiko45.galacticraft.race.SpaceRaces.get(player.server).onLogin(player);
+        }
+    }
+
+    /** 1.12.2 SpaceRaceManager#tick, from TickHandlerServer. */
+    @SubscribeEvent
+    public static void onServerTick(net.neoforged.neoforge.event.tick.ServerTickEvent.Post event) {
+        io.github.reiko45.galacticraft.race.SpaceRaces.get(event.getServer()).tick(event.getServer());
+    }
+
+    /**
+     * 1.12.2 GCPlayerHandler#onPlayerUpdate: with enableSpaceRaceManagerPopup on, a player without a named team sees the
+     * Space Race Manager once, a second after first logging in.
+     */
+    private static void spaceRacePopup(ServerPlayer player, GCPlayerData data) {
+        if (player.tickCount >= 25 && !data.openedSpaceRaceManager && io.github.reiko45.galacticraft.GCConfig.ENABLE_SPACE_RACE_MANAGER_POPUP.get()) {
+            final io.github.reiko45.galacticraft.race.SpaceRace race = io.github.reiko45.galacticraft.race.SpaceRaces.get(player.server).of(player.getUUID());
+            if (race == null || io.github.reiko45.galacticraft.race.SpaceRace.DEFAULT_NAME.equals(race.name())) {
+                io.github.reiko45.galacticraft.race.RaceNetwork.openManager(player);
+            }
+            data.openedSpaceRaceManager = true;
+        }
     }
 
     /** No getting out of a launched rocket or a flying lander (1.12.2 IIgnoreShift). */

@@ -14,7 +14,9 @@ Chamber, and send Cargo Rockets between Launch Controllers on any world. Beat th
 and ride an Entry Pod down into the asteroid belt, where titanium waits in the rock and the cold seeps in unless you
 wear Thermal Padding. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
-back and you come down by parachute, with your cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
+back and you come down by parachute, with your cargo following in a Para-chest. Team up in the Space Race: name your
+team, draw its flag, share unlocked schematics and plant your flag wherever you land. Galacticraft's power system,
+machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
 
 ## What works
@@ -112,8 +114,14 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
   zero-g bonus in the Circuit Fabricator. Rockets launched there need only half the fuel. Fall below y 30 and you land
   back on Earth. Rename your station on the screen; `/ssinvite`, `/ssuninvite` and `/ssnewowner` control who may come,
   and `/gchouston` takes you home from anywhere in space. Spin Thrusters fixed to the station make it spin.
+* **Space Race**: the "Space Race Manager" box in the pause menu's corner makes you a team. Name it, pick a team
+  colour and draw its 48x32 flag (brush, eraser, rectangle selection, colour picker and grid); invite players within
+  25 blocks, who join with `/joinrace`, and remove members. A schematic one member unlocks is unlocked for the whole
+  team, even those offline. Craft a Flag from steel poles and canvas, hold right-click for a second and let go to plant
+  it: it flies your team's flag and waves in the wind (gently on Mars, not at all on the Moon). The Tier 3 Rocket's nose
+  cone wears your team colour. As in 1.12.2, the server and global stats buttons say "Coming Soon".
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
-* Recipes: 176 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
+* Recipes: 177 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 
@@ -241,6 +249,16 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 |---|---|
 | ![A domed house of tin decoration blocks with glowstone torches](docs/screenshots/moon_village_house.png) | ![Two Alien Villagers and a child, and their trading screen](docs/screenshots/alien_villagers_and_trades.png) |
 
+![A planted team flag waving beside a Tier 3 Rocket with a team-coloured nose cone](docs/screenshots/space_race_flag.png)
+
+| The Space Race Manager | The flag designer |
+|---|---|
+| ![The Space Race Manager: the team's flag, colour and name, Add / Remove Player(s) and the stats buttons](docs/screenshots/space_race_manager.png) | ![The flag designer: tools, the 48x32 canvas and the colour sliders](docs/screenshots/space_race_flag_designer.png) |
+
+| An invitation and the Join screen | Carrying a flag |
+|---|---|
+| ![The chat invitation and the Join Space Race screen with the other team's flag](docs/screenshots/space_race_join.png) | ![A player carrying a flag, seen from behind](docs/screenshots/flag_in_hand.png) |
+
 ### Visiting the Moon, Mars and the asteroids
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
@@ -271,6 +289,7 @@ categories, shows the oxygen gear on the player, goes to the Moon for the oxygen
 a cave, the evolved mobs, a dungeon (placed where the structure set puts the first one, since the tour world has
 structures off), the Skeleton Boss and its treasure, the Moon Buggy and the NASA Workbench pages, then flies a rocket
 to the Moon. It saves screenshots to `run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
+`-PtourLastOnly=true` runs only the newest group of steps (now the Space Race), which is quicker while working on it.
 
 ## Porting tools
 
@@ -293,6 +312,7 @@ python3 tools/port_legacy_assets.py --legacy ../Galacticraft-Legacy
 | `src/main/java/.../fluid` | Oil/fuel blocks, oxygen gas, fluid tags, fluid pipe networks |
 | `src/main/java/.../oxygen`, `player` | Breathing and sealing rules, the seal check, player data and gear |
 | `src/main/java/.../network` | Packets |
+| `src/main/java/.../race`, `client/race` | Space Race teams, their packets, and the manager, designer and join screens |
 | `src/main/java/.../block/entity`, `menu`, `client/screen`, `client/render` | Machines, their menus, GUIs and block entity renderers |
 | `src/main/java/.../compat/jei` | Optional JEI plugin |
 | `src/main/java/.../recipe` | Compressing and circuit fabricating recipe types |

@@ -51,6 +51,10 @@ public final class GCEntities {
             () -> EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(10).updateInterval(2).build("parachest"));
 
+    /** 1.12.2 EntityFlag setSize(0.4, 3). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.FlagEntity>> FLAG = ENTITY_TYPES.register("flag",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.FlagEntity>of(io.github.reiko45.galacticraft.entity.FlagEntity::new,
+                    MobCategory.MISC).sized(0.4F, 3.0F).clientTrackingRange(10).build("flag"));
     public static final Supplier<EntityType<MeteorEntity>> METEOR = ENTITY_TYPES.register("meteor",
             () -> EntityType.Builder.<MeteorEntity>of(MeteorEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(16).updateInterval(1).fireImmune().noSave().build("meteor"));

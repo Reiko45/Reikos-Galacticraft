@@ -475,7 +475,9 @@
     "model/tier_3_rocket": "planets:blocks/tier3rocket",
     "model/entry_pod": "planets:blocks/space_pod",
     "gui/schematic_rocket_t3": "planets:gui/schematic_rocket_t3",
-    "model/villager": "model/villager"
+    "model/villager": "model/villager",
+    "model/flag": "model/flag",
+    "model/flag0": "model/flag0"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1087,7 +1089,46 @@
     "death.attack.thermal": "death.attack.thermal",
     "gui.galacticraftcore.invalid_thermal": "gui.warning.invalid_thermal",
     "entity.galacticraftcore.alien_villager": "entity.alien_villager.name",
-    "gui.galacticraftcore.village.warning.no_freq_mod": "gui.village.warning.no_freq_mod"
+    "gui.galacticraftcore.village.warning.no_freq_mod": "gui.village.warning.no_freq_mod",
+    "gui.galacticraftcore.space_race.chat.add_success": "gui.space_race.chat.add_success",
+    "gui.galacticraftcore.space_race.chat.already_part": "gui.space_race.chat.already_part",
+    "gui.galacticraftcore.space_race.chat.invite_received": "gui.space_race.chat.invite_received",
+    "gui.galacticraftcore.space_race.chat.not_found": "gui.space_race.chat.not_found",
+    "gui.galacticraftcore.space_race.chat.remove_success": "gui.space_race.chat.remove_success",
+    "gui.galacticraftcore.space_race.chat.to_join": "gui.space_race.chat.to_join",
+    "gui.galacticraftcore.space_race.coming_soon": "gui.space_race.coming_soon",
+    "gui.galacticraftcore.space_race.create.add_players": "gui.space_race.create.add_players.name",
+    "gui.galacticraftcore.space_race.create.back": "gui.space_race.create.back.name",
+    "gui.galacticraftcore.space_race.create.brush_radius": "gui.space_race.create.brush_radius.name",
+    "gui.galacticraftcore.space_race.create.brush_size": "gui.space_race.create.brush_size.name",
+    "gui.galacticraftcore.space_race.create.change_color.name.0": "gui.space_race.create.change_color.name.0",
+    "gui.galacticraftcore.space_race.create.change_color.name.1": "gui.space_race.create.change_color.name.1",
+    "gui.galacticraftcore.space_race.create.change_color.name.2": "gui.space_race.create.change_color.name.2",
+    "gui.galacticraftcore.space_race.create.close": "gui.space_race.create.close.name",
+    "gui.galacticraftcore.space_race.create.customize": "gui.space_race.create.customize.name",
+    "gui.galacticraftcore.space_race.create.eraser_radius": "gui.space_race.create.eraser_radius.name",
+    "gui.galacticraftcore.space_race.create.eraser_size": "gui.space_race.create.eraser_size.name",
+    "gui.galacticraftcore.space_race.create.global_stats": "gui.space_race.create.global_stats.name",
+    "gui.galacticraftcore.space_race.create.invite_player": "gui.space_race.create.invite_player.name",
+    "gui.galacticraftcore.space_race.create.player_radius": "gui.space_race.create.player_radius.name",
+    "gui.galacticraftcore.space_race.create.rem_players": "gui.space_race.create.rem_players.name",
+    "gui.galacticraftcore.space_race.create.remove": "gui.space_race.create.remove.name",
+    "gui.galacticraftcore.space_race.create.remove_player": "gui.space_race.create.remove_player.name",
+    "gui.galacticraftcore.space_race.create.rename": "gui.space_race.create.rename.name",
+    "gui.galacticraftcore.space_race.create.send_invite": "gui.space_race.create.send_invite.name",
+    "gui.galacticraftcore.space_race.create.server_stats": "gui.space_race.create.server_stats.name",
+    "gui.galacticraftcore.space_race.create.title.name.0": "gui.space_race.create.title.name.0",
+    "gui.galacticraftcore.space_race.create.title.name.1": "gui.space_race.create.title.name.1",
+    "gui.galacticraftcore.space_race.create.title": "gui.space_race.create.title.name",
+    "gui.galacticraftcore.space_race.join.member_count": "gui.space_race.join.member_count.name",
+    "gui.galacticraftcore.space_race.join": "gui.space_race.join.name",
+    "gui.galacticraftcore.space_race.join.owner": "gui.space_race.join.owner.name",
+    "gui.galacticraftcore.space_race.join.title": "gui.space_race.join.title.name",
+    "gui.galacticraftcore.space_race.unnamed": "gui.space_race.unnamed",
+    "config.galacticraftcore.enable_space_race_manager_popup": "gc.configgui.enable_space_race_manager_popup",
+    "item.galacticraftcore.flag": "item.flag.name",
+    "entity.galacticraftcore.flag": "entity.flag.name",
+    "gui.galacticraftcore.flag.already_placed": "gui.flag.already_placed"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1127,7 +1168,8 @@
     "item.galacticraftcore.liquid_oxygen_canister.contents": "LOX",
     "item.galacticraftcore.liquid_nitrogen_canister.contents": "Liquid",
     "block.galacticraftcore.bright_air": "Bright Air",
-    "item.galacticraftcore.alien_villager_spawn_egg": "Alien Villager Spawn Egg"
+    "item.galacticraftcore.alien_villager_spawn_egg": "Alien Villager Spawn Egg",
+    "commands.galacticraftcore.joinrace.no_team": "You haven't been invited to a space race team!"
   },
   "recipes": {
     "skip_conditions": [
@@ -1394,7 +1436,8 @@
       "galacticraftplanets:titanium_helmet": "galacticraftcore:titanium_helmet",
       "galacticraftplanets:titanium_chestplate": "galacticraftcore:titanium_chestplate",
       "galacticraftplanets:titanium_leggings": "galacticraftcore:titanium_leggings",
-      "galacticraftplanets:titanium_boots": "galacticraftcore:titanium_boots"
+      "galacticraftplanets:titanium_boots": "galacticraftcore:titanium_boots",
+      "galacticraftcore:flag": "galacticraftcore:flag"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -1514,6 +1557,7 @@
         "tier3rocket": "minecraft:block/white_concrete"
       }
     },
-    "entity/entry_pod": "planets:pod"
+    "entity/entry_pod": "planets:pod",
+    "item/flag": "flag"
   }
 }

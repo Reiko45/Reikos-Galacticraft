@@ -148,6 +148,10 @@ public final class GCItems {
             () -> new InfiniteOxygenTankItem(new Item.Properties()));
     public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
 
+    /** 1.12.2 ItemFlag: plants a Space Race flag. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.FlagItem> FLAG = ITEMS.register("flag",
+            () -> new io.github.reiko45.galacticraft.item.FlagItem(new Item.Properties()));
+
     // --- Spawn eggs (1.12.2 GCCoreUtil#registerGalacticraftCreature colours) ---
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_ZOMBIE_SPAWN_EGG = egg("evolved_zombie", GCEntities.EVOLVED_ZOMBIE, 44975, 7969893);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_SKELETON_SPAWN_EGG = egg("evolved_skeleton", GCEntities.EVOLVED_SKELETON, 12698049, 4802889);

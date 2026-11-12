@@ -59,6 +59,10 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int launchAttempts;
     public boolean usingParachute;
     public int chestSpawnCooldown;
+    /** The Space Race team this player was last invited to (1.12.2 spaceRaceInviteTeamID; not saved). */
+    public int spaceRaceInvite;
+    /** 1.12.2 openedSpaceRaceManager: the first-login popup has been shown. */
+    public boolean openedSpaceRaceManager;
     /** When an Alien Villager last told this player they need a Frequency Module (tick count; not saved). */
     public int lastVillagerChat = Integer.MIN_VALUE / 2;
     /** 1.12.2 GCPlayerStats thermalLevel (-22 freezing to 22 overheating) and thermalLevelNormalising. */
@@ -205,6 +209,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         tag.putInt("DamageCounter", this.damageCounter);
         tag.putInt("CryogenicChamberCooldown", this.cryogenicChamberCooldown);
         tag.putInt("ThermalLevel", this.thermalLevel);
+        tag.putBoolean("ShownSpaceRaceManager", this.openedSpaceRaceManager);
         final CompoundTag travel = new CompoundTag();
         travel.putInt("CargoSize", this.rocketCargo.size());
         net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
@@ -244,6 +249,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.damageCounter = tag.getInt("DamageCounter");
         this.cryogenicChamberCooldown = tag.getInt("CryogenicChamberCooldown");
         this.thermalLevel = tag.getInt("ThermalLevel");
+        this.openedSpaceRaceManager = tag.getBoolean("ShownSpaceRaceManager");
         final CompoundTag travel = tag.getCompound("Travel");
         this.rocketCargo = NonNullList.withSize(travel.getInt("CargoSize"), ItemStack.EMPTY);
         net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);
