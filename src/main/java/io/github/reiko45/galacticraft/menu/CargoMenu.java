@@ -3,7 +3,9 @@ package io.github.reiko45.galacticraft.menu;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.registry.GCMenus;
+import java.util.function.Consumer;
 import java.util.function.IntSupplier;
+import java.util.function.IntUnaryOperator;
 import java.util.function.Predicate;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
@@ -18,6 +20,7 @@ import net.minecraft.world.inventory.ContainerData;
 import net.minecraft.world.inventory.SimpleContainerData;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Cargo of a rocket, lander or para-chest.
@@ -26,11 +29,13 @@ import net.minecraft.world.item.ItemStack;
  *     carry the launch pads and the rocket itself) above the player's inventory, with the fuel level.</li>
  *     <li>{@link Layout#CHEST} is 1.12.2 ContainerParaChest, used by the lander and the para-chest: 18n cargo slots, the
  *     two rocket slots, a canister slot that is filled from the fuel tank, and the player's inventory.</li>
+ *     <li>{@link Layout#CARGO_ROCKET} is the rocket layout opened from the ground by a Cargo Rocket (1.12.2
+ *     GuiCargoRocket), with its Launch button (button 0) and launch status.</li>
  * </ul>
  */
 public class CargoMenu extends AbstractContainerMenu {
     public enum Layout {
-        ROCKET, CHEST, BUGGY
+        ROCKET, CHEST, BUGGY, CARGO_ROCKET
     }
 
     private final Layout layout;
@@ -38,13 +43,20 @@ public class CargoMenu extends AbstractContainerMenu {
     private final ContainerData data;
     private final Predicate<Player> valid;
     private final int cargoSlots;
+    @Nullable
+    private final Consumer<Player> onButton;
 
-    private CargoMenu(int id, Inventory playerInventory, Layout layout, Container cargo, ContainerData data, Predicate<Player> valid) {
+    /** Values: fuel, capacity, then for a Cargo Rocket its status, the status's countdown, whether it passed, and its flight phase. */
+    public static final int DATA_COUNT = 6;
+
+    private CargoMenu(int id, Inventory playerInventory, Layout layout, Container cargo, ContainerData data, Predicate<Player> valid,
+                      @Nullable Consumer<Player> onButton) {
         super(GCMenus.CARGO.get(), id);
         this.layout = layout;
         this.cargo = cargo;
         this.data = data;
         this.valid = valid;
+        this.onButton = onButton;
         final int size = cargo.getContainerSize();
         final int playerY;
         if (layout == Layout.BUGGY) {
@@ -55,7 +67,7 @@ public class CargoMenu extends AbstractContainerMenu {
                 }
             }
             playerY = 63 + size * 2;
-        } else if (layout == Layout.ROCKET) {
+        } else if (layout == Layout.ROCKET || layout == Layout.CARGO_ROCKET) {
             if (size - 2 <= 0) {
                 playerY = 50;
             } else {
@@ -97,15 +109,20 @@ public class CargoMenu extends AbstractContainerMenu {
     public static CargoMenu client(int id, Inventory playerInventory, RegistryFriendlyByteBuf buf) {
         final Layout layout = buf.readEnum(Layout.class);
         final int size = buf.readVarInt();
-        return new CargoMenu(id, playerInventory, layout, new SimpleContainer(size), new SimpleContainerData(2), player -> true);
+        return new CargoMenu(id, playerInventory, layout, new SimpleContainer(size), new SimpleContainerData(DATA_COUNT), player -> true, null);
     }
 
     public static void open(ServerPlayer player, Component title, Layout layout, Container cargo, IntSupplier fuel, int capacity,
                             Predicate<Player> valid) {
+        open(player, title, layout, cargo, index -> index == 0 ? fuel.getAsInt() : index == 1 ? capacity : 0, valid, null);
+    }
+
+    private static void open(ServerPlayer player, Component title, Layout layout, Container cargo, IntUnaryOperator values, Predicate<Player> valid,
+                             @Nullable Consumer<Player> onButton) {
         final ContainerData data = new ContainerData() {
             @Override
             public int get(int index) {
-                return index == 0 ? fuel.getAsInt() : capacity;
+                return values.applyAsInt(index);
             }
 
             @Override
@@ -114,10 +131,10 @@ public class CargoMenu extends AbstractContainerMenu {
 
             @Override
             public int getCount() {
-                return 2;
+                return DATA_COUNT;
             }
         };
-        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new CargoMenu(id, inventory, layout, cargo, data, valid), title), buf -> {
+        player.openMenu(new SimpleMenuProvider((id, inventory, p) -> new CargoMenu(id, inventory, layout, cargo, data, valid, onButton), title), buf -> {
             buf.writeEnum(layout);
             buf.writeVarInt(cargo.getContainerSize());
         });
@@ -127,6 +144,18 @@ public class CargoMenu extends AbstractContainerMenu {
     public static void openRocket(ServerPlayer player, RocketEntity rocket) {
         open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, rocket.fuelCapacity(),
                 p -> rocket.isAlive() && p.getVehicle() == rocket);
+    }
+
+    /** Right-clicking a Cargo Rocket (1.12.2 MarsUtil#openCargoRocketInventory). */
+    public static void openCargoRocket(ServerPlayer player, io.github.reiko45.galacticraft.entity.CargoRocketEntity rocket) {
+        open(player, rocket.getDisplayName(), Layout.CARGO_ROCKET, rocket.cargo(), index -> switch (index) {
+            case 0 -> rocket.fuel();
+            case 1 -> rocket.fuelCapacity();
+            case 2 -> rocket.statusCode();
+            case 3 -> rocket.statusCooldown();
+            case 4 -> rocket.statusValid() ? 1 : 0;
+            default -> rocket.phase().ordinal();
+        }, p -> rocket.isAlive() && p.distanceToSqr(rocket) <= 64.0D, p -> rocket.pressLaunch());
     }
 
     /** The inventory key while driving a buggy (1.12.2 GuiBuggy). */
@@ -155,6 +184,20 @@ public class CargoMenu extends AbstractContainerMenu {
 
     public int fuelCapacity() {
         return this.data.get(1);
+    }
+
+    public int value(int index) {
+        return this.data.get(index);
+    }
+
+    /** The Cargo Rocket's Launch button. */
+    @Override
+    public boolean clickMenuButton(Player player, int id) {
+        if (id == 0 && this.onButton != null) {
+            this.onButton.accept(player);
+            return true;
+        }
+        return false;
     }
 
     @Override

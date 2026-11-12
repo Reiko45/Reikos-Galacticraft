@@ -35,7 +35,7 @@ import org.jetbrains.annotations.Nullable;
  * three storage boxes hold 18 slots each; the inventory key opens them. One hit breaks it into its item (fuel kept),
  * creative players just remove it. A Buggy Fueling Pad with a Fuel Loader refuels it.
  */
-public class BuggyEntity extends Entity implements Refuelable {
+public class BuggyEntity extends Entity implements Refuelable, CargoCarrier {
     public static final int FUEL_CAPACITY = 1000;
     private static final EntityDataAccessor<Integer> FUEL = SynchedEntityData.defineId(BuggyEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Integer> STORAGE = SynchedEntityData.defineId(BuggyEntity.class, EntityDataSerializers.INT);
@@ -97,6 +97,17 @@ public class BuggyEntity extends Entity implements Refuelable {
 
     public SimpleContainer cargo() {
         return this.cargo;
+    }
+
+    /** 1.12.2 EntityBuggy#addCargo, loaded through its fueling pad. */
+    @Override
+    public LoadState addCargo(ItemStack stack, boolean doAdd) {
+        return CargoCarrier.add(this.cargo, this.cargo.getContainerSize(), stack, doAdd);
+    }
+
+    @Override
+    public Removal removeCargo(boolean doRemove) {
+        return CargoCarrier.remove(this.cargo, this.cargo.getContainerSize(), doRemove);
     }
 
     public int fuel() {

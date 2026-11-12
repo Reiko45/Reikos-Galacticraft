@@ -125,6 +125,10 @@ public class GCBlockStateProvider extends BlockStateProvider {
         horizontalBlock(GCBlocks.TERRAFORMER.get(), models().cube("terraformer", tex("machine"), tex("machine"), tex("terraformer"),
                 tex("terraformer"), tex("machine_input"), tex("machine")).texture("particle", tex("machine")));
         itemModels().withExistingParent("terraformer", modLoc("block/terraformer"));
+        // 1.12.2 launch_controller_model: the panel front and back, power in on the left (east).
+        horizontalBlock(GCBlocks.LAUNCH_CONTROLLER.get(), models().cube("launch_controller", tex("machine"), tex("machine"), tex("launch_controller"),
+                tex("launch_controller"), tex("machine_input"), tex("machine")).texture("particle", tex("machine")));
+        itemModels().withExistingParent("launch_controller", modLoc("block/launch_controller"));
         cryogenicChamber();
         fluidTank();
         fluidPipe();
@@ -169,6 +173,9 @@ public class GCBlockStateProvider extends BlockStateProvider {
         buggy();
         // 1.12.2 fuel_loader_model: loader panels front and back, power in on the left (east), fuel in on the right (west)
         machine(GCBlocks.FUEL_LOADER.get(), "", "machine_fuelloader", "machine_input", "machine_fuelloader", "machine_fuel_input");
+        // 1.12.2 cargo_loader_model / cargo_unloader_model: power in on the left (east), items in / out on the right
+        machine(GCBlocks.CARGO_LOADER.get(), "", "machine_cargoloader", "machine_input", "machine_cargoloader", "machine_item_input");
+        machine(GCBlocks.CARGO_UNLOADER.get(), "", "machine_cargounloader", "machine_input", "machine_cargounloader", "machine_item_output");
         final ModelFile workbench = models().getBuilder("nasa_workbench").customLoader(ObjModelBuilder::begin)
                 .modelLocation(modLoc("models/block/nasa_workbench.obj")).flipV(true).end()
                 .texture("particle", tex("assembly"));
@@ -214,7 +221,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
 
     private void buggy() {
         // The Tier 2 Rocket and Landing Balloons are single-object OBJs (1.12.2 RenderTier2Rocket, RenderLandingBalloons).
-        for (String entity : new String[]{"tier_2_rocket", "landing_balloons"}) {
+        for (String entity : new String[]{"tier_2_rocket", "cargo_rocket", "landing_balloons"}) {
             models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
         }

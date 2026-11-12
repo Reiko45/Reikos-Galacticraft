@@ -79,6 +79,8 @@ public final class GCBlockEntities {
             "methane_synthesizer", io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity::new, GCBlocks.METHANE_SYNTHESIZER);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity>> ELECTROLYZER = machine("electrolyzer",
             io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity::new, GCBlocks.ELECTROLYZER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity>> LAUNCH_CONTROLLER = machine(
+            "launch_controller", io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity::new, GCBlocks.LAUNCH_CONTROLLER);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity>> TERRAFORMER = machine("terraformer",
             io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::new, GCBlocks.TERRAFORMER);
     @SuppressWarnings("DataFlowIssue")
@@ -106,6 +108,10 @@ public final class GCBlockEntities {
 
     public static final Supplier<BlockEntityType<FuelLoaderBlockEntity>> FUEL_LOADER = machine("fuel_loader",
             FuelLoaderBlockEntity::new, GCBlocks.FUEL_LOADER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.CargoLoaderBlockEntity>> CARGO_LOADER = machine("cargo_loader",
+            io.github.reiko45.galacticraft.block.entity.CargoLoaderBlockEntity::new, GCBlocks.CARGO_LOADER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.CargoUnloaderBlockEntity>> CARGO_UNLOADER = machine(
+            "cargo_unloader", io.github.reiko45.galacticraft.block.entity.CargoUnloaderBlockEntity::new, GCBlocks.CARGO_UNLOADER);
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<ParachestBlockEntity>> PARACHEST = BLOCK_ENTITIES.register("parachest",
             () -> BlockEntityType.Builder.of(ParachestBlockEntity::new, GCBlocks.PARACHEST.get()).build(null));

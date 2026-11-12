@@ -65,6 +65,7 @@
     "galacticraftcore:methane_synthesizer",
     "galacticraftcore:electrolyzer",
     "galacticraftcore:terraformer",
+    "galacticraftcore:launch_controller",
     "galacticraftcore:cryogenic_chamber",
     "galacticraftcore:cryogenic_chamber_part",
     "galacticraftcore:oxygen_collector",
@@ -77,6 +78,8 @@
     "galacticraftcore:landing_pad",
     "galacticraftcore:buggy_fueling_pad",
     "galacticraftcore:fuel_loader",
+    "galacticraftcore:cargo_loader",
+    "galacticraftcore:cargo_unloader",
     "galacticraftcore:nasa_workbench",
     "galacticraftcore:nasa_workbench_part"
   ]

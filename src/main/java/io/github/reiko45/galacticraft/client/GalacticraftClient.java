@@ -135,6 +135,7 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.TERRAFORMER.get(), BubbleRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_2_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.CARGO_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDING_BALLOONS.get(), io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
         event.registerEntityRenderer(GCEntities.PARACHEST.get(), ParachestRenderer::new);
@@ -176,6 +177,7 @@ public final class GalacticraftClient {
         event.register(FluidPipeRenderer.PULL_MODEL);
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer.registerModels(event);
     }
 
@@ -221,6 +223,17 @@ public final class GalacticraftClient {
                 return this.renderer;
             }
         }, GCItems.TIER_2_ROCKET.get());
+        event.registerItem(new IClientItemExtensions() {
+            private RocketItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new RocketItemRenderer(0);
+                }
+                return this.renderer;
+            }
+        }, GCItems.CARGO_ROCKET.get());
         event.registerItem(new IClientItemExtensions() {
             private io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.Item renderer;
 
@@ -305,15 +318,19 @@ public final class GalacticraftClient {
         event.register(GCMenus.OXYGEN_STORAGE_MODULE.get(), OxygenMachineScreen::new);
         event.register(GCMenus.EXTENDED_INVENTORY.get(), ExtendedInventoryScreen::new);
         event.register(GCMenus.FUEL_LOADER.get(), FuelLoaderScreen::new);
+        event.register(GCMenus.CARGO_LOADER.get(), io.github.reiko45.galacticraft.client.screen.CargoLoaderScreen::new);
+        event.register(GCMenus.CARGO_UNLOADER.get(), io.github.reiko45.galacticraft.client.screen.CargoLoaderScreen::new);
         event.register(GCMenus.CARGO.get(), CargoScreen::new);
         event.register(GCMenus.GAS_LIQUEFIER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
         event.register(GCMenus.METHANE_SYNTHESIZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
         event.register(GCMenus.ELECTROLYZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
         event.register(GCMenus.TERRAFORMER.get(), io.github.reiko45.galacticraft.client.screen.TerraformerScreen::new);
+        event.register(GCMenus.LAUNCH_CONTROLLER.get(), io.github.reiko45.galacticraft.client.screen.LaunchControllerScreen::new);
         event.register(GCMenus.SLIMELING.get(), io.github.reiko45.galacticraft.client.screen.SlimelingInventoryScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);
         event.register(GCMenus.TIER_2_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.Tier2RocketBenchScreen::new);
+        event.register(GCMenus.CARGO_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.CargoRocketBenchScreen::new);
         event.register(GCMenus.SCHEMATIC_INPUT.get(), io.github.reiko45.galacticraft.client.screen.SchematicInputScreen::new);
     }
 

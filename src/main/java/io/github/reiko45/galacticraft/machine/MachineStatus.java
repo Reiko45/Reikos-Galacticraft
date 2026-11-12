@@ -44,6 +44,18 @@ public enum MachineStatus {
     TANKS_FULL("gui.galacticraftcore.status.tanks_full", ChatFormatting.DARK_RED),
     SYNTHESIZING("gui.galacticraftcore.status.synthesizing", ChatFormatting.GREEN),
     LIQUEFYING("gui.galacticraftcore.status.liquefying", ChatFormatting.GREEN),
+    // Cargo Loader / Unloader (1.12.2 GuiCargoLoader, GuiCargoUnloader)
+    NO_ITEMS("gui.galacticraftcore.status.no_items", ChatFormatting.DARK_RED),
+    NO_TARGET_LOAD("gui.galacticraftcore.status.no_target_load", ChatFormatting.DARK_RED),
+    NO_TARGET_UNLOAD("gui.galacticraftcore.status.no_target_unload", ChatFormatting.DARK_RED),
+    NO_INVENTORY_TARGET("gui.galacticraftcore.status.no_inventory_target", ChatFormatting.DARK_RED),
+    TARGET_FULL("gui.galacticraftcore.status.target_full", ChatFormatting.DARK_RED),
+    TARGET_EMPTY("gui.galacticraftcore.status.target_empty", ChatFormatting.DARK_RED),
+    // Launch Controller (1.12.2 GuiLaunchController#getStatus)
+    INVALID_FREQUENCY("gui.galacticraftcore.status.invalid_frequency", ChatFormatting.RED),
+    NO_ENERGY("gui.galacticraftcore.message.no_energy", ChatFormatting.RED),
+    CONTROLLER_DISABLED("gui.galacticraftcore.status.disabled", ChatFormatting.GOLD),
+    CONTROLLER_ACTIVE("gui.galacticraftcore.status.active", ChatFormatting.GREEN),
     UNKNOWN("gui.galacticraftcore.status.unknown", ChatFormatting.DARK_RED);
 
     private final String key;

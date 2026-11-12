@@ -59,6 +59,7 @@ public final class GalacticraftCore {
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
+        modBus.addListener(io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity::registerTickets);
         container.registerConfig(ModConfig.Type.CLIENT, GCConfig.CLIENT_SPEC);
         container.registerConfig(ModConfig.Type.SERVER, GCConfig.SERVER_SPEC);
     }

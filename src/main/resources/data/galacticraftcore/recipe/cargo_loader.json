@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "item": "minecraft:hopper"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "tag": "c:plates/aluminum"
+    },
+    "Z": {
+      "item": "minecraft:chest"
+    }
+  },
+  "pattern": [
+    "XWX",
+    "YZY",
+    "XXX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:cargo_loader"
+  }
+}

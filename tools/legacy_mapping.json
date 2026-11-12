@@ -424,7 +424,14 @@
     "block/cryo_0": "blocks/cryo_0",
     "block/cryo_1": "blocks/cryo_1",
     "gui/terraformer": "planets:gui/terraformer",
-    "gui/launch_controller": "planets:gui/launch_controller"
+    "gui/launch_controller": "planets:gui/launch_controller",
+    "block/machine_cargoloader": "blocks/machine_cargoloader",
+    "block/machine_cargounloader": "blocks/machine_cargounloader",
+    "block/machine_item_input": "blocks/machine_item_input",
+    "block/machine_item_output": "blocks/machine_item_output",
+    "gui/cargo_loader": "gui/cargo_loader",
+    "model/cargo_rocket": "planets:blocks/cargo_rocket",
+    "gui/schematic_rocket_cargo": "planets:gui/schematic_rocket_cargo"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -945,7 +952,55 @@
     "gui.galacticraftcore.message.trees": "planets:gui.message.trees.name",
     "gui.galacticraftcore.message.grass": "planets:gui.message.grass.name",
     "gui.galacticraftcore.show_bubble": "gui.show_bubble.desc.0",
-    "block.galacticraftcore.cryogenic_chamber_part": "tile.dummyblock.cryogenic_chamber.name"
+    "block.galacticraftcore.cryogenic_chamber_part": "tile.dummyblock.cryogenic_chamber.name",
+    "block.galacticraftcore.cargo_loader": "tile.cargo.loader.name",
+    "block.galacticraftcore.cargo_unloader": "tile.cargo.unloader.name",
+    "block.galacticraftcore.cargo_loader.desc": "tile.cargo_loader.description",
+    "block.galacticraftcore.cargo_unloader.desc": "tile.cargo_unloader.description",
+    "gui.galacticraftcore.button.load_items": "gui.button.loaditems.name",
+    "gui.galacticraftcore.button.unload_items": "gui.button.unloaditems.name",
+    "gui.galacticraftcore.button.stop_unloading": "gui.button.stopunloading.name",
+    "gui.galacticraftcore.status.no_items": "gui.status.noitems.name",
+    "gui.galacticraftcore.status.no_target_load": "gui.status.notargetload.name",
+    "gui.galacticraftcore.status.no_target_unload": "gui.status.notargetunload.name",
+    "gui.galacticraftcore.status.no_inventory_target": "gui.status.noinvtarget.name",
+    "gui.galacticraftcore.status.target_full": "gui.status.targetfull.name",
+    "gui.galacticraftcore.status.target_empty": "gui.status.targetempty.name",
+    "item.galacticraftcore.cargo_rocket": "planets:item.rocket_t2.cargo_rocket.name",
+    "entity.galacticraftcore.cargo_rocket": "planets:entity.rocket_cargo.name",
+    "gui.galacticraftcore.message.not_set": "planets:gui.message.not_set.name",
+    "gui.galacticraftcore.message.not_enough": "planets:gui.message.not_enough.name",
+    "gui.galacticraftcore.message.success": "planets:gui.message.success.name",
+    "gui.galacticraftcore.cargo_rocket.launched.0": "planets:gui.cargorocket.status.launched.0",
+    "gui.galacticraftcore.cargo_rocket.launched.1": "planets:gui.cargorocket.status.launched.1",
+    "gui.galacticraftcore.cargo_rocket.waiting.0": "planets:gui.cargorocket.status.waiting.0",
+    "gui.galacticraftcore.cargo_rocket.waiting.1": "planets:gui.cargorocket.status.waiting.1",
+    "gui.galacticraftcore.launch_controller.advanced": "planets:gui.launch_controller.advanced",
+    "gui.galacticraftcore.launch_controller.owner": "planets:gui.launch_controller.owner",
+    "gui.galacticraftcore.launch_controller.desc.0": "planets:gui.launch_controller.desc.0",
+    "gui.galacticraftcore.launch_controller.desc.1": "planets:gui.launch_controller.desc.1",
+    "gui.galacticraftcore.launch_controller.desc.2": "planets:gui.launch_controller.desc.2",
+    "gui.galacticraftcore.launch_controller.desc.3": "planets:gui.launch_controller.desc.3",
+    "gui.galacticraftcore.launch_controller.desc.4": "planets:gui.launch_controller.desc.4",
+    "gui.galacticraftcore.remove_pad": "planets:gui.message.remove_pad.name",
+    "gui.galacticraftcore.launch_when": "planets:gui.message.launch_when.name",
+    "gui.galacticraftcore.frequency": "planets:gui.message.frequency.name",
+    "gui.galacticraftcore.destination_frequency": "planets:gui.message.dest_frequency.name",
+    "gui.galacticraftcore.status.invalid_frequency": "planets:gui.message.invalid_freq.name",
+    "gui.galacticraftcore.button.hide_destination": "gui.button.hide_dest.name",
+    "gui.galacticraftcore.button.unhide_destination": "gui.button.unhide_dest.name",
+    "gui.galacticraftcore.battery_slot.desc.0": "gui.battery_slot.desc.0",
+    "gui.galacticraftcore.battery_slot.desc.1": "gui.battery_slot.desc.1",
+    "gui.galacticraftcore.rocket.warning.fuel_insufficient": "gui.rocket.warning.fuelinsufficient",
+    "gui.galacticraftcore.rocket.warning.launch_controller": "gui.rocket.warning.launchcontroller",
+    "gui.galacticraftcore.auto_launch.cargo_unloaded": "planets:gui.message.cargo_unloaded.name",
+    "gui.galacticraftcore.auto_launch.cargo_full": "planets:gui.message.cargo_full.name",
+    "gui.galacticraftcore.auto_launch.fully_fueled": "planets:gui.message.fully_fueled.name",
+    "gui.galacticraftcore.auto_launch.instant": "planets:gui.message.instant.name",
+    "gui.galacticraftcore.auto_launch.ten_sec": "planets:gui.message.ten_sec.name",
+    "gui.galacticraftcore.auto_launch.thirty_sec": "planets:gui.message.thirty_sec.name",
+    "gui.galacticraftcore.auto_launch.one_min": "planets:gui.message.one_min.name",
+    "gui.galacticraftcore.auto_launch.redstone_sig": "planets:gui.message.redstone_sig.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1212,7 +1267,10 @@
       "minecraft:coal:1": "minecraft:charcoal",
       "galacticraftplanets:mars_machine:0": "galacticraftcore:terraformer",
       "galacticraftplanets:mars_machine:4": "galacticraftcore:cryogenic_chamber",
-      "minecraft:bed:32767": "#minecraft:beds"
+      "minecraft:bed:32767": "#minecraft:beds",
+      "galacticraftcore:cargo:0": "galacticraftcore:cargo_loader",
+      "galacticraftcore:cargo:4": "galacticraftcore:cargo_unloader",
+      "galacticraftplanets:mars_machine:8": "galacticraftcore:launch_controller"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -1309,6 +1367,7 @@
       "default_map": "minecraft:block/white_concrete"
     },
     "entity/tier_2_rocket": "planets:rocket_t2",
-    "entity/landing_balloons": "planets:landing_balloon"
+    "entity/landing_balloons": "planets:landing_balloon",
+    "entity/cargo_rocket": "planets:cargo_rocket"
   }
 }

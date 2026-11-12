@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
  * the rider reaches space and picks a destination as far as the rocket's tier allows. Out of fuel it falls back and
  * crashes (explosion 5, 81 damage to the rider). Hitting it damages it; enough damage drops it as an item.
  */
-public abstract class RocketEntity extends Entity implements Refuelable {
+public abstract class RocketEntity extends Entity implements Refuelable, CargoCarrier {
     public static final int PRE_LAUNCH_WAIT = 400;
     public static final double EXIT_HEIGHT = 1200.0D;
 
@@ -113,7 +113,7 @@ public abstract class RocketEntity extends Entity implements Refuelable {
         return Phase.values()[this.entityData.get(PHASE)];
     }
 
-    private void setPhase(Phase phase) {
+    protected void setPhase(Phase phase) {
         this.entityData.set(PHASE, phase.ordinal());
     }
 
@@ -171,12 +171,45 @@ public abstract class RocketEntity extends Entity implements Refuelable {
 
     // ------------------------------------------------------------------ flight
 
-    /** 1.12.2 igniteCheckingCooldown: start the 400 tick countdown. */
+    /** 1.12.2 getPreLaunchWait: the countdown once ignited. */
+    protected int preLaunchWait() {
+        return PRE_LAUNCH_WAIT;
+    }
+
+    protected int timeSinceLaunch() {
+        return this.timeSinceLaunch;
+    }
+
+    /** 1.12.2 igniteCheckingCooldown: start the countdown. */
     public void ignite() {
         if (this.launchCooldown <= 0 && phase() == Phase.UNIGNITED) {
             setPhase(Phase.IGNITED);
-            this.entityData.set(COUNTDOWN, PRE_LAUNCH_WAIT);
+            this.entityData.set(COUNTDOWN, preLaunchWait());
         }
+    }
+
+    /** Back on a pad (a cargo rocket that has landed): not launched, nothing counted down. */
+    protected void resetFlight() {
+        setPhase(Phase.UNIGNITED);
+        this.entityData.set(COUNTDOWN, preLaunchWait());
+        this.timeSinceLaunch = 0;
+    }
+
+    /** Climbing with fuel: the thrust builds over 150 ticks to the tier's top speed (1.2x as fast with no air). */
+    protected Vec3 climbMotion() {
+        final double thrust = this.timeSinceLaunch / 150.0D;
+        final boolean airless = CelestialPhysics.isAirless(this.level());
+        return new Vec3(0.0D, climbFactor() * Math.min(airless ? thrust * 1.2D : thrust, speedCap(airless)), 0.0D);
+    }
+
+    /** Coming down in the landing phase with fuel (only cargo rockets land by themselves). */
+    protected Vec3 landingMotion() {
+        return new Vec3(0.0D, -1.0D, 0.0D);
+    }
+
+    /** In the landing phase: touched down on the pad (and handled it), so the tick stops here. */
+    protected boolean tryLand() {
+        return false;
     }
 
     @Override
@@ -221,24 +254,25 @@ public abstract class RocketEntity extends Entity implements Refuelable {
                 onLaunch();
             }
         }
-        double motionY = 0.0D;
+        Vec3 motion = Vec3.ZERO;
         if (launched()) {
             if (hasFuel()) {
-                final double thrust = this.timeSinceLaunch / 150.0D;
-                final boolean airless = CelestialPhysics.isAirless(this.level());
-                motionY = climbFactor() * Math.min(airless ? thrust * 1.2D : thrust, speedCap(airless));
+                motion = phase() == Phase.LANDING ? landingMotion() : climbMotion();
                 if (this.timeSinceLaunch % CelestialPhysics.fuelInterval(this.level(), burnTicks()) == 0) {
                     setFuel(fuel() - 1);
                 }
             } else {
-                motionY = getDeltaMovement().y - Math.abs(Math.sin(this.timeSinceLaunch / 1000.0D)) / 20.0D - 0.04D;
+                motion = new Vec3(0.0D, getDeltaMovement().y - Math.abs(Math.sin(this.timeSinceLaunch / 1000.0D)) / 20.0D - 0.04D, 0.0D);
+            }
+            if (phase() == Phase.LANDING && hasFuel() && tryLand()) {
+                return;
             }
             if (this.timeSinceLaunch > 50 && onGround()) {
                 crash();
                 return;
             }
         }
-        setDeltaMovement(0.0D, motionY, 0.0D);
+        setDeltaMovement(motion);
         move(MoverType.SELF, getDeltaMovement());
     }
 
@@ -248,7 +282,8 @@ public abstract class RocketEntity extends Entity implements Refuelable {
         final BlockPos below = BlockPos.containing(getX(), getY() - 0.1D, getZ());
         final BlockPos centre = LandingPadBlock.findLaunchPadCentre(this.level(), below);
         boolean padTaken = false;
-        if (centre != null) {
+        // 1.12.2 EventLandingPadRemoval: a powered Launch Controller beside the pad can keep it in place
+        if (centre != null && !io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity.keepsPad(this.level(), centre)) {
             for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-1, 0, -1), centre.offset(1, 0, 1))) {
                 this.level().removeBlock(pos, false);
             }
@@ -263,7 +298,7 @@ public abstract class RocketEntity extends Entity implements Refuelable {
     }
 
     /** Above y 1200 (750 in orbit): the riders go to the destination screen and the rocket travels with them as cargo. */
-    private void reachSpace() {
+    protected void reachSpace() {
         for (Entity passenger : getPassengers()) {
             if (passenger instanceof ServerPlayer player) {
                 SpaceTravel.reachSpace(player, this);
@@ -273,12 +308,30 @@ public abstract class RocketEntity extends Entity implements Refuelable {
     }
 
     /** 1.12.2 failRocket: explosion 5, 81 damage to the riders. */
-    private void crash() {
+    protected void crash() {
         for (Entity passenger : getPassengers()) {
             passenger.hurt(GCDamageTypes.crash(this.level()), 81.0F);
         }
         this.level().explode(this, getX(), getY(), getZ(), 5.0F, Level.ExplosionInteraction.TNT);
         discard();
+    }
+
+    // ------------------------------------------------------------------ cargo (Cargo Loader / Unloader)
+
+    /** The cargo slots, without the two kept for the launch pad and the rocket itself (1.12.2 stacks.size() - 2). */
+    protected int cargoSlots() {
+        return this.cargo.getContainerSize() - 2;
+    }
+
+    /** 1.12.2 EntityAutoRocket#addCargo: rockets without storage have no inventory to load. */
+    @Override
+    public LoadState addCargo(ItemStack stack, boolean doAdd) {
+        return CargoCarrier.add(this.cargo, cargoSlots(), stack, doAdd);
+    }
+
+    @Override
+    public Removal removeCargo(boolean doRemove) {
+        return CargoCarrier.remove(this.cargo, cargoSlots(), doRemove);
     }
 
     // ------------------------------------------------------------------ interaction

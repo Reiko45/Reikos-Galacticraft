@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraftcore:block/launch_controller",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/launch_controller"
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/launch_controller",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/launch_controller",
+      "y": 270
+    }
+  }
+}

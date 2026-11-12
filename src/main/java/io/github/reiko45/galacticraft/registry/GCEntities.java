@@ -28,6 +28,10 @@ public final class GCEntities {
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>> TIER_2_ROCKET = ENTITY_TYPES.register("tier_2_rocket",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>of(io.github.reiko45.galacticraft.entity.Tier2RocketEntity::new,
                     MobCategory.MISC).sized(1.2F, 4.5F).clientTrackingRange(16).updateInterval(1).fireImmune().build("tier_2_rocket"));
+    /** 1.12.2 EntityCargoRocket setSize(0.98, 2). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.CargoRocketEntity>> CARGO_ROCKET = ENTITY_TYPES.register("cargo_rocket",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.CargoRocketEntity>of(io.github.reiko45.galacticraft.entity.CargoRocketEntity::new,
+                    MobCategory.MISC).sized(0.98F, 2.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("cargo_rocket"));
     public static final Supplier<EntityType<LanderEntity>> LANDER = ENTITY_TYPES.register("lander",
             () -> EntityType.Builder.<LanderEntity>of(LanderEntity::new, MobCategory.MISC).sized(3.0F, 4.25F)
                     .clientTrackingRange(16).updateInterval(1).fireImmune().build("lander"));

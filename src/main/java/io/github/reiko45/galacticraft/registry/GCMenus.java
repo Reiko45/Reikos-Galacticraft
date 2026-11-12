@@ -56,6 +56,10 @@ public final class GCMenus {
 
     public static final Supplier<MenuType<FuelLoaderMenu>> FUEL_LOADER = MENUS.register("fuel_loader",
             () -> IMenuTypeExtension.create(FuelLoaderMenu::new));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.CargoLoaderMenu>> CARGO_LOADER = MENUS.register("cargo_loader",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.CargoLoaderMenu(true, id, inventory, buf)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.CargoLoaderMenu>> CARGO_UNLOADER = MENUS.register("cargo_unloader",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.CargoLoaderMenu(false, id, inventory, buf)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.GasMachineMenu>> GAS_LIQUEFIER = MENUS.register("gas_liquefier",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.GasMachineMenu(
                     io.github.reiko45.galacticraft.menu.GasMachineMenu.Kind.GAS_LIQUEFIER, id, inventory, buf)));
@@ -65,6 +69,8 @@ public final class GCMenus {
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.GasMachineMenu>> ELECTROLYZER = MENUS.register("electrolyzer",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.GasMachineMenu(
                     io.github.reiko45.galacticraft.menu.GasMachineMenu.Kind.ELECTROLYZER, id, inventory, buf)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.LaunchControllerMenu>> LAUNCH_CONTROLLER = MENUS.register("launch_controller",
+            () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.LaunchControllerMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.TerraformerMenu>> TERRAFORMER = MENUS.register("terraformer",
             () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.TerraformerMenu::new));
     public static final Supplier<MenuType<CargoMenu>> CARGO = MENUS.register("cargo",
@@ -76,6 +82,8 @@ public final class GCMenus {
 
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu>> TIER_2_ROCKET_BENCH = MENUS.register("tier_2_rocket_bench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu(id, inventory)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.CargoRocketBenchMenu>> CARGO_ROCKET_BENCH = MENUS.register("cargo_rocket_bench",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.CargoRocketBenchMenu(id, inventory)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.BuggyBenchMenu>> BUGGY_BENCH = MENUS.register("buggy_bench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.BuggyBenchMenu(id, inventory)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.SchematicInputMenu>> SCHEMATIC_INPUT = MENUS.register("schematic_input",

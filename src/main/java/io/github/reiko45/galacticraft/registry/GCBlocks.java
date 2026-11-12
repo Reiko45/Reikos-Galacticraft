@@ -186,6 +186,8 @@ public final class GCBlocks {
     // Mars machines (1.12.2 BlockMachineMars: terraformer, cryogenic_chamber, launch_controller)
     public static final DeferredBlock<MachineBlock> TERRAFORMER = withItem("terraformer",
             () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::new));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LaunchControllerBlock> LAUNCH_CONTROLLER = withItem("launch_controller",
+            () -> new io.github.reiko45.galacticraft.block.LaunchControllerBlock(machine()));
     /** 1.12.2 BlockMachineMars cryogenic_chamber; open at the front, so it neither hides faces nor suffocates. */
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.CryogenicChamberBlock> CRYOGENIC_CHAMBER = withItem("cryogenic_chamber",
             () -> new io.github.reiko45.galacticraft.block.CryogenicChamberBlock(machine().noOcclusion()
@@ -242,6 +244,11 @@ public final class GCBlocks {
                     .strength(1.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
     public static final DeferredBlock<MachineBlock> FUEL_LOADER = withItem("fuel_loader",
             () -> new MachineBlock(machine(), FuelLoaderBlockEntity::new));
+    /** 1.12.2 BlockCargoLoader (cargo_loader / cargo_unloader). */
+    public static final DeferredBlock<MachineBlock> CARGO_LOADER = withItem("cargo_loader",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.CargoLoaderBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> CARGO_UNLOADER = withItem("cargo_unloader",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.CargoUnloaderBlockEntity::new));
     /** 1.12.2: Material.IRON, hardness 2.5, metal sound. */
     public static final DeferredBlock<NasaWorkbenchBlock> NASA_WORKBENCH = withItem("nasa_workbench", () -> new NasaWorkbenchBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion()));

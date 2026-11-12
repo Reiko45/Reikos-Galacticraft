@@ -65,9 +65,11 @@ neoForge {
             programArguments.addAll '--width', '1280', '--height', '720'
         }
 
-        // Runs every registered GameTest and exits; used in CI.
+        // Runs every registered GameTest and exits; used in CI. It gets its own directory, and a fresh world each run (see
+        // below): Launch Controllers keep their chunks loaded, so a reused world would bring back earlier runs' machines.
         gameTestServer {
             type = 'gameTestServer'
+            gameDirectory = project.file('run/gametest')
             systemProperty 'neoforge.enabledGameTestNamespaces', project.mod_id
         }
 
@@ -84,6 +86,12 @@ neoForge {
         "${mod_id}" {
             sourceSet(sourceSets.main)
         }
+    }
+}
+
+tasks.matching { it.name == 'runGameTestServer' }.configureEach {
+    doFirst {
+        delete file('run/gametest/world')
     }
 }
 

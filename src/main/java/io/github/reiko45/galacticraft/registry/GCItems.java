@@ -178,6 +178,11 @@ public final class GCItems {
             () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
                     io.github.reiko45.galacticraft.entity.Tier2RocketEntity.FUEL_CAPACITY, -0.2D,
                     io.github.reiko45.galacticraft.entity.Tier2RocketEntity::create));
+    /** 1.12.2 ItemTier2Rocket types 10-13: the Cargo Rocket, 18-54 slots; it stands 0.05 lower on the pad. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.RocketItem> CARGO_ROCKET = ITEMS.register("cargo_rocket",
+            () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
+                    io.github.reiko45.galacticraft.entity.CargoRocketEntity.FUEL_CAPACITY, io.github.reiko45.galacticraft.entity.CargoRocketEntity.PAD_OFFSET,
+                    io.github.reiko45.galacticraft.entity.CargoRocketEntity::create));
 
     // --- Food (values from 1.12.2 ItemFood#getHealAmount / #getSaturationModifier) ---
     // Canned food returns an empty Tin Canister when eaten, like 1.12.2 did. TIN_CANISTER must be registered first.

@@ -148,7 +148,11 @@ public final class MarsMobTests {
         };
         helper.succeedWhen(() -> {
             helper.assertTrue(tnt.isRemoved(), "the TNT is gone");
-            helper.assertTrue(zombie.getHealth() <= 30.0F - (6.0F + 3.0F * difficulty), "hit hard: " + zombie.getHealth());
+            // the zombie's 2 armor still takes its share (vanilla armor rules, from 1.12.2 too)
+            final float damage = net.minecraft.world.damagesource.CombatRules.getDamageAfterAbsorb(zombie, 6.0F + 3.0F * difficulty,
+                    helper.getLevel().damageSources().source(net.minecraft.world.damagesource.DamageTypes.FIREBALL, tnt, owner),
+                    zombie.getArmorValue(), (float) zombie.getAttributeValue(net.minecraft.world.entity.ai.attributes.Attributes.ARMOR_TOUGHNESS));
+            helper.assertTrue(zombie.getHealth() <= 30.0F - damage + 0.01F, "hit hard: " + zombie.getHealth() + ", expected " + (30.0F - damage));
         });
     }
 
