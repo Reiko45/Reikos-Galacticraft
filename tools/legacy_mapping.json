@@ -474,7 +474,8 @@
     "item/titanium_boots": "planets:items/titanium_boots",
     "model/tier_3_rocket": "planets:blocks/tier3rocket",
     "model/entry_pod": "planets:blocks/space_pod",
-    "gui/schematic_rocket_t3": "planets:gui/schematic_rocket_t3"
+    "gui/schematic_rocket_t3": "planets:gui/schematic_rocket_t3",
+    "model/villager": "model/villager"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1084,7 +1085,9 @@
     "entity.galacticraftcore.tier_3_rocket": "planets:entity.rocket_t3.name",
     "entity.galacticraftcore.entry_pod": "planets:entity.entry_pod.name",
     "death.attack.thermal": "death.attack.thermal",
-    "gui.galacticraftcore.invalid_thermal": "gui.warning.invalid_thermal"
+    "gui.galacticraftcore.invalid_thermal": "gui.warning.invalid_thermal",
+    "entity.galacticraftcore.alien_villager": "entity.alien_villager.name",
+    "gui.galacticraftcore.village.warning.no_freq_mod": "gui.village.warning.no_freq_mod"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1123,7 +1126,8 @@
     "item.galacticraftcore.methane_canister.contents": "Gas",
     "item.galacticraftcore.liquid_oxygen_canister.contents": "LOX",
     "item.galacticraftcore.liquid_nitrogen_canister.contents": "Liquid",
-    "block.galacticraftcore.bright_air": "Bright Air"
+    "block.galacticraftcore.bright_air": "Bright Air",
+    "item.galacticraftcore.alien_villager_spawn_egg": "Alien Villager Spawn Egg"
   },
   "recipes": {
     "skip_conditions": [

@@ -135,6 +135,7 @@
   "death.attack.oxygen_suffocation": "%1$s had geen zuurstof meer!",
   "death.attack.spaceship_crash": "%1$s's Raket sloeg zichzelf in de Grond. Oeps",
   "death.attack.thermal": "%1$s Vergat Thermische Bescherming",
+  "entity.galacticraftcore.alien_villager": "Alien Dorpeling",
   "entity.galacticraftcore.buggy": "Maanwagen",
   "entity.galacticraftcore.cargo_rocket": "Vracht Raket",
   "entity.galacticraftcore.creeper_boss": "Geëvolueerde Creeper Baas",

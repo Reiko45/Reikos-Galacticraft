@@ -159,6 +159,8 @@ public final class GCItems {
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> CREEPER_BOSS_SPAWN_EGG = egg("creeper_boss", GCEntities.CREEPER_BOSS, 0x003200, 0x009600);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLUDGELING_SPAWN_EGG = egg("sludgeling", GCEntities.SLUDGELING, 0x003200, 0x009600);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLIMELING_SPAWN_EGG = egg("slimeling", GCEntities.SLIMELING, 0x003200, 0x009600);
+    /** 1.12.2 registerGalacticraftCreature("alien_villager", (103, 145, 181), 12422002). */
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> ALIEN_VILLAGER_SPAWN_EGG = egg("alien_villager", GCEntities.ALIEN_VILLAGER, 0x6791B5, 0xBD8A72);
 
     // --- Dungeon loot (1.12.2 ItemKey, ItemSchematic) ---
     public static final DeferredItem<DungeonKeyItem> TIER_1_DUNGEON_KEY = ITEMS.register("tier_1_dungeon_key",

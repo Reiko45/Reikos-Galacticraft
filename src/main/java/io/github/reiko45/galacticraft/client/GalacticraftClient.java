@@ -118,6 +118,8 @@ public final class GalacticraftClient {
                 io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SludgelingModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SludgelingModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.AlienVillagerModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.AlienVillagerModel::createBodyLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SlimelingModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SlimelingModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.TreasureChestRenderer.LAYER,
@@ -155,6 +157,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.TNT_PROJECTILE.get(), io.github.reiko45.galacticraft.client.render.entity.TntProjectileRenderer::new);
         event.registerEntityRenderer(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.client.render.entity.SludgelingRenderer::new);
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
+        event.registerEntityRenderer(GCEntities.ALIEN_VILLAGER.get(), io.github.reiko45.galacticraft.client.render.entity.AlienVillagerRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.TREASURE_CHEST.get(), io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::new);
     }
 

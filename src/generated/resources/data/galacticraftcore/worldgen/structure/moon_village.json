@@ -1,0 +1,6 @@
+{
+  "type": "galacticraftcore:moon_village",
+  "biomes": "galacticraftcore:moon",
+  "spawn_overrides": {},
+  "step": "surface_structures"
+}

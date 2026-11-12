@@ -135,6 +135,7 @@
   "death.attack.oxygen_suffocation": "%1$ ha esaurito l'ossigeno.",
   "death.attack.spaceship_crash": "Il razzo di %1$ si è schiantato da solo a terra. Ops.",
   "death.attack.thermal": "%1$ ha dimenticato la protezione per le alte temperature.",
+  "entity.galacticraftcore.alien_villager": "Paesano alieno",
   "entity.galacticraftcore.buggy": "Rover",
   "entity.galacticraftcore.cargo_rocket": "Razzo-Cargo",
   "entity.galacticraftcore.creeper_boss": "Creeper Boss Evoluto",

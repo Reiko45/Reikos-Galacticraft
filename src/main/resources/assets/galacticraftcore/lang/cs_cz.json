@@ -137,6 +137,7 @@
   "death.attack.oxygen_suffocation": "%1$s zemřel/a na hypoxii.",
   "death.attack.spaceship_crash": "%1$s zemřel/a při pádu rakety. Sakra.",
   "death.attack.thermal": "%1$s zapoměl skafandr.",
+  "entity.galacticraftcore.alien_villager": "Mimozemšťan",
   "entity.galacticraftcore.buggy": "Bugina",
   "entity.galacticraftcore.cargo_rocket": "Nákladní raketa",
   "entity.galacticraftcore.creeper_boss": "Vyvinutý creeper - Boss",

@@ -59,6 +59,8 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int launchAttempts;
     public boolean usingParachute;
     public int chestSpawnCooldown;
+    /** When an Alien Villager last told this player they need a Frequency Module (tick count; not saved). */
+    public int lastVillagerChat = Integer.MIN_VALUE / 2;
     /** 1.12.2 GCPlayerStats thermalLevel (-22 freezing to 22 overheating) and thermalLevelNormalising. */
     public int thermalLevel;
     public boolean thermalNormalising = true;

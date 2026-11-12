@@ -135,6 +135,7 @@
   "death.attack.oxygen_suffocation": "%1$s ficou sem oxigénio!",
   "death.attack.spaceship_crash": "O foguete de %1$s se esborrachou no chão. Ops.",
   "death.attack.thermal": "%1$s se esqueceu da proteção térmica.",
+  "entity.galacticraftcore.alien_villager": "Aldeão Alienígena",
   "entity.galacticraftcore.buggy": "Buggy",
   "entity.galacticraftcore.cargo_rocket": "Foguetão de Carga",
   "entity.galacticraftcore.creeper_boss": "Creeper-Chefe Evoluído",

@@ -217,7 +217,18 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
      * The Moon and Mars dungeons, each in its planet's biome only, built after caves like 1.12.2 (no terrain adaptation:
      * they dig their own crater).
      */
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> MOON_VILLAGE =
+            ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("moon_village"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MOON_VILLAGES =
+            ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("moon_villages"));
+
     private static void structures(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context) {
+        // 1.12.2 MapGenVillageMoon: on the surface, settling its pieces onto the ground as they are built
+        context.register(MOON_VILLAGE, new io.github.reiko45.galacticraft.world.village.MoonVillage(
+                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
+                        net.minecraft.core.HolderSet.direct(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MOON_BIOME)),
+                        java.util.Map.of(), GenerationStep.Decoration.SURFACE_STRUCTURES,
+                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE)));
         dungeon(context, MOON_DUNGEON, GCDimensions.MOON_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MOON);
         dungeon(context, MARS_DUNGEON, GCDimensions.MARS_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MARS);
     }
@@ -238,6 +249,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
      * the Moon's (which keeps the plain salt it was given in phase 5b).
      */
     private static void structureSets(BootstrapContext<net.minecraft.world.level.levelgen.structure.StructureSet> context) {
+        // 1.12.2 MapGenVillageMoon: one per 32x32 chunk region, at a random chunk of its first 24x24, as its
+        // getNearestStructurePos assumed (its own check seeded each chunk with the chunk's coordinates, not the region's)
+        context.register(MOON_VILLAGES, new net.minecraft.world.level.levelgen.structure.StructureSet(
+                context.lookup(Registries.STRUCTURE).getOrThrow(MOON_VILLAGE),
+                new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(32, 8,
+                        net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387312)));
         context.register(MOON_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
                 context.lookup(Registries.STRUCTURE).getOrThrow(MOON_DUNGEON),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,

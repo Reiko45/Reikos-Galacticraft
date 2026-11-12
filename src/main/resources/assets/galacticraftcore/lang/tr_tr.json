@@ -135,6 +135,7 @@
   "death.attack.oxygen_suffocation": "%1$s oksijen yetersizliğinden öldü!",
   "death.attack.spaceship_crash": "%1$s's roket sert bir kaza yaptı.",
   "death.attack.thermal": "%1$s termal koruması olmadığı için öldü.",
+  "entity.galacticraftcore.alien_villager": "Uzaylı Köylü",
   "entity.galacticraftcore.buggy": "Buggy",
   "entity.galacticraftcore.cargo_rocket": "Kargo Roketi",
   "entity.galacticraftcore.creeper_boss": "Evrimleşmiş Creeper Patronu",

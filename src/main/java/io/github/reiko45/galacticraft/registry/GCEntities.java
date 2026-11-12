@@ -100,6 +100,11 @@ public final class GCEntities {
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.SlimelingEntity>of(io.github.reiko45.galacticraft.entity.SlimelingEntity::new,
                     MobCategory.CREATURE).sized(0.45F, 0.7F).eyeHeight(0.56F).clientTrackingRange(10).build("slimeling"));
 
+    /** 1.12.2 EntityAlienVillager setSize(0.6, 1.8), eyes at 1.62. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.AlienVillagerEntity>> ALIEN_VILLAGER = ENTITY_TYPES.register("alien_villager",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.AlienVillagerEntity>of(io.github.reiko45.galacticraft.entity.AlienVillagerEntity::new,
+                    MobCategory.MISC).sized(0.6F, 1.8F).eyeHeight(1.62F).clientTrackingRange(10).build("alien_villager"));
+
     private GCEntities() {
     }
 }

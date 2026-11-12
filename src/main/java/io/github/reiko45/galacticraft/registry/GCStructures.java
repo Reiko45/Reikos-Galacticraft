@@ -19,6 +19,12 @@ public final class GCStructures {
     public static final Supplier<StructurePieceType> DUNGEON_PIECE = STRUCTURE_PIECES.register("moon_dungeon_piece",
             () -> DungeonPiece::new);
 
+    /** 1.12.2 MapGenVillageMoon. */
+    public static final Supplier<StructureType<io.github.reiko45.galacticraft.world.village.MoonVillage>> MOON_VILLAGE = STRUCTURE_TYPES.register("moon_village",
+            () -> () -> io.github.reiko45.galacticraft.world.village.MoonVillage.CODEC);
+    public static final Supplier<StructurePieceType> MOON_VILLAGE_PIECE = STRUCTURE_PIECES.register("moon_village_piece",
+            () -> io.github.reiko45.galacticraft.world.village.MoonVillagePiece::new);
+
     private GCStructures() {
     }
 }

@@ -32,6 +32,7 @@ public final class GCEntityEvents {
         event.put(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.entity.CreeperBossEntity.createAttributes().build());
         event.put(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.entity.SludgelingEntity.createAttributes().build());
         event.put(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.entity.SlimelingEntity.createAttributes().build());
+        event.put(GCEntities.ALIEN_VILLAGER.get(), io.github.reiko45.galacticraft.entity.AlienVillagerEntity.createAttributes().build());
     }
 
     @SubscribeEvent
