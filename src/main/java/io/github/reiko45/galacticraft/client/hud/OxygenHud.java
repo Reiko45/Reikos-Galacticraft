@@ -49,16 +49,27 @@ public final class OxygenHud {
 
     /**
      * 1.12.2 renderOxygenTankIndicator's thermometer left of the tanks: a 9 x 47 bar (drawn upside down from the
-     * texture) with a 2-pixel marker at the thermal level + 22, and while the level is 10 or more from 0 and the padding
-     * isn't bringing it back, a red arrow and "Invalid Thermal Protection!".
+     * texture) with a 2-pixel marker at the thermal level + 22, coloured from blue (cold) to red (hot), and while the
+     * level is 10 or more from 0 and the padding isn't bringing it back, "Invalid Thermal Protection!" (and 1.12.2's
+     * red-tinted arrow, from a nearly empty part of the texture).
      */
     private static void drawThermal(Minecraft minecraft, GuiGraphics graphics, int x, int top, int heat, boolean invalid) {
         final int bottom = top + 47;
-        graphics.pose().pushPose();
-        graphics.pose().translate(x, bottom, 0.0F);
-        graphics.pose().scale(1.0F, -1.0F, 1.0F);
-        graphics.blit(TEXTURE, 0, 0, 66, 47, 9, 47);
-        graphics.pose().popPose();
+        // the texture's v runs bottom to top here (a flipped pose would turn the quad's back to the screen)
+        com.mojang.blaze3d.systems.RenderSystem.setShaderTexture(0, TEXTURE);
+        com.mojang.blaze3d.systems.RenderSystem.setShader(net.minecraft.client.renderer.GameRenderer::getPositionTexShader);
+        final org.joml.Matrix4f matrix = graphics.pose().last().pose();
+        final com.mojang.blaze3d.vertex.BufferBuilder builder = com.mojang.blaze3d.vertex.Tesselator.getInstance().begin(
+                com.mojang.blaze3d.vertex.VertexFormat.Mode.QUADS, com.mojang.blaze3d.vertex.DefaultVertexFormat.POSITION_TEX);
+        final float u0 = 66.0F / 256.0F;
+        final float u1 = 75.0F / 256.0F;
+        final float vBottom = 47.0F / 256.0F;
+        final float vTop = 94.0F / 256.0F;
+        builder.addVertex(matrix, x, top, 0.0F).setUv(u0, vTop);
+        builder.addVertex(matrix, x, bottom, 0.0F).setUv(u0, vBottom);
+        builder.addVertex(matrix, x + 9, bottom, 0.0F).setUv(u1, vBottom);
+        builder.addVertex(matrix, x + 9, top, 0.0F).setUv(u1, vTop);
+        com.mojang.blaze3d.vertex.BufferUploader.drawWithShader(builder.buildOrThrow());
         final int scaled = Mth.clamp(heat, 1, 45);
         final int max = Math.min(scaled + 2, 45);
         final int min = Math.max(max - 2, 0);

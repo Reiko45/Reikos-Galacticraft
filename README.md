@@ -230,7 +230,7 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 |---|---|
 | ![The destination screen with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
 
-![An Entry Pod coming down from y 310 and settled on an asteroid](docs/screenshots/entry_pod.png)
+![An Entry Pod settled on an asteroid, lit by its Bright Air](docs/screenshots/entry_pod_landed.png)
 
 ### Visiting the Moon, Mars and the asteroids
 
