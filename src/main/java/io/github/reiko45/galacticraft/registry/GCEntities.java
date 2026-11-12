@@ -36,6 +36,10 @@ public final class GCEntities {
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.EntryPodEntity>> ENTRY_POD = ENTITY_TYPES.register("entry_pod",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.EntryPodEntity>of(io.github.reiko45.galacticraft.entity.EntryPodEntity::new,
                     MobCategory.MISC).sized(1.5F, 3.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("entry_pod"));
+    /** 1.12.2 EntityEntryPodVenus setSize(1.5, 3). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.VenusEntryPodEntity>> VENUS_ENTRY_POD = ENTITY_TYPES.register("venus_entry_pod",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.VenusEntryPodEntity>of(io.github.reiko45.galacticraft.entity.VenusEntryPodEntity::new,
+                    MobCategory.MISC).sized(1.5F, 3.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("venus_entry_pod"));
     /** 1.12.2 EntityCargoRocket setSize(0.98, 2). */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.CargoRocketEntity>> CARGO_ROCKET = ENTITY_TYPES.register("cargo_rocket",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.CargoRocketEntity>of(io.github.reiko45.galacticraft.entity.CargoRocketEntity::new,

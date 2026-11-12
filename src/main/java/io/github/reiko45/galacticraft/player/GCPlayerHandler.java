@@ -62,6 +62,7 @@ public final class GCPlayerHandler {
         Footprints.updateFeet(player, data);
         checkOxygen(player, data, needsOxygen(player, data));
         Thermal.check(player, data);
+        checkShield(player, data);
         sendState(player, data);
         if (data.takeGearChanged()) {
             broadcastGear(player, data);
@@ -182,6 +183,42 @@ public final class GCPlayerHandler {
     }
 
     /**
+     * 1.12.2 GCPlayerHandler#checkShield: once a second on a world with a corrosive atmosphere (Venus), every piece of
+     * armour worn loses a point of durability, unless a Shield Controller sits in its Galacticraft inventory slot.
+     */
+    private static void checkShield(ServerPlayer player, GCPlayerData data) {
+        checkShield(player, data, io.github.reiko45.galacticraft.world.Atmosphere.isCorrosive(player.level().dimension()));
+    }
+
+    /** One tick of {@link #checkShield} on a world whose air is, or isn't, corrosive. */
+    public static void checkShield(ServerPlayer player, GCPlayerData data, boolean corrosive) {
+        if (player.tickCount % 20 != 0 || !corrosive) {
+            return;
+        }
+        if (data.gear(io.github.reiko45.galacticraft.item.gear.GearSlot.SHIELD_CONTROLLER).is(io.github.reiko45.galacticraft.registry.GCModTags.SHIELD_CONTROLLERS)) {
+            return;
+        }
+        for (net.minecraft.world.entity.EquipmentSlot slot : new net.minecraft.world.entity.EquipmentSlot[]{
+                net.minecraft.world.entity.EquipmentSlot.FEET, net.minecraft.world.entity.EquipmentSlot.LEGS,
+                net.minecraft.world.entity.EquipmentSlot.CHEST, net.minecraft.world.entity.EquipmentSlot.HEAD}) {
+            final net.minecraft.world.item.ItemStack armor = player.getItemBySlot(slot);
+            if (!armor.isEmpty() && armor.getItem() instanceof net.minecraft.world.item.ArmorItem) {
+                armor.hurtAndBreak(1, player, slot);
+            }
+        }
+    }
+
+    /** 1.12.2 TransformerHooks#armorDamageHook: a worn Shield Controller keeps the armour from wearing at all. */
+    @SubscribeEvent
+    public static void onArmorHurt(net.neoforged.neoforge.event.entity.living.ArmorHurtEvent event) {
+        if (event.getEntity() instanceof ServerPlayer player
+                && GCPlayerData.get(player).gear(io.github.reiko45.galacticraft.item.gear.GearSlot.SHIELD_CONTROLLER)
+                .is(io.github.reiko45.galacticraft.registry.GCModTags.SHIELD_CONTROLLERS)) {
+            event.setCanceled(true);
+        }
+    }
+
+    /**
      * 1.12.2 WorldProviderMars#canRespawnHere only said yes while a bed was being used, so beds on Mars could be slept
      * in without exploding but never became a spawn point (respawning there without oxygen gear would be fatal).
      */
@@ -189,7 +226,8 @@ public final class GCPlayerHandler {
     public static void onSetSpawn(net.neoforged.neoforge.event.entity.player.PlayerSetSpawnEvent event) {
         if (!event.isForced() && event.getNewSpawn() != null
                 && (event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.MARS)
-                || event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.ASTEROIDS))) {
+                || event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.ASTEROIDS)
+                || event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.VENUS))) {
             event.setCanceled(true);
         }
     }

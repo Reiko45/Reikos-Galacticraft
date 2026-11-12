@@ -51,6 +51,16 @@ public final class GCDimensions {
     public static final ResourceKey<Biome> ASTEROIDS_BIOME = ResourceKey.create(Registries.BIOME, ASTEROIDS_ID);
     public static final ResourceLocation ASTEROIDS_EFFECTS = ASTEROIDS_ID;
 
+    /** Venus (1.12.2 WorldProviderVenus, planets module) and its three biomes (1.12.2 BiomeVenus). */
+    public static final ResourceLocation VENUS_ID = GalacticraftCore.id("venus");
+    public static final ResourceKey<Level> VENUS = ResourceKey.create(Registries.DIMENSION, VENUS_ID);
+    public static final ResourceKey<LevelStem> VENUS_STEM = ResourceKey.create(Registries.LEVEL_STEM, VENUS_ID);
+    public static final ResourceKey<DimensionType> VENUS_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, VENUS_ID);
+    public static final ResourceKey<Biome> VENUS_FLAT = ResourceKey.create(Registries.BIOME, GalacticraftCore.id("venus_flat"));
+    public static final ResourceKey<Biome> VENUS_MOUNTAIN = ResourceKey.create(Registries.BIOME, GalacticraftCore.id("venus_mountain"));
+    public static final ResourceKey<Biome> VENUS_VALLEY = ResourceKey.create(Registries.BIOME, GalacticraftCore.id("venus_valley"));
+    public static final ResourceLocation VENUS_EFFECTS = VENUS_ID;
+
     private GCDimensions() {
     }
 }

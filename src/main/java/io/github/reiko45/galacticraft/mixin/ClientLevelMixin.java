@@ -1,6 +1,6 @@
 package io.github.reiko45.galacticraft.mixin;
 
-import io.github.reiko45.galacticraft.client.render.MarsSkyRenderer;
+import io.github.reiko45.galacticraft.client.render.PlanetSkyRenderer;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -15,10 +15,11 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ClientLevel.class)
 public abstract class ClientLevelMixin {
     @Inject(method = "getSkyColor", at = @At("HEAD"), cancellable = true)
-    private void galacticraft$marsSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
+    private void galacticraft$planetSkyColor(Vec3 pos, float partialTick, CallbackInfoReturnable<Vec3> cir) {
         final ClientLevel level = (ClientLevel) (Object) this;
-        if (MarsSkyRenderer.isMars(level)) {
-            cir.setReturnValue(MarsSkyRenderer.skyColor(level.getTimeOfDay(partialTick)));
+        final PlanetSkyRenderer.Style style = PlanetSkyRenderer.styleOf(level);
+        if (style != null) {
+            cir.setReturnValue(style.skyColor(level.getTimeOfDay(partialTick)));
         }
     }
 }

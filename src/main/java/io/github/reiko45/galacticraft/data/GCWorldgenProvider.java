@@ -97,6 +97,19 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     public static final ResourceKey<PlacedFeature> MARS_ORE_TIN_PLACED = placed("mars_ore_tin");
     public static final ResourceKey<PlacedFeature> MARS_ORE_IRON_PLACED = placed("mars_ore_iron");
 
+    // Venus (1.12.2 BiomeDecoratorVenus ores; ChunkProviderVenus#populate lakes, vapor pools and crashed probes)
+    public static final ResourceKey<ConfiguredFeature<?, ?>> VENUS_FEATURES = configured("venus");
+    public static final ResourceKey<PlacedFeature> VENUS_FEATURES_PLACED = placed("venus");
+    private static final String[] VENUS_ORES = {"aluminum", "copper", "galena", "quartz", "silicon", "tin", "solar"};
+
+    private static ResourceKey<ConfiguredFeature<?, ?>> venusOre(String name) {
+        return configured("venus_ore_" + name);
+    }
+
+    private static ResourceKey<PlacedFeature> venusOrePlaced(String name) {
+        return placed("venus_ore_" + name);
+    }
+
     // Overworld crude oil pockets
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_POCKET = configured("oil_pocket");
     public static final ResourceKey<ConfiguredFeature<?, ?>> SLIMELING_EGGS = configured("slimeling_eggs");
@@ -155,6 +168,16 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         FeatureUtils.register(context, MOON_ORE_COPPER, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_COPPER_ORE.get().defaultBlockState(), 4));
         FeatureUtils.register(context, MOON_ORE_TIN, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_TIN_ORE.get().defaultBlockState(), 4));
         FeatureUtils.register(context, MOON_ORE_CHEESE, Feature.ORE, new OreConfiguration(moonRock, GCBlocks.MOON_CHEESE_ORE.get().defaultBlockState(), 3));
+        // BiomeDecoratorVenus: WorldGenMinableMeta veins of 6 (solar 5) that replace only Venus Hard Rock.
+        final RuleTest venusHard = new BlockMatchTest(GCBlocks.VENUS_HARD_ROCK.get());
+        final net.minecraft.world.level.block.Block[] venusOres = {GCBlocks.VENUS_ALUMINUM_ORE.get(), GCBlocks.VENUS_COPPER_ORE.get(),
+                GCBlocks.GALENA_ORE.get(), GCBlocks.VENUS_QUARTZ_ORE.get(), GCBlocks.VENUS_SILICON_ORE.get(), GCBlocks.VENUS_TIN_ORE.get(),
+                GCBlocks.SOLAR_ORE.get()};
+        for (int i = 0; i < VENUS_ORES.length; i++) {
+            FeatureUtils.register(context, venusOre(VENUS_ORES[i]), Feature.ORE,
+                    new OreConfiguration(venusHard, venusOres[i].defaultBlockState(), i == 6 ? 5 : 6));
+        }
+        FeatureUtils.register(context, VENUS_FEATURES, GCFeatures.VENUS.get(), NoneFeatureConfiguration.INSTANCE);
         // BiomeDecoratorMars: ores and regolith pockets replace Mars stone, ice replaces regolith.
         final RuleTest marsStone = new BlockMatchTest(GCBlocks.MARS_STONE.get());
         FeatureUtils.register(context, MARS_ICE, Feature.ORE, new OreConfiguration(new BlockMatchTest(GCBlocks.MARS_REGOLITH.get()),
@@ -186,6 +209,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         ore(context, MOON_ORE_TIN_PLACED, configured, MOON_ORE_TIN, 23, 0, 59);
         ore(context, MOON_ORE_CHEESE_PLACED, configured, MOON_ORE_CHEESE, 14, 0, 84);
         ore(context, MARS_ICE_PLACED, configured, MARS_ICE, 4, 60, 119);
+        // BiomeDecoratorVenus#generateVenus: per chunk, y 0-59 (solar 0-49)
+        final int[] venusCounts = {18, 24, 18, 26, 4, 22, 6};
+        for (int i = 0; i < VENUS_ORES.length; i++) {
+            ore(context, venusOrePlaced(VENUS_ORES[i]), configured, venusOre(VENUS_ORES[i]), venusCounts[i], 0, i == 6 ? 49 : 59);
+        }
+        PlacementUtils.register(context, VENUS_FEATURES_PLACED, configured.getOrThrow(VENUS_FEATURES), List.of(BiomeFilter.biome()));
         ore(context, MARS_REGOLITH_BLOB_PLACED, configured, MARS_REGOLITH_BLOB, 20, 0, 199);
         ore(context, MARS_ORE_DESH_PLACED, configured, MARS_ORE_DESH, 15, 20, 63);
         ore(context, MARS_ORE_COPPER_PLACED, configured, MARS_ORE_COPPER, 26, 0, 59);
@@ -286,6 +315,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
         orbitBiome(context);
         marsBiome(context);
         asteroidsBiome(context);
+        venusBiomes(context);
         final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
                 context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MOON_DIRT_BLOB_PLACED);
@@ -351,6 +381,42 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                         .build())
                 .generationSettings(generation.build())
                 .build());
+    }
+
+    /**
+     * 1.12.2 BiomeVenus "Venus Flat", "Venus Mountain" and "Venus Valley" (they differ only in their terrain): temperature
+     * 4, rain (acid, see VenusEffects), the evolved mobs of VenusModule#init with 1.12.2's 0.01 spawning chance, and the
+     * planet's ores, lakes, vapor pools and probes. Sky and fog colours are WorldProviderVenus's daytime ones.
+     */
+    private static void venusBiomes(BootstrapContext<Biome> context) {
+        for (ResourceKey<Biome> key : List.of(GCDimensions.VENUS_FLAT, GCDimensions.VENUS_MOUNTAIN, GCDimensions.VENUS_VALLEY)) {
+            final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
+                    context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
+            generation.addFeature(GenerationStep.Decoration.LAKES, VENUS_FEATURES_PLACED);
+            for (String ore : VENUS_ORES) {
+                generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, venusOrePlaced(ore));
+            }
+            context.register(key, new Biome.BiomeBuilder()
+                    .hasPrecipitation(true)
+                    .temperature(4.0F)
+                    .downfall(0.0F)
+                    .specialEffects(new BiomeSpecialEffects.Builder()
+                            .skyColor(0xFFCF51)
+                            .fogColor(0xCB9300)
+                            .waterColor(0x3F76E4)
+                            .waterFogColor(0x050533)
+                            .build())
+                    .mobSpawnSettings(new MobSpawnSettings.Builder()
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ZOMBIE.get(), 8, 2, 3))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SPIDER.get(), 8, 2, 3))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SKELETON.get(), 8, 2, 3))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_CREEPER.get(), 8, 2, 3))
+                            .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ENDERMAN.get(), 10, 1, 4))
+                            .creatureGenerationProbability(0.01F)
+                            .build())
+                    .generationSettings(generation.build())
+                    .build());
+        }
     }
 
     /** 1.12.2 BiomeAsteroids: black sky and fog, evolved mobs with 1.12.2's weights and 0.01 spawning chance. */
@@ -422,6 +488,11 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 OptionalLong.of(12785L), false, false, false, false, 1.0D, true, false, 0, 256, 256,
                 BlockTags.INFINIBURN_OVERWORLD, GCDimensions.ASTEROIDS_EFFECTS, 0.0F,
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
+        // 1.12.2 WorldProviderVenus: a 720,000 tick day (vanilla cannot express that), y 0 to 256; beds as on Mars.
+        context.register(GCDimensions.VENUS_TYPE, new DimensionType(
+                OptionalLong.empty(), true, false, false, false, 1.0D, true, false, 0, 256, 256,
+                BlockTags.INFINIBURN_OVERWORLD, GCDimensions.VENUS_EFFECTS, 0.0F,
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
         // 1.12.2 WorldProviderOverworldOrbit: 24,000 tick day, worlds from y 0 to 256, no weather
         context.register(GCDimensions.ORBIT_TYPE, new DimensionType(
                 OptionalLong.empty(), true, false, false, false, 1.0D, false, false, 0, 256, 256,
@@ -447,6 +518,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ASTEROIDS_TYPE),
                 new io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator(
                         new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.ASTEROIDS_BIOME)))));
+        final HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
+        context.register(GCDimensions.VENUS_STEM, new LevelStem(
+                context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.VENUS_TYPE),
+                new io.github.reiko45.galacticraft.world.VenusChunkGenerator(new io.github.reiko45.galacticraft.world.VenusBiomeSource(
+                        biomes.getOrThrow(GCDimensions.VENUS_FLAT), biomes.getOrThrow(GCDimensions.VENUS_MOUNTAIN),
+                        biomes.getOrThrow(GCDimensions.VENUS_VALLEY)))));
         // 1.12.2 ChunkProviderOrbit: empty space (stations are built when they are created)
         context.register(GCDimensions.ORBIT_STEM, new LevelStem(
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ORBIT_TYPE),

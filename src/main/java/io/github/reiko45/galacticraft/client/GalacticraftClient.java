@@ -97,6 +97,8 @@ public final class GalacticraftClient {
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.VenusEffects::onClientTick);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.VenusEffects::onRenderLevel);
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::pre);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::post);
@@ -155,6 +157,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.TIER_2_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_3_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.ENTRY_POD.get(), io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer::new);
+        event.registerEntityRenderer(GCEntities.VENUS_ENTRY_POD.get(), io.github.reiko45.galacticraft.client.render.entity.VenusEntryPodRenderer::new);
         event.registerEntityRenderer(GCEntities.CARGO_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDING_BALLOONS.get(), io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
@@ -206,6 +209,7 @@ public final class GalacticraftClient {
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.VenusEntryPodRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.GrappleRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.BeamRenderers.registerModels(event);
         io.github.reiko45.galacticraft.client.render.ShortRangeTelepadRenderer.registerModels(event);
@@ -404,6 +408,7 @@ public final class GalacticraftClient {
         event.register(GCDimensions.ORBIT_EFFECTS, new OrbitEffects());
         event.register(GCDimensions.MARS_EFFECTS, new MarsEffects());
         event.register(GCDimensions.ASTEROIDS_EFFECTS, new AsteroidsEffects());
+        event.register(GCDimensions.VENUS_EFFECTS, new io.github.reiko45.galacticraft.client.render.VenusEffects());
     }
 
     /** The asteroid belt: black sky and fog, no clouds or sunrise glow, the 1.12.2 asteroid sky. */
@@ -444,7 +449,8 @@ public final class GalacticraftClient {
 
     /** Mars: no clouds or sunrise glow, the 1.12.2 Mars sky, and orange fog that dims to a quarter at night. */
     static final class MarsEffects extends DimensionSpecialEffects {
-        private final io.github.reiko45.galacticraft.client.render.MarsSkyRenderer sky = new io.github.reiko45.galacticraft.client.render.MarsSkyRenderer();
+        private final io.github.reiko45.galacticraft.client.render.PlanetSkyRenderer sky = new io.github.reiko45.galacticraft.client.render.PlanetSkyRenderer(
+                io.github.reiko45.galacticraft.client.render.PlanetSkyRenderer.MARS);
 
         MarsEffects() {
             super(Float.NaN, true, SkyType.NORMAL, false, false);
@@ -465,7 +471,7 @@ public final class GalacticraftClient {
         @Override
         public Vec3 getBrightnessDependentFogColor(Vec3 fogColor, float brightness) {
             final net.minecraft.client.multiplayer.ClientLevel level = Minecraft.getInstance().level;
-            return level == null ? fogColor : io.github.reiko45.galacticraft.client.render.MarsSkyRenderer.fogColor(level.getTimeOfDay(1.0F));
+            return level == null ? fogColor : io.github.reiko45.galacticraft.client.render.PlanetSkyRenderer.MARS.fogColor(level.getTimeOfDay(1.0F));
         }
 
         @Override

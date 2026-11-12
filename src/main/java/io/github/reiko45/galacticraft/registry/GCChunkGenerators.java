@@ -20,6 +20,15 @@ public final class GCChunkGenerators {
     public static final Supplier<MapCodec<io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator>> ASTEROIDS = CHUNK_GENERATORS.register("asteroids",
             () -> io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.CODEC);
 
+    public static final Supplier<MapCodec<io.github.reiko45.galacticraft.world.VenusChunkGenerator>> VENUS = CHUNK_GENERATORS.register("venus",
+            () -> io.github.reiko45.galacticraft.world.VenusChunkGenerator.CODEC);
+
+    public static final DeferredRegister<MapCodec<? extends net.minecraft.world.level.biome.BiomeSource>> BIOME_SOURCES =
+            DeferredRegister.create(Registries.BIOME_SOURCE, GalacticraftCore.MOD_ID);
+
+    public static final Supplier<MapCodec<io.github.reiko45.galacticraft.world.VenusBiomeSource>> VENUS_BIOMES = BIOME_SOURCES.register("venus",
+            () -> io.github.reiko45.galacticraft.world.VenusBiomeSource.CODEC);
+
     private GCChunkGenerators() {
     }
 }

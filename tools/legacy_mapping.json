@@ -533,7 +533,9 @@
     "item/isothermal_padding_boots": "planets:items/thermal_boots_t2",
     "item/volcanic_pickaxe": "planets:items/volcanic_pickaxe",
     "item/atomic_battery": "planets:items/atomic_battery",
-    "item/sulphuric_acid_bucket": "planets:items/bucket_sulphuric_acid"
+    "item/sulphuric_acid_bucket": "planets:items/bucket_sulphuric_acid",
+    "model/pod_flame": "planets:blocks/pod_flame",
+    "misc/rain_venus": "planets:misc/rain_venus"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1304,7 +1306,9 @@
     "gui.galacticraftcore.low_energy_output": "planets:gui.message.low_energy_output.name",
     "container.galacticraftcore.crashed_probe": "planets:container.crashed_probe.name",
     "death.attack.sulphuric_acid": "death.attack.sulphuric_acid",
-    "fluid.galacticraftcore.sulphuric_acid": "planets:tile.sulphuric_acid.name"
+    "fluid.galacticraftcore.sulphuric_acid": "planets:tile.sulphuric_acid.name",
+    "planet.galacticraftcore.venus": "planet.venus",
+    "entity.galacticraftcore.venus_entry_pod": "planets:entity.entry_pod_venus.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1829,6 +1833,7 @@
     "entity/astro_miner_full": "planets:astro_miner_full",
     "entity/astro_miner_full_off": "planets:astro_miner_full_off",
     "item/astro_miner": "planets:astro_miner_inv",
-    "block/minerbase": "planets:minerbase0"
+    "block/minerbase": "planets:minerbase0",
+    "entity/venus_entry_pod": "planets:pod_flame"
   }
 }

@@ -17,6 +17,9 @@ public final class GCFeatures {
     public static final Supplier<io.github.reiko45.galacticraft.world.SlimelingEggFeature> SLIMELING_EGGS = FEATURES.register("slimeling_eggs",
             () -> new io.github.reiko45.galacticraft.world.SlimelingEggFeature(NoneFeatureConfiguration.CODEC));
 
+    public static final Supplier<io.github.reiko45.galacticraft.world.VenusFeature> VENUS = FEATURES.register("venus",
+            () -> new io.github.reiko45.galacticraft.world.VenusFeature(NoneFeatureConfiguration.CODEC));
+
     private GCFeatures() {
     }
 }

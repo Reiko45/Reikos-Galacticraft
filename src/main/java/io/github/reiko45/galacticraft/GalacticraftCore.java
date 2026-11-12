@@ -44,6 +44,7 @@ public final class GalacticraftCore {
         GCFluids.FLUID_TYPES.register(modBus);
         GCFluids.FLUIDS.register(modBus);
         GCFeatures.FEATURES.register(modBus);
+        GCChunkGenerators.BIOME_SOURCES.register(modBus);
         GCArmorMaterials.ARMOR_MATERIALS.register(modBus);
         GCCreativeTabs.TABS.register(modBus);
         GCChunkGenerators.CHUNK_GENERATORS.register(modBus);

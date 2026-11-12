@@ -228,6 +228,14 @@ public class GCBlockStateProvider extends BlockStateProvider {
             models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
         }
+        // 1.12.2 RenderEntryPodVenus baked pod_flame's PodBody and Flame_Sphere apart
+        for (String[] part : new String[][]{{"body", "PodBody"}, {"flame", "Flame_Sphere"}}) {
+            final var loader = models().getBuilder("entity/venus_entry_pod/" + part[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/venus_entry_pod.obj")).flipV(true);
+            loader.visibility("PodBody", part[1].equals("PodBody"));
+            loader.visibility("Flame_Sphere", part[1].equals("Flame_Sphere"));
+            loader.end();
+        }
         // 1.12.2 RenderTier3Rocket baked the body and boosters, the nose cone and the blinking light ("Cube") apart
         final String[][] tier3 = {{"body", "Boosters", "Rocket"}, {"nose_cone", "NoseCone"}, {"light", "Cube"}};
         for (String[] part : tier3) {

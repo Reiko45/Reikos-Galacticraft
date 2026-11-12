@@ -36,11 +36,18 @@ public record CelestialPhysics(double gravityReduction, float fallDamageModifier
      * arrows fall 0.002 per tick, solar (1 / 1.375 AU)^3 x the spaceStationEnergyScalar of 2, meteors 10.
      */
     public static final CelestialPhysics ASTEROIDS = new CelestialPhysics(0.072D, 0.1F, 0.769F, false, 0.002F, 10.0D, 0.9D, 1200.0D);
+    /**
+     * Venus (1.12.2 WorldProviderVenus): gravity 0.0375 below vanilla, falls do 0.38 of the damage, arrows fall 0.0275 per
+     * tick, solar (1 / 0.75 AU)^3 = 2.37, meteors 100 x its atmosphere's density of 54 (hardly ever), rockets use 0.9 of
+     * their fuel.
+     */
+    public static final CelestialPhysics VENUS = new CelestialPhysics(0.0375D, 0.38F, 2.3703704F, false, 0.0275F, 5400.0D, 0.9D, 1200.0D);
     private static final Map<ResourceKey<Level>, CelestialPhysics> BY_DIMENSION = Map.of(
             GCDimensions.MOON, new CelestialPhysics(0.062D, 0.18F, 1.4F, false, 0.005F, 5.0D, 0.7D, 1200.0D),
             GCDimensions.ORBIT, ORBIT,
             GCDimensions.MARS, MARS,
-            GCDimensions.ASTEROIDS, ASTEROIDS
+            GCDimensions.ASTEROIDS, ASTEROIDS,
+            GCDimensions.VENUS, VENUS
     );
 
     /** Where a rocket launched in this world reaches space (1200 outside Galacticraft worlds). */

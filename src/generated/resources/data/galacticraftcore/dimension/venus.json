@@ -1,0 +1,11 @@
+{
+  "type": "galacticraftcore:venus",
+  "generator": {
+    "type": "galacticraftcore:venus",
+    "biome_source": {
+      "flat": "galacticraftcore:venus_flat",
+      "mountain": "galacticraftcore:venus_mountain",
+      "valley": "galacticraftcore:venus_valley"
+    }
+  }
+}

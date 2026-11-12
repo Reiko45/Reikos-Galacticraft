@@ -13,7 +13,7 @@ import org.jetbrains.annotations.Nullable;
 
 /**
  * What a Galacticraft world's air is made of (1.12.2 CelestialBody#atmosphere), for the Gas Liquefier and Methane
- * Synthesizer. Mars: carbon dioxide, argon and nitrogen; the Moon and orbit have none.
+ * Synthesizer. Mars: carbon dioxide, argon and nitrogen; Venus: carbon dioxide and nitrogen; the Moon and orbit have none.
  */
 public final class Atmosphere {
     public enum Gas {
@@ -24,19 +24,25 @@ public final class Atmosphere {
             GCDimensions.MARS, List.of(Gas.CO2, Gas.ARGON, Gas.NITROGEN),
             GCDimensions.MOON, List.of(),
             GCDimensions.ORBIT, List.of(),
-            GCDimensions.ASTEROIDS, List.of());
+            GCDimensions.ASTEROIDS, List.of(),
+            GCDimensions.VENUS, List.of(Gas.CO2, Gas.NITROGEN));
 
-    /** 1.12.2 AtmosphereInfo#thermalLevel (WorldProviderSpace#getThermalLevelModifier): Mars is cold, the asteroids colder. */
+    /**
+     * 1.12.2 AtmosphereInfo#thermalLevel (WorldProviderSpace#getThermalLevelModifier): Mars is cold, the asteroids colder,
+     * Venus scorching.
+     */
     private static final Map<ResourceKey<Level>, Float> THERMAL = Map.of(
             GCDimensions.MARS, -1.0F,
-            GCDimensions.ASTEROIDS, -1.5F);
+            GCDimensions.ASTEROIDS, -1.5F,
+            GCDimensions.VENUS, 5.0F);
 
     /** 1.12.2 AtmosphereInfo#windLevel: how hard flags wave; 1 off Galacticraft worlds (ModelFlag's default). */
     private static final Map<ResourceKey<Level>, Float> WIND = Map.of(
             GCDimensions.MOON, 0.0F,
             GCDimensions.ORBIT, 0.1F,
             GCDimensions.MARS, 0.3F,
-            GCDimensions.ASTEROIDS, 0.05F);
+            GCDimensions.ASTEROIDS, 0.05F,
+            GCDimensions.VENUS, 0.3F);
 
     private Atmosphere() {
     }
@@ -44,6 +50,11 @@ public final class Atmosphere {
     /** How hot (positive) or cold (negative) a world is: 0 for the Moon, orbit and every non-Galacticraft world. */
     public static float thermalLevel(ResourceKey<Level> dimension) {
         return THERMAL.getOrDefault(dimension, 0.0F);
+    }
+
+    /** 1.12.2 AtmosphereInfo#isCorrosive: Venus's air eats at armour (GCPlayerHandler#checkShield). */
+    public static boolean isCorrosive(ResourceKey<Level> dimension) {
+        return GCDimensions.VENUS.equals(dimension);
     }
 
     public static float windLevel(ResourceKey<Level> dimension) {

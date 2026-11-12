@@ -1,0 +1,74 @@
+{
+  "carvers": {},
+  "creature_spawn_probability": 0.01,
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 13341440,
+    "sky_color": 16764753,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [],
+    [
+      "galacticraftcore:venus"
+    ],
+    [],
+    [],
+    [],
+    [],
+    [
+      "galacticraftcore:venus_ore_aluminum",
+      "galacticraftcore:venus_ore_copper",
+      "galacticraftcore:venus_ore_galena",
+      "galacticraftcore:venus_ore_quartz",
+      "galacticraftcore:venus_ore_silicon",
+      "galacticraftcore:venus_ore_tin",
+      "galacticraftcore:venus_ore_solar"
+    ]
+  ],
+  "has_precipitation": true,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "galacticraftcore:evolved_zombie",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_spider",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_skeleton",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_creeper",
+        "maxCount": 3,
+        "minCount": 2,
+        "weight": 8
+      },
+      {
+        "type": "galacticraftcore:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 4.0
+}

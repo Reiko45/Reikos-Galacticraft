@@ -1,0 +1,9 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/venus_entry_pod.obj",
+  "visibility": {
+    "Flame_Sphere": false,
+    "PodBody": true
+  }
+}

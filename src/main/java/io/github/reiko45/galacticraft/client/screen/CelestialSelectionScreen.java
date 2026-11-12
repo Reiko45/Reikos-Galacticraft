@@ -58,6 +58,10 @@ public class CelestialSelectionScreen extends Screen {
     private static final Body ASTEROIDS = new Body("asteroid", GCDimensions.ASTEROIDS, null, 1.375F, 45.0F, 4.0F, 8,
             Component.translatable("planet.galacticraftcore.asteroids"), null);
 
+    /** 1.12.2 VenusModule: 0.75 times Earth's distance, a 0.615 year orbit, phase shift 2. */
+    private static final Body VENUS = new Body("venus", GCDimensions.VENUS, null, 0.75F, 0.61527929901423877327491785323111F, 2.0F, 10,
+            Component.translatable("planet.galacticraftcore.venus"), null);
+
     private final List<Body> bodies = new java.util.ArrayList<>();
     private int tier;
     private boolean canCreateStation;
@@ -88,6 +92,7 @@ public class CelestialSelectionScreen extends Screen {
         this.bodies.add(MOON);
         this.bodies.add(MARS);
         this.bodies.add(ASTEROIDS);
+        this.bodies.add(VENUS);
         final List<GCNetwork.StationInfo> stations = contents.stations();
         for (int i = 0; i < stations.size(); i++) {
             final GCNetwork.StationInfo station = stations.get(i);

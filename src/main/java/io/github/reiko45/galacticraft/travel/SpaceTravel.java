@@ -48,7 +48,8 @@ public final class SpaceTravel {
             new Destination(GCDimensions.MOON, "moon.galacticraftcore.moon", 1),
             new Destination(GCDimensions.ORBIT, "satellite.galacticraftcore.overworld_station", 1),
             new Destination(GCDimensions.MARS, "planet.galacticraftcore.mars", 2),
-            new Destination(GCDimensions.ASTEROIDS, "planet.galacticraftcore.asteroids", 3));
+            new Destination(GCDimensions.ASTEROIDS, "planet.galacticraftcore.asteroids", 3),
+            new Destination(GCDimensions.VENUS, "planet.galacticraftcore.venus", 3));
 
     private SpaceTravel() {
     }
@@ -181,14 +182,17 @@ public final class SpaceTravel {
             final EntryPodEntity pod = EntryPodEntity.create(target, spot.getX(), spot.getY(), spot.getZ(), cargo, fuel);
             target.addFreshEntity(pod);
             player.startRiding(pod, true);
-        } else if (dimension.equals(GCDimensions.MOON) || dimension.equals(GCDimensions.MARS)) {
-            // TeleportTypeMoon / TeleportTypeMars: arrive at y 900 in a lander or landing balloons (within the world border)
+        } else if (dimension.equals(GCDimensions.MOON) || dimension.equals(GCDimensions.MARS) || dimension.equals(GCDimensions.VENUS)) {
+            // TeleportTypeMoon / Mars / Venus: arrive at y 900 in a lander, landing balloons or the Venus entry pod (within
+            // the world border)
             final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
             final double x = Math.max(-limit, Math.min(limit, data.launchedFromX));
             final double z = Math.max(-limit, Math.min(limit, data.launchedFromZ));
             player.teleportTo(target, x, 900.0D, z, player.getYRot(), player.getXRot());
             final LanderEntity lander = dimension.equals(GCDimensions.MARS)
                     ? LandingBalloonsEntity.create(target, x, 900.0D, z, cargo, fuel)
+                    : dimension.equals(GCDimensions.VENUS)
+                    ? io.github.reiko45.galacticraft.entity.VenusEntryPodEntity.create(target, x, 900.0D, z, cargo, fuel)
                     : LanderEntity.create(target, x, 900.0D, z, cargo, fuel);
             target.addFreshEntity(lander);
             player.startRiding(lander, true);
