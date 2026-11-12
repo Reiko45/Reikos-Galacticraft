@@ -73,6 +73,14 @@ public class GCEntityLootProvider extends EntityLootSubProvider {
         // 1.12.2 EntitySlimeling#getDropItem: 0-2 slime balls (plus looting); EntitySludgeling drops nothing
         add(GCEntities.SLIMELING.get(), LootTable.lootTable().withPool(common(Items.SLIME_BALL, 0, 2)));
         add(GCEntities.SLUDGELING.get(), LootTable.lootTable());
+        // 1.12.2 EntitySpiderQueen: a spider's string (0-2 plus looting), and a spider eye 1 time in 3 when a player killed
+        // her (or more with looting); EntityJuicer drops nothing
+        add(GCEntities.SPIDER_QUEEN.get(), LootTable.lootTable().withPool(common(Items.STRING, 0, 2)).withPool(LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(Items.SPIDER_EYE)
+                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(-1.0F, 1.0F)))
+                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.registries, UniformGenerator.between(0.0F, 1.0F))))
+                .when(LootItemKilledByPlayerCondition.killedByPlayer())));
+        add(GCEntities.JUICER.get(), LootTable.lootTable());
         // 1.12.2 EntityCreeperBoss#dropFewItems: the same rare bow
         add(GCEntities.CREEPER_BOSS.get(), LootTable.lootTable().withPool(LootPool.lootPool().add(LootItem.lootTableItem(Items.BOW))
                 .when(LootItemRandomChanceWithEnchantedBonusCondition.randomChanceAndLootingBoost(this.registries, 0.025F, 0.005F))));

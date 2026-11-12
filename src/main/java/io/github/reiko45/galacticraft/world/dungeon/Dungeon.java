@@ -20,7 +20,7 @@ import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 
 /**
- * A Moon or Mars dungeon (1.12.2 MapGenDungeon + DungeonStart + the room classes, with the planet's
+ * A Moon, Mars or Venus dungeon (1.12.2 MapGenDungeon / MapGenDungeonVenus + DungeonStart + the room classes, with the planet's
  * {@link DungeonConfig}). A crater on the surface leads down a shaft into an entrance room 12 blocks tall; from there
  * corridors and rooms (empty, with mob spawners and cobwebs, or with a chest) wander off until, after 10 to 25 pieces,
  * a corridor ends in the boss room, whose low corridor leads to the treasure room. A layout that doesn't end boss -
@@ -67,8 +67,14 @@ public class Dungeon extends Structure {
         return Optional.of(new GenerationStub(new BlockPos(x, this.config.y(), z), builder -> generate(this.config, builder, context.random(), x, z, surfaceTop)));
     }
 
-    /** One planned piece of the layout. */
-    public record Node(DungeonPiece.Kind kind, BoundingBox box, Direction direction, int sizeX, int sizeY, int sizeZ) {
+    /**
+     * One planned piece of the layout; a Venus boss room also knows the way out to its treasure (1.12.2
+     * RoomBossVenus#exitDirection, in the same sense as {@code direction}), for its second doorway.
+     */
+    public record Node(DungeonPiece.Kind kind, BoundingBox box, Direction direction, int sizeX, int sizeY, int sizeZ, @org.jetbrains.annotations.Nullable Direction exit) {
+        public Node(DungeonPiece.Kind kind, BoundingBox box, Direction direction, int sizeX, int sizeY, int sizeZ) {
+            this(kind, box, direction, sizeX, sizeY, sizeZ, null);
+        }
     }
 
     private static void generate(DungeonConfig config, StructurePiecesBuilder builder, RandomSource random, int x, int z, int surface) {
@@ -100,7 +106,13 @@ public class Dungeon extends Structure {
             Node next = entrance(config, random, x, z);
             while (next != null) {
                 pieces.add(next);
-                next = nextPiece(config, next, pieces, random);
+                final Node following = nextPiece(config, next, pieces, random);
+                if (next.kind() == DungeonPiece.Kind.BOSS && config == DungeonConfig.VENUS) {
+                    // RoomBossVenus#getNextPiece remembers which way its corridor leaves
+                    pieces.set(pieces.size() - 1, new Node(next.kind(), next.box(), next.direction(), next.sizeX(), next.sizeY(), next.sizeZ(),
+                            following == null ? null : following.direction().getOpposite()));
+                }
+                next = following;
             }
             final int attached = pieces.size() - 1;
             if (attached >= 3 && pieces.get(pieces.size() - 1).kind() == DungeonPiece.Kind.TREASURE
@@ -192,7 +204,8 @@ public class Dungeon extends Structure {
         boolean valid;
         do {
             dir = Direction.from2DDataValue((from.direction().getOpposite().get2DDataValue() + 1 + turn) % 4);
-            ext = extension(config, from.box(), dir, DungeonConfig.HALL_MIN + random.nextInt(DungeonConfig.HALL_MAX - DungeonConfig.HALL_MIN), 3);
+            ext = extension(config, from.box(), dir, DungeonConfig.HALL_MIN + random.nextInt(DungeonConfig.HALL_MAX - DungeonConfig.HALL_MIN),
+                    config.hallWidth());
             valid = !intersects(pieces, ext);
             attempts--;
             turn++;
@@ -222,17 +235,29 @@ public class Dungeon extends Structure {
         if (intersects(pieces, ext) || farFromStart(corridor, pieces.get(0).box())) {
             return null;
         }
-        final DungeonPiece.Kind kind = switch (random.nextInt(3)) {
-            case 0 -> DungeonPiece.Kind.SPAWNER;
-            case 1 -> DungeonPiece.Kind.CHEST;
-            default -> DungeonPiece.Kind.EMPTY;
-        };
+        final DungeonPiece.Kind kind;
+        if (config == DungeonConfig.VENUS) {
+            // CorridorVenus#getNextPiece: a spawner room unless the room before was one, then empty or chest
+            final Node last = count <= 2 ? null : pieces.get(pieces.size() - 2);
+            if (last == null || last.kind() != DungeonPiece.Kind.SPAWNER) {
+                kind = DungeonPiece.Kind.SPAWNER;
+            } else {
+                kind = random.nextInt(2) == 0 ? DungeonPiece.Kind.EMPTY : DungeonPiece.Kind.CHEST;
+            }
+        } else {
+            kind = switch (random.nextInt(3)) {
+                case 0 -> DungeonPiece.Kind.SPAWNER;
+                case 1 -> DungeonPiece.Kind.CHEST;
+                default -> DungeonPiece.Kind.EMPTY;
+            };
+        }
         return roomNode(config, kind, ext, config.roomHeight(), corridor.direction());
     }
 
     /**
      * 1.12.2 Corridor#getRoom: the boss or treasure room's own size, fitted to the corridor's end. The Moon's boss room
-     * is 14-19 x 8-9 x 14-19; RoomBossMars is always 24 x 11 x 24.
+     * is 14-19 x 8-9 x 14-19; RoomBossMars is always 24 x 11 x 24; RoomBossVenus is 20-25 x 10-11 x 20-25 and sunk 2
+     * blocks below the dungeon floor.
      */
     private static Node room(DungeonConfig config, DungeonPiece.Kind kind, Node corridor, List<Node> pieces, RandomSource random) {
         final int dummyX;
@@ -242,6 +267,10 @@ public class Dungeon extends Structure {
             dummyX = 24;
             dummyY = 11;
             dummyZ = 24;
+        } else if (kind == DungeonPiece.Kind.BOSS && config == DungeonConfig.VENUS) {
+            dummyX = random.nextInt(6) + 20;
+            dummyY = random.nextInt(2) + 10;
+            dummyZ = random.nextInt(6) + 20;
         } else if (kind == DungeonPiece.Kind.BOSS) {
             dummyX = random.nextInt(6) + 14;
             dummyY = random.nextInt(2) + 8;
@@ -256,7 +285,13 @@ public class Dungeon extends Structure {
         if (intersects(pieces, ext)) {
             return null;
         }
-        return roomNode(config, kind, ext, dummyY, corridor.direction());
+        final Node node = roomNode(config, kind, ext, dummyY, corridor.direction());
+        if (kind == DungeonPiece.Kind.BOSS && config == DungeonConfig.VENUS) {
+            final BoundingBox box = node.box();
+            return new Node(kind, new BoundingBox(box.minX(), box.minY() - 2, box.minZ(), box.maxX(), box.maxY(), box.maxZ()), node.direction(),
+                    node.sizeX(), node.sizeY(), node.sizeZ());
+        }
+        return node;
     }
 
     private static Node roomNode(DungeonConfig config, DungeonPiece.Kind kind, BoundingBox ext, int sizeY, Direction direction) {

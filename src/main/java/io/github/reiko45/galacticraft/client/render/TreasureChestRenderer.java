@@ -35,8 +35,11 @@ public class TreasureChestRenderer implements BlockEntityRenderer<TreasureChestB
     /** The Tier 2 (Mars) chest's own texture (planets textures/model/treasure.png). */
     public static final ResourceLocation TEXTURE_TIER_2 = GalacticraftCore.id("textures/model/treasure_tier_2.png");
 
+    /** The Tier 3 (Venus) chest's (planets textures/model/treasure_venus.png). */
+    public static final ResourceLocation TEXTURE_TIER_3 = GalacticraftCore.id("textures/model/treasure_tier_3.png");
+
     public static ResourceLocation texture(int tier) {
-        return tier >= 2 ? TEXTURE_TIER_2 : TEXTURE;
+        return tier >= 3 ? TEXTURE_TIER_3 : tier >= 2 ? TEXTURE_TIER_2 : TEXTURE;
     }
     private static final String[] KEY_PARTS = {"key0", "key1", "key2", "key3", "key4"};
     private final ModelPart model;

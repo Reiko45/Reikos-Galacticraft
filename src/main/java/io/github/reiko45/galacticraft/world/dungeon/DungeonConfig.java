@@ -22,9 +22,17 @@ import net.neoforged.neoforge.registries.DeferredBlock;
  */
 public enum DungeonConfig implements StringRepresentable {
     /** ChunkProviderMoon: moon dungeon brick, y 25, corridors 8-16 long and 5 high, rooms 6 high; RoomBoss, RoomTreasure. */
-    MOON("moon", 25, 5, 6, GCBlocks.MOON_DUNGEON_BRICK, GCBlocks.BOSS_SPAWNER, GCBlocks.TREASURE_CHEST_TIER_1, "dungeon_tier_1"),
+    MOON("moon", 25, 5, 6, GCBlocks.MOON_DUNGEON_BRICK, GCBlocks.MOON_DUNGEON_BRICK, GCBlocks.BOSS_SPAWNER, GCBlocks.TREASURE_CHEST_TIER_1,
+            "dungeon_tier_1", 3),
     /** ChunkProviderMars: Mars dungeon brick, y 30, corridors 8-16 long and 7 high, rooms 7 high; RoomBossMars, RoomTreasureMars. */
-    MARS("mars", 30, 7, 7, GCBlocks.MARS_DUNGEON_BRICK, GCBlocks.MARS_BOSS_SPAWNER, GCBlocks.TREASURE_CHEST_TIER_2, "dungeon_tier_2");
+    MARS("mars", 30, 7, 7, GCBlocks.MARS_DUNGEON_BRICK, GCBlocks.MARS_DUNGEON_BRICK, GCBlocks.MARS_BOSS_SPAWNER, GCBlocks.TREASURE_CHEST_TIER_2,
+            "dungeon_tier_2", 3),
+    /**
+     * ChunkProviderVenus (DungeonConfigurationVenus): Venus Dungeon Brick I walls and Brick II floors and ceilings, y 30,
+     * corridors 8-16 long, 5 wide and 7 high, rooms 7 high; RoomBossVenus, RoomTreasureVenus.
+     */
+    VENUS("venus", 30, 7, 7, GCBlocks.VENUS_DUNGEON_BRICK_1, GCBlocks.VENUS_DUNGEON_BRICK_2, GCBlocks.VENUS_BOSS_SPAWNER,
+            GCBlocks.TREASURE_CHEST_TIER_3, "dungeon_tier_3", 5);
 
     public static final Codec<DungeonConfig> CODEC = StringRepresentable.fromEnum(DungeonConfig::values);
 
@@ -36,17 +44,21 @@ public enum DungeonConfig implements StringRepresentable {
     private final int hallHeight;
     private final int roomHeight;
     private final DeferredBlock<? extends Block> brick;
+    private final DeferredBlock<? extends Block> floorBrick;
     private final DeferredBlock<? extends Block> bossSpawner;
     private final DeferredBlock<? extends Block> treasureChest;
     private final ResourceKey<LootTable> loot;
+    private final int hallWidth;
 
-    DungeonConfig(String name, int y, int hallHeight, int roomHeight, DeferredBlock<? extends Block> brick,
-                  DeferredBlock<? extends Block> bossSpawner, DeferredBlock<? extends Block> treasureChest, String loot) {
+    DungeonConfig(String name, int y, int hallHeight, int roomHeight, DeferredBlock<? extends Block> brick, DeferredBlock<? extends Block> floorBrick,
+                  DeferredBlock<? extends Block> bossSpawner, DeferredBlock<? extends Block> treasureChest, String loot, int hallWidth) {
         this.name = name;
         this.y = y;
         this.hallHeight = hallHeight;
         this.roomHeight = roomHeight;
         this.brick = brick;
+        this.floorBrick = floorBrick;
+        this.hallWidth = hallWidth;
         this.bossSpawner = bossSpawner;
         this.treasureChest = treasureChest;
         this.loot = ResourceKey.create(Registries.LOOT_TABLE, GalacticraftCore.id(loot));
@@ -72,6 +84,16 @@ public enum DungeonConfig implements StringRepresentable {
 
     public BlockState brick() {
         return this.brick.get().defaultBlockState();
+    }
+
+    /** Floors and ceilings (Venus has a brick of its own for them). */
+    public BlockState floorBrick() {
+        return this.floorBrick.get().defaultBlockState();
+    }
+
+    /** Corridor width, walls included (1.12.2 DirectionalPiece#getCorridor: 3, Venus 5 for its double walls). */
+    public int hallWidth() {
+        return this.hallWidth;
     }
 
     public Block bossSpawner() {

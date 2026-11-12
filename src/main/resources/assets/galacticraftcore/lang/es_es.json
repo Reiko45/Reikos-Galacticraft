@@ -131,6 +131,8 @@
   "block.galacticraftcore.treasure_chest_tier_1.desc": "Los cofres del tesoro nivel 1 se generarán en las mazmorras de la Luna. Se desbloquean despues de matar al jefe final.",
   "block.galacticraftcore.treasure_chest_tier_2": "Cofre del Tesoro Nivel 2",
   "block.galacticraftcore.treasure_chest_tier_2.desc": "La llaves del tesoro nivel 2 se generarán en las Mazmorras de Marte. Se pueden desbloquear tras matar al jefe final.",
+  "block.galacticraftcore.treasure_chest_tier_3": "Cofre del tesoro nivel 3",
+  "block.galacticraftcore.treasure_chest_tier_3.desc": "Los Cofres del Tesoro Nivel 3 se generarán en las Mazmorras de Venus. Se pueden desbloquear tras matar al jefe final.",
   "block.galacticraftcore.unlit_torch": "Antorcha",
   "block.galacticraftcore.unlit_wall_torch": "Antorcha",
   "block.galacticraftcore.vapor_spout": "Salida de Vapor",

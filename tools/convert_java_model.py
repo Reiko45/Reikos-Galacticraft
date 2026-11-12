@@ -29,6 +29,12 @@ def f(value):
 
 def parse(path):
     src = open(path, encoding="utf-8").read()
+    # Array parts (ModelSpiderQueen's leg1[0]...) become plain names (leg1_0)
+    src = re.sub(r"(\w+)\[(\d+)\]", r"\1_\2", src)
+    # "this." is optional: some 1.12.2 models (ModelJuicer, ModelSpiderQueen) leave it out
+    src = re.sub(r"(?<![\w.])(textureWidth|textureHeight|setRotation)\b", r"this.\1", src)
+    src = re.sub(r"(?m)^(\s*)(\w+)(\s*=\s*new ModelRenderer|\.addBox\(|\.setRotationPoint\(|\.mirror = |\.render\()", r"\1this.\2\3", src)
+    src = re.sub(r"this\.setRotation\((\w+),", r"this.setRotation(this.\1,", src)
     tex = re.search(r"this\.textureWidth = (?:[^;?]*\?\s*\d+\s*:\s*)?(\d+);\s*this\.textureHeight = (?:[^;?]*\?\s*\d+\s*:\s*)?(\d+);", src)
     parts = {}
     order = []
@@ -43,8 +49,9 @@ def parse(path):
         parts[m.group(1)]["boxes"].append(tuple(float(g) for g in m.groups()[1:7]) + ((inflate,) if inflate else ()))
     for m in re.finditer(r"this\.(\w+)\.setRotationPoint\(" + r",\s*".join([NUM] * 3) + r"\);", src):
         parts[m.group(1)]["pivot"] = tuple(float(g) for g in m.groups()[1:])
-    for m in re.finditer(r"this\.(\w+)\.mirror = true;", src):
-        parts[m.group(1)]["mirror"] = True
+    for m in re.finditer(r"this\.(\w+)\.mirror = (true|false);", src):
+        if m.group(1) in parts:
+            parts[m.group(1)]["mirror"] = m.group(2) == "true"
     for m in re.finditer(r"this\.setRotation\(this\.(\w+), " + r",\s*".join([NUM] * 3) + r"\);", src):
         parts[m.group(1)]["rot"] = tuple(float(g) for g in m.groups()[1:])
     return src, tex, parts, order
@@ -59,6 +66,9 @@ def main(path, as_json=False):
         return
     render = re.search(r"public void render\(Entity.*?\{(.*?)\n    \}", src, re.S)
     drawn = re.findall(r"this\.(\w+)\.render\(", render.group(1)) if render else order
+    drawn = [name for name in dict.fromkeys(drawn) if name in parts]
+    if render and "[i]" in render.group(1):
+        drawn = order  # parts drawn in a loop: keep the order they were made in
     out = ["        final MeshDefinition mesh = new MeshDefinition();", "        final PartDefinition root = mesh.getRoot();"]
     for name in drawn:
         p = parts[name]

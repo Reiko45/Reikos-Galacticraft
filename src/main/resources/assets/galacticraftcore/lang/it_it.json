@@ -126,6 +126,8 @@
   "block.galacticraftcore.treasure_chest_tier_1.desc": "Tier 1 Treasure Chests will generate in Moon Dungeons. They are unlockable after defeating the final boss.",
   "block.galacticraftcore.treasure_chest_tier_2": "Cassa Del Tesoro Di Livello 2",
   "block.galacticraftcore.treasure_chest_tier_2.desc": "Le Casse Del Tesoro Di Livello 2 spawneranno nelle Segrete Di Marte. Sono sbloccabili dopo aver sconfitto in boss finale.",
+  "block.galacticraftcore.treasure_chest_tier_3": "Cassa Del Tesoro di Livello 3",
+  "block.galacticraftcore.treasure_chest_tier_3.desc": "Tier 3 Treasure Chests are currently unused.",
   "block.galacticraftcore.unlit_torch": "Torcia",
   "block.galacticraftcore.unlit_wall_torch": "Torcia",
   "block.galacticraftcore.walkway": "Strada",

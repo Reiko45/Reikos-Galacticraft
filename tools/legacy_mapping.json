@@ -535,7 +535,13 @@
     "item/atomic_battery": "planets:items/atomic_battery",
     "item/sulphuric_acid_bucket": "planets:items/bucket_sulphuric_acid",
     "model/pod_flame": "planets:blocks/pod_flame",
-    "misc/rain_venus": "planets:misc/rain_venus"
+    "misc/rain_venus": "planets:misc/rain_venus",
+    "model/juicer": "planets:model/juicer",
+    "model/spider_queen": "planets:model/spider_queen",
+    "model/treasure_tier_3": "planets:model/treasure_venus",
+    "block/treasure_chest_tier_3": "planets:blocks/treasure_chest_venus",
+    "item/tier_3_dungeon_key": "planets:items/key_t3",
+    "model/web": "planets:blocks/web"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1308,7 +1314,13 @@
     "death.attack.sulphuric_acid": "death.attack.sulphuric_acid",
     "fluid.galacticraftcore.sulphuric_acid": "planets:tile.sulphuric_acid.name",
     "planet.galacticraftcore.venus": "planet.venus",
-    "entity.galacticraftcore.venus_entry_pod": "planets:entity.entry_pod_venus.name"
+    "entity.galacticraftcore.venus_entry_pod": "planets:entity.entry_pod_venus.name",
+    "entity.galacticraftcore.juicer": "planets:entity.juicer.name",
+    "entity.galacticraftcore.spider_queen": "planets:entity.spider_queen.name",
+    "entity.galacticraftcore.web_shot": "planets:entity.web_shot.name",
+    "item.galacticraftcore.tier_3_dungeon_key": "planets:item.key.t3.name",
+    "block.galacticraftcore.treasure_chest_tier_3": "planets:tile.treasure_t3.name",
+    "block.galacticraftcore.treasure_chest_tier_3.desc": "planets:tile.treasure_t3.description"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1354,7 +1366,11 @@
     "gui.galacticraftcore.astro_miner.offline_owner": "WARNING: that Astro Miner belonged to an offline player, cannot reset player's Astro Miner count.",
     "subtitles.galacticraftcore.entity.astro_miner": "Astro Miner hums",
     "block.galacticraftcore.dark_decoration_slab": "Dark Decoration Slab",
-    "entity.galacticraftcore.hanging_schematic": "Hanging Schematic"
+    "entity.galacticraftcore.hanging_schematic": "Hanging Schematic",
+    "item.galacticraftcore.tier_3_dungeon_key.desc": "Opens a Tier 3 Treasure Chest",
+    "item.galacticraftcore.juicer_spawn_egg": "Juicer Spawn Egg",
+    "item.galacticraftcore.spider_queen_spawn_egg": "Spider Queen Spawn Egg",
+    "block.galacticraftcore.venus_boss_spawner": "Venus Boss Spawner"
   },
   "recipes": {
     "skip_conditions": [
@@ -1834,6 +1850,7 @@
     "entity/astro_miner_full_off": "planets:astro_miner_full_off",
     "item/astro_miner": "planets:astro_miner_inv",
     "block/minerbase": "planets:minerbase0",
-    "entity/venus_entry_pod": "planets:pod_flame"
+    "entity/venus_entry_pod": "planets:pod_flame",
+    "entity/web_cocoon": "planets:web"
   }
 }

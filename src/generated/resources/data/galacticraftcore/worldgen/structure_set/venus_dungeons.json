@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10387309,
+    "separation": 0,
+    "spacing": 44
+  },
+  "structures": [
+    {
+      "structure": "galacticraftcore:venus_dungeon",
+      "weight": 1
+    }
+  ]
+}

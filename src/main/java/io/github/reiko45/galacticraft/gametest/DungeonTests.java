@@ -89,7 +89,9 @@ public final class DungeonTests {
                     "starts with crater and entrance");
             for (int i = 1; i < n; i++) {
                 final Dungeon.Node node = layout.get(i);
-                helper.assertTrue(node.box().minY() >= config.y() && node.box().maxY() <= config.y() + 12, config + " piece at dungeon depth: " + node);
+                // (RoomBossVenus is sunk 2 blocks below the dungeon floor)
+                final int floor = config == DungeonConfig.VENUS && node.kind() == DungeonPiece.Kind.BOSS ? config.y() - 2 : config.y();
+                helper.assertTrue(node.box().minY() >= floor && node.box().maxY() <= config.y() + 12, config + " piece at dungeon depth: " + node);
                 if (config == DungeonConfig.MARS && node.kind() == DungeonPiece.Kind.BOSS) {
                     helper.assertTrue(node.sizeX() == 24 && node.sizeY() == 11 && node.sizeZ() == 24, "RoomBossMars is 24x11x24: " + node);
                 }

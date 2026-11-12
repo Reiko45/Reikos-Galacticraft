@@ -34,6 +34,7 @@ public class GCChestLootProvider implements LootTableSubProvider {
     @Override
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
         crashedProbe(output);
+        venusDungeon(output);
         output.accept(DungeonPiece.MOON_CHEST, LootTable.lootTable().withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5.0F, 8.0F))
                 .add(item(GCItems.CHEESE_CURD.get(), 10, 1, 4))
                 .add(item(Items.IRON_INGOT, 10, 2, 7))
@@ -85,6 +86,32 @@ public class GCChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.IRON_INGOT, 5, 5, 9))
                 .add(item(GCItems.HEAVY_DUTY_PLATE_TIER_3.get(), 5, 3, 6))
                 .add(item(GCItems.COMPRESSED_TITANIUM.get(), 5, 3, 6))));
+    }
+
+    /** 1.12.2 loot_tables/dungeon_tier_3.json: Venus dungeon chests and the Tier 3 treasure chest. */
+    private void venusDungeon(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
+        output.accept(DungeonConfig.VENUS.loot(), LootTable.lootTable().withPool(LootPool.lootPool().setRolls(UniformGenerator.between(6.0F, 9.0F))
+                .add(item(GCItems.DEHYDRATED_APPLE.get(), 6, 1, 2))
+                .add(item(GCItems.DEHYDRATED_CARROT.get(), 6, 1, 2))
+                .add(item(GCItems.DEHYDRATED_MELON.get(), 6, 1, 2))
+                .add(item(GCItems.DEHYDRATED_POTATO.get(), 6, 1, 2))
+                .add(item(GCItems.DESH_BOOTS.get(), 2))
+                .add(item(GCItems.DESH_CHESTPLATE.get(), 2))
+                .add(item(GCItems.DESH_HELMET.get(), 2))
+                .add(item(GCItems.DESH_LEGGINGS.get(), 2))
+                .add(item(GCItems.OIL_CANISTER.get(), 5))
+                .add(item(io.github.reiko45.galacticraft.registry.GCFluids.SULPHURIC_ACID_BUCKET.get(), 4))
+                .add(item(Items.GOLDEN_APPLE, 10))
+                .add(item(Items.ENCHANTED_GOLDEN_APPLE, 2))
+                .add(item(Items.REDSTONE, 10, 2, 7))
+                .add(item(Items.MUSIC_DISC_CHIRP, 4))
+                .add(item(Items.MUSIC_DISC_WAIT, 4))
+                .add(item(Items.MUSIC_DISC_WARD, 4))
+                .add(item(GCItems.ISOTHERMAL_FABRIC.get(), 10, 2, 7))
+                .add(item(Items.GOLD_NUGGET, 10, 2, 4))
+                .add(item(Items.BOOK, 8).apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, ConstantValue.exactly(18.0F))))
+                .add(item(Items.BOOK, 8).apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, ConstantValue.exactly(27.0F))))
+                .add(item(Items.BOOK, 8).apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, ConstantValue.exactly(30.0F))))));
     }
 
     private static LootPoolSingletonContainer.Builder<?> item(ItemLike item, int weight) {

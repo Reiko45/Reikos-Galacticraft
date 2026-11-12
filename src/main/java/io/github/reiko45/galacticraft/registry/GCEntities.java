@@ -111,6 +111,18 @@ public final class GCEntities {
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.CreeperBossEntity>> CREEPER_BOSS = ENTITY_TYPES.register("creeper_boss",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.CreeperBossEntity>of(io.github.reiko45.galacticraft.entity.CreeperBossEntity::new,
                     MobCategory.MONSTER).sized(2.0F, 7.0F).fireImmune().clientTrackingRange(10).build("creeper_boss"));
+    /** 1.12.2 EntitySpiderQueen setSize(1.4, 0.9), eye height 0.65. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.SpiderQueenEntity>> SPIDER_QUEEN = ENTITY_TYPES.register("spider_queen",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.SpiderQueenEntity>of(io.github.reiko45.galacticraft.entity.SpiderQueenEntity::new,
+                    MobCategory.MONSTER).sized(1.4F, 0.9F).eyeHeight(0.65F).clientTrackingRange(5).build("spider_queen"));
+    /** 1.12.2 EntityJuicer setSize(0.95, 0.6). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.JuicerEntity>> JUICER = ENTITY_TYPES.register("juicer",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.JuicerEntity>of(io.github.reiko45.galacticraft.entity.JuicerEntity::new,
+                    MobCategory.MONSTER).sized(0.95F, 0.6F).clientTrackingRange(5).build("juicer"));
+    /** 1.12.2 EntityWebShot setSize(0.5, 0.5), tracked every tick. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.WebShotEntity>> WEB_SHOT = ENTITY_TYPES.register("web_shot",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.WebShotEntity>of(io.github.reiko45.galacticraft.entity.WebShotEntity::new,
+                    MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).build("web_shot"));
     /** 1.12.2 EntityProjectileTNT setSize(1.0, 1.0); "projectile_tnt", tracked every tick. */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.TntProjectileEntity>> TNT_PROJECTILE = ENTITY_TYPES.register("tnt_projectile",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.TntProjectileEntity>of(io.github.reiko45.galacticraft.entity.TntProjectileEntity::new,

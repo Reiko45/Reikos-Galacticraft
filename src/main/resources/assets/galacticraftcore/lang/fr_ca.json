@@ -126,6 +126,8 @@
   "block.galacticraftcore.treasure_chest_tier_1.desc": "Tier 1 Treasure Chests will generate in Moon Dungeons. They are unlockable after defeating the final boss. ##NEEDS TRANSLATE##",
   "block.galacticraftcore.treasure_chest_tier_2": "Coffre au trésor Niveau 2",
   "block.galacticraftcore.treasure_chest_tier_2.desc": "Tier 2 Treasure Chests will generate in Mars Dungeons. They are unlockable after defeating the final boss. ##NEEDS TRANSLATE##",
+  "block.galacticraftcore.treasure_chest_tier_3": "Tier 3 Treasure Chest ##NEEDS TRANSLATE##",
+  "block.galacticraftcore.treasure_chest_tier_3.desc": "Tier 3 Treasure Chests are currently unused. ##NEEDS TRANSLATE##",
   "block.galacticraftcore.unlit_torch": "Torche",
   "block.galacticraftcore.unlit_wall_torch": "Torche",
   "block.galacticraftcore.walkway": "Walkway ##NEEDS TRANSLATE##",

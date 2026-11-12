@@ -4,6 +4,8 @@
 * every blockstate variant points at an existing model
 * every model's parent (in our namespace) exists and every texture it references exists as a PNG
 * every block and item has an en_us name
+* every texture an OBJ model's .mtl uses outside block/ and item/ is stitched into the block atlas
+  (assets/minecraft/atlases/blocks.json), or it renders as the missing texture
 
 Run after ./gradlew runData:  python3 tools/check_assets.py
 """
@@ -91,6 +93,26 @@ def main():
         item = name[:-5]
         if item not in blocks and f"item.{MOD_ID}.{item}" not in lang:
             errors.append(f"en_us: missing item.{MOD_ID}.{item}")
+
+    atlas_file = os.path.join(ROOT, "src", "main", "resources", "assets", "minecraft", "atlases", "blocks.json")
+    sources = json.load(open(atlas_file, encoding="utf-8"))["sources"] if os.path.isfile(atlas_file) else []
+    singles = {s.get("resource") for s in sources if s.get("type") == "single"}
+    dirs = [s.get("source") for s in sources if s.get("type") == "directory"]
+    for base in RESOURCE_ROOTS:
+        models_dir = os.path.join(base, "assets", MOD_ID, "models")
+        for dirpath, _, files in os.walk(models_dir):
+            for name in files:
+                if not name.endswith(".mtl"):
+                    continue
+                for line in open(os.path.join(dirpath, name), encoding="utf-8"):
+                    if not line.startswith("map_Kd "):
+                        continue
+                    tex = line.split(None, 1)[1].strip()
+                    tns, tpath = split(tex)
+                    if tns != MOD_ID or tpath.startswith(("block/", "item/")):
+                        continue
+                    if tex not in singles and not any(tpath.startswith(d + "/") for d in dirs):
+                        errors.append(f"{name}: {tex} is not in the block atlas")
 
     for e in errors:
         print("ERROR", e)

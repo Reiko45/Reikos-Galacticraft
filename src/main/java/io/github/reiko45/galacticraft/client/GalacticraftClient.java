@@ -126,6 +126,10 @@ public final class GalacticraftClient {
                 io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.JuicerModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.JuicerModel::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SpiderQueenModel.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.SpiderQueenModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SludgelingModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SludgelingModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.AlienVillagerModel.LAYER,
@@ -171,6 +175,9 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.BUGGY.get(), io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer::new);
         event.registerEntityRenderer(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.SkeletonBossRenderer::new);
         event.registerEntityRenderer(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.CreeperBossRenderer::new);
+        event.registerEntityRenderer(GCEntities.SPIDER_QUEEN.get(), io.github.reiko45.galacticraft.client.render.entity.SpiderQueenRenderer::new);
+        event.registerEntityRenderer(GCEntities.JUICER.get(), io.github.reiko45.galacticraft.client.render.entity.JuicerRenderer::new);
+        event.registerEntityRenderer(GCEntities.WEB_SHOT.get(), io.github.reiko45.galacticraft.client.render.entity.WebShotRenderer::new);
         event.registerEntityRenderer(GCEntities.TNT_PROJECTILE.get(), io.github.reiko45.galacticraft.client.render.entity.TntProjectileRenderer::new);
         event.registerEntityRenderer(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.client.render.entity.SludgelingRenderer::new);
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
@@ -210,6 +217,7 @@ public final class GalacticraftClient {
         io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.VenusEntryPodRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.SpiderQueenRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.GrappleRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.BeamRenderers.registerModels(event);
         io.github.reiko45.galacticraft.client.render.ShortRangeTelepadRenderer.registerModels(event);
@@ -293,7 +301,7 @@ public final class GalacticraftClient {
                 }
                 return this.renderer;
             }
-        }, GCBlocks.TREASURE_CHEST_TIER_1.asItem(), GCBlocks.TREASURE_CHEST_TIER_2.asItem());
+        }, GCBlocks.TREASURE_CHEST_TIER_1.asItem(), GCBlocks.TREASURE_CHEST_TIER_2.asItem(), GCBlocks.TREASURE_CHEST_TIER_3.asItem());
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         event.registerFluidType(liquid("bacterial_sludge"), GCFluids.BACTERIAL_SLUDGE_TYPE.get());

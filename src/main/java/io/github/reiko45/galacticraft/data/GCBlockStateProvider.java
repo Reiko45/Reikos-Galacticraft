@@ -228,6 +228,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
             models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
         }
+        // 1.12.2 RenderSpiderQueen: the web cocoon sphere
+        models().getBuilder("entity/web_cocoon").customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/entity/web_cocoon.obj")).flipV(true).end();
         // 1.12.2 RenderEntryPodVenus baked pod_flame's PodBody and Flame_Sphere apart
         for (String[] part : new String[][]{{"body", "PodBody"}, {"flame", "Flame_Sphere"}}) {
             final var loader = models().getBuilder("entity/venus_entry_pod/" + part[0]).customLoader(ObjModelBuilder::begin)
@@ -276,6 +278,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
         }
         treasureChest(GCBlocks.TREASURE_CHEST_TIER_1.get(), "treasure_chest_tier_1", tex("treasure_chest"));
         treasureChest(GCBlocks.TREASURE_CHEST_TIER_2.get(), "treasure_chest_tier_2", tex("treasure_chest_tier_2"));
+        treasureChest(GCBlocks.TREASURE_CHEST_TIER_3.get(), "treasure_chest_tier_3", tex("treasure_chest_tier_3"));
+        simpleBlock(GCBlocks.VENUS_BOSS_SPAWNER.get(), models().getBuilder("venus_boss_spawner").texture("particle", tex("venus_dungeon_brick_1")));
     }
 
     private void treasureChest(Block block, String name, ResourceLocation particle) {

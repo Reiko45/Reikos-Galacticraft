@@ -59,6 +59,9 @@ public class DungeonPiece extends StructurePiece {
     /** Boss room: where the treasure chest is. */
     @Nullable
     private final BlockPos chestPos;
+    /** Venus boss room: which way its corridor to the treasure leaves (1.12.2 RoomBossVenus#exitDirection). */
+    @Nullable
+    private final Direction exit;
 
     public DungeonPiece(DungeonConfig config, Dungeon.Node node, int surface, @Nullable BlockPos chestPos) {
         super(GCStructures.DUNGEON_PIECE.get(), 0, node.box());
@@ -70,6 +73,7 @@ public class DungeonPiece extends StructurePiece {
         this.sizeZ = node.sizeZ();
         this.surface = surface;
         this.chestPos = chestPos;
+        this.exit = node.exit();
         setOrientation(Direction.SOUTH); // 1.12.2 setCoordBaseMode(SOUTH): no rotation, block states mirrored north/south
     }
 
@@ -83,6 +87,7 @@ public class DungeonPiece extends StructurePiece {
         this.sizeZ = tag.getInt("SizeZ");
         this.surface = tag.getInt("Surface");
         this.chestPos = tag.contains("ChestPos") ? NbtUtils.readBlockPos(tag, "ChestPos").orElse(null) : null;
+        this.exit = tag.contains("Exit") ? Direction.from3DDataValue(tag.getInt("Exit")) : null;
         setOrientation(Direction.SOUTH);
     }
 
@@ -98,6 +103,9 @@ public class DungeonPiece extends StructurePiece {
         if (this.chestPos != null) {
             tag.put("ChestPos", NbtUtils.writeBlockPos(this.chestPos));
         }
+        if (this.exit != null) {
+            tag.putInt("Exit", this.exit.get3DDataValue());
+        }
     }
 
     public Kind kind() {
@@ -112,6 +120,15 @@ public class DungeonPiece extends StructurePiece {
         return this.config.brick();
     }
 
+    /** Walls of brick; floors and ceilings (layer 0 and the top layer) of the floor brick. */
+    private BlockState brick(int j, int top) {
+        return j == 0 || j == top ? this.config.floorBrick() : this.config.brick();
+    }
+
+    private boolean venus() {
+        return this.config == DungeonConfig.VENUS;
+    }
+
     @Override
     public void postProcess(WorldGenLevel level, StructureManager structureManager, ChunkGenerator generator, RandomSource random,
                             BoundingBox chunkBox, ChunkPos chunkPos, BlockPos pivot) {
@@ -122,7 +139,11 @@ public class DungeonPiece extends StructurePiece {
             case EMPTY -> room(level, chunkBox, this.config.hallHeight(), null);
             case SPAWNER -> {
                 room(level, chunkBox, this.config.hallHeight(), null);
-                spawners(level, random, chunkBox);
+                if (venus()) {
+                    venusSpawner(level, random, chunkBox);
+                } else {
+                    spawners(level, random, chunkBox);
+                }
             }
             case CHEST -> {
                 room(level, chunkBox, this.config.hallHeight(), null);
@@ -131,10 +152,13 @@ public class DungeonPiece extends StructurePiece {
             case BOSS -> {
                 if (this.config == DungeonConfig.MARS) {
                     marsBossRoom(level, random, chunkBox);
+                    bossSpawner(level, chunkBox);
+                } else if (venus()) {
+                    venusBossRoom(level, random, chunkBox);
                 } else {
                     room(level, chunkBox, 3, Blocks.LAVA.defaultBlockState());
+                    bossSpawner(level, chunkBox);
                 }
-                bossSpawner(level, chunkBox);
             }
             case TREASURE -> {
                 room(level, chunkBox, 3, Blocks.GLOWSTONE.defaultBlockState());
@@ -181,6 +205,10 @@ public class DungeonPiece extends StructurePiece {
 
     /** 1.12.2 Corridor: brick tube with (unlit) wall torches every 4 blocks. */
     private void corridor(WorldGenLevel level, BoundingBox chunkBox) {
+        if (venus()) {
+            venusCorridor(level, chunkBox);
+            return;
+        }
         final int lenX = this.boundingBox.getXSpan();
         final int lenY = this.boundingBox.getYSpan();
         final int lenZ = this.boundingBox.getZSpan();
@@ -208,6 +236,42 @@ public class DungeonPiece extends StructurePiece {
         }
     }
 
+    /**
+     * 1.12.2 CorridorVenus: a double wall of brick (floor and ceiling of the floor brick), every 4 blocks at head
+     * height a window of iron bars in the inner wall looking onto lava in the outer one.
+     */
+    private void venusCorridor(WorldGenLevel level, BoundingBox chunkBox) {
+        final int lenX = this.boundingBox.getXSpan();
+        final int lenY = this.boundingBox.getYSpan();
+        final int lenZ = this.boundingBox.getZSpan();
+        final boolean alongZ = this.direction.getAxis() == Direction.Axis.Z;
+        for (int i = 0; i < lenX; i++) {
+            for (int j = 0; j < lenY; j++) {
+                for (int k = 0; k < lenZ; k++) {
+                    final BlockState state;
+                    if (j == 2 && alongZ && (k + 1) % 4 == 0 && k != lenZ - 1) {
+                        state = i == 0 || i == lenX - 1 ? Blocks.LAVA.defaultBlockState()
+                                : i == 1 || i == lenX - 2 ? Blocks.IRON_BARS.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    } else if (j == 2 && !alongZ && (i + 1) % 4 == 0 && i != lenX - 1) {
+                        state = k == 0 || k == lenZ - 1 ? Blocks.LAVA.defaultBlockState()
+                                : k == 1 || k == lenZ - 2 ? Blocks.IRON_BARS.defaultBlockState() : Blocks.AIR.defaultBlockState();
+                    } else if (alongZ && (i <= 1 || i >= lenX - 2) || j == 0 || j == lenY - 1 || !alongZ && (k <= 1 || k >= lenZ - 2)) {
+                        state = brick(j, lenY - 1);
+                    } else {
+                        state = Blocks.AIR.defaultBlockState();
+                    }
+                    placeBlock(level, state, i, j, k, chunkBox);
+                    if (state.is(Blocks.IRON_BARS) || state.is(Blocks.LAVA)) {
+                        final BlockPos pos = getWorldPos(i, j, k);
+                        if (chunkBox.isInside(pos)) {
+                            level.getChunk(pos).markPosForPostprocessing(pos);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
     private static BlockState torch(Direction facing) {
         return GCBlocks.UNLIT_WALL_TORCH.get().defaultBlockState().setValue(HorizontalDirectionalBlock.FACING, facing).setValue(SpaceTorchBlock.LIT, false);
     }
@@ -229,7 +293,7 @@ public class DungeonPiece extends StructurePiece {
                         boolean door = across > doorStart && across <= doorEnd && j > 0 && j < doorHeight;
                         door &= this.direction == Direction.SOUTH && k == 0 || this.direction == Direction.NORTH && k == this.sizeZ
                                 || this.direction == Direction.EAST && i == 0 || this.direction == Direction.WEST && i == this.sizeX;
-                        state = door ? Blocks.AIR.defaultBlockState() : brick();
+                        state = door ? Blocks.AIR.defaultBlockState() : brick(j, this.sizeY);
                     } else if (corners != null && (i == 1 || i == this.sizeX - 1) && (k == 1 || k == this.sizeZ - 1)) {
                         state = corners;
                     } else if (this.kind == Kind.BOSS && bossBars(i, j, k)) {
@@ -301,6 +365,105 @@ public class DungeonPiece extends StructurePiece {
             final BlockPos pos = getWorldPos(spot[0], 0, spot[1]);
             if (chunkBox.isInside(pos) && level.getBlockEntity(pos) instanceof SpawnerBlockEntity spawner) {
                 spawner.setEntityId(mob(random), random);
+            }
+        }
+    }
+
+    /**
+     * 1.12.2 RoomSpawnerVenus: cobwebs, and a spawner in the corner of the floor. (1.12.2 meant two, in opposite
+     * corners, but placed both in the same corner, the second's mob winning.)
+     */
+    private void venusSpawner(WorldGenLevel level, RandomSource random, BoundingBox chunkBox) {
+        for (int i = 1; i <= this.sizeX - 1; ++i) {
+            for (int j = 1; j <= this.sizeY - 1; ++j) {
+                for (int k = 1; k <= this.sizeZ - 1; ++k) {
+                    if (random.nextFloat() < 0.05F) {
+                        placeBlock(level, Blocks.COBWEB.defaultBlockState(), i, j, k, chunkBox);
+                    }
+                }
+            }
+        }
+        for (int n = 0; n < 2; n++) {
+            final EntityType<?> mob = mob(random);
+            placeBlock(level, Blocks.SPAWNER.defaultBlockState(), 1, 0, 1, chunkBox);
+            final BlockPos pos = getWorldPos(1, 0, 1);
+            if (chunkBox.isInside(pos) && level.getBlockEntity(pos) instanceof SpawnerBlockEntity spawner) {
+                spawner.setEntityId(mob, random);
+            }
+        }
+    }
+
+    /**
+     * 1.12.2 RoomBossVenus: a dome hollowed from the brick (1.5 x the distance from the middle, to the 6th power,
+     * brings the ceiling down to the floor at the edges), floored with the floor brick, doorways cut for the way in and
+     * the way out; from the ceiling away from the middle hang strands of web string, 1 in 12, each ending in a glowing
+     * web torch 3-7 blocks over the floor. The boss spawner sits in the middle, told the hollow's extent.
+     */
+    private void venusBossRoom(WorldGenLevel level, RandomSource random, BoundingBox chunkBox) {
+        int minX = Integer.MAX_VALUE;
+        int minY = Integer.MAX_VALUE;
+        int minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE;
+        int maxY = Integer.MIN_VALUE;
+        int maxZ = Integer.MIN_VALUE;
+        final BlockState web = GCBlocks.WEB_STRING.get().defaultBlockState();
+        final BlockState webTorch = GCBlocks.WEB_TORCH.get().defaultBlockState();
+        for (int i = 0; i <= this.sizeX; i++) {
+            for (int j = 0; j <= this.sizeY; j++) {
+                for (int k = 0; k <= this.sizeZ; k++) {
+                    final double dX = i - this.sizeX / 2;
+                    final double dZ = k - this.sizeZ / 2;
+                    final double dXZ = Math.sqrt(dX * dX + dZ * dZ);
+                    final double f = -Math.pow((dXZ * 1.5D) / (this.sizeX / 2 - 1), 6) + this.sizeY - 1;
+                    if (j == 0) {
+                        placeBlock(level, this.config.floorBrick(), i, j, k, chunkBox);
+                    } else if (j < f) {
+                        placeBlock(level, Blocks.AIR.defaultBlockState(), i, j, k, chunkBox);
+                        if (j + 1 >= f && dXZ > 5 && random.nextInt(12) == 0) {
+                            final int fromFloor = random.nextInt(5) + 2;
+                            for (int j0 = j; j0 >= fromFloor + 1; --j0) {
+                                placeBlock(level, j0 == fromFloor + 1 ? webTorch : web, i, j0, k, chunkBox);
+                            }
+                        }
+                        minX = Math.min(minX, i);
+                        maxX = Math.max(maxX, i);
+                        minY = Math.min(minY, j);
+                        maxY = Math.max(maxY, j);
+                        minZ = Math.min(minZ, k);
+                        maxZ = Math.max(maxZ, k);
+                    } else {
+                        boolean wall = true;
+                        int start = (this.boundingBox.maxX() - this.boundingBox.minX()) / 2 - 1;
+                        int end = (this.boundingBox.maxX() - this.boundingBox.minX()) / 2 + 1;
+                        if (i > start && i <= end && j < 5 && j > 2) {
+                            if ((this.direction == Direction.SOUTH || this.exit == Direction.SOUTH) && k < 7) {
+                                wall = false;
+                            }
+                            if ((this.direction == Direction.NORTH || this.exit == Direction.NORTH) && k > this.sizeZ - 7) {
+                                wall = false;
+                            }
+                        }
+                        start = (this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2 - 1;
+                        end = (this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2 + 1;
+                        if (k > start && k <= end && j < 5 && j > 2) {
+                            if ((this.direction == Direction.EAST || this.exit == Direction.EAST) && i < 7) {
+                                wall = false;
+                            }
+                            if ((this.direction == Direction.WEST || this.exit == Direction.WEST) && i > this.sizeX - 7) {
+                                wall = false;
+                            }
+                        }
+                        placeBlock(level, wall ? brick() : Blocks.AIR.defaultBlockState(), i, j, k, chunkBox);
+                    }
+                }
+            }
+        }
+        final BlockPos pos = getWorldPos(this.sizeX / 2, 1, this.sizeZ / 2);
+        if (chunkBox.isInside(pos) && minX <= maxX) {
+            level.setBlock(pos, this.config.bossSpawner().defaultBlockState(), 2);
+            if (level.getBlockEntity(pos) instanceof DungeonSpawnerBlockEntity spawner) {
+                spawner.setRoom(new BoundingBox(this.boundingBox.minX() + minX, this.boundingBox.minY() + minY, this.boundingBox.minZ() + minZ,
+                        this.boundingBox.minX() + maxX, this.boundingBox.minY() + maxY, this.boundingBox.minZ() + maxZ), this.chestPos);
             }
         }
     }

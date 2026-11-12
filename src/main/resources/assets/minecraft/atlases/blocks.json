@@ -43,6 +43,10 @@
     },
     {
       "type": "single",
+      "resource": "galacticraftcore:model/web"
+    },
+    {
+      "type": "single",
       "resource": "galacticraftcore:model/flag0"
     },
     {

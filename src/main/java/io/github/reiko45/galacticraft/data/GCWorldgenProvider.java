@@ -240,6 +240,10 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
             ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("moon_dungeons"));
     public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> MARS_DUNGEON =
             ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("mars_dungeon"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.Structure> VENUS_DUNGEON =
+            ResourceKey.create(Registries.STRUCTURE, GalacticraftCore.id("venus_dungeon"));
+    public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> VENUS_DUNGEONS =
+            ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("venus_dungeons"));
     public static final ResourceKey<net.minecraft.world.level.levelgen.structure.StructureSet> MARS_DUNGEONS =
             ResourceKey.create(Registries.STRUCTURE_SET, GalacticraftCore.id("mars_dungeons"));
 
@@ -271,6 +275,13 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                         net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE)));
         dungeon(context, MOON_DUNGEON, GCDimensions.MOON_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MOON);
         dungeon(context, MARS_DUNGEON, GCDimensions.MARS_BIOME, io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.MARS);
+        final HolderGetter<Biome> biomes = context.lookup(Registries.BIOME);
+        context.register(VENUS_DUNGEON, new io.github.reiko45.galacticraft.world.dungeon.Dungeon(
+                new net.minecraft.world.level.levelgen.structure.Structure.StructureSettings(
+                        net.minecraft.core.HolderSet.direct(biomes.getOrThrow(GCDimensions.VENUS_FLAT), biomes.getOrThrow(GCDimensions.VENUS_MOUNTAIN),
+                                biomes.getOrThrow(GCDimensions.VENUS_VALLEY)),
+                        java.util.Map.of(), GenerationStep.Decoration.UNDERGROUND_STRUCTURES,
+                        net.minecraft.world.level.levelgen.structure.TerrainAdjustment.NONE), io.github.reiko45.galacticraft.world.dungeon.DungeonConfig.VENUS));
     }
 
     private static void dungeon(BootstrapContext<net.minecraft.world.level.levelgen.structure.Structure> context,
@@ -305,6 +316,11 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.lookup(Registries.STRUCTURE).getOrThrow(ABANDONED_BASE),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(36, 0,
                         net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340 - 30)));
+        // 1.12.2 MapGenDungeonVenus: WorldProviderVenus#getDungeonSpacing (704 blocks, 44 chunks) and Venus's id (-31)
+        context.register(VENUS_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
+                context.lookup(Registries.STRUCTURE).getOrThrow(VENUS_DUNGEON),
+                new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,
+                        net.minecraft.world.level.levelgen.structure.placement.RandomSpreadType.LINEAR, 10387340 - 31)));
         context.register(MARS_DUNGEONS, new net.minecraft.world.level.levelgen.structure.StructureSet(
                 context.lookup(Registries.STRUCTURE).getOrThrow(MARS_DUNGEON),
                 new net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement(44, 0,

@@ -126,6 +126,8 @@
   "block.galacticraftcore.treasure_chest_tier_1.desc": "Tier 1 Treasure Chests will generate in Moon Dungeons. They are unlockable after defeating the final boss. ##NEEDS TRANSLATE##",
   "block.galacticraftcore.treasure_chest_tier_2": "Baú de Tesouro Nível 2",
   "block.galacticraftcore.treasure_chest_tier_2.desc": "Baús de Tesouro Nível 2 são gerados nos Calabouços Marcianos. Eles são desbloqueáveis depois de derrotar o chefe final.",
+  "block.galacticraftcore.treasure_chest_tier_3": "Baú de Tesouro Nível 3",
+  "block.galacticraftcore.treasure_chest_tier_3.desc": "Baú de Tesouro Nível 3 não são utilizados no momento.",
   "block.galacticraftcore.unlit_torch": "Tocha",
   "block.galacticraftcore.unlit_wall_torch": "Tocha",
   "block.galacticraftcore.walkway": "Passadiço",

@@ -132,6 +132,8 @@
   "block.galacticraftcore.treasure_chest_tier_1.desc": "Pokladnice typu 1 lze objevit v měsíčních dungeonech. Lze je odemknout po zabití bosse.",
   "block.galacticraftcore.treasure_chest_tier_2": "Pokladnice typ 2",
   "block.galacticraftcore.treasure_chest_tier_2.desc": "Pokladnice typu 2 jsou k nalezení v dungeonech na Marsu. Lze je odemknout po zabití bosse.",
+  "block.galacticraftcore.treasure_chest_tier_3": "Pokladnice typ 3",
+  "block.galacticraftcore.treasure_chest_tier_3.desc": "Pokladnice typu 3 zatím nejsou využity.",
   "block.galacticraftcore.unlit_torch": "Pochodeň",
   "block.galacticraftcore.unlit_wall_torch": "Pochodeň",
   "block.galacticraftcore.venus_aluminum_ore": "Hliníková ruda",

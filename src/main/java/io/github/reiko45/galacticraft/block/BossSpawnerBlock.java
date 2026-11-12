@@ -38,6 +38,9 @@ public class BossSpawnerBlock extends BaseEntityBlock {
                 GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get(),
                 EntityType.ZOMBIE, EntityType.SKELETON, EntityType.SPIDER, EntityType.CREEPER, EntityType.ENDERMAN)),
         CREEPER("creeper", GCEntities.CREEPER_BOSS, GCSounds.SCARY_SCAPE, 9.0F, 1.4F, () -> Set.of(
+                GCEntities.EVOLVED_SKELETON.get(), GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SPIDER.get())),
+        /** 1.12.2 TileEntityDungeonSpawnerVenus. */
+        SPIDER_QUEEN("spider_queen", GCEntities.SPIDER_QUEEN, GCSounds.SCARY_SCAPE, 9.0F, 1.4F, () -> Set.of(
                 GCEntities.EVOLVED_SKELETON.get(), GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SPIDER.get()));
 
         public static final Codec<Boss> CODEC = StringRepresentable.fromEnum(Boss::values);

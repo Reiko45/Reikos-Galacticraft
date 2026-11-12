@@ -351,6 +351,11 @@ public final class GCBlocks {
             BossSpawnerBlock.Boss.CREEPER, bossSpawner()));
     public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_2 = withItem("treasure_chest_tier_2", () -> new TreasureChestBlock(2,
             treasureChest()));
+    // --- Venus dungeon (1.12.2 BlockBossSpawnerVenus, BlockTier3TreasureChest) ---
+    public static final DeferredBlock<BossSpawnerBlock> VENUS_BOSS_SPAWNER = BLOCKS.register("venus_boss_spawner", () -> new BossSpawnerBlock(
+            BossSpawnerBlock.Boss.SPIDER_QUEEN, bossSpawner()));
+    public static final DeferredBlock<TreasureChestBlock> TREASURE_CHEST_TIER_3 = withItem("treasure_chest_tier_3", () -> new TreasureChestBlock(3,
+            treasureChest()));
     /**
      * 1.12.2 BlockCreeperEgg (a dragon egg that doesn't teleport): falls, can't be broken except with the Sticky Desh
      * Pickaxe, and hatches a baby Evolved Creeper when an explosion breaks it.

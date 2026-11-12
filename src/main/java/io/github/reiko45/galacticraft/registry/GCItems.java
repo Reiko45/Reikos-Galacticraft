@@ -171,6 +171,10 @@ public final class GCItems {
     // 1.12.2 MarsModule#registerCreatures: all three Mars creatures share these egg colours.
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> CREEPER_BOSS_SPAWN_EGG = egg("creeper_boss", GCEntities.CREEPER_BOSS, 0x003200, 0x009600);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLUDGELING_SPAWN_EGG = egg("sludgeling", GCEntities.SLUDGELING, 0x003200, 0x009600);
+    /** 1.12.2 VenusModule#registerGalacticraftCreature: both eggs (180, 50, 0) and (0, 2, 0). */
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> JUICER_SPAWN_EGG = egg("juicer", GCEntities.JUICER, 0xB43200, 0x000200);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SPIDER_QUEEN_SPAWN_EGG = egg("spider_queen", GCEntities.SPIDER_QUEEN,
+            0xB43200, 0x000200);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SLIMELING_SPAWN_EGG = egg("slimeling", GCEntities.SLIMELING, 0x003200, 0x009600);
     /** 1.12.2 registerGalacticraftCreature("alien_villager", (103, 145, 181), 12422002). */
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> ALIEN_VILLAGER_SPAWN_EGG = egg("alien_villager", GCEntities.ALIEN_VILLAGER, 0x6791B5, 0xBD8A72);
@@ -186,6 +190,9 @@ public final class GCItems {
     /** 1.12.2 key:0 of the planets module: dropped by the Creeper Boss, opens the Tier 2 Treasure Chest. */
     public static final DeferredItem<DungeonKeyItem> TIER_2_DUNGEON_KEY = ITEMS.register("tier_2_dungeon_key",
             () -> new DungeonKeyItem(new Item.Properties(), 2));
+    /** 1.12.2 ItemKeyVenus (key:0 of Venus): dropped by the Spider Queen, opens the Tier 3 Treasure Chest. */
+    public static final DeferredItem<DungeonKeyItem> TIER_3_DUNGEON_KEY = ITEMS.register("tier_3_dungeon_key",
+            () -> new DungeonKeyItem(new Item.Properties(), 3));
     // 1.12.2 ItemSchematicTier2 (planets schematic:0-2), the Creeper Boss's reward.
     public static final DeferredItem<SchematicItem> TIER_3_ROCKET_SCHEMATIC = ITEMS.register("tier_3_rocket_schematic",
             () -> new SchematicItem(new Item.Properties(), "rocket_t3"));
