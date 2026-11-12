@@ -2127,6 +2127,206 @@ public final class ScreenshotTour {
             shoot(minecraft, "isothermal_padding");
             minecraft.options.setCameraType(CameraType.FIRST_PERSON);
         });
+        addVenusDungeonSteps();
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusDungeonCrater;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusDungeonBoss;
+    @org.jetbrains.annotations.Nullable
+    private io.github.reiko45.galacticraft.world.dungeon.DungeonPiece venusDungeonCorridor;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusDungeonTreasure;
+
+    /**
+     * Phase 7f: the Spider Queen and Juicers (one hanging) on show; the nearest Venus dungeon found by the real structure
+     * placement: its crater, a corridor with its lava windows, the domed boss room with the Spider Queen hiding in her
+     * cocoon among her Juicers, and the Tier 3 treasure chest.
+     */
+    private void addVenusDungeonSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusSpot == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            srv.setDifficulty(net.minecraft.world.Difficulty.NORMAL, true); // monsters vanish on Peaceful
+            final BlockPos o = this.venusSpot.atY(surface(venus, this.venusSpot.getX(), this.venusSpot.getZ()) + 1).offset(0, 0, 30);
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-8, -1, -3), o.offset(8, 12, 12))) {
+                venus.setBlockAndUpdate(pos, pos.getY() == o.getY() - 1 ? GCBlocks.VENUS_DUNGEON_BRICK_2.get().defaultBlockState() : Blocks.AIR.defaultBlockState());
+            }
+            for (int x = 3; x <= 7; x++) {
+                for (int z = -2; z <= 2; z++) {
+                    venus.setBlockAndUpdate(o.offset(x, 3, z), GCBlocks.VENUS_DUNGEON_BRICK_1.get().defaultBlockState());
+                }
+            }
+            final io.github.reiko45.galacticraft.entity.SpiderQueenEntity queen = GCEntities.SPIDER_QUEEN.get().create(venus);
+            if (queen != null) {
+                queen.moveTo(o.getX() - 3.5D, o.getY(), o.getZ() + 0.5D, 0.0F, 0.0F);
+                queen.setNoAi(true);
+                queen.setYBodyRot(0.0F);
+                queen.setYHeadRot(0.0F);
+                venus.addFreshEntity(queen);
+            }
+            final io.github.reiko45.galacticraft.entity.JuicerEntity juicer = GCEntities.JUICER.get().create(venus);
+            if (juicer != null) {
+                juicer.moveTo(o.getX() + 1.5D, o.getY(), o.getZ() + 0.5D, 0.0F, 0.0F);
+                juicer.setNoAi(true);
+                juicer.setYBodyRot(0.0F);
+                venus.addFreshEntity(juicer);
+            }
+            final io.github.reiko45.galacticraft.entity.JuicerEntity hanging = GCEntities.JUICER.get().create(venus);
+            if (hanging != null) {
+                hanging.moveTo(o.getX() + 5.5D, o.getY() + 2.2D, o.getZ() + 0.5D, 0.0F, 0.0F);
+                hanging.setNoAi(true);
+                hanging.setHanging(true);
+                hanging.setYBodyRot(0.0F);
+                venus.addFreshEntity(hanging);
+            }
+            srv.overworld().setDayTime(6000L);
+            lookFrom(p, venus, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 3, 7)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 0, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_mobs"));
+        // The nearest Venus dungeon, placed in full
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null) {
+                return;
+            }
+            final var generator = venus.getChunkSource().getGenerator();
+            final var structure = venus.registryAccess().registryOrThrow(net.minecraft.core.registries.Registries.STRUCTURE)
+                    .getHolderOrThrow(io.github.reiko45.galacticraft.data.GCWorldgenProvider.VENUS_DUNGEON);
+            final var placements = venus.getChunkSource().getGeneratorState().getPlacementsForStructure(structure);
+            if (placements.isEmpty()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Venus dungeon placement");
+                return;
+            }
+            final var placement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement) placements.get(0);
+            final net.minecraft.world.level.ChunkPos chunk = placement.getPotentialStructureChunk(venus.getSeed(), 0, 0);
+            final net.minecraft.world.level.levelgen.structure.StructureStart start = structure.value().generate(venus.registryAccess(), generator,
+                    generator.getBiomeSource(), venus.getChunkSource().randomState(), venus.getStructureManager(), venus.getSeed(), chunk, 0, venus,
+                    biome -> true);
+            if (!start.isValid()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Venus dungeon start at {}", chunk);
+                return;
+            }
+            final var box = start.getBoundingBox();
+            net.minecraft.world.level.ChunkPos.rangeClosed(new net.minecraft.world.level.ChunkPos(box.minX() >> 4, box.minZ() >> 4),
+                    new net.minecraft.world.level.ChunkPos(box.maxX() >> 4, box.maxZ() >> 4)).forEach(pos -> {
+                venus.getChunk(pos.x, pos.z);
+                start.placeInChunk(venus, venus.structureManager(), generator, venus.getRandom(), new net.minecraft.world.level.levelgen.structure.BoundingBox(
+                        pos.getMinBlockX(), venus.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(), venus.getMaxBuildHeight(), pos.getMaxBlockZ()), pos);
+            });
+            for (var piece : start.getPieces()) {
+                if (piece instanceof io.github.reiko45.galacticraft.world.dungeon.DungeonPiece room) {
+                    final BlockPos centre = room.getBoundingBox().getCenter();
+                    switch (room.kind()) {
+                        case CRATER -> this.venusDungeonCrater = centre;
+                        case BOSS -> this.venusDungeonBoss = new BlockPos(centre.getX(), room.getBoundingBox().minY() + 1, centre.getZ());
+                        case CORRIDOR -> {
+                            if (this.venusDungeonCorridor == null && room.getBoundingBox().getYSpan() > 5) {
+                                this.venusDungeonCorridor = room;
+                            }
+                        }
+                        case TREASURE -> {
+                            for (BlockPos pos : BlockPos.betweenClosed(room.getBoundingBox().minX(), room.getBoundingBox().minY(), room.getBoundingBox().minZ(),
+                                    room.getBoundingBox().maxX(), room.getBoundingBox().maxY(), room.getBoundingBox().maxZ())) {
+                                if (venus.getBlockState(pos).is(GCBlocks.TREASURE_CHEST_TIER_3.get())) {
+                                    this.venusDungeonTreasure = pos.immutable();
+                                }
+                            }
+                        }
+                        default -> {
+                        }
+                    }
+                }
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: Venus dungeon in {} ({} pieces), boss room {}, treasure {}", chunk, start.getPieces().size(),
+                    this.venusDungeonBoss, this.venusDungeonTreasure);
+            if (this.venusDungeonCrater != null) {
+                final int camX = this.venusDungeonCrater.getX() + 20;
+                int top = 0;
+                for (int dx = -2; dx <= 2; dx++) {
+                    top = Math.max(top, surface(venus, camX + dx, this.venusDungeonCrater.getZ()));
+                }
+                tourPlayer(srv).teleportTo(venus, camX + 0.5D, top + 10.0D, this.venusDungeonCrater.getZ() + 0.5D, 90.0F, 35.0F);
+            }
+        }));
+        for (int i = 0; i < 4; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // chunks around the dungeon load and generate
+        }
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_dungeon_crater"));
+        // Down a corridor, its lava glowing through the bars
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusDungeonCorridor == null) {
+                return;
+            }
+            final var hall = this.venusDungeonCorridor.getBoundingBox();
+            final boolean alongZ = hall.getZSpan() > hall.getXSpan();
+            final double x = alongZ ? hall.minX() + 3.0D : hall.minX() + 0.5D;
+            final double z = alongZ ? hall.minZ() + 0.5D : hall.minZ() + 3.0D;
+            final net.minecraft.world.phys.Vec3 from = new net.minecraft.world.phys.Vec3(x, hall.minY() + 3.2D, z);
+            final net.minecraft.world.phys.Vec3 to = alongZ ? from.add(0.0D, -0.6D, 10.0D) : from.add(10.0D, -0.6D, 0.0D);
+            lookFrom(tourPlayer(srv), venus, from, to);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_dungeon_corridor"));
+        // The boss room: the Spider Queen in her cocoon on the ceiling, her Juicers about her
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusDungeonBoss == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.setGameMode(net.minecraft.world.level.GameType.SPECTATOR);
+            final io.github.reiko45.galacticraft.entity.SpiderQueenEntity queen = GCEntities.SPIDER_QUEEN.get().create(venus);
+            if (queen != null) {
+                queen.moveTo(this.venusDungeonBoss.getX() + 0.5D, this.venusDungeonBoss.getY() + 7.0D, this.venusDungeonBoss.getZ() + 0.5D, 0.0F, 0.0F);
+                queen.setNoAi(true);
+                queen.setNoGravity(true);
+                queen.setBurrowedCount((byte) 20);
+                venus.addFreshEntity(queen);
+            }
+            for (int i = 0; i < 4; i++) {
+                final io.github.reiko45.galacticraft.entity.JuicerEntity juicer = GCEntities.JUICER.get().create(venus);
+                if (juicer != null) {
+                    final double angle = i * Math.PI / 2.0D;
+                    juicer.moveTo(this.venusDungeonBoss.getX() + 0.5D + 3.0D * Math.sin(angle), this.venusDungeonBoss.getY(),
+                            this.venusDungeonBoss.getZ() + 0.5D + 3.0D * Math.cos(angle), i * 90.0F, 0.0F);
+                    juicer.setNoAi(true);
+                    venus.addFreshEntity(juicer);
+                }
+            }
+            lookFrom(p, venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusDungeonBoss.offset(-8, 3, -8)),
+                    net.minecraft.world.phys.Vec3.atCenterOf(this.venusDungeonBoss.offset(0, 3, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_dungeon_boss"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null && this.venusDungeonTreasure != null) {
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusDungeonTreasure.offset(2, 2, 2)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.venusDungeonTreasure));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+            shoot(minecraft, "venus_dungeon_treasure");
+            srv.execute(() -> {
+                tourPlayer(srv).setGameMode(net.minecraft.world.level.GameType.CREATIVE);
+                srv.setDifficulty(net.minecraft.world.Difficulty.PEACEFUL, true);
+            });
+        });
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */
