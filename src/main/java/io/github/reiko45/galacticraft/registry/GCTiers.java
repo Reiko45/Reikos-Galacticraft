@@ -21,6 +21,21 @@ public final class GCTiers {
     public static final Tier DESH = new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 1024, 5.0F, 2.5F, 10,
             () -> Ingredient.of(GCItems.DESH_INGOT.get()));
 
+    /**
+     * 1.12.2 TOOL_TITANIUM: 760 uses, efficiency 14, +4 damage, enchantability 16; AsteroidsItems#registerHarvestLevels
+     * gave the pickaxe and shovel level 5, above anything (netherite's place here). No repair item in 1.12.2; Titanium
+     * Ingots here.
+     */
+    public static final Tier TITANIUM = new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 760, 14.0F, 4.0F, 16,
+            () -> Ingredient.of(GCItems.TITANIUM_INGOT.get()));
+
+    /**
+     * 1.12.2 ItemAxeAsteroids was built on TOOL_STEEL (768 uses, efficiency 5, enchantability 8, repaired with Compressed
+     * Steel), then given axe level 5: the Titanium Axe keeps those numbers.
+     */
+    public static final Tier TITANIUM_AXE = new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 768, 5.0F, 2.0F, 8,
+            () -> Ingredient.of(GCItems.COMPRESSED_STEEL.get()));
+
     private GCTiers() {
     }
 }

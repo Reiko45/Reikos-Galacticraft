@@ -28,6 +28,14 @@ public final class GCEntities {
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>> TIER_2_ROCKET = ENTITY_TYPES.register("tier_2_rocket",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.Tier2RocketEntity>of(io.github.reiko45.galacticraft.entity.Tier2RocketEntity::new,
                     MobCategory.MISC).sized(1.2F, 4.5F).clientTrackingRange(16).updateInterval(1).fireImmune().build("tier_2_rocket"));
+    /** 1.12.2 EntityTier3Rocket setSize(1.8, 6). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.Tier3RocketEntity>> TIER_3_ROCKET = ENTITY_TYPES.register("tier_3_rocket",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.Tier3RocketEntity>of(io.github.reiko45.galacticraft.entity.Tier3RocketEntity::new,
+                    MobCategory.MISC).sized(1.8F, 6.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("tier_3_rocket"));
+    /** 1.12.2 EntityEntryPod setSize(1.5, 3). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.EntryPodEntity>> ENTRY_POD = ENTITY_TYPES.register("entry_pod",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.EntryPodEntity>of(io.github.reiko45.galacticraft.entity.EntryPodEntity::new,
+                    MobCategory.MISC).sized(1.5F, 3.0F).clientTrackingRange(16).updateInterval(1).fireImmune().build("entry_pod"));
     /** 1.12.2 EntityCargoRocket setSize(0.98, 2). */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.CargoRocketEntity>> CARGO_ROCKET = ENTITY_TYPES.register("cargo_rocket",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.CargoRocketEntity>of(io.github.reiko45.galacticraft.entity.CargoRocketEntity::new,

@@ -14,20 +14,28 @@ import net.minecraft.world.item.ItemStack;
  * desh_2 for the chestplate and boots, desh_3 for the leggings.
  */
 public class DeshArmorItem extends ArmorItem {
-    private static final ResourceLocation HELMET = GalacticraftCore.id("textures/models/armor/desh_1.png");
-    private static final ResourceLocation BODY = GalacticraftCore.id("textures/models/armor/desh_2.png");
-    private static final ResourceLocation LEGS = GalacticraftCore.id("textures/models/armor/desh_3.png");
+    private final ResourceLocation helmet;
+    private final ResourceLocation body;
+    private final ResourceLocation legs;
 
     public DeshArmorItem(Type type, Properties properties) {
-        super(GCArmorMaterials.DESH, type, properties);
+        this(GCArmorMaterials.DESH, "desh", type, properties);
+    }
+
+    /** Armour drawn from three 1.12.2 sheets {@code <sheet>_1} (helmet), {@code _2} (chest and boots) and {@code _3} (legs). */
+    public DeshArmorItem(net.minecraft.core.Holder<ArmorMaterial> material, String sheet, Type type, Properties properties) {
+        super(material, type, properties);
+        this.helmet = GalacticraftCore.id("textures/models/armor/" + sheet + "_1.png");
+        this.body = GalacticraftCore.id("textures/models/armor/" + sheet + "_2.png");
+        this.legs = GalacticraftCore.id("textures/models/armor/" + sheet + "_3.png");
     }
 
     @Override
     public ResourceLocation getArmorTexture(ItemStack stack, Entity entity, EquipmentSlot slot, ArmorMaterial.Layer layer, boolean innerModel) {
         return switch (this.getType()) {
-            case HELMET -> HELMET;
-            case LEGGINGS -> LEGS;
-            default -> BODY;
+            case HELMET -> this.helmet;
+            case LEGGINGS -> this.legs;
+            default -> this.body;
         };
     }
 }

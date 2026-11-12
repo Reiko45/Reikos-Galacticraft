@@ -53,6 +53,13 @@ public class GCRecipeProvider extends RecipeProvider {
         ore(output, GCBlocks.MARS_COPPER_ORE.get(), Items.COPPER_INGOT, 1.0F);
         ore(output, GCBlocks.MARS_TIN_ORE.get(), GCItems.TIN_INGOT.get(), 1.0F);
         ore(output, GCBlocks.MARS_IRON_ORE.get(), Items.IRON_INGOT, 0.2F);
+        // RecipeManagerAsteroids#addUniversalRecipes
+        ore(output, GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCItems.ALUMINUM_INGOT.get(), 0.5F);
+        ore(output, GCBlocks.ILMENITE_ORE.get(), GCItems.TITANIUM_INGOT.get(), 0.5F);
+        ore(output, GCBlocks.ASTEROID_IRON_ORE.get(), Items.IRON_INGOT, 0.5F);
+        ore(output, GCItems.IRON_SHARD.get(), Items.IRON_INGOT, 0.5F);
+        ore(output, GCItems.TITANIUM_SHARD.get(), GCItems.TITANIUM_INGOT.get(), 0.5F);
+        ore(output, GCItems.TITANIUM_DUST.get(), GCItems.TITANIUM_INGOT.get(), 0.5F);
         SimpleCookingRecipeBuilder.smelting(Ingredient.of(GCBlocks.MARS_COBBLESTONE.get()), RecipeCategory.BUILDING_BLOCKS, GCBlocks.MARS_STONE.get(), 0.0F, 200)
                 .unlockedBy(getHasName(GCBlocks.MARS_COBBLESTONE.get()), has(GCBlocks.MARS_COBBLESTONE.get()))
                 .save(output, GalacticraftCore.id("smelting/mars_stone"));
@@ -110,6 +117,11 @@ public class GCRecipeProvider extends RecipeProvider {
         compressShapeless(output, "heavy_duty_plate", GCItems.HEAVY_DUTY_PLATE.get(),
                 Ingredient.of(GCItems.HEAVY_PLATING.get()), Ingredient.of(GCItems.COMPRESSED_METEORIC_IRON.get()));
         compressShapeless(output, "compressed_desh", GCItems.COMPRESSED_DESH.get(), tag("ingots/desh"));
+        // RecipeManagerAsteroids: Compressed Titanium, the Tier 3 Rocket's plate, and Dense Ice back into ice.
+        compressShapeless(output, "compressed_titanium", GCItems.COMPRESSED_TITANIUM.get(), tag("ingots/titanium"), tag("ingots/titanium"));
+        compressShapeless(output, "heavy_duty_plate_tier_3", GCItems.HEAVY_DUTY_PLATE_TIER_3.get(),
+                Ingredient.of(GCItems.HEAVY_DUTY_PLATE.get()), Ingredient.of(GCItems.COMPRESSED_DESH.get()));
+        compressShapeless(output, "ice_from_dense_ice", Items.ICE, Ingredient.of(GCBlocks.DENSE_ICE.get()), Ingredient.of(GCBlocks.DENSE_ICE.get()));
     }
 
     private static void compressShapeless(RecipeOutput output, String name, ItemLike result, Ingredient... ingredients) {

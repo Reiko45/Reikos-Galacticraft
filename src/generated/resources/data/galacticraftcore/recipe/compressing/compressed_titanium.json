@@ -1,0 +1,15 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:ingots/titanium"
+    },
+    {
+      "tag": "c:ingots/titanium"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:compressed_titanium"
+  }
+}

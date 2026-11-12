@@ -1,0 +1,15 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:heavy_duty_plate"
+    },
+    {
+      "item": "galacticraftcore:compressed_desh"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:heavy_duty_plate_tier_3"
+  }
+}

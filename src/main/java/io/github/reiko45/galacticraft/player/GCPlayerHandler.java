@@ -185,8 +185,18 @@ public final class GCPlayerHandler {
     @SubscribeEvent
     public static void onSetSpawn(net.neoforged.neoforge.event.entity.player.PlayerSetSpawnEvent event) {
         if (!event.isForced() && event.getNewSpawn() != null
-                && event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.MARS)) {
+                && (event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.MARS)
+                || event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.ASTEROIDS))) {
             event.setCanceled(true);
+        }
+    }
+
+    /** 1.12.2 WorldProviderAsteroids#isDaytime was always true, so beds there always said it wasn't night. */
+    @SubscribeEvent
+    public static void onCanSleep(net.neoforged.neoforge.event.entity.player.CanPlayerSleepEvent event) {
+        if (event.getProblem() == null && event.getLevel().dimension().equals(io.github.reiko45.galacticraft.world.GCDimensions.ASTEROIDS)
+                && !(event.getLevel().getBlockState(event.getPos()).getBlock() instanceof io.github.reiko45.galacticraft.block.CryogenicChamberBlock)) {
+            event.setProblem(net.minecraft.world.entity.player.Player.BedSleepingProblem.NOT_POSSIBLE_NOW);
         }
     }
 

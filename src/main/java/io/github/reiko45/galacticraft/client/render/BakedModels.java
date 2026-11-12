@@ -26,6 +26,18 @@ public final class BakedModels {
         return ModelResourceLocation.standalone(GalacticraftCore.id(path));
     }
 
+    /** Every quad of the model in one colour (1.12.2 ClientUtil#drawBakedModelColored; give it a white texture). */
+    public static void drawTinted(PoseStack poseStack, VertexConsumer consumer, ModelResourceLocation location, int light, float red, float green, float blue) {
+        final BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);
+        final int[] lights = {light, light, light, light};
+        for (Direction side : SIDES) {
+            RANDOM.setSeed(42L);
+            for (BakedQuad quad : model.getQuads(null, side, RANDOM, ModelData.EMPTY, null)) {
+                consumer.putBulkData(poseStack.last(), quad, FULL_BRIGHTNESS, red, green, blue, 1.0F, lights, OverlayTexture.NO_OVERLAY, false);
+            }
+        }
+    }
+
     /** Every quad of the model at the current pose, keeping the quads' own (material) colour. */
     public static void draw(PoseStack poseStack, VertexConsumer consumer, ModelResourceLocation location, int light) {
         final BakedModel model = Minecraft.getInstance().getModelManager().getModel(location);

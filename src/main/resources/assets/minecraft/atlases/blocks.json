@@ -28,6 +28,14 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/cargo_rocket"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/tier_3_rocket"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/entry_pod"
     }
   ]
 }

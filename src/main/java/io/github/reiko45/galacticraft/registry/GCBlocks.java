@@ -126,6 +126,29 @@ public final class GCBlocks {
     public static final DeferredBlock<Block> DESH_BLOCK = withItem("desh_block", () -> new Block(marsRock(MapColor.COLOR_RED, 2.2F, 60.0F)
             .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
 
+    // --- Asteroids (1.12.2 BlockBasicAsteroids "asteroids_block": Material.ROCK, hardness 3 and no blast resistance) ---
+    public static final DeferredBlock<Block> ASTEROID_ROCK_0 = withItem("asteroid_rock_0", () -> new Block(asteroidRock()));
+    public static final DeferredBlock<Block> ASTEROID_ROCK_1 = withItem("asteroid_rock_1", () -> new Block(asteroidRock()));
+    public static final DeferredBlock<Block> ASTEROID_ROCK_2 = withItem("asteroid_rock_2", () -> new Block(asteroidRock()));
+    public static final DeferredBlock<Block> ASTEROID_ALUMINUM_ORE = withItem("asteroid_aluminum_ore", () -> new Block(asteroidRock()));
+    /** Drops an Iron Shard and a Titanium Shard and 2-3 experience (1.12.2 getDrops, getExpDrop). */
+    public static final DeferredBlock<DropExperienceBlock> ILMENITE_ORE = withItem("ilmenite_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 3), asteroidRock()));
+    public static final DeferredBlock<Block> ASTEROID_IRON_ORE = withItem("asteroid_iron_ore", () -> new Block(asteroidRock()));
+    /** 1.12.2 "Dark Decoration Block", drawn with the screen side texture. */
+    public static final DeferredBlock<Block> DARK_DECORATION_BLOCK = withItem("dark_decoration_block", () -> new Block(asteroidRock()));
+    public static final DeferredBlock<Block> TITANIUM_BLOCK = withItem("titanium_block", () -> new Block(asteroidRock()
+            .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
+    /** 1.12.2 BlockIceAsteroids: Material.ICE, slipperiness 0.98, hardness 0.5, glass sounds, translucent. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.DenseIceBlock> DENSE_ICE = withItem("dense_ice",
+            () -> new io.github.reiko45.galacticraft.block.DenseIceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.ICE).friction(0.98F)
+                    .randomTicks().strength(0.5F).sound(SoundType.GLASS).noOcclusion()
+                    .isRedstoneConductor((state, level, pos) -> false)));
+    /** 1.12.2 BlockBrightAir: lights the sunward side of asteroids; no item. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.BrightAirBlock> BRIGHT_AIR = BLOCKS.register("bright_air",
+            () -> new io.github.reiko45.galacticraft.block.BrightAirBlock(BlockBehaviour.Properties.of().replaceable().noCollission().noLootTable().air()
+                    .lightLevel(state -> state.getValue(io.github.reiko45.galacticraft.block.BrightAirBlock.LEVEL))));
+
     public static final DeferredBlock<StairBlock> MARS_COBBLESTONE_STAIRS = stairs("mars_cobblestone_stairs", MARS_COBBLESTONE, 1.5F);
     public static final DeferredBlock<StairBlock> MARS_DUNGEON_BRICK_STAIRS = stairs("mars_dungeon_brick_stairs", MARS_DUNGEON_BRICK, 4.0F);
     public static final DeferredBlock<SlabBlock> MARS_COBBLESTONE_SLAB = slab("mars_cobblestone_slab", MARS_COBBLESTONE);
@@ -381,6 +404,11 @@ public final class GCBlocks {
     private static BlockBehaviour.Properties moonStone(float hardness, float resistance) {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
+    }
+
+    private static BlockBehaviour.Properties asteroidRock() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM)
+                .requiresCorrectToolForDrops().strength(3.0F, 0.0F).sound(SoundType.STONE);
     }
 
     private static BlockBehaviour.Properties marsRock(MapColor color, float hardness, float resistance) {

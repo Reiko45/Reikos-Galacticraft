@@ -1,0 +1,15 @@
+{
+  "type": "galacticraftcore:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:dense_ice"
+    },
+    {
+      "item": "galacticraftcore:dense_ice"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:ice"
+  }
+}

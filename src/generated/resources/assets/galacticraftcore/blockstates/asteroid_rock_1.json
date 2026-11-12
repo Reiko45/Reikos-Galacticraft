@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftcore:block/asteroid_rock_1"
+      },
+      {
+        "model": "galacticraftcore:block/asteroid_rock_1",
+        "y": 90
+      },
+      {
+        "model": "galacticraftcore:block/asteroid_rock_1",
+        "y": 180
+      },
+      {
+        "model": "galacticraftcore:block/asteroid_rock_1",
+        "y": 270
+      }
+    ]
+  }
+}

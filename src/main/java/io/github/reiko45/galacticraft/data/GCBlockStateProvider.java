@@ -59,6 +59,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
             simpleBlockWithItem(block.get(), cubeAll(block.get()));
         }
         simpleBlockWithItem(GCBlocks.DESH_ORE.get(), cubeAll(GCBlocks.DESH_ORE.get()));
+        asteroids();
         // 1.12.2 vine_0..2 are cross models (vine_model); the item shows the first.
         getVariantBuilder(GCBlocks.CAVERNOUS_VINES.get()).forAllStates(state -> {
             final int type = state.getValue(io.github.reiko45.galacticraft.block.CavernousVinesBlock.TYPE);
@@ -221,9 +222,19 @@ public class GCBlockStateProvider extends BlockStateProvider {
 
     private void buggy() {
         // The Tier 2 Rocket and Landing Balloons are single-object OBJs (1.12.2 RenderTier2Rocket, RenderLandingBalloons).
-        for (String entity : new String[]{"tier_2_rocket", "cargo_rocket", "landing_balloons"}) {
+        for (String entity : new String[]{"tier_2_rocket", "cargo_rocket", "landing_balloons", "entry_pod"}) {
             models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
+        }
+        // 1.12.2 RenderTier3Rocket baked the body and boosters, the nose cone and the blinking light ("Cube") apart
+        final String[][] tier3 = {{"body", "Boosters", "Rocket"}, {"nose_cone", "NoseCone"}, {"light", "Cube"}};
+        for (String[] part : tier3) {
+            final var loader = models().getBuilder("entity/tier_3_rocket/" + part[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/tier_3_rocket.obj")).flipV(true);
+            for (String group : new String[]{"Boosters", "Rocket", "NoseCone", "Cube"}) {
+                loader.visibility(group, java.util.Arrays.asList(part).subList(1, part.length).contains(group));
+            }
+            loader.end();
         }
         for (String part : BUGGY_PARTS) {
             final var loader = models().getBuilder("entity/buggy/" + part.toLowerCase(java.util.Locale.ROOT)).customLoader(ObjModelBuilder::begin)
@@ -280,6 +291,23 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .modelFile(state.getValue(io.github.reiko45.galacticraft.block.CryogenicChamberPartBlock.TOP) ? top : middle)
                 .rotationY((int) state.getValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING).toYRot()).build());
         itemModels().withExistingParent("cryogenic_chamber", modLoc("block/cryogenic_chamber"));
+    }
+
+    /** 1.12.2 asteroids_block (rock turned at random, like its four weighted variants) and dense_ice. */
+    private void asteroids() {
+        for (net.neoforged.neoforge.registries.DeferredBlock<Block> rock : java.util.List.of(GCBlocks.ASTEROID_ROCK_0, GCBlocks.ASTEROID_ROCK_1,
+                GCBlocks.ASTEROID_ROCK_2)) {
+            final ModelFile model = cubeAll(rock.get());
+            getVariantBuilder(rock.get()).partialState().setModels(ConfiguredModel.allYRotations(model, 0, false));
+            simpleBlockItem(rock.get(), model);
+        }
+        for (Block block : new Block[]{GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ILMENITE_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get(),
+                GCBlocks.DARK_DECORATION_BLOCK.get(), GCBlocks.TITANIUM_BLOCK.get()}) {
+            simpleBlockWithItem(block, cubeAll(block));
+        }
+        simpleBlockWithItem(GCBlocks.DENSE_ICE.get(), models().cubeAll("dense_ice", tex("dense_ice")).renderType("translucent"));
+        // Invisible; the model only gives particles a texture.
+        simpleBlock(GCBlocks.BRIGHT_AIR.get(), models().getBuilder("bright_air").texture("particle", mcLoc("block/glass")));
     }
 
     private void gasMachine(Block block, String name, String back, String left, String right) {

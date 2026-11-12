@@ -3,6 +3,7 @@
     "#c:ingots/tin",
     "#c:ingots/aluminum",
     "#c:ingots/meteoric_iron",
-    "#c:ingots/desh"
+    "#c:ingots/desh",
+    "#c:ingots/titanium"
   ]
 }

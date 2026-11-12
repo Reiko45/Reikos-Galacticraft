@@ -124,7 +124,9 @@ public class SolarPanelBlockEntity extends MachineBlockEntity {
     /** Basic panel: the panel block sees the sky and nothing opaque is above it. */
     private boolean skyColumnClear(Level level, int x, int z) {
         final BlockPos panel = this.worldPosition.offset(x, 2, z);
-        if (level.getBrightness(LightLayer.SKY, panel) < level.getMaxLightLevel()) {
+        // 1.12.2 canBlockSeeSky went by the height map, which also works where there is no sky light (the asteroids)
+        if (level.dimensionType().hasSkyLight() ? level.getBrightness(LightLayer.SKY, panel) < level.getMaxLightLevel()
+                : level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING, panel.getX(), panel.getZ()) > panel.getY()) {
             return false;
         }
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();

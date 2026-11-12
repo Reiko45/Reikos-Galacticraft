@@ -38,6 +38,10 @@ public class RocketItemRenderer extends BlockEntityWithoutLevelRenderer {
             final float scale = context == ItemDisplayContext.GUI ? 0.5F : 0.6F;
             poseStack.scale(scale, scale, scale);
             io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.renderModel(poseStack, buffers, light);
+        } else if (this.tier >= 3) {
+            final float scale = context == ItemDisplayContext.GUI ? 0.16F : 0.2F;
+            poseStack.scale(scale, scale, scale);
+            io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer.renderModel(poseStack, buffers, light);
         } else if (this.tier >= 2) {
             final float scale = context == ItemDisplayContext.GUI ? 0.2F : 0.24F;
             poseStack.scale(scale, scale, scale);

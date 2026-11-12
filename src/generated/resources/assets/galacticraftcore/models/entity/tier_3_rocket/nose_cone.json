@@ -1,0 +1,11 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/tier_3_rocket.obj",
+  "visibility": {
+    "Boosters": false,
+    "Cube": false,
+    "NoseCone": true,
+    "Rocket": false
+  }
+}

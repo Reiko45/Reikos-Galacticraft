@@ -1,0 +1,11 @@
+newmtl tier3rocket
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+d 1.000000
+map_Kd minecraft:block/white_concrete
+
+newmtl tier3rocket_tier3rocket.png
+Ka 1.000000 1.000000 1.000000
+Kd 0.640000 0.640000 0.640000
+d 1.000000
+map_Kd galacticraftcore:model/tier_3_rocket

@@ -54,6 +54,25 @@ public final class GCArmorMaterials {
             3.0F,
             0.0F));
 
+    /**
+     * 1.12.2 ARMOR_TITANIUM: durability factor 26, protection 5/7/10/5, enchantability 20, toughness 1, repaired with
+     * Compressed Titanium (ItemArmorAsteroids#getIsRepairable). The three 1.12.2 texture sheets are picked by the item.
+     */
+    public static final Holder<ArmorMaterial> TITANIUM = ARMOR_MATERIALS.register("titanium", () -> new ArmorMaterial(
+            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                map.put(ArmorItem.Type.BOOTS, 5);
+                map.put(ArmorItem.Type.LEGGINGS, 7);
+                map.put(ArmorItem.Type.CHESTPLATE, 10);
+                map.put(ArmorItem.Type.HELMET, 5);
+                map.put(ArmorItem.Type.BODY, 10);
+            }),
+            20,
+            SoundEvents.ARMOR_EQUIP_IRON,
+            () -> Ingredient.of(GCItems.COMPRESSED_TITANIUM.get()),
+            List.of(new ArmorMaterial.Layer(GalacticraftCore.id("titanium"))),
+            1.0F,
+            0.0F));
+
     private GCArmorMaterials() {
     }
 }

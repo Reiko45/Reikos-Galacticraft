@@ -1,0 +1,10 @@
+{
+  "type": "galacticraftcore:asteroids",
+  "generator": {
+    "type": "galacticraftcore:asteroids",
+    "biome_source": {
+      "type": "minecraft:fixed",
+      "biome": "galacticraftcore:asteroids"
+    }
+  }
+}

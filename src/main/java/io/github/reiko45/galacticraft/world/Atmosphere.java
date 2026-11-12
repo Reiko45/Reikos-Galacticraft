@@ -23,9 +23,20 @@ public final class Atmosphere {
     private static final Map<ResourceKey<Level>, List<Gas>> GASES = Map.of(
             GCDimensions.MARS, List.of(Gas.CO2, Gas.ARGON, Gas.NITROGEN),
             GCDimensions.MOON, List.of(),
-            GCDimensions.ORBIT, List.of());
+            GCDimensions.ORBIT, List.of(),
+            GCDimensions.ASTEROIDS, List.of());
+
+    /** 1.12.2 AtmosphereInfo#thermalLevel (WorldProviderSpace#getThermalLevelModifier): Mars is cold, the asteroids colder. */
+    private static final Map<ResourceKey<Level>, Float> THERMAL = Map.of(
+            GCDimensions.MARS, -1.0F,
+            GCDimensions.ASTEROIDS, -1.5F);
 
     private Atmosphere() {
+    }
+
+    /** How hot (positive) or cold (negative) a world is: 0 for the Moon, orbit and every non-Galacticraft world. */
+    public static float thermalLevel(ResourceKey<Level> dimension) {
+        return THERMAL.getOrDefault(dimension, 0.0F);
     }
 
     /** The gases of a Galacticraft world, in 1.12.2's order; null for other worlds (the Overworld, the Nether...). */

@@ -1,0 +1,35 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "V": {
+      "item": "minecraft:stone_button"
+    },
+    "W": [
+      {
+        "item": "galacticraftcore:tin_canister"
+      },
+      {
+        "item": "galacticraftcore:copper_canister"
+      }
+    ],
+    "X": {
+      "item": "galacticraftcore:heavy_duty_plate_tier_3"
+    },
+    "Y": {
+      "item": "minecraft:flint_and_steel"
+    },
+    "Z": {
+      "item": "galacticraftcore:oxygen_vent"
+    }
+  },
+  "pattern": [
+    " YV",
+    "XWX",
+    "XZX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:heavy_rocket_engine"
+  }
+}

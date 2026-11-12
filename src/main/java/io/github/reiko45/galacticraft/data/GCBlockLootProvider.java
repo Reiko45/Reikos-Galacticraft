@@ -52,6 +52,21 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
                 LootItem.lootTableItem(GCItems.RAW_DESH.get()).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1), true)
                         .when(net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition.bonusLevelFlatChance(fortune,
                                 0.0F, 0.04F, 0.33F, 0.62F, 0.91F))))));
+        // Asteroids (1.12.2 BlockBasicAsteroids#getDrops): ilmenite gives an Iron Shard and a Titanium Shard, each with the
+        // same Fortune chance of a second one as desh. Dense Ice drops only with Silk Touch (BlockIceAsteroids).
+        add(GCBlocks.ILMENITE_ORE.get(), block -> {
+            final LootTable.Builder table = LootTable.lootTable();
+            for (net.minecraft.world.item.Item shard : new net.minecraft.world.item.Item[]{GCItems.IRON_SHARD.get(), GCItems.TITANIUM_SHARD.get()}) {
+                table.withPool(LootPool.lootPool().setRolls(ConstantValue.exactly(1)).add(
+                        net.minecraft.world.level.storage.loot.entries.AlternativesEntry.alternatives(
+                                LootItem.lootTableItem(block).when(hasSilkTouch()),
+                                applyExplosionDecay(block, LootItem.lootTableItem(shard).apply(SetItemCountFunction.setCount(ConstantValue.exactly(1), true)
+                                        .when(net.minecraft.world.level.storage.loot.predicates.BonusLevelTableCondition.bonusLevelFlatChance(fortune,
+                                                0.0F, 0.04F, 0.33F, 0.62F, 0.91F)))))));
+            }
+            return table;
+        });
+        add(GCBlocks.DENSE_ICE.get(), createSilkTouchOnlyTable(GCBlocks.DENSE_ICE.get()));
         // 1.12.2 BlockCavernousVine dropped nothing unless sheared.
         add(GCBlocks.CAVERNOUS_VINES.get(), createShearsOnlyDrop(GCBlocks.CAVERNOUS_VINES.get()));
         // 1.12.2 BlockFluidPipe#breakBlock: a dyed pipe also gives its dye back.

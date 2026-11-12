@@ -43,6 +43,14 @@ public final class GCDimensions {
     public static final ResourceKey<Biome> MARS_BIOME = ResourceKey.create(Registries.BIOME, MARS_ID);
     public static final ResourceLocation MARS_EFFECTS = MARS_ID;
 
+    /** The asteroid belt (1.12.2 WorldProviderAsteroids, planets module). */
+    public static final ResourceLocation ASTEROIDS_ID = GalacticraftCore.id("asteroids");
+    public static final ResourceKey<Level> ASTEROIDS = ResourceKey.create(Registries.DIMENSION, ASTEROIDS_ID);
+    public static final ResourceKey<LevelStem> ASTEROIDS_STEM = ResourceKey.create(Registries.LEVEL_STEM, ASTEROIDS_ID);
+    public static final ResourceKey<DimensionType> ASTEROIDS_TYPE = ResourceKey.create(Registries.DIMENSION_TYPE, ASTEROIDS_ID);
+    public static final ResourceKey<Biome> ASTEROIDS_BIOME = ResourceKey.create(Registries.BIOME, ASTEROIDS_ID);
+    public static final ResourceLocation ASTEROIDS_EFFECTS = ASTEROIDS_ID;
+
     private GCDimensions() {
     }
 }

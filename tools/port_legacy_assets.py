@@ -135,6 +135,7 @@ def port_models(mapping, legacy_assets, out_assets):
         # {"from": ..., "default_map": ...} also gives untextured materials (1.12.2 drew them white) a texture.
         old = spec if isinstance(spec, str) else spec["from"]
         default_map = None if isinstance(spec, str) else spec.get("default_map")
+        materials = {} if isinstance(spec, str) else spec.get("materials", {})
         root, path = asset_source(legacy_assets, old)
         src = os.path.join(root, "models", path)
         dst = os.path.join(out_assets, "models", new)
@@ -146,12 +147,18 @@ def port_models(mapping, legacy_assets, out_assets):
             f.write(obj)
         lines = []
         textured = True
+        material = None
         with open(src + ".mtl", encoding="utf-8") as f:
             for line in f.read().splitlines():
                 if line.startswith("newmtl "):
                     if not textured and default_map:
                         lines.append("map_Kd " + default_map)
                     textured = False
+                    material = line.split(" ", 1)[1].strip()
+                if line.startswith("map_Kd ") and material in materials:
+                    lines.append("map_Kd " + materials[material])
+                    textured = True
+                    continue
                 if line.startswith("map_Kd "):
                     ref = line.split(" ", 1)[1].strip()
                     if ref not in reverse:

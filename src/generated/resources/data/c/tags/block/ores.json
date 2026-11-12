@@ -6,8 +6,10 @@
     "#c:ores/sapphire",
     "#c:ores/cheese",
     "#c:ores/desh",
+    "#c:ores/ilmenite",
     "galacticraftcore:moon_copper_ore",
     "galacticraftcore:mars_copper_ore",
-    "galacticraftcore:mars_iron_ore"
+    "galacticraftcore:mars_iron_ore",
+    "galacticraftcore:asteroid_iron_ore"
   ]
 }

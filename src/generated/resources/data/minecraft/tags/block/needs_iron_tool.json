@@ -1,5 +1,7 @@
 {
   "values": [
+    "galacticraftcore:asteroid_aluminum_ore",
+    "galacticraftcore:asteroid_iron_ore",
     "galacticraftcore:silicon_ore"
   ]
 }

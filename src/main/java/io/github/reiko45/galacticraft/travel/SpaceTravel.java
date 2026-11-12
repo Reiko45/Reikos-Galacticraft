@@ -1,5 +1,6 @@
 package io.github.reiko45.galacticraft.travel;
 
+import io.github.reiko45.galacticraft.entity.EntryPodEntity;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.entity.ParachestEntity;
 import io.github.reiko45.galacticraft.entity.RocketEntity;
@@ -32,7 +33,8 @@ import org.jetbrains.annotations.Nullable;
  *
  * <p>A rocket that climbs above y 1200 hands its cargo, fuel, launch pads and itself to the rider, who stays in place
  * while choosing a destination within the rocket's tier. On the Moon the player arrives at y 900 in a Space Lander
- * holding all of it, on Mars in Landing Balloons (TeleportTypeMars). On Earth the player arrives at y 250 (falling
+ * holding all of it, on Mars in Landing Balloons (TeleportTypeMars), among the asteroids in an Entry Pod from y 310
+ * (TeleportTypeAsteroids). On Earth the player arrives at y 250 (falling
  * slowly under their parachute if they wear one), and a Parachest with the cargo floats down from y 230 nearby 20
  * ticks later.
  */
@@ -45,7 +47,8 @@ public final class SpaceTravel {
             new Destination(Level.OVERWORLD, "planet.galacticraftcore.overworld", 1),
             new Destination(GCDimensions.MOON, "moon.galacticraftcore.moon", 1),
             new Destination(GCDimensions.ORBIT, "satellite.galacticraftcore.overworld_station", 1),
-            new Destination(GCDimensions.MARS, "planet.galacticraftcore.mars", 2));
+            new Destination(GCDimensions.MARS, "planet.galacticraftcore.mars", 2),
+            new Destination(GCDimensions.ASTEROIDS, "planet.galacticraftcore.asteroids", 3));
 
     private SpaceTravel() {
     }
@@ -168,6 +171,16 @@ public final class SpaceTravel {
             data.rocketFuel = fuel;
             data.chestSpawnPos = Vec3.atLowerCornerOf(station.base()).add(-8.5D, 26.0D, -1.5D);
             data.chestSpawnCooldown = 200;
+        } else if (dimension.equals(GCDimensions.ASTEROIDS)) {
+            // TeleportTypeAsteroids: an Entry Pod drops from y 310 over the nearest asteroid (within the world border)
+            final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
+            final int x = (int) Math.floor(Math.max(-limit, Math.min(limit, data.launchedFromX)));
+            final int z = (int) Math.floor(Math.max(-limit, Math.min(limit, data.launchedFromZ)));
+            final BlockPos spot = AsteroidLanding.find(target, x, z);
+            player.teleportTo(target, spot.getX(), spot.getY(), spot.getZ(), player.getYRot(), player.getXRot());
+            final EntryPodEntity pod = EntryPodEntity.create(target, spot.getX(), spot.getY(), spot.getZ(), cargo, fuel);
+            target.addFreshEntity(pod);
+            player.startRiding(pod, true);
         } else if (dimension.equals(GCDimensions.MOON) || dimension.equals(GCDimensions.MARS)) {
             // TeleportTypeMoon / TeleportTypeMars: arrive at y 900 in a lander or landing balloons (within the world border)
             final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
@@ -195,6 +208,9 @@ public final class SpaceTravel {
 
     /** The rocket a traveller gets back on arrival (1.12.2 GCPlayerStats rocketItem and rocketType). */
     public static ItemStack rocketItem(int tier, int storage) {
+        if (tier >= 3) {
+            return GCItems.TIER_3_ROCKET.get().stack(storage, 0);
+        }
         return tier >= 2 ? GCItems.TIER_2_ROCKET.get().stack(storage, 0) : Tier1RocketItem.create(storage, 0);
     }
 

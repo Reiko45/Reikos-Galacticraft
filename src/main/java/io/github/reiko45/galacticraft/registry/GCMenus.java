@@ -80,6 +80,8 @@ public final class GCMenus {
     public static final Supplier<MenuType<NasaWorkbenchMenu>> NASA_WORKBENCH = MENUS.register("nasa_workbench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new NasaWorkbenchMenu(id, inventory)));
 
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.Tier3RocketBenchMenu>> TIER_3_ROCKET_BENCH = MENUS.register("tier_3_rocket_bench",
+            () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.Tier3RocketBenchMenu(id, inventory)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu>> TIER_2_ROCKET_BENCH = MENUS.register("tier_2_rocket_bench",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.Tier2RocketBenchMenu(id, inventory)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.CargoRocketBenchMenu>> CARGO_ROCKET_BENCH = MENUS.register("cargo_rocket_bench",

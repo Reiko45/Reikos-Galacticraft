@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:heavy_duty_plate_tier_3"
+    },
+    "Y": {
+      "item": "galacticraftcore:heavy_duty_plate"
+    }
+  },
+  "pattern": [
+    " Y ",
+    "XYX",
+    "X X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:heavy_rocket_fins"
+  }
+}

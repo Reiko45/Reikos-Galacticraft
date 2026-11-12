@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "galacticraftcore:block/dark_decoration_block"
+  }
+}

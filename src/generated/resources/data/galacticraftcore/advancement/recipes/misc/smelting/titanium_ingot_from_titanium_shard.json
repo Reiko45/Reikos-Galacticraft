@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:smelting/titanium_ingot_from_titanium_shard"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_titanium_shard": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:titanium_shard"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_titanium_shard"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:smelting/titanium_ingot_from_titanium_shard"
+    ]
+  }
+}

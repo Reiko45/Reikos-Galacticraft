@@ -250,6 +250,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     private static void biomes(BootstrapContext<Biome> context) {
         orbitBiome(context);
         marsBiome(context);
+        asteroidsBiome(context);
         final BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(
                 context.lookup(Registries.PLACED_FEATURE), context.lookup(Registries.CONFIGURED_CARVER));
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, MOON_DIRT_BLOB_PLACED);
@@ -317,6 +318,29 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 .build());
     }
 
+    /** 1.12.2 BiomeAsteroids: black sky and fog, evolved mobs with 1.12.2's weights and 0.01 spawning chance. */
+    private static void asteroidsBiome(BootstrapContext<Biome> context) {
+        context.register(GCDimensions.ASTEROIDS_BIOME, new Biome.BiomeBuilder()
+                .hasPrecipitation(false)
+                .temperature(0.0F)
+                .downfall(0.0F)
+                .specialEffects(new BiomeSpecialEffects.Builder()
+                        .skyColor(0x000000)
+                        .fogColor(0x000000)
+                        .waterColor(0x3F76E4)
+                        .waterFogColor(0x050533)
+                        .build())
+                .mobSpawnSettings(new MobSpawnSettings.Builder()
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_ZOMBIE.get(), 3000, 1, 3))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SPIDER.get(), 2000, 1, 2))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_SKELETON.get(), 1500, 1, 1))
+                        .addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntities.EVOLVED_CREEPER.get(), 2000, 1, 1))
+                        .creatureGenerationProbability(0.01F)
+                        .build())
+                .generationSettings(BiomeGenerationSettings.EMPTY)
+                .build());
+    }
+
     /** 1.12.2 BiomeOrbit.space: black sky, nothing spawns. */
     private static void orbitBiome(BootstrapContext<Biome> context) {
         context.register(GCDimensions.ORBIT_BIOME, new Biome.BiomeBuilder()
@@ -357,6 +381,12 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 OptionalLong.empty(), true, false, false, false, 1.0D, true, false, 0, 256, 256,
                 BlockTags.INFINIBURN_OVERWORLD, GCDimensions.MARS_EFFECTS, 0.0F,
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
+        // 1.12.2 WorldProviderAsteroids: no sky light, the sun fixed on the horizon (celestial angle 0.25, which day time
+        // 12,785 gives), y 0 to 256. Beds can't be slept in (1.12.2 isDaytime was always true; see GCPlayerHandler).
+        context.register(GCDimensions.ASTEROIDS_TYPE, new DimensionType(
+                OptionalLong.of(12785L), false, false, false, false, 1.0D, true, false, 0, 256, 256,
+                BlockTags.INFINIBURN_OVERWORLD, GCDimensions.ASTEROIDS_EFFECTS, 0.0F,
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)));
         // 1.12.2 WorldProviderOverworldOrbit: 24,000 tick day, worlds from y 0 to 256, no weather
         context.register(GCDimensions.ORBIT_TYPE, new DimensionType(
                 OptionalLong.empty(), true, false, false, false, 1.0D, false, false, 0, 256, 256,
@@ -378,6 +408,10 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                         new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.MARS_BIOME)),
                         GCBlocks.MARS_FINE_REGOLITH.get().defaultBlockState(), GCBlocks.MARS_REGOLITH.get().defaultBlockState(),
                         GCBlocks.MARS_STONE.get().defaultBlockState())));
+        context.register(GCDimensions.ASTEROIDS_STEM, new LevelStem(
+                context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ASTEROIDS_TYPE),
+                new io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator(
+                        new FixedBiomeSource(context.lookup(Registries.BIOME).getOrThrow(GCDimensions.ASTEROIDS_BIOME)))));
         // 1.12.2 ChunkProviderOrbit: empty space (stations are built when they are created)
         context.register(GCDimensions.ORBIT_STEM, new LevelStem(
                 context.lookup(Registries.DIMENSION_TYPE).getOrThrow(GCDimensions.ORBIT_TYPE),

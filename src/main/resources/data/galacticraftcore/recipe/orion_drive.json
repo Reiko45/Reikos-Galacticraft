@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:ores/diamond"
+    },
+    "B": {
+      "tag": "c:ores/lapis"
+    },
+    "C": {
+      "tag": "c:ores/gold"
+    },
+    "D": {
+      "tag": "c:ores/redstone"
+    },
+    "E": {
+      "tag": "c:ores/coal"
+    },
+    "F": {
+      "tag": "c:ores/cheese"
+    },
+    "G": {
+      "tag": "c:ores/desh"
+    },
+    "H": {
+      "tag": "c:ores/ilmenite"
+    },
+    "O": {
+      "item": "galacticraftcore:beam_core"
+    }
+  },
+  "pattern": [
+    "ABC",
+    "DOE",
+    "FGH"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:orion_drive"
+  }
+}

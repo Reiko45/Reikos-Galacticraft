@@ -135,6 +135,8 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.TERRAFORMER.get(), BubbleRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_2_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.TIER_3_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer::new);
+        event.registerEntityRenderer(GCEntities.ENTRY_POD.get(), io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer::new);
         event.registerEntityRenderer(GCEntities.CARGO_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDING_BALLOONS.get(), io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDER.get(), LanderRenderer::new);
@@ -178,6 +180,8 @@ public final class GalacticraftClient {
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer.registerModels(event);
     }
 
@@ -223,6 +227,17 @@ public final class GalacticraftClient {
                 return this.renderer;
             }
         }, GCItems.TIER_2_ROCKET.get());
+        event.registerItem(new IClientItemExtensions() {
+            private RocketItemRenderer renderer;
+
+            @Override
+            public BlockEntityWithoutLevelRenderer getCustomRenderer() {
+                if (this.renderer == null) {
+                    this.renderer = new RocketItemRenderer(3);
+                }
+                return this.renderer;
+            }
+        }, GCItems.TIER_3_ROCKET.get());
         event.registerItem(new IClientItemExtensions() {
             private RocketItemRenderer renderer;
 
@@ -330,6 +345,7 @@ public final class GalacticraftClient {
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);
         event.register(GCMenus.TIER_2_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.Tier2RocketBenchScreen::new);
+        event.register(GCMenus.TIER_3_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.Tier3RocketBenchScreen::new);
         event.register(GCMenus.CARGO_ROCKET_BENCH.get(), io.github.reiko45.galacticraft.client.screen.CargoRocketBenchScreen::new);
         event.register(GCMenus.SCHEMATIC_INPUT.get(), io.github.reiko45.galacticraft.client.screen.SchematicInputScreen::new);
     }
@@ -352,6 +368,43 @@ public final class GalacticraftClient {
         event.register(GCDimensions.MOON_EFFECTS, new MoonEffects());
         event.register(GCDimensions.ORBIT_EFFECTS, new OrbitEffects());
         event.register(GCDimensions.MARS_EFFECTS, new MarsEffects());
+        event.register(GCDimensions.ASTEROIDS_EFFECTS, new AsteroidsEffects());
+    }
+
+    /** The asteroid belt: black sky and fog, no clouds or sunrise glow, the 1.12.2 asteroid sky. */
+    static final class AsteroidsEffects extends DimensionSpecialEffects {
+        private final io.github.reiko45.galacticraft.client.render.AsteroidsSkyRenderer sky = new io.github.reiko45.galacticraft.client.render.AsteroidsSkyRenderer();
+
+        AsteroidsEffects() {
+            super(Float.NaN, false, SkyType.NORMAL, false, false);
+        }
+
+        @Override
+        public boolean renderSky(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, org.joml.Matrix4f modelViewMatrix,
+                                 net.minecraft.client.Camera camera, org.joml.Matrix4f projectionMatrix, boolean isFoggy, Runnable setupFog) {
+            return this.sky.render(level, partialTick, modelViewMatrix, camera, projectionMatrix, setupFog);
+        }
+
+        @Override
+        public boolean renderClouds(net.minecraft.client.multiplayer.ClientLevel level, int ticks, float partialTick, com.mojang.blaze3d.vertex.PoseStack poseStack,
+                                    double camX, double camY, double camZ, org.joml.Matrix4f modelViewMatrix, org.joml.Matrix4f projectionMatrix) {
+            return true;
+        }
+
+        @Override
+        public Vec3 getBrightnessDependentFogColor(Vec3 fogColor, float brightness) {
+            return Vec3.ZERO;
+        }
+
+        @Override
+        public boolean isFoggyAt(int x, int y) {
+            return false;
+        }
+
+        @Override
+        public float[] getSunriseColor(float timeOfDay, float partialTicks) {
+            return null;
+        }
     }
 
     /** Mars: no clouds or sunrise glow, the 1.12.2 Mars sky, and orange fog that dims to a quarter at night. */

@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:heavy_duty_plate_tier_3"
+    },
+    "Y": {
+      "item": "minecraft:redstone_torch"
+    }
+  },
+  "pattern": [
+    " Y ",
+    " X ",
+    "X X"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:heavy_nose_cone"
+  }
+}

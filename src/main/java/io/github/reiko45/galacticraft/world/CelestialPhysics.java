@@ -31,10 +31,16 @@ public record CelestialPhysics(double gravityReduction, float fallDamageModifier
      * 100 x its atmosphere's density of 0.1, arrows fall 0.015 per tick.
      */
     public static final CelestialPhysics MARS = new CelestialPhysics(0.058D, 0.38F, 0.512F, false, 0.015F, 10.0D, 0.9D, 1200.0D);
+    /**
+     * The asteroid belt (1.12.2 WorldProviderAsteroids): gravity 0.072 below vanilla, falls do a tenth of the damage,
+     * arrows fall 0.002 per tick, solar (1 / 1.375 AU)^3 x the spaceStationEnergyScalar of 2, meteors 10.
+     */
+    public static final CelestialPhysics ASTEROIDS = new CelestialPhysics(0.072D, 0.1F, 0.769F, false, 0.002F, 10.0D, 0.9D, 1200.0D);
     private static final Map<ResourceKey<Level>, CelestialPhysics> BY_DIMENSION = Map.of(
             GCDimensions.MOON, new CelestialPhysics(0.062D, 0.18F, 1.4F, false, 0.005F, 5.0D, 0.7D, 1200.0D),
             GCDimensions.ORBIT, ORBIT,
-            GCDimensions.MARS, MARS
+            GCDimensions.MARS, MARS,
+            GCDimensions.ASTEROIDS, ASTEROIDS
     );
 
     /** Where a rocket launched in this world reaches space (1200 outside Galacticraft worlds). */
@@ -54,11 +60,14 @@ public record CelestialPhysics(double gravityReduction, float fallDamageModifier
         return physics == null || physics.fuelUsage() <= 0.0D ? (int) base : Math.max(1, (int) Math.floor(base / physics.fuelUsage()));
     }
 
-    /** 1.12.2 WorldProviderOverworldOrbit#isDaytime: in orbit the planet only hides the sun for a sixth of the day. */
+    /** 1.12.2 isDaytime: in orbit the planet only hides the sun for a sixth of the day; among the asteroids it never sets. */
     public static boolean isDaytime(Level level) {
         if (level.dimension().equals(GCDimensions.ORBIT)) {
             final float angle = level.getTimeOfDay(1.0F); // celestial angle: 0 at noon, 0.5 at midnight
             return angle < 0.42F || angle > 0.58F;
+        }
+        if (level.dimension().equals(GCDimensions.ASTEROIDS)) {
+            return true; // 1.12.2 WorldProviderAsteroids#isDaytime
         }
         return level.isDay();
     }

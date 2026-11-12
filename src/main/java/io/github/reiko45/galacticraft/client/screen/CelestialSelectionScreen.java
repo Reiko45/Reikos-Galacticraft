@@ -54,6 +54,10 @@ public class CelestialSelectionScreen extends Screen {
     private static final Body MARS = new Body("mars", GCDimensions.MARS, null, 1.25F, 1.8811610076670317F, 0.1667F, 10,
             Component.translatable("planet.galacticraftcore.mars"), null);
 
+    /** 1.12.2 AsteroidsModule: 1.375 times Earth's distance, orbit time 45 (a random phase there; a fixed one here). */
+    private static final Body ASTEROIDS = new Body("asteroid", GCDimensions.ASTEROIDS, null, 1.375F, 45.0F, 4.0F, 8,
+            Component.translatable("planet.galacticraftcore.asteroids"), null);
+
     private final List<Body> bodies = new java.util.ArrayList<>();
     private int tier;
     private boolean canCreateStation;
@@ -83,6 +87,7 @@ public class CelestialSelectionScreen extends Screen {
         this.bodies.add(EARTH);
         this.bodies.add(MOON);
         this.bodies.add(MARS);
+        this.bodies.add(ASTEROIDS);
         final List<GCNetwork.StationInfo> stations = contents.stations();
         for (int i = 0; i < stations.size(); i++) {
             final GCNetwork.StationInfo station = stations.get(i);

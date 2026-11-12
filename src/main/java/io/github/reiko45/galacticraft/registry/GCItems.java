@@ -62,6 +62,19 @@ public final class GCItems {
     public static final DeferredItem<Item> ATMOSPHERIC_VALVE = simple("atmospheric_valve");
     /** 1.12.2 reinforced_plate_t2 ("Heavy-Duty Plate"), the Tier 2 Rocket's hull. */
     public static final DeferredItem<Item> HEAVY_DUTY_PLATE = simple("heavy_duty_plate");
+    // Asteroids (1.12.2 ItemBasicAsteroids item_basic_asteroids:0-9, ItemHeavyNoseCone, ItemOrionDrive)
+    public static final DeferredItem<Item> TITANIUM_INGOT = simple("titanium_ingot");
+    public static final DeferredItem<Item> HEAVY_ROCKET_ENGINE = simple("heavy_rocket_engine");
+    public static final DeferredItem<Item> HEAVY_ROCKET_FINS = simple("heavy_rocket_fins");
+    public static final DeferredItem<Item> IRON_SHARD = simple("iron_shard");
+    public static final DeferredItem<Item> TITANIUM_SHARD = simple("titanium_shard");
+    public static final DeferredItem<Item> HEAVY_DUTY_PLATE_TIER_3 = simple("heavy_duty_plate_tier_3");
+    public static final DeferredItem<Item> COMPRESSED_TITANIUM = simple("compressed_titanium");
+    public static final DeferredItem<Item> THERMAL_CLOTH = simple("thermal_cloth");
+    public static final DeferredItem<Item> BEAM_CORE = simple("beam_core");
+    public static final DeferredItem<Item> TITANIUM_DUST = simple("titanium_dust");
+    public static final DeferredItem<Item> HEAVY_NOSE_CONE = simple("heavy_nose_cone");
+    public static final DeferredItem<Item> ORION_DRIVE = simple("orion_drive");
 
     // --- Compressed plates (made in the Compressor, a later phase) ---
     public static final DeferredItem<Item> COMPRESSED_COPPER = simple("compressed_copper");
@@ -158,7 +171,7 @@ public final class GCItems {
     /** 1.12.2 key:0 of the planets module: dropped by the Creeper Boss, opens the Tier 2 Treasure Chest. */
     public static final DeferredItem<DungeonKeyItem> TIER_2_DUNGEON_KEY = ITEMS.register("tier_2_dungeon_key",
             () -> new DungeonKeyItem(new Item.Properties(), 2));
-    // 1.12.2 ItemSchematicTier2 (planets schematic:0-2), the Creeper Boss's reward; their pages come with later phases.
+    // 1.12.2 ItemSchematicTier2 (planets schematic:0-2), the Creeper Boss's reward.
     public static final DeferredItem<SchematicItem> TIER_3_ROCKET_SCHEMATIC = ITEMS.register("tier_3_rocket_schematic",
             () -> new SchematicItem(new Item.Properties(), "rocket_t3"));
     public static final DeferredItem<SchematicItem> CARGO_ROCKET_SCHEMATIC = ITEMS.register("cargo_rocket_schematic",
@@ -178,6 +191,11 @@ public final class GCItems {
             () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
                     io.github.reiko45.galacticraft.entity.Tier2RocketEntity.FUEL_CAPACITY, -0.2D,
                     io.github.reiko45.galacticraft.entity.Tier2RocketEntity::create));
+    /** 1.12.2 ItemTier3Rocket (planets item tier3rocket types 0-3); it stands right on the pad. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.RocketItem> TIER_3_ROCKET = ITEMS.register("tier_3_rocket",
+            () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
+                    io.github.reiko45.galacticraft.entity.Tier3RocketEntity.FUEL_CAPACITY, 0.0D,
+                    io.github.reiko45.galacticraft.entity.Tier3RocketEntity::create));
     /** 1.12.2 ItemTier2Rocket types 10-13: the Cargo Rocket, 18-54 slots; it stands 0.05 lower on the pad. */
     public static final DeferredItem<io.github.reiko45.galacticraft.item.RocketItem> CARGO_ROCKET = ITEMS.register("cargo_rocket",
             () -> new io.github.reiko45.galacticraft.item.RocketItem(new Item.Properties(),
@@ -238,6 +256,37 @@ public final class GCItems {
     public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_LEGGINGS = deshArmor("desh_leggings", ArmorItem.Type.LEGGINGS);
     public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> DESH_BOOTS = deshArmor("desh_boots", ArmorItem.Type.BOOTS);
 
+    // --- Titanium tools and armour (1.12.2 ItemPickaxeAsteroids & co.) ---
+    public static final DeferredItem<PickaxeItem> TITANIUM_PICKAXE = ITEMS.register("titanium_pickaxe",
+            () -> new PickaxeItem(GCTiers.TITANIUM, new Item.Properties().attributes(PickaxeItem.createAttributes(GCTiers.TITANIUM, 1.0F, -2.8F))));
+    /** 1.12.2 ItemAxeAsteroids: 6 damage, -3 speed, on the steel tool material. */
+    public static final DeferredItem<AxeItem> TITANIUM_AXE = ITEMS.register("titanium_axe",
+            () -> new AxeItem(GCTiers.TITANIUM_AXE, new Item.Properties().attributes(AxeItem.createAttributes(GCTiers.TITANIUM_AXE, 4.0F, -3.0F))));
+    public static final DeferredItem<ShovelItem> TITANIUM_SHOVEL = ITEMS.register("titanium_shovel",
+            () -> new ShovelItem(GCTiers.TITANIUM, new Item.Properties().attributes(ShovelItem.createAttributes(GCTiers.TITANIUM, 1.5F, -3.0F))));
+    /** 1.12.2 ItemHoe: no damage, attack speed (4 + 1) - 4. */
+    public static final DeferredItem<HoeItem> TITANIUM_HOE = ITEMS.register("titanium_hoe",
+            () -> new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -4.0F, 1.0F))));
+    /** 1.12.2 ItemSwordAsteroids: 9 damage, -2.8 speed. */
+    public static final DeferredItem<SwordItem> TITANIUM_SWORD = ITEMS.register("titanium_sword",
+            () -> new SwordItem(GCTiers.TITANIUM, new Item.Properties().attributes(SwordItem.createAttributes(GCTiers.TITANIUM, 5, -2.8F))));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> TITANIUM_HELMET = titaniumArmor("titanium_helmet", ArmorItem.Type.HELMET);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> TITANIUM_CHESTPLATE = titaniumArmor("titanium_chestplate",
+            ArmorItem.Type.CHESTPLATE);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> TITANIUM_LEGGINGS = titaniumArmor("titanium_leggings",
+            ArmorItem.Type.LEGGINGS);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> TITANIUM_BOOTS = titaniumArmor("titanium_boots", ArmorItem.Type.BOOTS);
+
+    // --- Thermal padding (1.12.2 ItemThermalPadding thermal_padding:0-3) ---
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> THERMAL_PADDING_HELMET = thermalPadding(
+            "thermal_padding_helmet", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_HELMET);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> THERMAL_PADDING_CHESTPLATE = thermalPadding(
+            "thermal_padding_chestplate", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_CHESTPLATE);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> THERMAL_PADDING_LEGGINGS = thermalPadding(
+            "thermal_padding_leggings", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_LEGGINGS);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> THERMAL_PADDING_BOOTS = thermalPadding(
+            "thermal_padding_boots", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_BOOTS);
+
     private static DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> egg(String name,
             java.util.function.Supplier<? extends net.minecraft.world.entity.EntityType<? extends net.minecraft.world.entity.Mob>> type, int primary, int secondary) {
         return ITEMS.register(name + "_spawn_egg", () -> new net.neoforged.neoforge.common.DeferredSpawnEggItem(type, primary, secondary, new Item.Properties()));
@@ -267,6 +316,17 @@ public final class GCItems {
             }
             return new Item(new Item.Properties().food(food.build()));
         });
+    }
+
+    /** ARMOR_TITANIUM in 1.12.2 used durability factor 26. */
+    private static DeferredItem<io.github.reiko45.galacticraft.item.DeshArmorItem> titaniumArmor(String name, ArmorItem.Type type) {
+        return ITEMS.register(name, () -> new io.github.reiko45.galacticraft.item.DeshArmorItem(GCArmorMaterials.TITANIUM, "titanium", type,
+                new Item.Properties().durability(type.getDurability(26))));
+    }
+
+    private static DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> thermalPadding(String name,
+                                                                                                    io.github.reiko45.galacticraft.item.gear.GearSlot slot) {
+        return ITEMS.register(name, () -> new io.github.reiko45.galacticraft.item.ThermalPaddingItem(new Item.Properties(), slot, 1));
     }
 
     /** ARMORDESH in 1.12.2 used durability factor 42. */
