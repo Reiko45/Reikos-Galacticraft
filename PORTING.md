@@ -399,13 +399,41 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Locked Cargo Loaders (TileEntityCargoLoader#locked), and the Dark Decoration Slab (BlockSlabGC asteroids_slab,
       missed in phase 7d)
 
-### Phase 7g – Core blocks still missing
+### Phase 7f – Venus ✅
+- [x] Venus blocks (BlockBasicVenus): soft, hard and volcanic rock and pumice (turned at random), two dungeon bricks,
+      aluminium, copper, galena, quartz, silicon, tin and solar ores, the lead block; Scorched Venus Rock (smoking); the
+      Vapor Spout over acid pits; Web String and the glowing Web Torch; the Crashed Probe with six slots of salvage loot
+      and, if it really crashed, a Radioisotope Core
+- [x] Sulphuric Acid (BlockSulphuricAcid): a fluid that burns whatever wades in it, with a bucket
+- [x] Venus items: lead, solar dust, the solar array wafer and panel, the Radioisotope Core, the Atomic Battery (7 gJ/t,
+      never runs down), the Shield Controller, Isothermal Fabric and Isothermal Padding (thermal strength 2), and the
+      Volcanic Pickaxe that mines 3 x 3
+- [x] Venus (WorldProviderVenus, ChunkProviderVenus, `galacticraftcore:venus`): the 1.12.2 density field over three
+      biomes (flat, mountain, valley) laid out by the 1.12.2 biome layers; worm caves, sealed lava tubes, each biome's
+      surface; lava lakes, acid vapor pools under vapor spouts, crashed probes and the seven ores
+- [x] Venus's own weather (updateWeatherOverride): acid rain spells that hiss on the ground, distant lightning, the
+      sulphur sky and fog; scorching heat (thermal level 5); armour corrodes a point a second unless a Shield Controller
+      is worn (GCPlayerHandler#checkShield); beds don't set your spawn; Venus physics (gravity, solar ×2.37, fuel)
+- [x] Travel by Tier 3 rocket in the Venus Entry Pod (EntityEntryPodVenus): a fiery plunge from y 900, a parachute from
+      y 242, and the rocket's cargo in the landed pod
+- [x] Venus dungeons (MapGenDungeonVenus, RoomBossVenus, RoomSpawnerVenus, RoomTreasureVenus) from the shared dungeon
+      planner: corridors with lava behind iron bars, spawner rooms, a domed boss room hung with web strings, and the
+      Tier 3 treasure chest opened by the Tier 3 key
+- [x] The Spider Queen (EntitySpiderQueen): web shots that slow, a web cocoon at two thirds and one third of her health
+      while up to six Juicers fight for her, the Tier 3 key and a Volcanic Pickaxe or Shield Controller; the Juicer
+      (EntityJuicer), leaping between dungeon floors and ceilings; the Web Shot (EntityWebShot)
+- [x] Geothermal Generator (TileEntityGeothermalGenerator): on a Vapor Spout with acid under it, 30-200 gJ/t on a sine
+      wave, lit vents and acid exhaust while it works; GUI with the flickering flame and Enable / Disable
+- [x] Solar Array Module and Controller (TileEntitySolarArrayController, SolarModuleNetwork): the controller gathers the
+      modules joined side by side to its left, right and back, and makes 6.3 gJ/t for each one within 16 blocks that sees
+      the sun, up to 1,000 gJ/t, more on space stations and high up on Venus; GUI with Enable / Disable
+
+### Phase 7g – Core blocks still missing, and the Laser Turret
 - [ ] Air Lock Frame and Controller, Space Glass (clear, vanilla, strong, each plain or tin-framed), Arc Lamp, Concealed
       Redstone, Repeater and Detector, Magnetic Crafting Table, Telemetry Unit, Display Screen, sealable (enclosed)
       wires and pipes; then put them in place of their stand-ins in the abandoned bases (`world/base/BaseBlocks`)
-
-### Phase 7f – Venus
-- [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
+- [ ] Laser Turret (TileEntityLaserTurret, Venus): left out of phase 7f. 1.12.2 Legacy has no recipe for it (only the
+      creative menu), and its targeting, owner lists and GUI are about 1,700 lines
 
 ### Phase 8 – Polish
 - [ ] Advancements, sounds/music (check the provenance of the `*_jc.ogg` tracks first), manual, Jade/EMI integration
@@ -629,6 +657,27 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Only a locked Cargo Loader loses its items when broken (1.12.2 cleared every Cargo Loader's items on breaking it).
 * The Dark Decoration Slab is named in English (1.12.2 had no name for it) and cut from the block in a stonecutter
   (1.12.2 had no recipe).
+
+* Venus's day is vanilla's length (1.12.2: 720,000 ticks, 30 Earth days), on the Overworld's clock like the other
+  worlds. Its weather is its own (1.12.2 updateWeatherOverride) through a mixin on `ServerLevel#advanceWeatherCycle`:
+  in 1.21 every other world follows the Overworld's rain.
+* Venus's terrain noise is seeded from the world seed through `RandomState`, and its surface and bedrock random mixes
+  in the seed too (1.12.2 gave every world the same surface pattern). 1.21 biome sources aren't told the seed, so the
+  chunk generator hands it to the biome layers when the world is created. Caves, lava tubes and the surface are laid
+  in the surface step, in 1.12.2's order.
+* The Juicer walks the floor like a spider and keeps still while it hangs (1.12.2 steered it with a ceiling path-finder
+  that let it creep along under a ceiling). Kept from 1.12.2: it counts as hanging only on the first tick of each leap
+  (one flag did for both), and the Web Shot is aimed like an arrow allowing for a fall it never makes, so far off it
+  sails over all but tall targets.
+* The Geothermal Generator's wave runs on the world clock (1.12.2: its own tick counter, sent to nearby clients), so
+  the client times the exhaust itself; the vents' lit look is a block state the server sets.
+* Solar Array Modules have no block entity: the controller looks for its modules itself once a second, at most 4,096
+  (1.12.2 kept them in a module network of tile entities). Its column check is kept: a module counts only if the
+  column over the controller is clear from as high above the controller as the controller is above the bottom of the
+  world, so a low roof over the controller doesn't matter. Its sun-visible tooltip follows the array live (1.12.2
+  worked it out once, when the screen opened), and its status and sun icon still read "blocked" unless every module in
+  range sees the sun.
+* The Laser Turret is not ported yet (phase 7g).
 
 ## Workflow for porting more content
 

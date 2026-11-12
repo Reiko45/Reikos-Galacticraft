@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7e of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 7f of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -14,7 +14,9 @@ Chamber, and send Cargo Rockets between Launch Controllers on any world. Beat th
 and ride an Entry Pod down into the asteroid belt, where titanium waits in the rock and the cold seeps in unless you
 wear Thermal Padding. Out there, send Astro Miners to tunnel through the asteroids for you, beam power between
 machines, hop between Short Range Telepads, swing across on a grapple, and explore abandoned alien bases for their
-treasure. From a rocket
+treasure. The Tier 3 Rocket also takes you to Venus, burning down through its thick air in an Entry Pod onto
+scorching plains and valleys under acid rain, where crashed probes hold salvage, Geothermal Generators tap the vapor
+spouts and Solar Arrays drink in the sun, and the Spider Queen waits in the Venus dungeons. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
 back and you come down by parachute, with your cargo following in a Para-chest. Team up in the Space Race: name your
 team, draw its flag, share unlocked schematics and plant your flag wherever you land. Galacticraft's power system,
@@ -81,9 +83,24 @@ machines, solar panels and oil processing work. See
   the store's locked Cargo Loader holds the base's treasure (and rotten supplies) until you load it into a rocket.
   Medical rooms, crew quarters, power rooms, cryogenic chambers and Space Wart make up the rest. (A few blocks they use
   aren't ported yet, so look-alikes stand in for them; see PORTING.md.)
+* **Venus** (`galacticraftcore:venus`): flats, mountains and deep valleys ported from the 1.12.2 generator, riddled with
+  caves and sealed lava tubes, with lava lakes, sulphuric acid pools under Vapor Spouts, and Crashed Probes in their
+  craters holding salvage and a Radioisotope Core. Soft, hard and volcanic rock, pumice and seven ores (solar ore gives
+  Solar Dust). It has its own weather: spells of acid rain that hiss on the ground, distant lightning, a sulphur-yellow
+  sky. It is scorching, and its air eats at your armour unless you carry a Shield Controller. Arrive by Tier 3 Rocket
+  in the Venus Entry Pod, which plunges from y 900 in flames and opens a parachute for the last stretch.
+* **Venus mobs and dungeon**: under a crater, corridors with lava behind iron bars lead past spawner rooms to the domed
+  lair of the Spider Queen, hung with glowing web strings. She shoots webs that slow you, and twice hides in a cocoon
+  while Juicers (small spiders that leap between floor and ceiling) fight for her. Beat her for the Tier 3 key, which
+  opens the Tier 3 Treasure Chest: a Volcanic Pickaxe that mines 3x3, or a Shield Controller.
+* **Venus machines**: a Geothermal Generator set on a Vapor Spout over acid makes 30-200 gJ/t as the vapor surges and
+  ebbs, puffing yellow exhaust. Solar Array Modules laid side by side feed a Solar Array Controller 6.3 gJ/t each in
+  the sun, up to 1,000 gJ/t, more on a space station or high up on Venus. Also lead, Atomic Batteries that never run
+  down, and Isothermal Padding.
 * **Temperature**: on Mars and among the asteroids your body cools down, faster without Thermal Padding (four pieces
   in the Galacticraft inventory, worn over your body with a pulsing glow). A full set, or a sealed room with an Ambient
-  Thermal Controller, keeps you warm; otherwise the HUD thermometer warns you, then you slow down and freeze.
+  Thermal Controller, keeps you warm; otherwise the HUD thermometer warns you, then you slow down and freeze. Venus
+  heats you up instead, and Isothermal Padding copes with it better.
 * **Tier 2 Rocket**: unlock its NASA Workbench page with the schematic from a Moon dungeon, then build it from a nose
   cone, ten heavy-duty plates, two boosters, four fins and an engine (plus chests for cargo). It holds 1,500 mB, climbs
   twice as fast as the Tier 1, and can reach Mars. You land on Mars in Landing Balloons, which drop from y 900 and
@@ -133,7 +150,7 @@ machines, solar panels and oil processing work. See
   it: it flies your team's flag and waves in the wind (gently on Mars, not at all on the Moon). The Tier 3 Rocket's nose
   cone wears your team colour. As in 1.12.2, the server and global stats buttons say "Coming Soon".
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
-* Recipes: 177 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
+* Recipes: 199 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 
@@ -283,7 +300,37 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![The chat invitation and the Join Space Race screen with the other team's flag](docs/screenshots/space_race_join.png) | ![A player carrying a flag, seen from behind](docs/screenshots/flag_in_hand.png) |
 
-### Visiting the Moon, Mars and the asteroids
+![Venus flats under the thick yellow sky](docs/screenshots/venus_flats.png)
+
+| A Venus valley | Venus mountains |
+|---|---|
+| ![A deep Venus valley between soft rock walls](docs/screenshots/venus_valley.png) | ![Mountains rising out of the Venus flats](docs/screenshots/venus_mountains.png) |
+
+![The Venus sky by day, the sun a blur in the haze, and by night](docs/screenshots/venus_sky.png)
+
+![The Venus Entry Pod burning down through the atmosphere, and under its parachute near the ground](docs/screenshots/venus_entry_pod.png)
+
+| Acid rain | Lightning |
+|---|---|
+| ![Acid rain hissing into vapor on the rocks](docs/screenshots/venus_acid_rain.png) | ![A lightning bolt in the distance at night](docs/screenshots/venus_lightning.png) |
+
+![Venus rocks, ores and bricks, the Vapor Spout and scorched rock, with web strings and web torches](docs/screenshots/venus_blocks.png)
+
+| An acid pool under a vapor spout, cut open | A Crashed Probe in its crater |
+|---|---|
+| ![A sulphuric acid pool sealed in soft rock under a Vapor Spout](docs/screenshots/vapor_pool.png) | ![A Crashed Probe at the bottom of its scorched crater](docs/screenshots/crashed_probe.png) |
+
+![The Spider Queen and Juicers, one hanging from the ceiling](docs/screenshots/venus_mobs.png)
+
+| The Spider Queen's lair | The Tier 3 Treasure Chest |
+|---|---|
+| ![The domed boss room hung with glowing web strings, the queen cocooned above her Juicers](docs/screenshots/venus_dungeon_boss.png) | ![The Tier 3 Treasure Chest in the Venus dungeon](docs/screenshots/venus_dungeon_treasure.png) |
+
+![A Geothermal Generator puffing acid exhaust on a vapor spout, and a Solar Array with its controller](docs/screenshots/venus_machines.png)
+
+![The Geothermal Generator and Solar Array Controller GUIs](docs/screenshots/venus_machine_screens.png)
+
+### Visiting the Moon, Mars, the asteroids and Venus
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
 (right-click them, or use the Galacticraft tab of the inventory). Earth orbit is `galacticraftcore:overworld_orbit`
@@ -293,6 +340,7 @@ Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxyg
 /execute in galacticraftcore:moon run tp @s 0 120 0
 /execute in galacticraftcore:mars run tp @s 0 200 0
 /execute in galacticraftcore:asteroids run tp @s 0 160 0
+/execute in galacticraftcore:venus run tp @s 0 200 0
 ```
 
 ## Building and running

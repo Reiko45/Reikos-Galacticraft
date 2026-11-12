@@ -2128,6 +2128,7 @@ public final class ScreenshotTour {
             minecraft.options.setCameraType(CameraType.FIRST_PERSON);
         });
         addVenusDungeonSteps();
+        addVenusMachineSteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2327,6 +2328,86 @@ public final class ScreenshotTour {
                 srv.setDifficulty(net.minecraft.world.Difficulty.PEACEFUL, true);
             });
         });
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusGeothermal;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusSolarController;
+
+    /** A Geothermal Generator on a spout over an acid pocket, and a Solar Array; then their screens. */
+    private void addVenusMachineSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusSpot == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            io.github.reiko45.galacticraft.world.VenusWeather.set(venus, false, 0.0F);
+            srv.overworld().setDayTime(5000L);
+            final BlockPos corner = this.venusSpot.offset(-40, 0, 0);
+            // a plateau as high as the highest ground under the scene and the camera, so no cut walls hem it in
+            int ground = 0;
+            for (int x = -4; x <= 16; x++) {
+                for (int z = -4; z <= 18; z++) {
+                    ground = Math.max(ground, surface(venus, corner.getX() + x, corner.getZ() + z));
+                }
+            }
+            final BlockPos o = corner.atY(ground + 1);
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-4, -12, -4), o.offset(16, 16, 18))) {
+                venus.setBlock(pos, pos.getY() < o.getY() ? GCBlocks.VENUS_SOFT_ROCK.get().defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            // the geothermal generator: spout in the ground, an air shaft and an acid pocket under it
+            final BlockPos generator = o.offset(1, 0, 4);
+            venus.setBlockAndUpdate(generator.below(), GCBlocks.VAPOR_SPOUT.get().defaultBlockState());
+            for (int y = 2; y <= 5; y++) {
+                venus.setBlockAndUpdate(generator.below(y), Blocks.AIR.defaultBlockState());
+            }
+            venus.setBlockAndUpdate(generator.below(6), io.github.reiko45.galacticraft.registry.GCFluids.SULPHURIC_ACID_BLOCK.get().defaultBlockState());
+            venus.setBlockAndUpdate(generator, GCBlocks.GEOTHERMAL_GENERATOR.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.MachineBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            this.venusGeothermal = generator;
+            // the solar array: a controller facing south with a 6 x 5 field of modules behind and beside it
+            final BlockPos controller = o.offset(8, 0, 6);
+            for (int x = -2; x <= 3; x++) {
+                for (int z = -4; z <= 0; z++) {
+                    if (x != 0 || z != 0) {
+                        venus.setBlockAndUpdate(controller.offset(x, 0, z), GCBlocks.SOLAR_ARRAY_MODULE.get().defaultBlockState());
+                    }
+                }
+            }
+            venus.setBlockAndUpdate(controller, GCBlocks.SOLAR_ARRAY_CONTROLLER.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.MachineBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            this.venusSolarController = controller;
+            lookFrom(p, venus, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(5, 5, 14)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(5, 0, 3)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_machines"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null && this.venusGeothermal != null
+                    && venus.getBlockEntity(this.venusGeothermal) instanceof io.github.reiko45.galacticraft.block.entity.MachineBlockEntity machine) {
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusGeothermal.offset(0, 2, 3)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.venusGeothermal));
+                tourPlayer(srv).openMenu(machine, this.venusGeothermal);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "geothermal_generator_gui"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            tourPlayer(srv).closeContainer();
+            if (venus != null && this.venusSolarController != null
+                    && venus.getBlockEntity(this.venusSolarController) instanceof io.github.reiko45.galacticraft.block.entity.MachineBlockEntity machine) {
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusSolarController.offset(0, 2, 3)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.venusSolarController));
+                tourPlayer(srv).openMenu(machine, this.venusSolarController);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "solar_array_gui"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).closeContainer()));
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */
