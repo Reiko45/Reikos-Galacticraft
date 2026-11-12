@@ -47,7 +47,9 @@ public final class GCCreativeTabs {
                             for (int storage = 1; storage <= 3; storage++) {
                                 output.accept(rocket.stack(storage, 0));
                             }
-                            output.accept(rocket.stack(0, rocket.fuelCapacity()));
+                            if (item != GCItems.CARGO_ROCKET.get()) {
+                                output.accept(rocket.stack(0, rocket.fuelCapacity())); // 1.12.2 had no pre-fuelled cargo rocket
+                            }
                         }
                         if (item == GCItems.BUGGY.get()) {
                             // 1.12.2 buggy types 1-3: 18, 36, 54 storage slots

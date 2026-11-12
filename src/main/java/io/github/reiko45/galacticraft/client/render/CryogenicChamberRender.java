@@ -33,6 +33,12 @@ public final class CryogenicChamberRender {
         if (!upright(player)) {
             return;
         }
+        // Vanilla draws a sleeping player even from their own first-person camera; standing, that would be inside the head
+        final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
+        if (player == minecraft.getCameraEntity() && !minecraft.gameRenderer.getMainCamera().isDetached()) {
+            event.setCanceled(true);
+            return;
+        }
         final BlockPos pos = player.getSleepingPos().orElseThrow();
         final BlockState state = player.level().getBlockState(pos);
         final float yaw = state.getValue(HorizontalDirectionalBlock.FACING).toYRot();

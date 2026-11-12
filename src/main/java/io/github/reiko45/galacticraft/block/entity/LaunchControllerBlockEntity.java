@@ -389,6 +389,15 @@ public class LaunchControllerBlockEntity extends MachineBlockEntity {
         return new LaunchControllerMenu(id, playerInventory, this);
     }
 
+    /** Opens the GUI; the client menu also needs the owner's name and whether this player is the owner. */
+    public void openMenu(net.minecraft.server.level.ServerPlayer player) {
+        player.openMenu(this, buf -> {
+            buf.writeBlockPos(this.worldPosition);
+            buf.writeUtf(this.ownerName);
+            buf.writeBoolean(isOwner(player));
+        });
+    }
+
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider registries) {
         super.saveAdditional(tag, registries);

@@ -148,7 +148,11 @@ public final class ScreenshotTour {
                         if (machine instanceof RefineryBlockEntity) {
                             machine.energy().setStored(machine.energy().getCapacityGJ()); // it has been refining all along
                         }
-                        player.openMenu(machine, pos);
+                        if (machine instanceof io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity controller) {
+                            controller.openMenu(player);
+                        } else {
+                            player.openMenu(machine, pos);
+                        }
                     }
                 });
                 this.step++;
@@ -1417,6 +1421,298 @@ public final class ScreenshotTour {
             srv.setDifficulty(Difficulty.PEACEFUL, true);
             srv.overworld().setDayTime(6000L);
         }));
+        marsMachineSteps();
+    }
+
+    // ------------------------------------------------------------------ Phase 7c
+
+    private BlockPos marsBase;
+    private BlockPos terraformerScene;
+    private java.util.UUID cargoRocketId;
+    private final java.util.Map<String, BlockPos> marsMachines = new java.util.LinkedHashMap<>();
+
+    /**
+     * Phase 7c on Mars: the gas machines, a Cryogenic Chamber and a Cargo Rocket pad with its loader, unloader and Launch
+     * Controller; a Terraformer greening the regolith under its bubble; each GUI (both Launch Controller pages, the
+     * Cargo Rocket's cargo and its NASA Workbench page); the view from inside the Cryogenic Chamber; a cargo launch.
+     */
+    private void marsMachineSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars == null) {
+                return;
+            }
+            srv.overworld().setDayTime(5000L);
+            this.marsBase = new BlockPos(-160, surface(mars, -160, -100) + 1, -100);
+            buildMarsBase(mars, this.marsBase);
+            this.terraformerScene = new BlockPos(-160, surface(mars, -160, -160) + 1, -160);
+            buildTerraformerScene(mars, this.terraformerScene);
+            tourPlayer(srv).teleportTo(mars, this.marsBase.getX() + 2.5D, this.marsBase.getY() + 3.0D, this.marsBase.getZ() + 14.5D, 180.0F, 15.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "mars_machines_and_cargo_rocket"));
+        for (String name : new String[]{"electrolyzer", "methane_synthesizer", "gas_liquefier", "cargo_loader", "cargo_unloader", "launch_controller"}) {
+            this.extras.add((minecraft, srv) -> srv.execute(() -> {
+                final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+                final BlockPos pos = this.marsMachines.get(name);
+                if (mars == null || pos == null) {
+                    return;
+                }
+                final ServerPlayer p = tourPlayer(srv);
+                p.teleportTo(mars, pos.getX() + 0.5D, pos.getY(), pos.getZ() + 3.5D, 180.0F, 15.0F);
+                if (mars.getBlockEntity(pos) instanceof io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity controller) {
+                    controller.openMenu(p);
+                } else if (mars.getBlockEntity(pos) instanceof MachineBlockEntity machine) {
+                    p.openMenu(machine, pos);
+                }
+            }));
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_" + name));
+        }
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.LaunchControllerScreen screen) {
+                screen.showAdvanced(true);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_launch_controller_advanced"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (mars != null && this.cargoRocketId != null && mars.getEntity(this.cargoRocketId) instanceof io.github.reiko45.galacticraft.entity.CargoRocketEntity rocket) {
+                CargoMenu.openCargoRocket(p, rocket);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_cargo_rocket"));
+        // The Cargo Rocket page, unlocked with the Creeper Boss's schematic, every part in place
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (mars == null) {
+                return;
+            }
+            GCPlayerData.get(p).unlockSchematic(io.github.reiko45.galacticraft.menu.Schematics.CARGO_ROCKET.id());
+            // at the Overworld scene's NASA Workbench (the page closes away from one)
+            final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+            p.teleportTo(srv.overworld(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+            io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.CARGO_ROCKET, srv.overworld(), bench);
+            if (p.containerMenu instanceof io.github.reiko45.galacticraft.menu.CargoRocketBenchMenu menu) {
+                for (int i = 1; i < io.github.reiko45.galacticraft.menu.CargoRocketBenchMenu.MATRIX_SIZE; i++) {
+                    final int index = menu.getSlot(i).getContainerSlot();
+                    final Item part = switch (index) {
+                        case 1 -> GCItems.NOSE_CONE.get();
+                        case 2 -> GCItems.ADVANCED_WAFER.get();
+                        case 9, 10, 12, 13 -> GCItems.ROCKET_FINS.get();
+                        case 11 -> GCItems.TIER_1_ROCKET_ENGINE.get();
+                        case 14, 15, 16 -> Items.CHEST;
+                        default -> GCItems.HEAVY_DUTY_PLATE.get();
+                    };
+                    menu.getSlot(i).set(new ItemStack(part));
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_cargo_rocket_bench"));
+        // The Terraformer's bubble from outside, then its GUI
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (mars != null && this.terraformerScene != null) {
+                p.teleportTo(mars, this.terraformerScene.getX() + 0.5D, this.terraformerScene.getY() + 9.0D, this.terraformerScene.getZ() + 26.5D, 180.0F, 18.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "terraformer_bubble"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            if (mars != null && this.terraformerScene != null && mars.getBlockEntity(this.terraformerScene) instanceof MachineBlockEntity machine) {
+                final ServerPlayer p = tourPlayer(srv);
+                p.teleportTo(mars, this.terraformerScene.getX() + 0.5D, this.terraformerScene.getY(), this.terraformerScene.getZ() + 3.5D, 180.0F, 15.0F);
+                p.openMenu(machine, this.terraformerScene);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_terraformer"));
+        // Inside the Cryogenic Chamber
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final BlockPos chamber = this.marsMachines.get("cryogenic_chamber");
+            if (mars != null && chamber != null) {
+                p.teleportTo(mars, chamber.getX() + 0.5D, chamber.getY(), chamber.getZ() + 2.5D, 180.0F, 0.0F);
+                p.getAbilities().flying = false;
+                p.onUpdateAbilities();
+                io.github.reiko45.galacticraft.block.CryogenicChamberBlock.enter(p, chamber);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null); // the Leave Bed screen
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "cryogenic_chamber_inside"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            minecraft.setScreen(null);
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "cryogenic_chamber_sleeper"));
+        // A cargo launch: the Launch Controller's rule fires at once
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerLevel mars = srv.getLevel(GCDimensions.MARS);
+                final ServerPlayer p = tourPlayer(srv);
+                p.stopSleepInBed(true, true);
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+                final BlockPos pos = this.marsMachines.get("launch_controller");
+                if (mars != null && pos != null && mars.getBlockEntity(pos) instanceof io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity controller) {
+                    controller.setLaunchSelection(io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity.AutoLaunch.INSTANT);
+                    controller.setLaunchSchedulingEnabled(true);
+                    p.teleportTo(mars, this.marsBase.getX() + 6.5D, this.marsBase.getY() + 2.0D, this.marsBase.getZ() + 13.5D, 180.0F, 0.0F);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // countdown
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "cargo_rocket_launch"));
+    }
+
+    /**
+     * Gas machines and a Cryogenic Chamber in a row, and a launch pad with a Cargo Rocket, a Cargo Loader and Unloader
+     * and a Launch Controller (set up to send it to a second pad on the right).
+     */
+    private void buildMarsBase(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-10, 0, -4), origin.offset(14, 10, 14))) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-10, -1, -4), origin.offset(14, -1, 14))) {
+            level.setBlockAndUpdate(pos, GCBlocks.MARS_COBBLESTONE.get().defaultBlockState());
+        }
+        final ItemStack battery = GCItems.BATTERY.get().charged();
+        final BlockPos electrolyzer = origin.offset(-7, 0, -1);
+        final BlockPos synthesizer = origin.offset(-5, 0, -1);
+        final BlockPos liquefier = origin.offset(-3, 0, -1);
+        level.setBlockAndUpdate(electrolyzer, GCBlocks.ELECTROLYZER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        level.setBlockAndUpdate(synthesizer, GCBlocks.METHANE_SYNTHESIZER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        level.setBlockAndUpdate(liquefier, GCBlocks.GAS_LIQUEFIER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        if (level.getBlockEntity(electrolyzer) instanceof io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity machine) {
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.tanks()[0].fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 3000), IFluidHandler.FluidAction.EXECUTE);
+            machine.tanks()[1].fill(new FluidStack(GCFluids.OXYGEN.get(), 1500), IFluidHandler.FluidAction.EXECUTE);
+            machine.tanks()[2].fill(new FluidStack(GCFluids.HYDROGEN.get(), 3000), IFluidHandler.FluidAction.EXECUTE);
+            machine.inventory().setStackInSlot(1, new ItemStack(Items.WATER_BUCKET));
+        }
+        if (level.getBlockEntity(synthesizer) instanceof io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity machine) {
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.tanks()[0].fill(new FluidStack(GCFluids.HYDROGEN.get(), 2500), IFluidHandler.FluidAction.EXECUTE);
+            machine.tanks()[1].fill(new FluidStack(GCFluids.CARBON_DIOXIDE.get(), 800), IFluidHandler.FluidAction.EXECUTE);
+            machine.tanks()[2].fill(new FluidStack(GCFluids.METHANE.get(), 1200), IFluidHandler.FluidAction.EXECUTE);
+            machine.inventory().setStackInSlot(2, new ItemStack(GCItems.ATMOSPHERIC_VALVE.get()));
+            machine.inventory().setStackInSlot(3, new ItemStack(GCItems.CARBON_FRAGMENTS.get(), 16));
+        }
+        if (level.getBlockEntity(liquefier) instanceof io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity machine) {
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.tanks()[0].fill(new FluidStack(GCFluids.METHANE.get(), 2000), IFluidHandler.FluidAction.EXECUTE);
+            machine.tanks()[1].fill(new FluidStack(GCFluids.FUEL.get(), 900), IFluidHandler.FluidAction.EXECUTE);
+            machine.inventory().setStackInSlot(1, LiquidCanisterItem.full(LiquidCanisterItem.Kind.METHANE));
+        }
+        this.marsMachines.put("electrolyzer", electrolyzer);
+        this.marsMachines.put("methane_synthesizer", synthesizer);
+        this.marsMachines.put("gas_liquefier", liquefier);
+        final BlockPos chamber = origin.offset(0, 0, -1);
+        final BlockState chamberState = GCBlocks.CRYOGENIC_CHAMBER.get().defaultBlockState()
+                .setValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING, Direction.SOUTH);
+        level.setBlockAndUpdate(chamber, chamberState);
+        chamberState.getBlock().setPlacedBy(level, chamber, chamberState, tourPlayer(level.getServer()), new ItemStack(GCBlocks.CRYOGENIC_CHAMBER.get()));
+        this.marsMachines.put("cryogenic_chamber", chamber);
+        // The cargo pad: loader on its west, unloader on its south, controller on its east
+        final BlockPos pad = origin.offset(6, 0, 3);
+        final BlockPos farPad = origin.offset(12, 0, 3);
+        for (BlockPos centre : new BlockPos[]{pad, farPad}) {
+            for (int dx = -1; dx <= 1; dx++) {
+                for (int dz = -1; dz <= 1; dz++) {
+                    level.setBlockAndUpdate(centre.offset(dx, 0, dz), GCBlocks.LANDING_PAD.get().defaultBlockState());
+                }
+            }
+        }
+        final BlockPos loader = pad.west(2);
+        final BlockPos unloader = pad.south(2);
+        final BlockPos controller = pad.north(2);
+        level.setBlockAndUpdate(loader, GCBlocks.CARGO_LOADER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        level.setBlockAndUpdate(unloader, GCBlocks.CARGO_UNLOADER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        level.setBlockAndUpdate(controller, GCBlocks.LAUNCH_CONTROLLER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        final BlockPos farController = farPad.north(2);
+        level.setBlockAndUpdate(farController, GCBlocks.LAUNCH_CONTROLLER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        if (level.getBlockEntity(loader) instanceof io.github.reiko45.galacticraft.block.entity.CargoLoaderBlockEntity machine) {
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.inventory().setStackInSlot(1, new ItemStack(GCItems.RAW_DESH.get(), 48));
+            machine.inventory().setStackInSlot(2, new ItemStack(Items.IRON_INGOT, 32));
+            machine.inventory().setStackInSlot(3, new ItemStack(GCItems.CARBON_FRAGMENTS.get(), 20));
+        }
+        if (level.getBlockEntity(unloader) instanceof io.github.reiko45.galacticraft.block.entity.CargoUnloaderBlockEntity machine) {
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.toggleDisabled();
+        }
+        final ServerPlayer owner = tourPlayer(level.getServer());
+        if (level.getBlockEntity(controller) instanceof io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity machine) {
+            machine.setOwner(owner);
+            machine.inventory().setStackInSlot(0, battery.copy());
+            machine.energy().setStored(16_000.0F);
+            machine.setFrequency(1);
+            machine.setDestFrequency(2);
+        }
+        if (level.getBlockEntity(farController) instanceof io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity machine) {
+            machine.setOwner(owner);
+            machine.energy().setStored(16_000.0F);
+            machine.setFrequency(2);
+            machine.setDestFrequency(1);
+        }
+        this.marsMachines.put("cargo_loader", loader);
+        this.marsMachines.put("cargo_unloader", unloader);
+        this.marsMachines.put("launch_controller", controller);
+        final io.github.reiko45.galacticraft.entity.CargoRocketEntity rocket = io.github.reiko45.galacticraft.entity.CargoRocketEntity.create(level,
+                pad.getX() + 0.5D, pad.getY() + 0.4D + io.github.reiko45.galacticraft.entity.CargoRocketEntity.PAD_OFFSET, pad.getZ() + 0.5D, 2,
+                io.github.reiko45.galacticraft.entity.CargoRocketEntity.FUEL_CAPACITY);
+        rocket.setYRot(180.0F);
+        rocket.cargo().setItem(0, new ItemStack(GCItems.DESH_INGOT.get(), 24));
+        rocket.cargo().setItem(1, new ItemStack(Items.REDSTONE, 40));
+        level.addFreshEntity(rocket);
+        this.cargoRocketId = rocket.getUUID();
+    }
+
+    /** A Terraformer at full bubble with water, bone meal, seeds and saplings, the regolith around it already greening. */
+    private void buildTerraformerScene(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-16, 0, -16), origin.offset(16, 12, 16))) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        }
+        final net.minecraft.util.RandomSource random = net.minecraft.util.RandomSource.create(7L);
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-16, -1, -16), origin.offset(16, -1, 16))) {
+            final double d = Math.sqrt(pos.distSqr(origin.below()));
+            final boolean green = d < 9.0D && random.nextFloat() < 0.75F || d < 13.0D && random.nextFloat() < 0.25F;
+            level.setBlockAndUpdate(pos, (green ? Blocks.GRASS_BLOCK : GCBlocks.MARS_FINE_REGOLITH.get()).defaultBlockState());
+        }
+        for (BlockPos sapling : new BlockPos[]{origin.offset(-5, 0, -3), origin.offset(4, 0, -6), origin.offset(6, 0, 4)}) {
+            level.setBlockAndUpdate(sapling.below(), Blocks.GRASS_BLOCK.defaultBlockState());
+            level.setBlockAndUpdate(sapling, Blocks.OAK_SAPLING.defaultBlockState());
+            if (level.getBlockState(sapling).getBlock() instanceof net.minecraft.world.level.block.SaplingBlock tree) {
+                tree.advanceTree(level, sapling, level.getBlockState(sapling).setValue(net.minecraft.world.level.block.SaplingBlock.STAGE, 1), random);
+            }
+        }
+        level.setBlockAndUpdate(origin.offset(-2, -1, 5), Blocks.WATER.defaultBlockState());
+        level.setBlockAndUpdate(origin, GCBlocks.TERRAFORMER.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+        if (level.getBlockEntity(origin) instanceof io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity terraformer) {
+            terraformer.inventory().setStackInSlot(1, GCItems.BATTERY.get().charged());
+            terraformer.energy().setStored(16_000.0F);
+            terraformer.waterTank().fill(new FluidStack(net.minecraft.world.level.material.Fluids.WATER, 1600), IFluidHandler.FluidAction.EXECUTE);
+            terraformer.inventory().setStackInSlot(0, new ItemStack(Items.WATER_BUCKET));
+            terraformer.inventory().setStackInSlot(2, new ItemStack(Items.BONE_MEAL, 64));
+            terraformer.inventory().setStackInSlot(3, new ItemStack(Items.BONE_MEAL, 32));
+            terraformer.inventory().setStackInSlot(6, new ItemStack(Items.OAK_SAPLING, 16));
+            terraformer.inventory().setStackInSlot(7, new ItemStack(Items.BIRCH_SAPLING, 8));
+            terraformer.inventory().setStackInSlot(10, new ItemStack(Items.WHEAT_SEEDS, 32));
+            terraformer.setBubbleSize(io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity.MAX_SIZE);
+        }
     }
 
     private SlimelingEntity clientSlimeling(Minecraft minecraft) {

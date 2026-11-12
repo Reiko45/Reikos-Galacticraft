@@ -282,9 +282,36 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Tier 2 Treasure Chest and Tier 2 Dungeon Key; the Tier 3 Rocket, Cargo Rocket and Astro Miner schematics (their
       workbench pages come with Phases 7c and 7d); spawn eggs for the Creeper Boss, Sludgeling and Slimeling
 
-### Phase 7c – Mars machines and the cargo rocket
-- [ ] Terraformer, Cryogenic Chamber, Launch Controller, Gas Liquefier, Methane Synthesizer, Water Electrolyzer
-- [ ] Cargo Rocket and its schematic, Fluid Manipulator, Fragmented Carbon
+### Phase 7c – Mars machines and the cargo rocket ✅
+- [x] Gases and liquids (1.12.2 FluidGC hydrogen, methane, atmospheric gases, carbon dioxide, nitrogen, argon, liquid
+      oxygen / nitrogen / argon), held in tanks only; Mars air is CO2, argon and nitrogen, the Moon has none
+      (WorldProviderMars / Moon `getCelestialBody().atmosphere`)
+- [x] Canisters: the Methane, Liquid Oxygen and Liquid Nitrogen canisters (ItemCanisterMethane, ...LiquidOxygen,
+      ...LiquidNitrogen) beside the Oil and Fuel canisters, with their 7 fill stages; Atmospheric Valve, Carbon
+      Fragments, Fluid Manipulator
+- [x] Water Electrolyzer (TileEntityElectrolyzer: 1 water makes 2 oxygen and 4 hydrogen, 120 gJ/t), Methane
+      Synthesizer (TileEntityMethaneSynthesizer: hydrogen with Carbon Fragments, 40 uses each, or CO2 from Mars air
+      through an Atmospheric Valve; 45 gJ/t) and Gas Liquefier (TileEntityGasLiquefier: methane to fuel, oxygen to
+      liquid oxygen, nitrogen to liquid nitrogen, or the local air mix through a valve; 60 gJ/t), with their GUIs, side
+      I/O (power from below, gases in on the left, out on the right / back) and Process / Stop
+- [x] Terraformer (TileEntityTerraformer): with power, water, bone meal and seeds it grows a green bubble 15 blocks
+      across and turns the Mars fine regolith and Moon turf inside it into grass (now and then a pool of water), and
+      plants saplings (or any plant) on the grass, using up bone meal, seeds and saplings at the 1.12.2 rates; its GUI
+      with Enable / Disable Trees and Grass and Show Bubble
+- [x] Cryogenic Chamber (TileEntityCryogenicChamber, the cryo_chamber multiblock): a 3-high glass tube to sleep in by
+      day or night, standing up; a full sleep heals 5 health and starts a 6,000 tick cooldown
+      (EventHandlerMars#onPlayerWakeUp); it doesn't set the spawn point
+- [x] Cargo Loader and Cargo Unloader (TileEntityCargoLoader / Unloader): beside a launch pad (or buggy fueling pad),
+      one item every 15 ticks (9 on tier 2 power) into or out of the rocket or buggy on it, 45 gJ/t
+- [x] Launch Controller (TileEntityLaunchController, GuiLaunchController / Advanced): owned by whoever placed it, with
+      a frequency, a target frequency (hidden from others), Enable / Disable, and on its advanced page Remove Pad On
+      Launch and Auto Launch When (cargo unloaded / cargo full / fully fuelled / instantly / 10 s / 30 s / 1 minute /
+      redstone signal); it keeps its chunk loaded so rockets can find it
+- [x] Cargo Rocket (EntityCargoRocket on EntityAutoRocket) with its NASA Workbench page (SchematicCargoRocket):
+      18 / 36 / 54 slots and 2,000 mB, launched by the Launch button of its cargo GUI or by its controller's rule. It
+      climbs (up to 5 / (1 + 0.1 per filled slot) blocks a tick), and on reaching space it comes down 800 blocks above
+      the pad of the controller with the target frequency, on whichever world that is, and lands on it, slowing as it
+      nears; 1 mB of fuel every 3 ticks, landing included; without fuel it falls and crashes
 
 ### Phase 7d+ – More planets
 - [ ] Asteroids (Tier 3 rocket, Astro Miner, telepads, beam power, thermal gear)
@@ -337,7 +364,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
   not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
   configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id). A
-  schematic whose page doesn't exist yet (Cargo Rocket, Tier 3 Rocket, ...) is not used up by Unlock Schematic.
+  schematic whose page doesn't exist yet (Tier 3 Rocket, Astro Miner) is not used up by Unlock Schematic.
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
@@ -416,6 +443,26 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   gravity attribute already makes every jump higher). Their size follows their age (1.12.2 only resized them when
   vanilla's breeding age changed).
 * The Creeper Egg and Slimeling Egg tooltips, and the Treasure Chests', replace 1.12.2's shift descriptions.
+* There is no liquid methane: the Gas Liquefier makes fuel from methane, as 1.12.2's did in practice. Gases are
+  fluids in tanks only (no world blocks), and an oxygen mB is an oxygen mB everywhere (1.12.2's gas machines mixed
+  units of 1, 2 and 4 per mB). The gas machines push their products out through the standard fluid capability.
+* Canisters are one item per contents; an empty canister of any kind is an empty Oil Canister, and it turns into
+  whichever canister it is filled as (1.12.2 kept separate empty canisters per kind).
+* The Methane Synthesizer's first slot takes hydrogen containers (1.12.2 had the slot but never used it).
+* The Cryogenic Chamber's occupant is drawn standing on its floor and its camera looks out through the opening
+  (1.12.2 hooked RenderPlayer and the camera setup with its own events; here the player keeps the sleeping pose
+  vanilla gives sleepers, drawn upright).
+* The Launch Controller's dropdown is drawn like 1.12.2's GuiElementDropdown but opens on click and closes after a
+  choice; its pages switch on the client (1.12.2 reopened the container). Its owner is a UUID (1.12.2: the name).
+  Values typed into its boxes are sent as they change.
+* Cargo rockets keep the chunk they fly through loaded (a timed ticket refreshed every second), and the destination
+  controller's chunk is force-loaded; 1.12.2 force-loaded the controller's chunk and its pads' chunks with a config
+  option. A cargo rocket can't target a pad on a world that isn't loaded (1.12.2 loaded it; here the controller's
+  forced chunk keeps it loaded once placed).
+* Rockets, landers and buggies are loaded and unloaded through `CargoCarrier` (1.12.2 ICargoEntity); the loaders find
+  the vehicle on their pad themselves (1.12.2 asked the pad's tile entity).
+* The Cargo Rocket recipe takes one to three chests in any chest slots (1.12.2: one chest in the first slot, or two
+  in the second and third, or three).
 
 ## Workflow for porting more content
 
@@ -425,7 +472,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 3. `python3 tools/port_legacy_assets.py --legacy /path/to/Galacticraft-Legacy`. It copies textures, converts
    translations and re-converts recipes, and lists every recipe still blocked on unmapped items.
 4. Add block states/models/loot/tags to the datagen providers, then run `./gradlew runData`.
-5. `python3 tools/check_assets.py` and `./gradlew runGameTestServer`.
+5. `python3 tools/check_assets.py` and `./gradlew runGameTestServer` (a fresh world in `run/gametest` each run; the
+   result is at the end of `run/gametest/logs/latest.log`).
 6. Entity and block-entity models written as 1.12.2 `ModelRenderer` code: `python3 tools/convert_java_model.py
    Model.java` prints the 1.21 `LayerDefinition` body (boxes, pivots, rotations, mirroring, texture offsets).
 7. `xvfb-run -a ./gradlew runScreenshotTour` (or plain `./gradlew runScreenshotTour` with a display) builds scenes and

@@ -73,4 +73,11 @@ public class CryogenicChamberPartBlock extends HorizontalDirectionalBlock {
     public ItemStack getCloneItemStack(BlockState state, HitResult target, LevelReader level, BlockPos pos, Player player) {
         return new ItemStack(GCBlocks.CRYOGENIC_CHAMBER.get());
     }
+
+    /** See-through for the camera (third person from outside, and the view out of it while asleep). */
+    @Override
+    protected net.minecraft.world.phys.shapes.VoxelShape getVisualShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos,
+                                                                       net.minecraft.world.phys.shapes.CollisionContext context) {
+        return net.minecraft.world.phys.shapes.Shapes.empty();
+    }
 }

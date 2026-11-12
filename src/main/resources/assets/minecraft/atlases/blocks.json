@@ -24,6 +24,10 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/landing_balloons"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/cargo_rocket"
     }
   ]
 }

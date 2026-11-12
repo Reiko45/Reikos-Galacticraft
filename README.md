@@ -4,11 +4,13 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7b of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 7c of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
-Slimeling and take on the three-headed Creeper Boss in the Mars dungeons. From a rocket
+Slimeling and take on the three-headed Creeper Boss in the Mars dungeons. Build a base there: split water into oxygen
+and hydrogen, make methane and liquefy it into fuel, green the regolith with a Terraformer, sleep in a Cryogenic
+Chamber, and send Cargo Rockets between Launch Controllers on any world. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
 back and you come down by parachute, with your cargo following in a Para-chest. Galacticraft's power system, machines, solar panels and oil processing work. See
 [PORTING.md](PORTING.md) for the roadmap and how each 1.12.2 system maps to NeoForge.
@@ -42,6 +44,16 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
   make it sit or follow), feed it its favourite food to grow, breed, strengthen or heal it, and give it a Slimeling
   Inventory Bag to carry 27 stacks for you. It grows to twice its hatching size, and bred Slimelings mix their parents'
   colours. A Desh Pickaxe with Silk Touch used on an egg comes away as a Sticky Desh Pickaxe.
+* **Mars machines**: the Water Electrolyzer splits water into oxygen and hydrogen, the Methane Synthesizer makes methane
+  from hydrogen and Carbon Fragments (or CO2 drawn from Mars air through an Atmospheric Valve), and the Gas Liquefier
+  turns methane into rocket fuel and oxygen or nitrogen into liquids for the new canisters. The Terraformer grows a
+  green bubble that turns Mars regolith and Moon turf into grass, digs ponds and plants saplings. The Cryogenic Chamber
+  lets you sleep standing up, any time of day, and heals you (once every five minutes).
+* **Cargo Rockets**: unlock the page with the schematic from the Creeper Boss and build an unmanned rocket with 18 to 54
+  slots. Cargo Loaders and Unloaders beside a launch pad fill and empty it (and Moon Buggies). Give the pad a Launch
+  Controller with a frequency and a target frequency, and the rocket flies itself to the target controller's pad on
+  any world when you press Launch, or when its cargo is full or unloaded, it is fuelled, a timer runs out or redstone
+  says so.
 * **Tier 2 Rocket**: unlock its NASA Workbench page with the schematic from a Moon dungeon, then build it from a nose
   cone, ten heavy-duty plates, two boosters, four fins and an engine (plus chests for cargo). It holds 1,500 mB, climbs
   twice as fast as the Tier 1, and can reach Mars. You land on Mars in Landing Balloons, which drop from y 900 and
@@ -85,7 +97,7 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
   back on Earth. Rename your station on the screen; `/ssinvite`, `/ssuninvite` and `/ssnewowner` control who may come,
   and `/gchouston` takes you home from anywhere in space. Spin Thrusters fixed to the station make it spin.
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
-* Recipes: 137 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
+* Recipes: 151 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 

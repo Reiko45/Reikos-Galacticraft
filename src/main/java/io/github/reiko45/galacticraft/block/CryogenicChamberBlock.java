@@ -138,4 +138,11 @@ public class CryogenicChamberBlock extends HorizontalDirectionalBlock {
     public Direction getBedDirection(BlockState state, LevelReader level, BlockPos pos) {
         return state.getValue(FACING).getOpposite();
     }
+
+    /** See-through for the camera (third person from outside, and the view out of it while asleep). */
+    @Override
+    protected net.minecraft.world.phys.shapes.VoxelShape getVisualShape(BlockState state, net.minecraft.world.level.BlockGetter level, BlockPos pos,
+                                                                       net.minecraft.world.phys.shapes.CollisionContext context) {
+        return net.minecraft.world.phys.shapes.Shapes.empty();
+    }
 }

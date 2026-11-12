@@ -63,14 +63,14 @@ public class LaunchControllerScreen extends MachineScreen<LaunchControllerMenu> 
         this.hide = addRenderableWidget(Button.builder(Component.empty(), b -> press(LaunchControllerMenu.BUTTON_HIDE_DESTINATION))
                 .bounds(this.leftPos + 95, this.topPos + 38, 39, 20).build());
         this.openAdvanced = addRenderableWidget(Button.builder(Component.translatable("gui.galacticraftcore.launch_controller.advanced").append("..."),
-                b -> setAdvanced(true)).bounds(this.leftPos + 48, this.topPos + 62, 80, 20).build());
-        this.back = addRenderableWidget(Button.builder(Component.literal("<"), b -> setAdvanced(false))
+                b -> showAdvanced(true)).bounds(this.leftPos + 48, this.topPos + 62, 80, 20).build());
+        this.back = addRenderableWidget(Button.builder(Component.literal("<"), b -> showAdvanced(false))
                 .bounds(this.leftPos + 5, this.topPos + 5, 20, 20).build());
         this.dropdownWidth = 0;
         for (LaunchControllerBlockEntity.AutoLaunch option : LaunchControllerBlockEntity.AutoLaunch.values()) {
             this.dropdownWidth = Math.max(this.dropdownWidth, this.font.width(Component.translatable(option.translationKey())) + 8 + 15);
         }
-        setAdvanced(this.advanced);
+        showAdvanced(this.advanced);
         refresh();
     }
 
@@ -82,7 +82,8 @@ public class LaunchControllerScreen extends MachineScreen<LaunchControllerMenu> 
         return addRenderableWidget(box);
     }
 
-    private void setAdvanced(boolean advanced) {
+    /** Switch between the main and the advanced page (also used by the screenshot tour). */
+    public void showAdvanced(boolean advanced) {
         this.advanced = advanced;
         this.dropdownOpen = false;
         this.frequency.visible = !advanced;

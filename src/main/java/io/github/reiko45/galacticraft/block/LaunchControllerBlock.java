@@ -34,11 +34,7 @@ public class LaunchControllerBlock extends MachineBlock {
     @Override
     protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hitResult) {
         if (!level.isClientSide && player instanceof ServerPlayer serverPlayer && level.getBlockEntity(pos) instanceof LaunchControllerBlockEntity controller) {
-            serverPlayer.openMenu(controller, buf -> {
-                buf.writeBlockPos(pos);
-                buf.writeUtf(controller.ownerName());
-                buf.writeBoolean(controller.isOwner(serverPlayer));
-            });
+            controller.openMenu(serverPlayer);
         }
         return InteractionResult.sidedSuccess(level.isClientSide);
     }
