@@ -20,6 +20,8 @@ public final class GCSounds {
     /** Sludge dripping from Mars dungeon bricks (1.12.2 singleDrip). */
     public static final Supplier<SoundEvent> SINGLE_DRIP = sound("ambient.single_drip");
     public static final Supplier<SoundEvent> SLIME_DEATH = sound("entity.slime_death");
+    /** The Astro Miner's engine (1.12.2 astroMiner). */
+    public static final Supplier<SoundEvent> ASTRO_MINER = sound("entity.astro_miner");
 
     private static Supplier<SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GalacticraftCore.id(name)));

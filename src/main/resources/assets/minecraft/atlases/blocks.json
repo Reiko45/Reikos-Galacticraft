@@ -44,6 +44,22 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/grapple"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/astro_miner"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/astro_miner_fx"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/astro_miner_off"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/minerbase"
     }
   ]
 }

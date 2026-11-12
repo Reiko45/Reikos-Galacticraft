@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraftcore:block/miner_base_full"
+    }
+  }
+}

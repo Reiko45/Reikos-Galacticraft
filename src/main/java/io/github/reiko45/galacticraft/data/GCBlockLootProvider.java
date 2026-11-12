@@ -31,6 +31,7 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
     protected void generate() {
         for (Block block : getKnownBlocks()) {
             if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block == GCBlocks.UNLIT_WALL_TORCH.get() || block == GCBlocks.SPACE_WART.get()
+                    || block == GCBlocks.MINER_BASE_FULL.get()
                     || block.getLootTable() == BuiltInLootTables.EMPTY) {
                 continue; // wall torches use the standing torch's table; solar parts, liquids and breathable air drop nothing
             }
@@ -40,6 +41,10 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
                 dropSelf(block);
             }
         }
+        // 1.12.2 BlockMinerBaseFull#getDrops: a built base breaks back into the eight blocks it was made of
+        add(GCBlocks.MINER_BASE_FULL.get(), block -> LootTable.lootTable().withPool(applyExplosionCondition(block, net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(GCBlocks.MINER_BASE.get())
+                        .apply(SetItemCountFunction.setCount(ConstantValue.exactly(8.0F)))))));
         // 1.12.2 BlockSpaceWart is BlockNetherWart: its drops are nether wart's
         final var fortuneLevel = this.registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
                 .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);

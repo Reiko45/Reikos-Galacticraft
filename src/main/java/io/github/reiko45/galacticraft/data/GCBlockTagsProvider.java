@@ -56,7 +56,9 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ILMENITE_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get(), GCBlocks.DARK_DECORATION_BLOCK.get(),
                 GCBlocks.TITANIUM_BLOCK.get(), GCBlocks.DENSE_ICE.get());
         tag(BlockTags.NEEDS_IRON_TOOL).add(GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get());
-        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.WALKWAY.get(), GCBlocks.WALKWAY_WIRE.get(), GCBlocks.WALKWAY_PIPE.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.WALKWAY.get(), GCBlocks.WALKWAY_WIRE.get(), GCBlocks.WALKWAY_PIPE.get(),
+                GCBlocks.MINER_BASE.get(), GCBlocks.MINER_BASE_FULL.get(), GCBlocks.BEAM_REFLECTOR.get(), GCBlocks.BEAM_RECEIVER.get(),
+                GCBlocks.SHORT_RANGE_TELEPAD.get(), GCBlocks.TELEPAD_FAKE.get());
         tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.ILMENITE_ORE.get());
         tag(BlockTags.ICE).add(GCBlocks.DENSE_ICE.get());
         tag(GCTags.block("ores/aluminum")).add(GCBlocks.ASTEROID_ALUMINUM_ORE.get());

@@ -60,6 +60,8 @@ public final class GalacticraftCore {
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
         modBus.addListener(io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity::registerTickets);
+        modBus.addListener((net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent event) ->
+                event.register(io.github.reiko45.galacticraft.entity.AstroMinerEntity.TICKETS));
         container.registerConfig(ModConfig.Type.CLIENT, GCConfig.CLIENT_SPEC);
         container.registerConfig(ModConfig.Type.SERVER, GCConfig.SERVER_SPEC);
     }

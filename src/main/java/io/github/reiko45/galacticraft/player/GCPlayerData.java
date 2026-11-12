@@ -63,6 +63,26 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int spaceRaceInvite;
     /** 1.12.2 openedSpaceRaceManager: the first-login popup has been shown. */
     public boolean openedSpaceRaceManager;
+    /** 1.12.2 astroMinerCount: Astro Miners this player has out (at most maximumAstroMiners). */
+    public int astroMinerCount;
+    /** 1.12.2 activeAstroMinerChunks: where each of this player's miners was, to load them again at login. */
+    private final java.util.Map<java.util.UUID, AstroMinerChunk> astroMinerChunks = new java.util.LinkedHashMap<>();
+
+    public record AstroMinerChunk(net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension, net.minecraft.world.level.ChunkPos chunk) {
+    }
+
+    public void setAstroMinerChunk(java.util.UUID miner, net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension,
+                                   net.minecraft.world.level.ChunkPos chunk) {
+        this.astroMinerChunks.put(miner, new AstroMinerChunk(dimension, chunk));
+    }
+
+    public void removeAstroMinerChunk(java.util.UUID miner) {
+        this.astroMinerChunks.remove(miner);
+    }
+
+    public java.util.Map<java.util.UUID, AstroMinerChunk> astroMinerChunks() {
+        return java.util.Collections.unmodifiableMap(this.astroMinerChunks);
+    }
     /** When an Alien Villager last told this player they need a Frequency Module (tick count; not saved). */
     public int lastVillagerChat = Integer.MIN_VALUE / 2;
     /** 1.12.2 GCPlayerStats thermalLevel (-22 freezing to 22 overheating) and thermalLevelNormalising. */
@@ -210,6 +230,16 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         tag.putInt("CryogenicChamberCooldown", this.cryogenicChamberCooldown);
         tag.putInt("ThermalLevel", this.thermalLevel);
         tag.putBoolean("ShownSpaceRaceManager", this.openedSpaceRaceManager);
+        tag.putInt("AstroMinerCount", this.astroMinerCount);
+        final net.minecraft.nbt.ListTag miners = new net.minecraft.nbt.ListTag();
+        this.astroMinerChunks.forEach((id, chunk) -> {
+            final CompoundTag entry = new CompoundTag();
+            entry.putUUID("Miner", id);
+            entry.putString("Dimension", chunk.dimension().location().toString());
+            entry.putLong("Chunk", chunk.chunk().toLong());
+            miners.add(entry);
+        });
+        tag.put("AstroMinerChunks", miners);
         final CompoundTag travel = new CompoundTag();
         travel.putInt("CargoSize", this.rocketCargo.size());
         net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
@@ -250,6 +280,17 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.cryogenicChamberCooldown = tag.getInt("CryogenicChamberCooldown");
         this.thermalLevel = tag.getInt("ThermalLevel");
         this.openedSpaceRaceManager = tag.getBoolean("ShownSpaceRaceManager");
+        this.astroMinerCount = tag.getInt("AstroMinerCount");
+        this.astroMinerChunks.clear();
+        for (net.minecraft.nbt.Tag entry : tag.getList("AstroMinerChunks", net.minecraft.nbt.Tag.TAG_COMPOUND)) {
+            final CompoundTag miner = (CompoundTag) entry;
+            final net.minecraft.resources.ResourceLocation dimension = net.minecraft.resources.ResourceLocation.tryParse(miner.getString("Dimension"));
+            if (miner.hasUUID("Miner") && dimension != null) {
+                this.astroMinerChunks.put(miner.getUUID("Miner"), new AstroMinerChunk(
+                        net.minecraft.resources.ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, dimension),
+                        new net.minecraft.world.level.ChunkPos(miner.getLong("Chunk"))));
+            }
+        }
         final CompoundTag travel = tag.getCompound("Travel");
         this.rocketCargo = NonNullList.withSize(travel.getInt("CargoSize"), ItemStack.EMPTY);
         net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);

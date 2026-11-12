@@ -48,9 +48,12 @@ public final class Schematics {
     /** 1.12.2 SchematicTier3Rocket (asteroids config id 4). */
     public static final Page ROCKET_T3 = new Page("rocket_t3", 4, GCItems.TIER_3_ROCKET_SCHEMATIC, "schematic.galacticraftcore.rocket_t3",
             Tier3RocketBenchMenu::new);
+    /** 1.12.2 SchematicAstroMiner (asteroids config id 4 + 1). */
+    public static final Page ASTRO_MINER = new Page("astro_miner", 5, GCItems.ASTRO_MINER_SCHEMATIC, "schematic.galacticraftcore.astro_miner",
+            AstroMinerBenchMenu::new);
     public static final Page ADD_SCHEMATIC = new Page("add_schematic", Integer.MAX_VALUE, null, "gui.galacticraftcore.add_new_schematic",
             SchematicInputMenu::new);
-    private static final List<Page> PAGES = List.of(ROCKET_T1, MOON_BUGGY, ROCKET_T2, CARGO_ROCKET, ROCKET_T3, ADD_SCHEMATIC).stream()
+    private static final List<Page> PAGES = List.of(ROCKET_T1, MOON_BUGGY, ROCKET_T2, CARGO_ROCKET, ROCKET_T3, ASTRO_MINER, ADD_SCHEMATIC).stream()
             .sorted(Comparator.comparingInt(Page::order)).toList();
 
     public static final int ACTION_BACK = 0;

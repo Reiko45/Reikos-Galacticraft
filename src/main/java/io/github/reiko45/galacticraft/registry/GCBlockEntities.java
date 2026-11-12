@@ -138,6 +138,8 @@ public final class GCBlockEntities {
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TelepadFakeBlockEntity>> TELEPAD_FAKE = BLOCK_ENTITIES.register(
             "telepad_fake", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.TelepadFakeBlockEntity::new,
                     GCBlocks.TELEPAD_FAKE.get()).build(null));
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.MinerBaseBlockEntity>> MINER_BASE = machine(
+            "miner_base", io.github.reiko45.galacticraft.block.entity.MinerBaseBlockEntity::new, GCBlocks.MINER_BASE_FULL);
     public static final Supplier<BlockEntityType<TreasureChestBlockEntity>> TREASURE_CHEST = BLOCK_ENTITIES.register("treasure_chest",
             () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, GCBlocks.TREASURE_CHEST_TIER_1.get(),
                     GCBlocks.TREASURE_CHEST_TIER_2.get()).build(null));

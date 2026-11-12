@@ -486,7 +486,15 @@
     "block/beam_receiver": "planets:blocks/beam_receiver",
     "block/telepad_short": "planets:blocks/telepad_short",
     "block/telepad_short0": "planets:blocks/telepad_short0",
-    "gui/short_range_telepad": "planets:gui/short_range_telepad"
+    "gui/short_range_telepad": "planets:gui/short_range_telepad",
+    "model/astro_miner": "planets:blocks/astro_miner",
+    "model/astro_miner_fx": "planets:blocks/astro_miner_fx",
+    "model/astro_miner_off": "planets:blocks/astro_miner_off",
+    "model/minerbase": "planets:blocks/minerbase",
+    "block/machine_frame": "planets:blocks/machineframe",
+    "misc/gradient": "planets:misc/gradient",
+    "gui/gui_astro_miner_dock": "planets:gui/gui_astro_miner_dock",
+    "gui/schematic_astro_miner": "planets:gui/schematic_astro_miner"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -502,7 +510,8 @@
     "ambience/singledrip5": "ambience/singledrip5",
     "ambience/singledrip6": "ambience/singledrip6",
     "ambience/singledrip7": "ambience/singledrip7",
-    "ambience/singledrip8": "ambience/singledrip8"
+    "ambience/singledrip8": "ambience/singledrip8",
+    "entity/astrominer": "entity/astrominer"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -1185,7 +1194,34 @@
     "gui.galacticraftcore.telepad.target_no_energy": "planets:gui.message.target_no_energy.name",
     "gui.galacticraftcore.telepad.desc.0": "planets:gui.telepad.desc.0",
     "gui.galacticraftcore.telepad.desc.1": "planets:gui.telepad.desc.1",
-    "block.galacticraftcore.telepad_fake": "planets:tile.telepad_short.name"
+    "block.galacticraftcore.telepad_fake": "planets:tile.telepad_short.name",
+    "block.galacticraftcore.miner_base": "planets:tile.miner_base.name",
+    "block.galacticraftcore.miner_base.desc": "planets:tile.miner_base.description",
+    "block.galacticraftcore.miner_base_full": "planets:tile.miner_base_full.name",
+    "item.galacticraftcore.astro_miner": "planets:item.astro_miner.name",
+    "entity.galacticraftcore.astro_miner": "planets:entity.astro_miner.name",
+    "gui.galacticraftcore.astro_miner.fail_1": "planets:gui.message.astro_miner1.fail",
+    "gui.galacticraftcore.astro_miner.fail_2": "planets:gui.message.astro_miner2.fail",
+    "gui.galacticraftcore.astro_miner.fail_3": "planets:gui.message.astro_miner3.fail",
+    "gui.galacticraftcore.astro_miner.fail_4": "planets:gui.message.astro_miner4.fail",
+    "gui.galacticraftcore.astro_miner.fail_5": "planets:gui.message.astro_miner5.fail",
+    "gui.galacticraftcore.astro_miner.fail_6": "planets:gui.message.astro_miner6.fail",
+    "gui.galacticraftcore.astro_miner.fail_7": "planets:gui.message.astro_miner7.fail",
+    "gui.galacticraftcore.astro_miner.fail_8": "planets:gui.message.astro_miner8.fail",
+    "gui.galacticraftcore.astro_miner.fail_linked": "planets:gui.message.astro_miner.fail",
+    "gui.galacticraftcore.astro_miner.route_blocked": "planets:gui.message.astro_miner1_a.fail",
+    "gui.galacticraftcore.astro_miner.protected": "planets:gui.message.astro_miner1_b.fail",
+    "gui.galacticraftcore.miner.docked": "planets:gui.miner.docked",
+    "gui.galacticraftcore.miner.docking": "planets:gui.miner.docking",
+    "gui.galacticraftcore.miner.mined": "planets:gui.miner.mined",
+    "gui.galacticraftcore.miner.mining": "planets:gui.miner.mining",
+    "gui.galacticraftcore.miner.offline": "planets:gui.miner.offline",
+    "gui.galacticraftcore.miner.out_of_range": "planets:gui.miner.out_of_range",
+    "gui.galacticraftcore.miner.returning": "planets:gui.miner.returning",
+    "gui.galacticraftcore.miner.stuck": "planets:gui.miner.stuck",
+    "gui.galacticraftcore.miner.travelling": "planets:gui.miner.travelling",
+    "gui.galacticraftcore.button.recall": "planets:gui.button.recall.name",
+    "config.galacticraftcore.astro_miners_max": "planets:gc.configgui.astro_miners_max"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1227,7 +1263,9 @@
     "block.galacticraftcore.bright_air": "Bright Air",
     "item.galacticraftcore.alien_villager_spawn_egg": "Alien Villager Spawn Egg",
     "commands.galacticraftcore.joinrace.no_team": "You haven't been invited to a space race team!",
-    "block.galacticraftcore.space_wart": "Space Wart"
+    "block.galacticraftcore.space_wart": "Space Wart",
+    "gui.galacticraftcore.astro_miner.offline_owner": "WARNING: that Astro Miner belonged to an offline player, cannot reset player's Astro Miner count.",
+    "subtitles.galacticraftcore.entity.astro_miner": "Astro Miner hums"
   },
   "recipes": {
     "skip_conditions": [
@@ -1506,7 +1544,9 @@
       "minecraft:lever": "minecraft:lever",
       "galacticraftplanets:telepad_short": "galacticraftcore:short_range_telepad",
       "minecraft:ender_pearl": "minecraft:ender_pearl",
-      "minecraft:redstone": "minecraft:redstone"
+      "minecraft:redstone": "minecraft:redstone",
+      "galacticraftplanets:miner_base": "galacticraftcore:miner_base",
+      "minecraft:chest": "minecraft:chest"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -1670,6 +1710,10 @@
       "from": "planets:block/receiver",
       "default_map": "minecraft:block/white_concrete"
     },
-    "block/telepad_short": "planets:block/telepad_short"
+    "block/telepad_short": "planets:block/telepad_short",
+    "entity/astro_miner_full": "planets:astro_miner_full",
+    "entity/astro_miner_full_off": "planets:astro_miner_full_off",
+    "item/astro_miner": "planets:astro_miner_inv",
+    "block/minerbase": "planets:minerbase0"
   }
 }

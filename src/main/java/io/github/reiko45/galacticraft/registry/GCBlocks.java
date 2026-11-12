@@ -377,6 +377,14 @@ public final class GCBlocks {
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.TelepadFakeBlock> TELEPAD_FAKE = BLOCKS.register("telepad_fake",
             () -> new io.github.reiko45.galacticraft.block.TelepadFakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .strength(3.0F, 3_600_000.0F).sound(SoundType.METAL).noOcclusion().noLootTable().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
+    /** 1.12.2 BlockMinerBase (Material.ROCK, hardness 3) and BlockMinerBaseFull (resistance 35). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.MinerBaseBlock> MINER_BASE = withItem("miner_base",
+            () -> new io.github.reiko45.galacticraft.block.MinerBaseBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(3.0F).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.MinerBaseFullBlock> MINER_BASE_FULL = BLOCKS.register("miner_base_full",
+            () -> new io.github.reiko45.galacticraft.block.MinerBaseFullBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(3.0F, 21.0F).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion()
+                    .pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
     /** 1.12.2 BlockSpaceWart (nether wart, no item). */
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceWartBlock> SPACE_WART = BLOCKS.register("space_wart",
             () -> new io.github.reiko45.galacticraft.block.SpaceWartBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_WART)));

@@ -148,6 +148,9 @@ public final class GCItems {
             () -> new InfiniteOxygenTankItem(new Item.Properties()));
     public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
 
+    /** 1.12.2 ItemAstroMiner. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.AstroMinerItem> ASTRO_MINER = ITEMS.register("astro_miner",
+            () -> new io.github.reiko45.galacticraft.item.AstroMinerItem(new Item.Properties()));
     /** 1.12.2 ItemGrappleHook. */
     public static final DeferredItem<io.github.reiko45.galacticraft.item.GrappleItem> GRAPPLE = ITEMS.register("grapple",
             () -> new io.github.reiko45.galacticraft.item.GrappleItem(new Item.Properties()));

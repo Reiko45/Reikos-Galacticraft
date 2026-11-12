@@ -31,6 +31,8 @@ public class GCItemModelProvider extends ItemModelProvider {
                 withExistingParent(holder.getId().getPath(), mcLoc("item/template_spawn_egg"));
             } else if (item instanceof io.github.reiko45.galacticraft.item.BuggyItem) {
                 buggy(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.AstroMinerItem) {
+                astroMiner(holder.getId().getPath());
             } else if (item instanceof io.github.reiko45.galacticraft.item.GrappleItem) {
                 grapple(holder.getId().getPath());
             } else if (item instanceof io.github.reiko45.galacticraft.item.FlagItem) {
@@ -45,6 +47,21 @@ public class GCItemModelProvider extends ItemModelProvider {
                 basicItem(item);
             }
         }
+    }
+
+    /** 1.12.2 ItemModelAstroMiner: the astro_miner_inv OBJ (the transforms approximate the 1.12.2 matrices). */
+    private void astroMiner(String name) {
+        getBuilder(name).customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/item/astro_miner.obj")).flipV(true).end()
+                .texture("particle", modLoc("model/astro_miner_off")).transforms()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, 0, 0).scale(0.03F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.015F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 180, 0).scale(0.03F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.02F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.02F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 225, 0).translation(0, 2, 0).scale(0.03F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 225, 0).translation(0, 2, 0).scale(0.03F).end()
+                .end();
     }
 
     /** 1.12.2 ItemModelGrapple: the grapple OBJ (the transforms approximate the 1.12.2 matrices). */

@@ -208,6 +208,13 @@ public final class GCPlayerHandler {
         GCPlayerData.get(event.getEntity()).markGearChanged();
         if (event.getEntity() instanceof ServerPlayer player) {
             io.github.reiko45.galacticraft.race.SpaceRaces.get(player.server).onLogin(player);
+            // 1.12.2 loadAstroChunkList: load the chunks this player's Astro Miners were left in, so they carry on
+            GCPlayerData.get(player).astroMinerChunks().forEach((miner, chunk) -> {
+                final net.minecraft.server.level.ServerLevel level = player.server.getLevel(chunk.dimension());
+                if (level != null) {
+                    io.github.reiko45.galacticraft.entity.AstroMinerEntity.TICKETS.forceChunk(level, miner, chunk.chunk().x, chunk.chunk().z, true, true);
+                }
+            });
         }
     }
 

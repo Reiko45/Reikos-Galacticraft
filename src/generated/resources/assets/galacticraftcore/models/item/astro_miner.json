@@ -1,0 +1,114 @@
+{
+  "display": {
+    "firstperson_lefthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "scale": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ]
+    },
+    "firstperson_righthand": {
+      "rotation": [
+        0,
+        225,
+        0
+      ],
+      "scale": [
+        0.03,
+        0.03,
+        0.03
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ]
+    },
+    "fixed": {
+      "rotation": [
+        0,
+        180,
+        0
+      ],
+      "scale": [
+        0.03,
+        0.03,
+        0.03
+      ]
+    },
+    "ground": {
+      "scale": [
+        0.015,
+        0.015,
+        0.015
+      ],
+      "translation": [
+        0,
+        2,
+        0
+      ]
+    },
+    "gui": {
+      "rotation": [
+        30,
+        225,
+        0
+      ],
+      "scale": [
+        0.03,
+        0.03,
+        0.03
+      ]
+    },
+    "thirdperson_lefthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "scale": [
+        0.02,
+        0.02,
+        0.02
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ]
+    },
+    "thirdperson_righthand": {
+      "rotation": [
+        75,
+        45,
+        0
+      ],
+      "scale": [
+        0.02,
+        0.02,
+        0.02
+      ],
+      "translation": [
+        0,
+        2.5,
+        0
+      ]
+    }
+  },
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/item/astro_miner.obj",
+  "textures": {
+    "particle": "galacticraftcore:model/astro_miner_off"
+  }
+}

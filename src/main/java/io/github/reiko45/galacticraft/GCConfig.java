@@ -23,6 +23,7 @@ public final class GCConfig {
     public static final ModConfigSpec.BooleanValue DISABLE_SPACE_STATION_CREATION;
     public static final ModConfigSpec.BooleanValue ENABLE_SPACE_RACE_MANAGER_POPUP;
     public static final ModConfigSpec.BooleanValue DISABLE_SMALL_ASTEROIDS;
+    public static final ModConfigSpec.IntValue ASTRO_MINER_MAX;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -61,6 +62,10 @@ public final class GCConfig {
                 .comment("Disable Small Asteroid spawning (Asteroids)")
                 .translation("config.galacticraftcore.disable_small_asteroids")
                 .define("disableSmallAsteroids", false);
+        ASTRO_MINER_MAX = server
+                .comment("Maximum number of Astro Miners per player")
+                .translation("config.galacticraftcore.astro_miners_max")
+                .defineInRange("maximumAstroMiners", 6, 0, 1000);
         SERVER_SPEC = server.build();
     }
 

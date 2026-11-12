@@ -1,0 +1,14 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/astro_miner_full.obj",
+  "visibility": {
+    "Glow": true,
+    "HoverPad": false,
+    "Hull": false,
+    "Lasers_Main_Laser_Base": false,
+    "Main_Laser_Center": false,
+    "Main_Laser_Front": false,
+    "Main_Laser_Left_Guard": false
+  }
+}

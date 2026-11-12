@@ -65,5 +65,14 @@
         "stream": false
       }
     ]
+  },
+  "entity.astro_miner": {
+    "subtitle": "subtitles.galacticraftcore.entity.astro_miner",
+    "sounds": [
+      {
+        "name": "galacticraftcore:entity/astrominer",
+        "stream": false
+      }
+    ]
   }
 }

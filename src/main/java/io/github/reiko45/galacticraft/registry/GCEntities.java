@@ -51,6 +51,10 @@ public final class GCEntities {
             () -> EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(10).updateInterval(2).build("parachest"));
 
+    /** 1.12.2 EntityAstroMiner (2.6 long, 1.8 wide; its box turns with it). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.AstroMinerEntity>> ASTRO_MINER = ENTITY_TYPES.register("astro_miner",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.AstroMinerEntity>of(io.github.reiko45.galacticraft.entity.AstroMinerEntity::new,
+                    MobCategory.MISC).sized(2.6F, 1.8F).fireImmune().clientTrackingRange(10).updateInterval(1).build("astro_miner"));
     /** 1.12.2 EntityGrapple setSize(0.75, 0.75). */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.GrappleEntity>> GRAPPLE = ENTITY_TYPES.register("grapple",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.GrappleEntity>of(io.github.reiko45.galacticraft.entity.GrappleEntity::new,

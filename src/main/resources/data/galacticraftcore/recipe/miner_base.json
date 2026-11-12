@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "item": "galacticraftcore:energy_storage_module"
+    },
+    "C": {
+      "item": "minecraft:chest"
+    },
+    "W": {
+      "item": "galacticraftcore:beam_core"
+    },
+    "X": {
+      "tag": "c:plates/desh"
+    }
+  },
+  "pattern": [
+    "XCX",
+    "W W",
+    "XBX"
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraftcore:miner_base"
+  }
+}

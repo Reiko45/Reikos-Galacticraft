@@ -525,6 +525,30 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.15F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.15F).end()
                 .end();
+        // 1.12.2 Astro Miner Base: single blocks are cubes of machine frame; the built base is drawn by its master's renderer
+        simpleBlockWithItem(GCBlocks.MINER_BASE.get(), models().cubeAll("miner_base", tex("machine_frame")));
+        getVariantBuilder(GCBlocks.MINER_BASE_FULL.get()).partialState().setModels(new ConfiguredModel(
+                models().getBuilder("block/miner_base_full").texture("particle", tex("machine_frame"))));
+        models().getBuilder("block/miner_base_model").customLoader(ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/block/minerbase.obj")).flipV(true).end();
+        // 1.12.2 RenderAstroMiner's parts of astro_miner_full and astro_miner_full_off
+        final String[] minerGroups = {"Hull", "Lasers_Main_Laser_Base", "HoverPad", "Glow", "Main_Laser_Front", "Main_Laser_Center", "Main_Laser_Left_Guard"};
+        final String[][] minerParts = {{"main", "Hull", "Lasers_Main_Laser_Base"}, {"hover_pad", "HoverPad"}, {"glow", "Glow"},
+                {"laser_front", "Main_Laser_Front"}, {"laser_center", "Main_Laser_Center"}, {"laser_guard", "Main_Laser_Left_Guard"}};
+        for (String[] part : minerParts) {
+            final var loader = models().getBuilder("entity/astro_miner/" + part[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/astro_miner_full.obj")).flipV(true);
+            for (String group : minerGroups) {
+                loader.visibility(group, java.util.Arrays.asList(part).subList(1, part.length).contains(group));
+            }
+            loader.end();
+        }
+        final var inactive = models().getBuilder("entity/astro_miner/inactive").customLoader(ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/entity/astro_miner_full_off.obj")).flipV(true);
+        for (String group : new String[]{"Hull", "Lasers_Main_Laser_Base", "HoverPad", "Main_Laser_Front", "Main_Laser_Center", "Main_Laser_Left_Guard"}) {
+            inactive.visibility(group, group.equals("Hull") || group.equals("Lasers_Main_Laser_Base") || group.equals("HoverPad"));
+        }
+        inactive.end();
         // 1.12.2 spacewart.json: the vanilla nether wart models
         getVariantBuilder(GCBlocks.SPACE_WART.get()).forAllStates(state -> {
             final int age = state.getValue(net.minecraft.world.level.block.NetherWartBlock.AGE);
