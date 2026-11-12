@@ -342,6 +342,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 ### Phase 7e – Asteroid machines
 - [ ] Astro Miner and its base, beam power (reflectors and receivers), short-range telepads, walkways, the abandoned
       base, the grapple, strange seed and space wart, small floating asteroids
+
+### Phase 7f – Venus
 - [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
 
 ### Phase 8 – Polish
