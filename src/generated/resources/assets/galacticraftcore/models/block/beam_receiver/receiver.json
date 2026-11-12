@@ -1,0 +1,10 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/block/receiver.obj",
+  "visibility": {
+    "Main": false,
+    "Receiver": true,
+    "Ring": false
+  }
+}

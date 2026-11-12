@@ -1,0 +1,11 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/block/reflector.obj",
+  "visibility": {
+    "Axle": false,
+    "Base": false,
+    "EnergyBlaster": true,
+    "Ring": false
+  }
+}

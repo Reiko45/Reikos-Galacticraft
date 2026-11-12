@@ -40,6 +40,10 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/flag0"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/grapple"
     }
   ]
 }

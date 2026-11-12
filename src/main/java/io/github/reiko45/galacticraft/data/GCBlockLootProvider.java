@@ -30,7 +30,8 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
     @Override
     protected void generate() {
         for (Block block : getKnownBlocks()) {
-            if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block == GCBlocks.UNLIT_WALL_TORCH.get() || block.getLootTable() == BuiltInLootTables.EMPTY) {
+            if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block == GCBlocks.UNLIT_WALL_TORCH.get() || block == GCBlocks.SPACE_WART.get()
+                    || block.getLootTable() == BuiltInLootTables.EMPTY) {
                 continue; // wall torches use the standing torch's table; solar parts, liquids and breathable air drop nothing
             }
             if (block instanceof net.minecraft.world.level.block.SlabBlock) {
@@ -39,6 +40,20 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
                 dropSelf(block);
             }
         }
+        // 1.12.2 BlockSpaceWart is BlockNetherWart: its drops are nether wart's
+        final var fortuneLevel = this.registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+                .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
+        add(GCBlocks.SPACE_WART.get(), block -> LootTable.lootTable().withPool(applyExplosionDecay(block, net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F))
+                .add(LootItem.lootTableItem(net.minecraft.world.item.Items.NETHER_WART)
+                        .apply(SetItemCountFunction.setCount(net.minecraft.world.level.storage.loot.providers.number.UniformGenerator.between(2.0F, 4.0F))
+                                .when(net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties()
+                                                .hasProperty(net.minecraft.world.level.block.NetherWartBlock.AGE, 3))))
+                        .apply(net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.addUniformBonusCount(fortuneLevel)
+                                .when(net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition.hasBlockStateProperties(block)
+                                        .setProperties(net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties()
+                                                .hasProperty(net.minecraft.world.level.block.NetherWartBlock.AGE, 3))))))));
         // Ores that drop items (fortune applies, like 1.12.2 quantityDropped).
         add(GCBlocks.SILICON_ORE.get(), block -> createOreDrop(block, GCItems.RAW_SILICON.get()));
         add(GCBlocks.MOON_CHEESE_ORE.get(), block -> createOreDrop(block, GCItems.CHEESE_CURD.get()));

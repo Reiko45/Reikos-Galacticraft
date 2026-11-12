@@ -83,9 +83,14 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::addPlayerLayers);
         modBus.addListener(VehicleControls::registerKeys);
         modBus.addListener(GalacticraftClient::registerBlockColors);
-        modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> event.registerSpriteSet(
-                io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
-                io.github.reiko45.galacticraft.client.particle.BacterialDripParticle.Provider::new));
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
+                    io.github.reiko45.galacticraft.client.particle.BacterialDripParticle.Provider::new);
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_UP.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, false));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_DOWN.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, true));
+        });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
@@ -137,6 +142,9 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.BASIC_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.BEAM_REFLECTOR.get(), io.github.reiko45.galacticraft.client.render.BeamRenderers.Reflector::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.BEAM_RECEIVER.get(), io.github.reiko45.galacticraft.client.render.BeamRenderers.Receiver::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.SHORT_RANGE_TELEPAD.get(), io.github.reiko45.galacticraft.client.render.ShortRangeTelepadRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_PIPE.get(), FluidPipeRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.OXYGEN_DISTRIBUTOR.get(), BubbleRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.TERRAFORMER.get(), BubbleRenderer::new);
@@ -162,6 +170,8 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
         event.registerEntityRenderer(GCEntities.ALIEN_VILLAGER.get(), io.github.reiko45.galacticraft.client.render.entity.AlienVillagerRenderer::new);
         event.registerEntityRenderer(GCEntities.FLAG.get(), io.github.reiko45.galacticraft.client.render.entity.FlagRenderer::new);
+        event.registerEntityRenderer(GCEntities.GRAPPLE.get(), io.github.reiko45.galacticraft.client.render.entity.GrappleRenderer::new);
+        event.registerEntityRenderer(GCEntities.SMALL_ASTEROID.get(), io.github.reiko45.galacticraft.client.render.entity.SmallAsteroidRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.TREASURE_CHEST.get(), io.github.reiko45.galacticraft.client.render.TreasureChestRenderer::new);
     }
 
@@ -191,6 +201,9 @@ public final class GalacticraftClient {
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier3RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.EntryPodRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.entity.GrappleRenderer.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.BeamRenderers.registerModels(event);
+        io.github.reiko45.galacticraft.client.render.ShortRangeTelepadRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer.registerModels(event);
     }
 
@@ -350,6 +363,7 @@ public final class GalacticraftClient {
         event.register(GCMenus.ELECTROLYZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
         event.register(GCMenus.TERRAFORMER.get(), io.github.reiko45.galacticraft.client.screen.TerraformerScreen::new);
         event.register(GCMenus.LAUNCH_CONTROLLER.get(), io.github.reiko45.galacticraft.client.screen.LaunchControllerScreen::new);
+        event.register(GCMenus.SHORT_RANGE_TELEPAD.get(), io.github.reiko45.galacticraft.client.screen.ShortRangeTelepadScreen::new);
         event.register(GCMenus.SLIMELING.get(), io.github.reiko45.galacticraft.client.screen.SlimelingInventoryScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);

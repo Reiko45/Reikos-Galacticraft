@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/titanium"
+    },
+    "Y": {
+      "item": "galacticraftcore:beam_core"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XYX",
+    " X "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:beam_receiver"
+  }
+}

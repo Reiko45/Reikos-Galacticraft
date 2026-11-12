@@ -42,7 +42,7 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<WireBlockEntity>> WIRE = BLOCK_ENTITIES.register("wire",
             () -> BlockEntityType.Builder.of(WireBlockEntity::new, GCBlocks.ALUMINUM_WIRE.get(), GCBlocks.HEAVY_ALUMINUM_WIRE.get(),
-                    GCBlocks.ALUMINUM_WIRE_SWITCH.get(), GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get()).build(null));
+                    GCBlocks.ALUMINUM_WIRE_SWITCH.get(), GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get(), GCBlocks.WALKWAY_WIRE.get()).build(null));
 
     public static final Supplier<BlockEntityType<CoalGeneratorBlockEntity>> COAL_GENERATOR = machine("coal_generator",
             CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR);
@@ -88,7 +88,7 @@ public final class GCBlockEntities {
             () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new, GCBlocks.FLUID_TANK.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<FluidPipeBlockEntity>> FLUID_PIPE = BLOCK_ENTITIES.register("fluid_pipe",
-            () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new, GCBlocks.FLUID_PIPE.get()).build(null));
+            () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new, GCBlocks.FLUID_PIPE.get(), GCBlocks.WALKWAY_PIPE.get()).build(null));
 
     public static final Supplier<BlockEntityType<OxygenCollectorBlockEntity>> OXYGEN_COLLECTOR = machine("oxygen_collector",
             OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR);
@@ -127,6 +127,17 @@ public final class GCBlockEntities {
     public static final Supplier<BlockEntityType<DungeonSpawnerBlockEntity>> DUNGEON_SPAWNER = BLOCK_ENTITIES.register("dungeon_spawner",
             () -> BlockEntityType.Builder.of(DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER.get(), GCBlocks.MARS_BOSS_SPAWNER.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.BeamReflectorBlockEntity>> BEAM_REFLECTOR = BLOCK_ENTITIES.register(
+            "beam_reflector", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.BeamReflectorBlockEntity::new,
+                    GCBlocks.BEAM_REFLECTOR.get()).build(null));
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.BeamReceiverBlockEntity>> BEAM_RECEIVER = BLOCK_ENTITIES.register(
+            "beam_receiver", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.BeamReceiverBlockEntity::new,
+                    GCBlocks.BEAM_RECEIVER.get()).build(null));
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ShortRangeTelepadBlockEntity>> SHORT_RANGE_TELEPAD = machine(
+            "short_range_telepad", io.github.reiko45.galacticraft.block.entity.ShortRangeTelepadBlockEntity::new, GCBlocks.SHORT_RANGE_TELEPAD);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TelepadFakeBlockEntity>> TELEPAD_FAKE = BLOCK_ENTITIES.register(
+            "telepad_fake", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.TelepadFakeBlockEntity::new,
+                    GCBlocks.TELEPAD_FAKE.get()).build(null));
     public static final Supplier<BlockEntityType<TreasureChestBlockEntity>> TREASURE_CHEST = BLOCK_ENTITIES.register("treasure_chest",
             () -> BlockEntityType.Builder.of(TreasureChestBlockEntity::new, GCBlocks.TREASURE_CHEST_TIER_1.get(),
                     GCBlocks.TREASURE_CHEST_TIER_2.get()).build(null));

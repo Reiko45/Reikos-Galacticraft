@@ -49,6 +49,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.StandingAndWallBlockItem;
 import net.minecraft.util.valueproviders.UniformInt;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DropExperienceBlock;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.SoundType;
@@ -354,6 +355,38 @@ public final class GCBlocks {
             io.github.reiko45.galacticraft.block.SlimelingEggBlock.Color color) {
         return withItem(name, () -> new io.github.reiko45.galacticraft.block.SlimelingEggBlock(color, BlockBehaviour.Properties.of().mapColor(MapColor.STONE)
                 .strength(0.75F).requiresCorrectToolForDrops().sound(SoundType.STONE).noOcclusion().pushReaction(PushReaction.DESTROY)));
+    }
+
+    // --- Phase 7e: asteroid machines and decoration ---
+    /** 1.12.2 BlockWalkway: Material.IRON, hardness 1, metal sound. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.WalkwayBlock> WALKWAY = withItem("walkway",
+            () -> new io.github.reiko45.galacticraft.block.WalkwayBlock(walkway()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.WalkwayWireBlock> WALKWAY_WIRE = withItem("walkway_wire",
+            () -> new io.github.reiko45.galacticraft.block.WalkwayWireBlock(walkway()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.WalkwayPipeBlock> WALKWAY_PIPE = withItem("walkway_pipe",
+            () -> new io.github.reiko45.galacticraft.block.WalkwayPipeBlock(walkway()));
+    /** 1.12.2 BlockBeamReflector / BlockBeamReceiver (BlockAdvanced: hardness 0.6, resistance 2.5 x 3 / 5). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.BeamReflectorBlock> BEAM_REFLECTOR = withItem("beam_reflector",
+            () -> new io.github.reiko45.galacticraft.block.BeamReflectorBlock(beam()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.BeamReceiverBlock> BEAM_RECEIVER = withItem("beam_receiver",
+            () -> new io.github.reiko45.galacticraft.block.BeamReceiverBlock(beam()));
+    /** 1.12.2 BlockShortRangeTelepad (hardness 3) and BlockTelepadFake (as hard as its telepad, unbreakable by explosions). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.ShortRangeTelepadBlock> SHORT_RANGE_TELEPAD = withItem("short_range_telepad",
+            () -> new io.github.reiko45.galacticraft.block.ShortRangeTelepadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(3.0F).sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.TelepadFakeBlock> TELEPAD_FAKE = BLOCKS.register("telepad_fake",
+            () -> new io.github.reiko45.galacticraft.block.TelepadFakeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(3.0F, 3_600_000.0F).sound(SoundType.METAL).noOcclusion().noLootTable().pushReaction(net.minecraft.world.level.material.PushReaction.BLOCK)));
+    /** 1.12.2 BlockSpaceWart (nether wart, no item). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceWartBlock> SPACE_WART = BLOCKS.register("space_wart",
+            () -> new io.github.reiko45.galacticraft.block.SpaceWartBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.NETHER_WART)));
+
+    private static BlockBehaviour.Properties beam() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.6F, 1.5F).sound(SoundType.METAL).noOcclusion();
+    }
+
+    private static BlockBehaviour.Properties walkway() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion();
     }
 
     private static <B extends Block> DeferredBlock<B> withItem(String name, Supplier<B> factory) {

@@ -1,0 +1,17 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/titanium"
+    }
+  },
+  "pattern": [
+    "XXX",
+    " X "
+  ],
+  "result": {
+    "count": 5,
+    "id": "galacticraftcore:walkway"
+  }
+}

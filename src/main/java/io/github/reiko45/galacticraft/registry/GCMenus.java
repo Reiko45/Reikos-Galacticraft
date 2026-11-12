@@ -71,6 +71,8 @@ public final class GCMenus {
                     io.github.reiko45.galacticraft.menu.GasMachineMenu.Kind.ELECTROLYZER, id, inventory, buf)));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.LaunchControllerMenu>> LAUNCH_CONTROLLER = MENUS.register("launch_controller",
             () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.LaunchControllerMenu::new));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.ShortRangeTelepadMenu>> SHORT_RANGE_TELEPAD = MENUS.register(
+            "short_range_telepad", () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.ShortRangeTelepadMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.TerraformerMenu>> TERRAFORMER = MENUS.register("terraformer",
             () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.TerraformerMenu::new));
     public static final Supplier<MenuType<CargoMenu>> CARGO = MENUS.register("cargo",

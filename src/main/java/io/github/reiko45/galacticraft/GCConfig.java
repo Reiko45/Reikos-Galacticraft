@@ -22,6 +22,7 @@ public final class GCConfig {
     public static final ModConfigSpec.DoubleValue SPACE_STATION_ENERGY_SCALAR;
     public static final ModConfigSpec.BooleanValue DISABLE_SPACE_STATION_CREATION;
     public static final ModConfigSpec.BooleanValue ENABLE_SPACE_RACE_MANAGER_POPUP;
+    public static final ModConfigSpec.BooleanValue DISABLE_SMALL_ASTEROIDS;
 
     static {
         final ModConfigSpec.Builder builder = new ModConfigSpec.Builder();
@@ -56,6 +57,10 @@ public final class GCConfig {
                 .comment("Enable this if you want the Space Race Manager to pop up when a player first logs in.")
                 .translation("config.galacticraftcore.enable_space_race_manager_popup")
                 .define("enableSpaceRaceManagerPopup", false);
+        DISABLE_SMALL_ASTEROIDS = server
+                .comment("Disable Small Asteroid spawning (Asteroids)")
+                .translation("config.galacticraftcore.disable_small_asteroids")
+                .define("disableSmallAsteroids", false);
         SERVER_SPEC = server.build();
     }
 

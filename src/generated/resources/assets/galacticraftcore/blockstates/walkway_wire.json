@@ -1,0 +1,52 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire_side"
+      },
+      "when": {
+        "north": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire_side",
+        "y": 90
+      },
+      "when": {
+        "east": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire_side",
+        "y": 180
+      },
+      "when": {
+        "south": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire_side",
+        "y": 270
+      },
+      "when": {
+        "west": "true"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraftcore:block/walkway_wire_down"
+      },
+      "when": {
+        "down": "true"
+      }
+    }
+  ]
+}

@@ -31,6 +31,8 @@ public class GCItemModelProvider extends ItemModelProvider {
                 withExistingParent(holder.getId().getPath(), mcLoc("item/template_spawn_egg"));
             } else if (item instanceof io.github.reiko45.galacticraft.item.BuggyItem) {
                 buggy(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.GrappleItem) {
+                grapple(holder.getId().getPath());
             } else if (item instanceof io.github.reiko45.galacticraft.item.FlagItem) {
                 flag(holder.getId().getPath());
             } else if (item instanceof io.github.reiko45.galacticraft.item.RocketItem) {
@@ -43,6 +45,21 @@ public class GCItemModelProvider extends ItemModelProvider {
                 basicItem(item);
             }
         }
+    }
+
+    /** 1.12.2 ItemModelGrapple: the grapple OBJ (the transforms approximate the 1.12.2 matrices). */
+    private void grapple(String name) {
+        getBuilder(name).customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/item/grapple.obj")).flipV(true).end()
+                .texture("particle", modLoc("model/grapple")).transforms()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 135, 0).translation(1.0F, 1.0F, 0.0F).scale(0.7F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0.0F, 3.0F, 0.0F).scale(0.35F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 90, 0).translation(1.0F, 1.0F, 0.0F).scale(0.6F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(0, 90, 0).translation(0.0F, 3.0F, 1.0F).scale(0.45F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(0, 90, 0).translation(0.0F, 3.0F, 1.0F).scale(0.45F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 120, 0).translation(1.0F, 4.0F, 0.0F).scale(0.7F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 120, 0).translation(1.0F, 4.0F, 0.0F).scale(0.7F).end()
+                .end();
     }
 
     /**

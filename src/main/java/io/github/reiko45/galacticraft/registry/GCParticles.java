@@ -13,6 +13,10 @@ public final class GCParticles {
     /** 1.12.2 "bacterialDrip" (ParticleDrip): dark green drips seeping through the floor under bacterial sludge. */
     public static final Supplier<SimpleParticleType> BACTERIAL_DRIP = PARTICLES.register("bacterial_drip", () -> new SimpleParticleType(false));
 
+    /** 1.12.2 "portalBlue" (EntityFXTeleport): rising off a telepad, and falling from its canopy. */
+    public static final Supplier<SimpleParticleType> TELEPAD_UP = PARTICLES.register("telepad_up", () -> new SimpleParticleType(false));
+    public static final Supplier<SimpleParticleType> TELEPAD_DOWN = PARTICLES.register("telepad_down", () -> new SimpleParticleType(false));
+
     private GCParticles() {
     }
 }

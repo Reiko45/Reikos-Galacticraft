@@ -477,7 +477,16 @@
     "gui/schematic_rocket_t3": "planets:gui/schematic_rocket_t3",
     "model/villager": "model/villager",
     "model/flag": "model/flag",
-    "model/flag0": "model/flag0"
+    "model/flag0": "model/flag0",
+    "block/walkway": "planets:blocks/walkway",
+    "model/grapple": "planets:blocks/grapple",
+    "item/strange_seed_0": "planets:items/strange_seed0",
+    "item/strange_seed_1": "planets:items/strange_seed1",
+    "block/beam_reflector": "planets:blocks/beam_reflector",
+    "block/beam_receiver": "planets:blocks/beam_receiver",
+    "block/telepad_short": "planets:blocks/telepad_short",
+    "block/telepad_short0": "planets:blocks/telepad_short0",
+    "gui/short_range_telepad": "planets:gui/short_range_telepad"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -542,6 +551,18 @@
     "block/cryogenic_chamber_top": {
       "from": "block/cryo_2",
       "render_type": "minecraft:translucent"
+    },
+    "block/walkway": {
+      "from": "planets:block/walkway",
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_wire": {
+      "from": "planets:block/walkway_wire",
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_pipe": {
+      "from": "planets:block/walkway_oxygen",
+      "render_type": "minecraft:cutout"
     }
   },
   "lang": {
@@ -1128,7 +1149,43 @@
     "config.galacticraftcore.enable_space_race_manager_popup": "gc.configgui.enable_space_race_manager_popup",
     "item.galacticraftcore.flag": "item.flag.name",
     "entity.galacticraftcore.flag": "entity.flag.name",
-    "gui.galacticraftcore.flag.already_placed": "gui.flag.already_placed"
+    "gui.galacticraftcore.flag.already_placed": "gui.flag.already_placed",
+    "block.galacticraftcore.walkway": "planets:tile.walkway.walkway.name",
+    "block.galacticraftcore.walkway.desc": "planets:tile.walkway.walkway.description",
+    "block.galacticraftcore.walkway_wire": "planets:tile.walkway.walkway_wire.name",
+    "block.galacticraftcore.walkway_wire.desc": "planets:tile.walkway.walkway_wire.description",
+    "block.galacticraftcore.walkway_pipe": "planets:tile.walkway.walkway_pipe.name",
+    "block.galacticraftcore.walkway_pipe.desc": "planets:tile.walkway.walkway_pipe.description",
+    "item.galacticraftcore.grapple": "planets:item.grapple.name",
+    "entity.galacticraftcore.grapple": "planets:entity.grapple_hook.name",
+    "gui.galacticraftcore.grapple.fail": "planets:gui.message.grapple.fail",
+    "item.galacticraftcore.strange_seed_0": "planets:item.strange_seed.name",
+    "item.galacticraftcore.strange_seed_1": "planets:item.strange_seed.name",
+    "entity.galacticraftcore.small_asteroid": "planets:entity.small_asteroid.name",
+    "config.galacticraftcore.disable_small_asteroids": "planets:gc.configgui.disable_small_asteroids",
+    "block.galacticraftcore.beam_reflector": "planets:tile.beam_reflector.name",
+    "block.galacticraftcore.beam_reflector.desc": "planets:tile.beam_reflector.description",
+    "block.galacticraftcore.beam_receiver": "planets:tile.beam_receiver.name",
+    "block.galacticraftcore.beam_receiver.desc": "planets:tile.beam_receiver.description",
+    "gui.galacticraftcore.receiver.cannot_attach": "gui.receiver.cannot_attach",
+    "block.galacticraftcore.short_range_telepad": "planets:tile.telepad_short.name",
+    "block.galacticraftcore.short_range_telepad.desc": "planets:tile.telepad_short.description",
+    "gui.galacticraftcore.telepad.address": "planets:gui.message.address.name",
+    "gui.galacticraftcore.telepad.dest_address": "planets:gui.message.dest_address.name",
+    "gui.galacticraftcore.telepad.invalid_address": "planets:gui.message.invalid_address.name",
+    "gui.galacticraftcore.telepad.invalid_target_address": "planets:gui.message.invalid_target_address.name",
+    "gui.galacticraftcore.telepad.no_energy": "planets:gui.message.no_energy.name",
+    "gui.galacticraftcore.telepad.not_enough_energy": "planets:gui.message.not_enough_energy.name",
+    "gui.galacticraftcore.telepad.receiving_active": "planets:gui.message.receiving_active.name",
+    "gui.galacticraftcore.telepad.sending_active": "planets:gui.message.sending_active.name",
+    "gui.galacticraftcore.telepad.too_far": "planets:gui.message.telepad_too_far.name",
+    "gui.galacticraftcore.telepad.wrong_dim": "planets:gui.message.telepad_wrong_dim.name",
+    "gui.galacticraftcore.telepad.not_found": "planets:gui.message.telepad_not_found.name",
+    "gui.galacticraftcore.telepad.target_disabled": "planets:gui.message.telepad_target_disabled.name",
+    "gui.galacticraftcore.telepad.target_no_energy": "planets:gui.message.target_no_energy.name",
+    "gui.galacticraftcore.telepad.desc.0": "planets:gui.telepad.desc.0",
+    "gui.galacticraftcore.telepad.desc.1": "planets:gui.telepad.desc.1",
+    "block.galacticraftcore.telepad_fake": "planets:tile.telepad_short.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1169,7 +1226,8 @@
     "item.galacticraftcore.liquid_nitrogen_canister.contents": "Liquid",
     "block.galacticraftcore.bright_air": "Bright Air",
     "item.galacticraftcore.alien_villager_spawn_egg": "Alien Villager Spawn Egg",
-    "commands.galacticraftcore.joinrace.no_team": "You haven't been invited to a space race team!"
+    "commands.galacticraftcore.joinrace.no_team": "You haven't been invited to a space race team!",
+    "block.galacticraftcore.space_wart": "Space Wart"
   },
   "recipes": {
     "skip_conditions": [
@@ -1437,7 +1495,18 @@
       "galacticraftplanets:titanium_chestplate": "galacticraftcore:titanium_chestplate",
       "galacticraftplanets:titanium_leggings": "galacticraftcore:titanium_leggings",
       "galacticraftplanets:titanium_boots": "galacticraftcore:titanium_boots",
-      "galacticraftcore:flag": "galacticraftcore:flag"
+      "galacticraftcore:flag": "galacticraftcore:flag",
+      "galacticraftplanets:walkway:0": "galacticraftcore:walkway",
+      "galacticraftplanets:walkway": "galacticraftcore:walkway",
+      "galacticraftplanets:walkway:1": "galacticraftcore:walkway_wire",
+      "galacticraftplanets:walkway:2": "galacticraftcore:walkway_pipe",
+      "galacticraftplanets:grapple": "galacticraftcore:grapple",
+      "galacticraftplanets:beam_reflector": "galacticraftcore:beam_reflector",
+      "galacticraftplanets:beam_receiver": "galacticraftcore:beam_receiver",
+      "minecraft:lever": "minecraft:lever",
+      "galacticraftplanets:telepad_short": "galacticraftcore:short_range_telepad",
+      "minecraft:ender_pearl": "minecraft:ender_pearl",
+      "minecraft:redstone": "minecraft:redstone"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",
@@ -1535,6 +1604,41 @@
         "North"
       ],
       "render_type": "minecraft:cutout"
+    },
+    "block/walkway_side": {
+      "from": "planets:block/walkway_n",
+      "elements": [
+        "Bottom_North"
+      ],
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_wire_side": {
+      "from": "planets:block/walkway_wire_n",
+      "elements": [
+        "Bottom_North"
+      ],
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_wire_down": {
+      "from": "planets:block/walkway_wire_d",
+      "elements": [
+        "Bottom_Down"
+      ],
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_pipe_side": {
+      "from": "planets:block/walkway_oxygen_n",
+      "elements": [
+        "Bottom_North"
+      ],
+      "render_type": "minecraft:cutout"
+    },
+    "block/walkway_pipe_down": {
+      "from": "planets:block/walkway_oxygen_d",
+      "elements": [
+        "Bottom_Down"
+      ],
+      "render_type": "minecraft:cutout"
     }
   },
   "obj_models": {
@@ -1558,6 +1662,14 @@
       }
     },
     "entity/entry_pod": "planets:pod",
-    "item/flag": "flag"
+    "item/flag": "flag",
+    "entity/grapple": "planets:grapple",
+    "item/grapple": "planets:grapple",
+    "block/reflector": "planets:block/reflector",
+    "block/receiver": {
+      "from": "planets:block/receiver",
+      "default_map": "minecraft:block/white_concrete"
+    },
+    "block/telepad_short": "planets:block/telepad_short"
   }
 }

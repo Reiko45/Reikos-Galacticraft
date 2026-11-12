@@ -116,7 +116,8 @@ def port_models(mapping, legacy_assets, out_assets):
         write_json(os.path.join(out_assets, "models", new + ".json"), model)
     parts = {k: v for k, v in mapping.get("model_parts", {}).items() if not k.startswith("_")}
     for new, spec in parts.items():
-        with open(os.path.join(legacy_assets, "models", spec["from"] + ".json"), encoding="utf-8") as f:
+        root, path = asset_source(legacy_assets, spec["from"])
+        with open(os.path.join(root, "models", path + ".json"), encoding="utf-8") as f:
             source = json.load(f)
         model = {"textures": {}, "elements": [e for e in source["elements"] if e.get("__comment") in spec["elements"]]}
         if "render_type" in spec:

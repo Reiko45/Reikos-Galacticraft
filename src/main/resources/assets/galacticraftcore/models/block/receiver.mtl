@@ -1,0 +1,7 @@
+newmtl None
+Ks 0.8 0.8 0.8
+d 1
+
+map_Kd minecraft:block/white_concrete
+newmtl Receiver
+map_Kd galacticraftcore:block/beam_receiver

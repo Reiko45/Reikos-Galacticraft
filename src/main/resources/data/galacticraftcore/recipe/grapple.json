@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "minecraft:iron_ingot"
+    },
+    "Z": {
+      "item": "minecraft:string"
+    }
+  },
+  "pattern": [
+    "  Z",
+    "XZ ",
+    "XX "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:grapple"
+  }
+}

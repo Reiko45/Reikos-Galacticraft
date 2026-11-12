@@ -58,6 +58,7 @@ public final class GCPlayerHandler {
         spaceRacePopup(player, data);
         SpaceTravel.tick(player, data);
         MeteorShowers.tick(player);
+        io.github.reiko45.galacticraft.entity.SmallAsteroidEntity.spawnNear(player);
         Footprints.updateFeet(player, data);
         checkOxygen(player, data, needsOxygen(player, data));
         Thermal.check(player, data);

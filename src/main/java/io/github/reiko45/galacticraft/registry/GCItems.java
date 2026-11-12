@@ -148,6 +148,12 @@ public final class GCItems {
             () -> new InfiniteOxygenTankItem(new Item.Properties()));
     public static final List<DeferredItem<ParachuteItem>> PARACHUTES = parachutes();
 
+    /** 1.12.2 ItemGrappleHook. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.GrappleItem> GRAPPLE = ITEMS.register("grapple",
+            () -> new io.github.reiko45.galacticraft.item.GrappleItem(new Item.Properties()));
+    /** 1.12.2 ItemStrangeSeed metas 0 and 1, found in the abandoned asteroid base (no use yet, as in 1.12.2). */
+    public static final DeferredItem<Item> STRANGE_SEED_0 = simple("strange_seed_0");
+    public static final DeferredItem<Item> STRANGE_SEED_1 = simple("strange_seed_1");
     /** 1.12.2 ItemFlag: plants a Space Race flag. */
     public static final DeferredItem<io.github.reiko45.galacticraft.item.FlagItem> FLAG = ITEMS.register("flag",
             () -> new io.github.reiko45.galacticraft.item.FlagItem(new Item.Properties()));

@@ -60,6 +60,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         }
         simpleBlockWithItem(GCBlocks.DESH_ORE.get(), cubeAll(GCBlocks.DESH_ORE.get()));
         asteroids();
+        walkways();
         // 1.12.2 vine_0..2 are cross models (vine_model); the item shows the first.
         getVariantBuilder(GCBlocks.CAVERNOUS_VINES.get()).forAllStates(state -> {
             final int type = state.getValue(io.github.reiko45.galacticraft.block.CavernousVinesBlock.TYPE);
@@ -222,7 +223,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
 
     private void buggy() {
         // The Tier 2 Rocket and Landing Balloons are single-object OBJs (1.12.2 RenderTier2Rocket, RenderLandingBalloons).
-        for (String entity : new String[]{"tier_2_rocket", "cargo_rocket", "landing_balloons", "entry_pod"}) {
+        for (String entity : new String[]{"tier_2_rocket", "cargo_rocket", "landing_balloons", "entry_pod", "grapple"}) {
             models().getBuilder("entity/" + entity).customLoader(ObjModelBuilder::begin)
                     .modelLocation(modLoc("models/entity/" + entity + ".obj")).flipV(true).end();
         }
@@ -433,6 +434,105 @@ public class GCBlockStateProvider extends BlockStateProvider {
      * Multipart: the core always, plus the 1.12.2 north arm rotated onto each connected side
      * (x=270 points it up, x=90 down, y rotates it around the horizontal sides).
      */
+    /**
+     * 1.12.2 BlockWalkway: the grating with its centre strut (walkway / walkway_wire / walkway_oxygen), plus the
+     * per-side strut, wire or pipe arm of walkway_n and the downward arm of walkway_*_d.
+     */
+    private void walkways() {
+        final String[][] kinds = {{"walkway", null}, {"walkway_wire", "walkway_wire_down"}, {"walkway_pipe", "walkway_pipe_down"}};
+        final Block[] blocks = {GCBlocks.WALKWAY.get(), GCBlocks.WALKWAY_WIRE.get(), GCBlocks.WALKWAY_PIPE.get()};
+        for (int i = 0; i < blocks.length; i++) {
+            final ModelFile base = models().getExistingFile(modLoc("block/" + kinds[i][0]));
+            final ModelFile side = models().getExistingFile(modLoc("block/" + kinds[i][0] + "_side"));
+            final MultiPartBlockStateBuilder builder = getMultipartBuilder(blocks[i]);
+            builder.part().modelFile(base).addModel().end();
+            final Direction[] sides = {Direction.NORTH, Direction.EAST, Direction.SOUTH, Direction.WEST};
+            for (int r = 0; r < sides.length; r++) {
+                builder.part().modelFile(side).rotationY(r * 90).addModel()
+                        .condition(net.minecraft.world.level.block.PipeBlock.PROPERTY_BY_DIRECTION.get(sides[r]), true).end();
+            }
+            if (kinds[i][1] != null) {
+                builder.part().modelFile(models().getExistingFile(modLoc("block/" + kinds[i][1]))).addModel()
+                        .condition(net.minecraft.world.level.block.PipeBlock.DOWN, true).end();
+            }
+            simpleBlockItem(blocks[i], base);
+        }
+        // 1.12.2 beam_reflector / beam_receiver: drawn by their renderers from OBJ parts; the block model is just a particle
+        final String[][][] beams = {
+                {{"beam_reflector", "reflector"}, {"base", "Base"}, {"axle", "Axle"}, {"energy_blaster", "EnergyBlaster"}, {"ring", "Ring"}},
+                {{"beam_receiver", "receiver"}, {"main", "Main"}, {"receiver", "Receiver"}, {"ring", "Ring"}}};
+        for (String[][] beam : beams) {
+            final java.util.List<String> groups = new java.util.ArrayList<>();
+            for (int i = 1; i < beam.length; i++) {
+                groups.add(beam[i][1]);
+            }
+            for (int i = 1; i < beam.length; i++) {
+                final var loader = models().getBuilder("block/" + beam[0][0] + "/" + beam[i][0]).customLoader(ObjModelBuilder::begin)
+                        .modelLocation(modLoc("models/block/" + beam[0][1] + ".obj")).flipV(true);
+                for (String group : groups) {
+                    loader.visibility(group, group.equals(beam[i][1]));
+                }
+                loader.end();
+            }
+            final Block block = beam[0][0].equals("beam_reflector") ? GCBlocks.BEAM_REFLECTOR.get() : GCBlocks.BEAM_RECEIVER.get();
+            final ModelFile particle = models().getBuilder("block/" + beam[0][0]).texture("particle", tex(beam[0][0]));
+            getVariantBuilder(block).partialState().setModels(new ConfiguredModel(particle));
+            final var item = itemModels().getBuilder(beam[0][0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/block/" + beam[0][1] + ".obj")).flipV(true).end()
+                    .texture("particle", tex(beam[0][0]));
+            if (beam[0][0].equals("beam_reflector")) {
+                item.transforms()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -4, 0).scale(0.45F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 0, 0).scale(0.25F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(0, -4, 0).scale(0.45F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 0, 0).scale(0.25F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 0, 0).scale(0.25F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.3F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.3F).end()
+                        .end();
+            } else {
+                item.transforms()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(4, -2, 0).scale(0.6F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.4F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(4, -2, 0).scale(0.6F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2, 0).scale(0.375F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 2, 0).scale(0.375F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(2, 2, 0).scale(0.4F).end()
+                        .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 45, 0).translation(2, 2, 0).scale(0.4F).end()
+                        .end();
+            }
+        }
+        // 1.12.2 telepad_short: drawn by its renderer (the pad, and the canopy with its connector); the parts are invisible
+        for (String[] part : new String[][]{{"top", "Top", "Connector"}, {"bottom", "Bottom"}}) {
+            final var loader = models().getBuilder("block/short_range_telepad/" + part[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/block/telepad_short.obj")).flipV(true);
+            for (String group : new String[]{"Top", "Connector", "Bottom"}) {
+                loader.visibility(group, java.util.Arrays.asList(part).subList(1, part.length).contains(group));
+            }
+            loader.end();
+        }
+        final ModelFile telepadParticle = models().getBuilder("block/short_range_telepad").texture("particle", tex("telepad_short"));
+        getVariantBuilder(GCBlocks.SHORT_RANGE_TELEPAD.get()).partialState().setModels(new ConfiguredModel(telepadParticle));
+        getVariantBuilder(GCBlocks.TELEPAD_FAKE.get()).partialState().setModels(new ConfiguredModel(telepadParticle));
+        itemModels().getBuilder("short_range_telepad").customLoader(ObjModelBuilder::begin)
+                .modelLocation(modLoc("models/block/telepad_short.obj")).flipV(true).end()
+                .texture("particle", tex("telepad_short")).transforms()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -3, 0).scale(0.2F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 1, 0).scale(0.12F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(0, -3, 0).scale(0.2F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 1, 0).scale(0.12F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_LEFT_HAND).rotation(75, 45, 0).translation(0, 1, 0).scale(0.12F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.15F).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.FIRST_PERSON_LEFT_HAND).rotation(0, 45, 0).translation(0, 0, 0).scale(0.15F).end()
+                .end();
+        // 1.12.2 spacewart.json: the vanilla nether wart models
+        getVariantBuilder(GCBlocks.SPACE_WART.get()).forAllStates(state -> {
+            final int age = state.getValue(net.minecraft.world.level.block.NetherWartBlock.AGE);
+            return ConfiguredModel.builder().modelFile(new ModelFile.UncheckedModelFile(mcLoc("block/nether_wart_stage" + (age == 0 ? 0 : age == 3 ? 2 : 1))))
+                    .build();
+        });
+    }
+
     private void wire(Block block, String modelPrefix, String itemTexture) {
         final ModelFile core = new ModelFile.UncheckedModelFile(modLoc("block/" + modelPrefix + "_core"));
         final ModelFile side = new ModelFile.UncheckedModelFile(modLoc("block/" + modelPrefix + "_side"));

@@ -1,0 +1,78 @@
+{
+  "textures": {
+    "particle": "galacticraftcore:block/walkway",
+    "texture": "galacticraftcore:block/walkway",
+    "aluminum_wire": "galacticraftcore:block/aluminum_wire"
+  },
+  "elements": [
+    {
+      "from": [
+        6.5,
+        0,
+        6.5
+      ],
+      "to": [
+        9.5,
+        6.5,
+        9.5
+      ],
+      "faces": {
+        "down": {
+          "uv": [
+            12.11,
+            4.11,
+            15.89,
+            7.89
+          ],
+          "texture": "#aluminum_wire"
+        },
+        "up": {
+          "uv": [
+            12.11,
+            4.11,
+            15.89,
+            7.89
+          ],
+          "texture": "#aluminum_wire"
+        },
+        "north": {
+          "uv": [
+            0.08,
+            0,
+            2.92,
+            6.4
+          ],
+          "texture": "#aluminum_wire"
+        },
+        "south": {
+          "uv": [
+            0.08,
+            0,
+            2.92,
+            6.4
+          ],
+          "texture": "#aluminum_wire"
+        },
+        "west": {
+          "uv": [
+            0.08,
+            0,
+            2.92,
+            6.4
+          ],
+          "texture": "#aluminum_wire"
+        },
+        "east": {
+          "uv": [
+            0.08,
+            0,
+            2.92,
+            6.4
+          ],
+          "texture": "#aluminum_wire"
+        }
+      }
+    }
+  ],
+  "render_type": "minecraft:cutout"
+}

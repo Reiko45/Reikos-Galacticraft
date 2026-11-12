@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/titanium"
+    },
+    "Y": {
+      "item": "galacticraftcore:heavy_aluminum_wire"
+    }
+  },
+  "pattern": [
+    "XXX",
+    "YXY",
+    "YYY"
+  ],
+  "result": {
+    "count": 5,
+    "id": "galacticraftcore:walkway_wire"
+  }
+}

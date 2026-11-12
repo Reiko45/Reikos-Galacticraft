@@ -34,6 +34,13 @@ public final class GCCapabilities {
                 io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FUEL_LOADER.get(), FuelLoaderBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_TANK.get(), (tank, side) -> tank.stackHandler());
+        // The telepad's canopy middle takes power for it on its top face
+        event.registerBlockEntity(GCEnergy.BLOCK, GCBlockEntities.TELEPAD_FAKE.get(),
+                io.github.reiko45.galacticraft.block.entity.TelepadFakeBlockEntity::energyHandler);
+        event.registerBlockEntity(Capabilities.EnergyStorage.BLOCK, GCBlockEntities.TELEPAD_FAKE.get(), (fake, side) -> {
+            final IGCEnergyHandler handler = fake.energyHandler(side);
+            return handler != null ? GCEnergy.asFE(handler) : null;
+        });
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_PIPE.get(), (pipe, side) -> pipe.fluidHandler());
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) -> new LiquidCanisterItem.Handler(stack),
                 LiquidCanisterItem.items());

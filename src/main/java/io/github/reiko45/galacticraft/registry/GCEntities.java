@@ -51,6 +51,14 @@ public final class GCEntities {
             () -> EntityType.Builder.<ParachestEntity>of(ParachestEntity::new, MobCategory.MISC).sized(1.0F, 1.0F)
                     .clientTrackingRange(10).updateInterval(2).build("parachest"));
 
+    /** 1.12.2 EntityGrapple setSize(0.75, 0.75). */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.GrappleEntity>> GRAPPLE = ENTITY_TYPES.register("grapple",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.GrappleEntity>of(io.github.reiko45.galacticraft.entity.GrappleEntity::new,
+                    MobCategory.MISC).sized(0.75F, 0.75F).clientTrackingRange(10).updateInterval(1).build("grapple"));
+    /** 1.12.2 EntitySmallAsteroid setSize(1, 1), fire immune. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.SmallAsteroidEntity>> SMALL_ASTEROID = ENTITY_TYPES.register("small_asteroid",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.SmallAsteroidEntity>of(io.github.reiko45.galacticraft.entity.SmallAsteroidEntity::new,
+                    MobCategory.MISC).sized(1.0F, 1.0F).fireImmune().noSave().clientTrackingRange(10).updateInterval(5).build("small_asteroid"));
     /** 1.12.2 EntityFlag setSize(0.4, 3). */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.FlagEntity>> FLAG = ENTITY_TYPES.register("flag",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.FlagEntity>of(io.github.reiko45.galacticraft.entity.FlagEntity::new,
