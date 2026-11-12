@@ -432,6 +432,9 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [ ] Air Lock Frame and Controller, Space Glass (clear, vanilla, strong, each plain or tin-framed), Arc Lamp, Concealed
       Redstone, Repeater and Detector, Magnetic Crafting Table, Telemetry Unit, Display Screen, sealable (enclosed)
       wires and pipes; then put them in place of their stand-ins in the abandoned bases (`world/base/BaseBlocks`)
+- [ ] Also still missing from the core module: the Deconstructor and the Chromatic Applicator (BlockMachine2/3), the
+      Hydraulic Platform, the Emergency Post and its kit, the Communications Dish, Lighting Panels (five shapes),
+      Grating, the Compact NASA Workbench, Sensor Glasses, the Throwable Meteor Chunk and the Prelaunch Checklist
 - [ ] Laser Turret (TileEntityLaserTurret, Venus): left out of phase 7f. 1.12.2 Legacy has no recipe for it (only the
       creative menu), and its targeting, owner lists and GUI are about 1,700 lines
 
@@ -678,12 +681,16 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   worked it out once, when the screen opened), and its status and sun icon still read "blocked" unless every module in
   range sees the sun.
 * The Laser Turret is not ported yet (phase 7g).
+* Galacticraft's green dye recipe takes any yellow and any blue dye (1.12.2: dandelion yellow and lapis lazuli, which
+  was the blue dye then).
 
 ## Workflow for porting more content
 
 1. Register the block/item in `GCBlocks`/`GCItems` (flatten metadata variants).
 2. Add `textures`, `lang` and `recipes.items` entries to `tools/legacy_mapping.json` (`models` for 1.12.2 JSON
-   models, `obj_models` for OBJ models and their `.mtl`).
+   models, `obj_models` for OBJ models and their `.mtl`). A `recipes.items` value can be an item, a `#tag`, a list of
+   either, or a whole ingredient object (e.g. `neoforge:components` for a full canister); `recipes.result_items`
+   names the single item a recipe makes where the ingredient mapping is a tag.
 3. `python3 tools/port_legacy_assets.py --legacy /path/to/Galacticraft-Legacy`. It copies textures, converts
    translations and re-converts recipes, and lists every recipe still blocked on unmapped items.
 4. Add block states/models/loot/tags to the datagen providers, then run `./gradlew runData`.

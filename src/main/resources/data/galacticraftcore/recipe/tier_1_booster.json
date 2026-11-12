@@ -1,0 +1,38 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "V": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "W": {
+      "type": "neoforge:components",
+      "items": "galacticraftcore:fuel_canister",
+      "components": {
+        "galacticraftcore:fluid": {
+          "id": "galacticraftcore:fuel",
+          "amount": 1000
+        }
+      },
+      "strict": false
+    },
+    "X": {
+      "item": "galacticraftcore:heavy_plating"
+    },
+    "Y": {
+      "item": "minecraft:yellow_wool"
+    },
+    "Z": {
+      "tag": "c:plates/meteoric_iron"
+    }
+  },
+  "pattern": [
+    "ZYZ",
+    "ZWZ",
+    "XVX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:tier_1_booster"
+  }
+}

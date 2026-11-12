@@ -113,34 +113,51 @@ public final class VillageTests {
      * A house built on flat ground: tin decoration floor and walls, a glass skylight, glowstone torches, and four Alien
      * Villagers inside (built far from the other tests: it is 17 blocks wide and its walls go 8 blocks down).
      */
-    @GameTest(template = "empty", timeoutTicks = 100)
+    @GameTest(template = "empty", timeoutTicks = 200)
     public static void houseIsBuiltWithVillagers(GameTestHelper helper) {
         final ServerLevel level = helper.getLevel();
         final BlockPos corner = helper.absolutePos(BlockPos.ZERO).offset(3000, 0, 3000).atY(100);
-        for (BlockPos pos : BlockPos.betweenClosed(corner, corner.offset(16, 0, 16))) {
-            level.setBlockAndUpdate(pos, GCBlocks.MOON_TURF.get().defaultBlockState());
-        }
-        final MoonVillagePiece house = new MoonVillagePiece(MoonVillagePiece.Kind.HOUSE, 1,
-                BoundingBox.orientBox(corner.getX(), 64, corner.getZ(), 0, 0, 0, 17, 9, 17, Direction.SOUTH), Direction.SOUTH, null);
-        final BoundingBox everywhere = new BoundingBox(corner.getX() - 4, level.getMinBuildHeight(), corner.getZ() - 4,
-                corner.getX() + 20, level.getMaxBuildHeight(), corner.getZ() + 20);
-        house.postProcess(level, level.structureManager(), level.getChunkSource().getGenerator(), RandomSource.create(5L), everywhere,
-                new ChunkPos(corner), corner);
-        final BoundingBox box = house.getBoundingBox();
-        helper.assertValueEqual(box.minY(), 101, "settled on the ground (floor at the old surface + 1)");
-        helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY(), box.minZ() + 8)).is(GCBlocks.TIN_DECORATION_BLOCK_1.get()), "floor");
-        helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 1, box.minY() - 8, box.minZ() + 6)).is(GCBlocks.TIN_DECORATION_BLOCK_2.get()),
-                "walls 8 blocks into the ground");
-        helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY() + 9, box.minZ() + 8)).is(Blocks.GLASS), "skylight");
-        helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY() + 4, box.minZ() + 2)).is(GCBlocks.GLOWSTONE_WALL_TORCH.get()), "torch");
-        helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 1, box.minY() + 3, box.minZ() + 8)).isAir(), "doorway");
-        final List<AlienVillagerEntity> villagers = level.getEntitiesOfClass(AlienVillagerEntity.class, AABB.of(box).inflate(2.0D));
-        helper.assertValueEqual(villagers.size(), 4, "four villagers");
-        house.postProcess(level, level.structureManager(), level.getChunkSource().getGenerator(), RandomSource.create(5L), everywhere,
-                new ChunkPos(corner), corner);
-        helper.assertValueEqual(level.getEntitiesOfClass(AlienVillagerEntity.class, AABB.of(box).inflate(2.0D)).size(), 4, "no more on a second build");
-        villagers.forEach(villager -> villager.discard());
-        helper.succeed();
+        // So far away nothing keeps the chunks loaded for entities, and villagers added to them can't be found: hold
+        // them loaded (entity ticking) for the test.
+        final List<ChunkPos> chunks = new ArrayList<>();
+        ChunkPos.rangeClosed(new ChunkPos(corner.offset(-4, 0, -4)), new ChunkPos(corner.offset(20, 0, 20))).forEach(chunks::add);
+        chunks.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, true));
+        helper.startSequence().thenWaitUntil(() -> {
+            for (ChunkPos chunk : chunks) {
+                helper.assertTrue(level.isPositionEntityTicking(chunk.getWorldPosition()), "loading " + chunk);
+            }
+        }).thenExecute(() -> {
+            for (BlockPos pos : BlockPos.betweenClosed(corner, corner.offset(16, 0, 16))) {
+                level.setBlockAndUpdate(pos, GCBlocks.MOON_TURF.get().defaultBlockState());
+            }
+            final MoonVillagePiece house = new MoonVillagePiece(MoonVillagePiece.Kind.HOUSE, 1,
+                    BoundingBox.orientBox(corner.getX(), 64, corner.getZ(), 0, 0, 0, 17, 9, 17, Direction.SOUTH), Direction.SOUTH, null);
+            final BoundingBox everywhere = new BoundingBox(corner.getX() - 4, level.getMinBuildHeight(), corner.getZ() - 4,
+                    corner.getX() + 20, level.getMaxBuildHeight(), corner.getZ() + 20);
+            house.postProcess(level, level.structureManager(), level.getChunkSource().getGenerator(), RandomSource.create(5L), everywhere,
+                    new ChunkPos(corner), corner);
+            final BoundingBox box = house.getBoundingBox();
+            final List<AlienVillagerEntity> villagers = level.getEntitiesOfClass(AlienVillagerEntity.class, AABB.of(box).inflate(2.0D));
+            try {
+                helper.assertValueEqual(box.minY(), 101, "settled on the ground (floor at the old surface + 1)");
+                helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY(), box.minZ() + 8)).is(GCBlocks.TIN_DECORATION_BLOCK_1.get()),
+                        "floor");
+                helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 1, box.minY() - 8, box.minZ() + 6)).is(GCBlocks.TIN_DECORATION_BLOCK_2.get()),
+                        "walls 8 blocks into the ground");
+                helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY() + 9, box.minZ() + 8)).is(Blocks.GLASS), "skylight");
+                helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 8, box.minY() + 4, box.minZ() + 2)).is(GCBlocks.GLOWSTONE_WALL_TORCH.get()),
+                        "torch");
+                helper.assertTrue(level.getBlockState(new BlockPos(box.minX() + 1, box.minY() + 3, box.minZ() + 8)).isAir(), "doorway");
+                helper.assertValueEqual(villagers.size(), 4, "four villagers");
+                house.postProcess(level, level.structureManager(), level.getChunkSource().getGenerator(), RandomSource.create(5L), everywhere,
+                        new ChunkPos(corner), corner);
+                helper.assertValueEqual(level.getEntitiesOfClass(AlienVillagerEntity.class, AABB.of(box).inflate(2.0D)).size(), 4,
+                        "no more on a second build");
+            } finally {
+                level.getEntitiesOfClass(AlienVillagerEntity.class, AABB.of(box).inflate(2.0D)).forEach(villager -> villager.discard());
+                chunks.forEach(chunk -> level.setChunkForced(chunk.x, chunk.z, false));
+            }
+        }).thenSucceed();
     }
 
     /** EntityAlienVillager's trade list, priced in Lunar Sapphires, 7 uses each. */

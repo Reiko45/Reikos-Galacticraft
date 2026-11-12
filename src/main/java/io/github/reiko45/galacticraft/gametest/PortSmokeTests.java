@@ -181,6 +181,43 @@ public final class PortSmokeTests {
         }
     }
 
+    /**
+     * Every part the NASA Workbench pages take can be crafted (a missing ingredient mapping once left the Tier 1 Booster,
+     * and with it the Tier 2 and 3 Rockets, without a recipe), and so can a few odd ones Galacticraft adds.
+     */
+    @GameTest(template = EMPTY)
+    public static void workbenchPartsCanBeCrafted(GameTestHelper helper) {
+        final MinecraftServer server = helper.getLevel().getServer();
+        final java.util.Set<net.minecraft.world.item.Item> made = new java.util.HashSet<>();
+        for (var holder : server.getRecipeManager().getRecipes()) {
+            made.add(holder.value().getResultItem(server.registryAccess()).getItem());
+        }
+        final List<String> missing = new ArrayList<>();
+        for (net.minecraft.world.item.Item part : List.of(GCItems.NOSE_CONE.get(), GCItems.HEAVY_PLATING.get(), GCItems.ROCKET_FINS.get(),
+                GCItems.TIER_1_ROCKET_ENGINE.get(), GCItems.TIER_1_BOOSTER.get(), GCItems.HEAVY_DUTY_PLATE.get(), GCItems.HEAVY_NOSE_CONE.get(),
+                GCItems.HEAVY_DUTY_PLATE_TIER_3.get(), GCItems.HEAVY_ROCKET_FINS.get(), GCItems.HEAVY_ROCKET_ENGINE.get(), GCItems.BUGGY_SEAT.get(),
+                GCItems.BUGGY_STORAGE_BOX.get(), GCItems.BUGGY_WHEEL.get(), GCItems.ADVANCED_WAFER.get(), GCItems.BEAM_CORE.get(),
+                GCItems.ORION_DRIVE.get(), GCItems.STEEL_POLE.get(), net.minecraft.world.item.Items.GREEN_DYE,
+                net.minecraft.world.item.Items.JACK_O_LANTERN)) {
+            if (!made.contains(part)) {
+                missing.add(net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(part).toString());
+            }
+        }
+        helper.assertTrue(missing.isEmpty(), "No recipe makes " + missing);
+        // 1.12.2 fuel_canister_partial:1: the booster and the spin thruster take a full canister of fuel
+        final ItemStack full = io.github.reiko45.galacticraft.item.LiquidCanisterItem.full(true);
+        final ItemStack half = io.github.reiko45.galacticraft.item.LiquidCanisterItem.filled(GCItems.FUEL_CANISTER.get(),
+                new net.neoforged.neoforge.fluids.FluidStack(io.github.reiko45.galacticraft.registry.GCFluids.FUEL.get(), 500));
+        for (String id : List.of("tier_1_booster", "spin_thruster")) {
+            final var ingredients = server.getRecipeManager().byKey(GalacticraftCore.id(id)).orElseThrow().value().getIngredients();
+            helper.assertTrue(ingredients.stream().anyMatch(ingredient -> ingredient.test(full)), id + " takes a full fuel canister");
+            helper.assertFalse(ingredients.stream().anyMatch(ingredient -> ingredient.test(half)), id + " not a half-empty one");
+        }
+        helper.assertTrue(server.getRecipeManager().byKey(GalacticraftCore.id("green_dye")).isPresent()
+                && server.getRecipeManager().byKey(GalacticraftCore.id("jack_o_lantern")).isPresent(), "Galacticraft's green dye and lantern");
+        helper.succeed();
+    }
+
     /** Recipes that fail to parse are only logged by vanilla; make sure every JSON in our namespace loaded. */
     @GameTest(template = EMPTY)
     public static void allRecipesLoad(GameTestHelper helper) {

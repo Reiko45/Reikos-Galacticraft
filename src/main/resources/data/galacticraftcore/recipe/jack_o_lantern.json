@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "minecraft:pumpkin"
+    },
+    "T": {
+      "item": "galacticraftcore:unlit_torch"
+    }
+  },
+  "pattern": [
+    "P  ",
+    "T  ",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "minecraft:jack_o_lantern"
+  }
+}

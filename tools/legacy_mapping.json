@@ -1528,7 +1528,17 @@
       "galacticraftcore:solar:0": "galacticraftcore:basic_solar_panel",
       "galacticraftcore:solar:4": "galacticraftcore:advanced_solar_panel",
       "galacticraftcore:oil_canister_partial:1001": "galacticraftcore:oil_canister",
-      "galacticraftcore:fuel_canister_partial:1": "galacticraftcore:fuel_canister",
+      "galacticraftcore:fuel_canister_partial:1": {
+        "type": "neoforge:components",
+        "items": "galacticraftcore:fuel_canister",
+        "components": {
+          "galacticraftcore:fluid": {
+            "id": "galacticraftcore:fuel",
+            "amount": 1000
+          }
+        },
+        "strict": false
+      },
       "galacticraftcore:refinery": "galacticraftcore:refinery",
       "galacticraftcore:fluid_tank": "galacticraftcore:fluid_tank",
       "galacticraftcore:fluid_pipe": "galacticraftcore:fluid_pipe",
@@ -1706,7 +1716,12 @@
       "galacticraftplanets:volcanic_pickaxe": "galacticraftcore:volcanic_pickaxe",
       "galacticraftplanets:geothermal_generator": "galacticraftcore:geothermal_generator",
       "galacticraftplanets:solar_array_module": "galacticraftcore:solar_array_module",
-      "galacticraftplanets:solar_array_controller": "galacticraftcore:solar_array_controller"
+      "galacticraftplanets:solar_array_controller": "galacticraftcore:solar_array_controller",
+      "minecraft:wool:4": "minecraft:yellow_wool",
+      "galacticraftcore:unlit_torch": "galacticraftcore:unlit_torch"
+    },
+    "result_items": {
+      "minecraft:dye:2": "minecraft:green_dye"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",

@@ -213,6 +213,8 @@ def resolve_ref(value):
     """'#ns:tag' -> {'tag': ...}; 'ns:item' -> {'item': ...}; list -> list of those."""
     if isinstance(value, list):
         return [resolve_ref(v) for v in value]
+    if isinstance(value, dict):
+        return value  # a full ingredient (e.g. neoforge:components for a full canister)
     if value.startswith("#"):
         return {"tag": value[1:]}
     return {"item": value}
@@ -269,8 +271,10 @@ def convert_recipe(rules, recipe):
             return None
     kind = recipe["type"]
     result = recipe["result"]
-    result_id = lookup_item(rules["items"], result["item"], result.get("data"))
-    if isinstance(result_id, list) or result_id.startswith("#"):
+    # a result needs one item, where the ingredient mapping may give a tag (e.g. dye colours): "result_items" wins
+    result_key = result["item"] + (f":{result['data']}" if result.get("data") not in (None, 0) else "")
+    result_id = rules.get("result_items", {}).get(result_key) or lookup_item(rules["items"], result["item"], result.get("data"))
+    if not isinstance(result_id, str) or result_id.startswith("#"):
         raise Unmapped("ambiguous result " + result["item"])
     out_result = {"count": result.get("count", 1), "id": result_id}
     if kind in ("minecraft:crafting_shaped", "forge:ore_shaped", f"{MOD_ID}:replacable", f"{PLANETS_ID}:replacable"):
