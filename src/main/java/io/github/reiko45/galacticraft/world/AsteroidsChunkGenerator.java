@@ -106,8 +106,9 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
             new TwoLayersFeatureSize(1, 0, 1)).ignoreVines().build();
 
     private final Map<RandomState, Noises> noiseCache = Collections.synchronizedMap(new WeakHashMap<>());
-    private List<Special> coreBlocks;
-    private List<Special> shellBlocks;
+    // built on first use (the blocks aren't registered when the codec makes the generator); chunks generate in parallel
+    private volatile List<Special> coreBlocks;
+    private volatile List<Special> shellBlocks;
 
     public AsteroidsChunkGenerator(BiomeSource biomeSource) {
         super(biomeSource);
@@ -590,8 +591,8 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
 
     // ---------------------------------------------------------------- where the asteroids are
 
-    /** An asteroid's centre and radius. */
-    public record Asteroid(int x, int y, int z, int size) {
+    /** An asteroid's centre and radius, and whether it is hollow inside. */
+    public record Asteroid(int x, int y, int z, int size, boolean hollow) {
     }
 
     /**
@@ -600,6 +601,7 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
      * here they are worked out directly, generated or not.
      */
     public List<Asteroid> asteroidsNear(RandomState state, int x, int z, int radius) {
+        initBlocks();
         final Noises noises = noises(state);
         final List<Asteroid> found = new ArrayList<>();
         final Random random = new Random();
@@ -611,7 +613,15 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
                 if (randFromPointPos(ax, az) < (noises.density.get(ax, az) + .4) / ASTEROID_CHANCE) {
                     random.setSeed(ax + az * 3067L);
                     final int y = random.nextInt(rangeY) + MIN_ASTEROID_Y;
-                    found.add(new Asteroid(ax, y, az, random.nextInt(rangeSize) + MIN_ASTEROID_RADIUS));
+                    final int size = random.nextInt(rangeSize) + MIN_ASTEROID_RADIUS;
+                    // the same draws as generateAsteroid, up to the hollow test
+                    pick(this.coreBlocks, random, size);
+                    if (random.nextInt(ASTEROID_SHELL_CHANCE) == 0) {
+                        pick(this.shellBlocks, random, size);
+                    }
+                    random.nextFloat();
+                    final boolean hollow = random.nextInt(HOLLOW_CHANCE) == 0 && size >= MIN_RADIUS_FOR_HOLLOW;
+                    found.add(new Asteroid(ax, y, az, size, hollow));
                 }
             }
         }

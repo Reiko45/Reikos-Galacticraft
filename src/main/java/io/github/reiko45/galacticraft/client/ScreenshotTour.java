@@ -22,6 +22,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.SimpleMenuProvider;
 import net.minecraft.world.inventory.ContainerLevelAccess;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.InteractionHand;
+import io.github.reiko45.galacticraft.player.GearData;
 import net.minecraft.world.item.Item;
 import net.neoforged.neoforge.fluids.FluidStack;
 import net.neoforged.neoforge.fluids.capability.IFluidHandler;
@@ -1576,6 +1579,244 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> {
         }); // countdown
         this.extras.add((minecraft, srv) -> shoot(minecraft, "cargo_rocket_launch"));
+        addAsteroidSteps();
+    }
+
+    private BlockPos asteroidScene;
+    private BlockPos podLanding;
+
+    /**
+     * Phase 7d: a Tier 3 Rocket on its pad with the asteroid blocks and a player in Thermal Padding; the Tier 3 page; the
+     * asteroids on the destination screen; the Entry Pod coming down and landed; the belt itself, its sky and a hollow
+     * asteroid; and the thermometer warning on the HUD.
+     */
+    private void addAsteroidSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel level = srv.overworld();
+            this.asteroidScene = this.rocketScene.offset(40, 0, 0);
+            buildAsteroidScene(level, this.asteroidScene);
+            final GCPlayerData data = GCPlayerData.get(p);
+            for (GearSlot slot : GearData.THERMAL_SLOTS) {
+                data.setGear(slot, ItemStack.EMPTY);
+            }
+            data.setGear(GearSlot.THERMAL_HELMET, new ItemStack(GCItems.THERMAL_PADDING_HELMET.get()));
+            data.setGear(GearSlot.THERMAL_CHESTPLATE, new ItemStack(GCItems.THERMAL_PADDING_CHESTPLATE.get()));
+            data.setGear(GearSlot.THERMAL_LEGGINGS, new ItemStack(GCItems.THERMAL_PADDING_LEGGINGS.get()));
+            data.setGear(GearSlot.THERMAL_BOOTS, new ItemStack(GCItems.THERMAL_PADDING_BOOTS.get()));
+            data.setGear(GearSlot.PARACHUTE, ItemStack.EMPTY);
+            data.markGearChanged();
+            for (EquipmentSlot slot : new EquipmentSlot[]{EquipmentSlot.HEAD, EquipmentSlot.CHEST, EquipmentSlot.LEGS, EquipmentSlot.FEET}) {
+                p.setItemSlot(slot, ItemStack.EMPTY);
+            }
+            p.setItemInHand(InteractionHand.MAIN_HAND, new ItemStack(GCItems.TITANIUM_PICKAXE.get()));
+            p.getAbilities().flying = false;
+            p.onUpdateAbilities();
+            level.setDayTime(5000L);
+            p.teleportTo(level, this.asteroidScene.getX() - 2.5D, this.asteroidScene.getY(), this.asteroidScene.getZ() + 4.5D, 180.0F, 0.0F);
+        }));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "tier_3_rocket_and_thermal_padding"));
+        // The Tier 3 Rocket page, unlocked with the Creeper Boss's schematic, every part in place
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                GCPlayerData.get(p).unlockSchematic(io.github.reiko45.galacticraft.menu.Schematics.ROCKET_T3.id());
+                final BlockPos bench = this.rocketScene.offset(-5, 0, 0);
+                p.teleportTo(srv.overworld(), bench.getX() + 0.5, bench.getY(), bench.getZ() + 3.5, 180.0F, 15.0F);
+                io.github.reiko45.galacticraft.menu.Schematics.open(p, io.github.reiko45.galacticraft.menu.Schematics.ROCKET_T3, srv.overworld(), bench);
+                if (p.containerMenu instanceof io.github.reiko45.galacticraft.menu.Tier3RocketBenchMenu menu) {
+                    for (int i = 1; i < io.github.reiko45.galacticraft.menu.Tier3RocketBenchMenu.MATRIX_SIZE; i++) {
+                        final int index = menu.getSlot(i).getContainerSlot();
+                        final Item part = switch (index) {
+                            case 1 -> GCItems.HEAVY_NOSE_CONE.get();
+                            case 12, 16 -> GCItems.TIER_1_BOOSTER.get();
+                            case 13, 14, 17, 18 -> GCItems.HEAVY_ROCKET_FINS.get();
+                            case 15 -> GCItems.HEAVY_ROCKET_ENGINE.get();
+                            case 19, 20 -> Items.CHEST;
+                            case 21 -> null;
+                            default -> GCItems.HEAVY_DUTY_PLATE_TIER_3.get();
+                        };
+                        if (part != null) {
+                            menu.getSlot(i).set(new ItemStack(part));
+                        }
+                    }
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_tier_3_rocket_bench"));
+        // The asteroids on the destination screen, reachable from a Tier 3 Rocket
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.setGear(GearSlot.MASK, new ItemStack(GCItems.OXYGEN_MASK.get()));
+            data.setGear(GearSlot.GEAR, new ItemStack(GCItems.OXYGEN_GEAR.get()));
+            data.setGear(GearSlot.LEFT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+            data.setGear(GearSlot.RIGHT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+            data.markGearChanged();
+            data.inSpace = true;
+            data.spacePos = p.position();
+            data.rocketTier = 3;
+            data.rocketStorage = 2;
+            data.rocketFuel = 200;
+            data.rocketCargo = NonNullList.withSize(38, ItemStack.EMPTY);
+            data.rocketCargo.set(0, new ItemStack(GCItems.THERMAL_CLOTH.get(), 12));
+            data.launchedFromX = 0.5D;
+            data.launchedFromZ = 0.5D;
+            GCNetwork.sendToPlayer(p, SpaceTravel.selectionPayload(p));
+        }));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(GCDimensions.ASTEROIDS);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_asteroids"));
+        // The Entry Pod: 40 ticks for the ground to load, then a fall from y 310 onto an asteroid
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            srv.execute(() -> SpaceTravel.choose(tourPlayer(srv), GCDimensions.ASTEROIDS));
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+            logPod(srv, "descent");
+            shoot(minecraft, "entry_pod_descent");
+        });
+        for (int i = 0; i < 9; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // down onto the rock
+        }
+        this.extras.add((minecraft, srv) -> {
+            logPod(srv, "landed");
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "entry_pod_landed"));
+        // Out of the pod: the thermometer warns while the cold creeps in without padding
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                if (p.getVehicle() != null) {
+                    final Entity pod = p.getVehicle();
+                    p.stopRiding();
+                    this.podLanding = pod.blockPosition();
+                    p.teleportTo(p.serverLevel(), pod.getX() + 2.0D, pod.getY(), pod.getZ(), -90.0F, 10.0F);
+                }
+                final GCPlayerData data = GCPlayerData.get(p);
+                for (GearSlot slot : GearData.THERMAL_SLOTS) {
+                    data.setGear(slot, ItemStack.EMPTY);
+                }
+                data.markGearChanged();
+                data.thermalLevel = -14;
+                p.setGameMode(GameType.SURVIVAL);
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "thermal_hud_warning"));
+        // The belt from among the asteroids, its sky with the sun on the horizon, and a hollow asteroid's inside
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            GCPlayerData.get(p).thermalLevel = 0;
+            final ServerLevel asteroids = srv.getLevel(GCDimensions.ASTEROIDS);
+            final io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.Asteroid big = asteroid(asteroids, false);
+            if (big == null) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no big asteroid");
+                return;
+            }
+            final double distance = big.size() + 22.0D;
+            final double x = big.x() - distance * 0.7D;
+            final double z = big.z() + distance * 0.7D;
+            final double y = big.y() + 8.0D;
+            final float yaw = (float) Math.toDegrees(Math.atan2(-(big.x() - x), big.z() - z));
+            final float pitch = (float) Math.toDegrees(Math.atan2(y - big.y(), distance));
+            GalacticraftCore.LOGGER.info("Screenshot tour: big asteroid {}, camera at {} {} {}", big, x, y, z);
+            p.teleportTo(asteroids, x, y, z, yaw, pitch);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "asteroid_belt"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.teleportTo(p.serverLevel(), p.getX(), p.getY(), p.getZ(), 90.0F, -4.0F); // west, to the sun on the horizon
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "asteroid_sky"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            final ServerLevel asteroids = srv.getLevel(GCDimensions.ASTEROIDS);
+            final io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.Asteroid hollow = asteroid(asteroids, true);
+            if (hollow == null) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no hollow asteroid");
+                return;
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: hollow asteroid {}", hollow);
+            p.teleportTo(asteroids, hollow.x() + 0.5D, hollow.y() + 1.0D, hollow.z() + 0.5D, 45.0F, 25.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "hollow_asteroid"));
+    }
+
+    /** The nearest asteroid to (0, 0) that is (or isn't) hollow, big ones first for the outside view. */
+    @org.jetbrains.annotations.Nullable
+    private static io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.Asteroid asteroid(@org.jetbrains.annotations.Nullable ServerLevel level,
+                                                                                                 boolean hollow) {
+        if (level == null || !(level.getChunkSource().getGenerator() instanceof io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator generator)) {
+            return null;
+        }
+        io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.Asteroid best = null;
+        double bestDistance = Double.MAX_VALUE;
+        for (io.github.reiko45.galacticraft.world.AsteroidsChunkGenerator.Asteroid asteroid
+                : generator.asteroidsNear(level.getChunkSource().randomState(), 0, 0, 300)) {
+            if (asteroid.hollow() != hollow || !hollow && asteroid.size() < 18) {
+                continue;
+            }
+            final double distance = (double) asteroid.x() * asteroid.x() + (double) asteroid.z() * asteroid.z();
+            if (distance < bestDistance) {
+                bestDistance = distance;
+                best = asteroid;
+            }
+        }
+        return best;
+    }
+
+    private static void logPod(MinecraftServer server, String when) {
+        final ServerPlayer p = tourPlayer(server);
+        GalacticraftCore.LOGGER.info("Screenshot tour ({}): player at {} riding {}", when, p.position(), p.getVehicle());
+    }
+
+    /** A launch pad with a Tier 3 Rocket and, beside it, each asteroid block on a plinth. */
+    private void buildAsteroidScene(ServerLevel level, BlockPos origin) {
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-12, 0, -5), origin.offset(6, 9, 8))) {
+            level.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-12, -1, -5), origin.offset(6, -1, 8))) {
+            level.setBlockAndUpdate(pos, Blocks.SMOOTH_STONE.defaultBlockState());
+        }
+        for (BlockPos pos : BlockPos.betweenClosed(origin.offset(-1, 0, -1), origin.offset(1, 0, 1))) {
+            level.setBlockAndUpdate(pos, GCBlocks.LANDING_PAD.get().defaultBlockState());
+        }
+        final io.github.reiko45.galacticraft.entity.Tier3RocketEntity rocket = io.github.reiko45.galacticraft.entity.Tier3RocketEntity.create(level,
+                origin.getX() + 0.5D, origin.getY() + 0.4D, origin.getZ() + 0.5D, 3, 0);
+        rocket.setYRot(180.0F);
+        level.addFreshEntity(rocket);
+        final Block[] blocks = {GCBlocks.ASTEROID_ROCK_0.get(), GCBlocks.ASTEROID_ROCK_1.get(), GCBlocks.ASTEROID_ROCK_2.get(),
+                GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ILMENITE_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get(), GCBlocks.DENSE_ICE.get(),
+                GCBlocks.DARK_DECORATION_BLOCK.get(), GCBlocks.TITANIUM_BLOCK.get()};
+        for (int i = 0; i < blocks.length; i++) {
+            level.setBlockAndUpdate(origin.offset(-11 + i, 0, -1), blocks[i].defaultBlockState());
+        }
     }
 
     /**

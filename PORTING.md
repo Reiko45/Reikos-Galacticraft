@@ -313,8 +313,35 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       the pad of the controller with the target frequency, on whichever world that is, and lands on it, slowing as it
       nears; 1 mB of fuel every 3 ticks, landing included; without fuel it falls and crashes
 
-### Phase 7d+ – More planets
-- [ ] Asteroids (Tier 3 rocket, Astro Miner, telepads, beam power, thermal gear)
+### Phase 7d – The asteroid belt ✅
+- [x] Asteroid blocks (BlockBasicAsteroids): three asteroid rocks, asteroid aluminium and iron ores, ilmenite ore (an
+      iron and a titanium shard, fortune-boosted, or the ore with Silk Touch), the dark decoration block and the
+      titanium block; Dense Ice (BlockIceAsteroids: slippery, Silk Touch only, gone without water on Galacticraft worlds)
+      and Bright Air (BlockBrightAir)
+- [x] Titanium (ItemBasicAsteroids): ingots, shards, dust, compressed titanium, the Tier 3 heavy-duty plate, heavy
+      rocket engine and fins, heavy nose cone, thermal cloth, beam core, Orion drive; titanium tools and armour
+      (ItemPickaxeAsteroids..., ItemArmorAsteroids), with their smelting, compressor and crafting recipes
+- [x] The asteroid belt (WorldProviderAsteroids, `galacticraftcore:asteroids`): ChunkProviderAsteroids's asteroids of
+      5-25 blocks between y 48 and 208 in empty space, skewed by three noise fields and roughened by turbulence, with a
+      core (rock, aluminium, ilmenite, iron, silicon, meteoric iron, diamond) and half the time a shell (rock or Dense
+      Ice); one big one in ten is hollow, with grass, dirt, glowstone, trees, flowers and pools inside a Dense Ice shell;
+      single rocks and ores float between them; Bright Air lights the faces turned towards the sun. Black sky
+      (SkyProviderAsteroids: small stars, a smaller sun fixed on the horizon, the Earth a speck), no air, gravity 0.072
+      below vanilla, falls a tenth as bad, arrows 0.002, solar 0.77; evolved mobs; tier 3 only
+- [x] Tier 3 Rocket (EntityTier3Rocket, ItemTier3Rocket, RenderTier3Rocket with its blinking light) and its NASA
+      Workbench page (SchematicTier3Rocket), unlocked with the Creeper Boss's schematic; 1,500 mB, up to 3.5 blocks a
+      tick (5 in a vacuum)
+- [x] Entry Pod (EntityEntryPod, TeleportTypeAsteroids): from y 310 onto the nearest asteroid not yet landed on, within
+      160 blocks of the take-off point, through a shaft cut in the rock above it (or onto a small platform made for
+      it); it opens as a chest with the rocket's cargo
+- [x] Thermal Padding (ItemThermalPadding) in the four thermal gear slots, worn on the player with its pulsing glow
+      (LayerThermalPadding), and body temperature (GCPlayerHandler#checkThermalStatus): Mars (-1) and the asteroids
+      (-1.5) chill you down to -22, slowed by each piece of padding and held off by a full set or a sealer's Ambient
+      Thermal Controller; at the limit it hurts, below -15 it slows you; the HUD thermometer and its warning
+
+### Phase 7e – Asteroid machines
+- [ ] Astro Miner and its base, beam power (reflectors and receivers), short-range telepads, walkways, the abandoned
+      base, the grapple, strange seed and space wart, small floating asteroids
 - [ ] Venus (acid, geothermal generator, solar array, laser turret, Spider Queen)
 
 ### Phase 8 – Polish
@@ -463,6 +490,30 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   the vehicle on their pad themselves (1.12.2 asked the pad's tile entity).
 * The Cargo Rocket recipe takes one to three chests in any chest slots (1.12.2: one chest in the first slot, or two
   in the second and third, or three).
+* The asteroids' noise fields are seeded from the world seed (1.12.2: also the world seed, through its own Random);
+  which grid points hold asteroids, and their heights, sizes and cores, come from 1.12.2's unseeded position hashes, so
+  every world has its asteroids in the same places, as in 1.12.2. The 1.12.2 quirks are kept: the noise offsets add the
+  chunk's corner (so asteroids show seams on chunk borders), the hollow-asteroid decoration reads the heights from
+  chunk-local indices, and the sunward lighting counts the same block twice.
+* Bright Air is a light-emitting invisible block (1.12.2 also placed Bright Air, but wrote the light level straight into
+  the chunk's block light at generation). The pod's landing light is full Bright Air.
+* 1.12.2 kept a saved list of every asteroid generated (WorldProviderAsteroids#addAsteroid). Here the centres near a
+  point are worked out from the hashes when needed, generated or not; only the asteroids landed on are saved.
+* Hollow asteroids grow vanilla oaks with 1.12.2's 2-4 log trunks, and their lakes are vanilla's lake feature centred
+  where 1.12.2 centred WorldGenLakes. 1.12.2's tall grass, flower and lake generators are replaced by the vanilla
+  equivalents; populate runs once per chunk in vanilla's decoration step (1.12.2 kept a set of populated chunks).
+* The asteroid belt's sun stays on the horizon with a fixed day time of 12,785 (celestial angle 0.25, 1.12.2's fixed
+  value). Beds can be placed there but never slept in (1.12.2's `isDaytime` was always true), and solar panels there go
+  by the height map, as 1.12.2's `canBlockSeeSky` did, since the world has no sky light.
+* The asteroid belt sits at a fixed phase on the celestial map (1.12.2 chose a random one each time the game started).
+* Titanium tools are repaired with titanium ingots; the titanium axe (1.12.2: the TOOL_STEEL material, 768 uses) with
+  compressed steel. Asteroid rock has no blast resistance, as in 1.12.2.
+* The Tier 3 Rocket's nose cone is always drawn with its texture (1.12.2 tinted it with the player's team colour), and
+  its recipe takes one to three chests in any chest slots, like the Tier 2's.
+* The Entry Pod falls under its own rules on the server (1.12.2 moved it on the client and sent its position up); the
+  1.12.2 camera zoom and default third-person view in the pod are not ported.
+* The thermal check spares spectators as well as creative players. Thermal padding pieces sync with the rest of the
+  gear look (1.12.2 PlayerGearData) rather than separate gear ids.
 
 ## Workflow for porting more content
 
