@@ -336,6 +336,29 @@ public class GCBlockStateProvider extends BlockStateProvider {
         horizontalBlock(GCBlocks.CRASHED_PROBE.get(), probe);
         simpleBlockItem(GCBlocks.CRASHED_PROBE.get(), probe);
         liquid(GCFluids.SULPHURIC_ACID_BLOCK.get(), "sulphuric_acid");
+        venusMachines();
+    }
+
+    /**
+     * 1.12.2 geothermal_model / geothermal_inactive_model (front north, power out on the left, east; vent on top), and
+     * the porter's solar_array_module and solar_array_controller models. The controller model has its port on east,
+     * and 1.12.2 turned it to the facing (north: y 270).
+     */
+    private void venusMachines() {
+        final ResourceLocation casing = tex("machine");
+        final ModelFile active = models().cube("geothermal_generator", casing, tex("geothermal_vent"), tex("geothermal"), tex("geothermal"),
+                tex("machine_output"), tex("machine_side")).texture("particle", casing);
+        final ModelFile inactive = models().cube("geothermal_generator_inactive", casing, tex("geothermal_vent"), tex("geothermal_inactive"),
+                tex("geothermal_inactive"), tex("machine_output"), tex("machine_side")).texture("particle", casing);
+        horizontalBlock(GCBlocks.GEOTHERMAL_GENERATOR.get(),
+                state -> state.getValue(io.github.reiko45.galacticraft.block.GeothermalGeneratorBlock.ACTIVE) ? active : inactive);
+        itemModels().withExistingParent("geothermal_generator", modLoc("block/geothermal_generator_inactive"));
+        final ModelFile module = models().getExistingFile(modLoc("block/solar_array_module"));
+        simpleBlock(GCBlocks.SOLAR_ARRAY_MODULE.get(), module);
+        simpleBlockItem(GCBlocks.SOLAR_ARRAY_MODULE.get(), module);
+        final ModelFile controller = models().getExistingFile(modLoc("block/solar_array_controller"));
+        horizontalBlock(GCBlocks.SOLAR_ARRAY_CONTROLLER.get(), controller, 90);
+        simpleBlockItem(GCBlocks.SOLAR_ARRAY_CONTROLLER.get(), controller);
     }
 
     /** 1.12.2 asteroids_block (rock turned at random, like its four weighted variants) and dense_ice. */

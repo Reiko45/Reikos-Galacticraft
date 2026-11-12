@@ -234,6 +234,17 @@ public final class GCBlocks {
     public static final DeferredBlock<ConfigurableMachineBlock> CIRCUIT_FABRICATOR = withItem("circuit_fabricator",
             () -> new ConfigurableMachineBlock(machine(), CircuitFabricatorBlockEntity::new));
 
+    // Venus machines (1.12.2 BlockGeothermalGenerator: Material.IRON, hardness 2.5; BlockSolarArrayModule: hardness 2.5;
+    // BlockSolarArrayController: hardness 1; all with metal sounds)
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.GeothermalGeneratorBlock> GEOTHERMAL_GENERATOR = withItem(
+            "geothermal_generator", () -> new io.github.reiko45.galacticraft.block.GeothermalGeneratorBlock(
+                    BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL)));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SolarArrayModuleBlock> SOLAR_ARRAY_MODULE = withItem(
+            "solar_array_module", () -> new io.github.reiko45.galacticraft.block.SolarArrayModuleBlock(
+                    BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SolarArrayControllerBlock> SOLAR_ARRAY_CONTROLLER = withItem(
+            "solar_array_controller", () -> new io.github.reiko45.galacticraft.block.SolarArrayControllerBlock(machine().noOcclusion()));
+
     // Solar panels: base block + invisible pole/panel parts (1.12.2 BlockSolar + BlockMulti)
     public static final DeferredBlock<SolarPanelBlock> BASIC_SOLAR_PANEL = withItem("basic_solar_panel",
             () -> new SolarPanelBlock(machine(), SolarPanelBlockEntity::basic));

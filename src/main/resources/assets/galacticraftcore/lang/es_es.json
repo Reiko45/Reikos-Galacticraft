@@ -50,6 +50,8 @@
   "block.galacticraftcore.galena_ore": "Mena de Galena",
   "block.galacticraftcore.gas_liquefier": "Condensador de Gas",
   "block.galacticraftcore.gas_liquefier.desc": "Licua los gases, ya sean de la atmósfera o de los botes. ¡El metano líquido hace un buen combustible!",
+  "block.galacticraftcore.geothermal_generator": "Generador Geotérmico",
+  "block.galacticraftcore.geothermal_generator.desc": "Cuando se coloca sobre una salida de vapor de sulfuro válida, genera energia a una velocidad oscilante",
   "block.galacticraftcore.glowstone_torch": "Antorcha de glowstone",
   "block.galacticraftcore.glowstone_wall_torch": "Antorcha de glowstone",
   "block.galacticraftcore.heavy_aluminum_wire": "Cable de aluminio grande",

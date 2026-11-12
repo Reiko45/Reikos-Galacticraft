@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "item": "galacticraftcore:heavy_aluminum_wire"
+    },
+    "Z": {
+      "item": "galacticraftcore:advanced_wafer"
+    }
+  },
+  "pattern": [
+    "X X",
+    "YZY",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:solar_array_controller"
+  }
+}

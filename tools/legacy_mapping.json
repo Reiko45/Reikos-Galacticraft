@@ -541,7 +541,17 @@
     "model/treasure_tier_3": "planets:model/treasure_venus",
     "block/treasure_chest_tier_3": "planets:blocks/treasure_chest_venus",
     "item/tier_3_dungeon_key": "planets:items/key_t3",
-    "model/web": "planets:blocks/web"
+    "model/web": "planets:blocks/web",
+    "block/geothermal": "planets:blocks/geothermal",
+    "block/geothermal_inactive": "planets:blocks/geothermal_inactive",
+    "block/geothermal_vent": "planets:blocks/geothermal_vent",
+    "block/solar_array_top": "planets:blocks/solar_top",
+    "block/solar_array_side": "planets:blocks/solar_side",
+    "block/solar_array_controller_top": "planets:blocks/solar_controller_top",
+    "block/solar_array_controller_side": "planets:blocks/solar_controller_side",
+    "block/solar_array_controller_output": "planets:blocks/solar_controller_output",
+    "gui/geothermal": "planets:gui/geothermal",
+    "gui/solar_array_controller": "planets:gui/solar_array_controller"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -622,6 +632,12 @@
     },
     "block/crashed_probe": {
       "from": "planets:block/crashed_probe"
+    },
+    "block/solar_array_module": {
+      "from": "planets:block/solar_array_module"
+    },
+    "block/solar_array_controller": {
+      "from": "planets:block/solar_array_controller"
     }
   },
   "lang": {
@@ -1320,7 +1336,16 @@
     "entity.galacticraftcore.web_shot": "planets:entity.web_shot.name",
     "item.galacticraftcore.tier_3_dungeon_key": "planets:item.key.t3.name",
     "block.galacticraftcore.treasure_chest_tier_3": "planets:tile.treasure_t3.name",
-    "block.galacticraftcore.treasure_chest_tier_3.desc": "planets:tile.treasure_t3.description"
+    "block.galacticraftcore.treasure_chest_tier_3.desc": "planets:tile.treasure_t3.description",
+    "block.galacticraftcore.geothermal_generator": "planets:tile.geothermal_generator.name",
+    "block.galacticraftcore.geothermal_generator.desc": "planets:tile.geothermal_generator.description",
+    "block.galacticraftcore.solar_array_module": "planets:tile.solar_array_module.name",
+    "block.galacticraftcore.solar_array_module.desc": "planets:tile.solar_array_module.description",
+    "block.galacticraftcore.solar_array_controller": "planets:tile.solar_array_controller.name",
+    "block.galacticraftcore.solar_array_controller.desc": "planets:tile.solar_array_controller.description",
+    "gui.galacticraftcore.connected_solar_controller": "planets:gui.message.connected_solar_controller.name",
+    "gui.galacticraftcore.status.invalid_spout_1": "planets:gui.status.invalid_spout_1.name",
+    "gui.galacticraftcore.status.invalid_spout_2": "planets:gui.status.invalid_spout_2.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1678,7 +1703,10 @@
       "galacticraftplanets:thermal_padding_t2:2": "galacticraftcore:isothermal_padding_leggings",
       "galacticraftplanets:thermal_padding_t2:3": "galacticraftcore:isothermal_padding_boots",
       "galacticraftplanets:atomic_battery": "galacticraftcore:atomic_battery",
-      "galacticraftplanets:volcanic_pickaxe": "galacticraftcore:volcanic_pickaxe"
+      "galacticraftplanets:volcanic_pickaxe": "galacticraftcore:volcanic_pickaxe",
+      "galacticraftplanets:geothermal_generator": "galacticraftcore:geothermal_generator",
+      "galacticraftplanets:solar_array_module": "galacticraftcore:solar_array_module",
+      "galacticraftplanets:solar_array_controller": "galacticraftcore:solar_array_controller"
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",

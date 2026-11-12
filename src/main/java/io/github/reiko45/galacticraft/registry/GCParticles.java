@@ -19,6 +19,8 @@ public final class GCParticles {
 
     /** 1.12.2 "acidVapor" (ParticleAcidVapor): yellow vapor from spouts and the Venus Entry Pod. */
     public static final Supplier<SimpleParticleType> ACID_VAPOR = PARTICLES.register("acid_vapor", () -> new SimpleParticleType(false));
+    /** 1.12.2 "acidExhaust" (ParticleAcidExhaust): the puffs over a working Geothermal Generator. */
+    public static final Supplier<SimpleParticleType> ACID_EXHAUST = PARTICLES.register("acid_exhaust", () -> new SimpleParticleType(false));
 
     private GCParticles() {
     }

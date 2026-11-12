@@ -88,6 +88,8 @@ public final class GalacticraftClient {
                     io.github.reiko45.galacticraft.client.particle.BacterialDripParticle.Provider::new);
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.ACID_VAPOR.get(),
                     io.github.reiko45.galacticraft.client.particle.AcidVaporParticle.Provider::new);
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.ACID_EXHAUST.get(),
+                    io.github.reiko45.galacticraft.client.particle.AcidExhaustParticle.Provider::new);
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_UP.get(),
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, false));
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_DOWN.get(),
@@ -368,6 +370,8 @@ public final class GalacticraftClient {
         event.register(GCMenus.ELECTRIC_ARC_FURNACE.get(), ElectricFurnaceScreen::new);
         event.register(GCMenus.CIRCUIT_FABRICATOR.get(), CircuitFabricatorScreen::new);
         event.register(GCMenus.SOLAR_PANEL.get(), SolarPanelScreen::new);
+        event.register(GCMenus.GEOTHERMAL_GENERATOR.get(), io.github.reiko45.galacticraft.client.screen.GeothermalGeneratorScreen::new);
+        event.register(GCMenus.SOLAR_ARRAY_CONTROLLER.get(), io.github.reiko45.galacticraft.client.screen.SolarArrayControllerScreen::new);
         event.register(GCMenus.REFINERY.get(), RefineryScreen::new);
         event.register(GCMenus.OXYGEN_COLLECTOR.get(), OxygenMachineScreen::new);
         event.register(GCMenus.OXYGEN_COMPRESSOR.get(), OxygenMachineScreen::new);

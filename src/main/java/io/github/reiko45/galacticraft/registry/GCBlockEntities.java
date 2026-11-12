@@ -129,6 +129,11 @@ public final class GCBlockEntities {
             "crashed_probe", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.CrashedProbeBlockEntity::new,
                     GCBlocks.CRASHED_PROBE.get()).build(null));
 
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.GeothermalGeneratorBlockEntity>> GEOTHERMAL_GENERATOR = machine(
+            "geothermal_generator", io.github.reiko45.galacticraft.block.entity.GeothermalGeneratorBlockEntity::new, GCBlocks.GEOTHERMAL_GENERATOR);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity>> SOLAR_ARRAY_CONTROLLER = machine(
+            "solar_array_controller", io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity::new, GCBlocks.SOLAR_ARRAY_CONTROLLER);
+
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity>> SLIMELING_EGG = BLOCK_ENTITIES.register("slimeling_egg",
             () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity::new, GCBlocks.RED_SLIMELING_EGG.get(),
