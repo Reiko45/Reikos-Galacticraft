@@ -1614,7 +1614,8 @@ public final class ScreenshotTour {
             p.getAbilities().flying = false;
             p.onUpdateAbilities();
             level.setDayTime(5000L);
-            p.teleportTo(level, this.asteroidScene.getX() - 2.5D, this.asteroidScene.getY(), this.asteroidScene.getZ() + 4.5D, 180.0F, 0.0F);
+            // facing south, so the front camera looks back at the player with the rocket and the blocks behind
+            p.teleportTo(level, this.asteroidScene.getX() - 2.5D, this.asteroidScene.getY(), this.asteroidScene.getZ() + 3.5D, 0.0F, 0.0F);
         }));
         this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
         this.extras.add((minecraft, srv) -> shoot(minecraft, "tier_3_rocket_and_thermal_padding"));

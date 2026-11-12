@@ -220,6 +220,18 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 |---|---|
 | ![The Terraformer GUI and the Cargo Rocket's NASA Workbench page](docs/screenshots/terraformer_and_cargo_bench_screens.png) | ![A Cargo Rocket launching from its pad, which its Launch Controller keeps](docs/screenshots/cargo_rocket_launch.png) |
 
+![Among the asteroids: their sunward faces lit, the rest in shadow](docs/screenshots/asteroid_belt.png)
+
+![The asteroid belt's sky with the sun on the horizon, and inside a hollow asteroid](docs/screenshots/asteroid_sky_and_hollow.png)
+
+![A Tier 3 Rocket on its pad beside the asteroid blocks, and a player in Thermal Padding with a titanium pickaxe](docs/screenshots/tier_3_rocket_and_thermal_padding.png)
+
+| Choosing the asteroids | The Tier 3 page and the thermometer |
+|---|---|
+| ![The destination screen with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
+
+![An Entry Pod coming down from y 310 and settled on an asteroid](docs/screenshots/entry_pod.png)
+
 ### Visiting the Moon, Mars and the asteroids
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
