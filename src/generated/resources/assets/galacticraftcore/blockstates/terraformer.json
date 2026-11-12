@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraftcore:block/terraformer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/terraformer"
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/terraformer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/terraformer",
+      "y": 270
+    }
+  }
+}

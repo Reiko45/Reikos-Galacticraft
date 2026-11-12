@@ -59,6 +59,8 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int launchAttempts;
     public boolean usingParachute;
     public int chestSpawnCooldown;
+    /** Ticks until a Cryogenic Chamber can be used again (1.12.2 GCPlayerStats#cryogenicChamberCooldown). */
+    public int cryogenicChamberCooldown;
     public net.minecraft.world.phys.Vec3 chestSpawnPos;
 
     // --- Footprints (1.12.2 distanceSinceLastStep / lastStep; not saved) ---
@@ -196,6 +198,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         tag.putInt("AirRemaining", this.airRemaining);
         tag.putInt("AirRemaining2", this.airRemaining2);
         tag.putInt("DamageCounter", this.damageCounter);
+        tag.putInt("CryogenicChamberCooldown", this.cryogenicChamberCooldown);
         final CompoundTag travel = new CompoundTag();
         travel.putInt("CargoSize", this.rocketCargo.size());
         net.minecraft.world.ContainerHelper.saveAllItems(travel, this.rocketCargo, provider);
@@ -233,6 +236,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.airRemaining = tag.getInt("AirRemaining");
         this.airRemaining2 = tag.getInt("AirRemaining2");
         this.damageCounter = tag.getInt("DamageCounter");
+        this.cryogenicChamberCooldown = tag.getInt("CryogenicChamberCooldown");
         final CompoundTag travel = tag.getCompound("Travel");
         this.rocketCargo = NonNullList.withSize(travel.getInt("CargoSize"), ItemStack.EMPTY);
         net.minecraft.world.ContainerHelper.loadAllItems(travel, this.rocketCargo, provider);

@@ -75,6 +75,8 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get(), GCBlocks.CIRCUIT_FABRICATOR.get(),
                 GCBlocks.BASIC_SOLAR_PANEL.get(), GCBlocks.ADVANCED_SOLAR_PANEL.get(), GCBlocks.SOLAR_PART.get(),
                 GCBlocks.REFINERY.get(), GCBlocks.FLUID_TANK.get(),
+                GCBlocks.GAS_LIQUEFIER.get(), GCBlocks.METHANE_SYNTHESIZER.get(), GCBlocks.ELECTROLYZER.get(), GCBlocks.TERRAFORMER.get(),
+                GCBlocks.CRYOGENIC_CHAMBER.get(), GCBlocks.CRYOGENIC_CHAMBER_PART.get(),
                 GCBlocks.OXYGEN_COLLECTOR.get(), GCBlocks.OXYGEN_COMPRESSOR.get(), GCBlocks.OXYGEN_DECOMPRESSOR.get(),
                 GCBlocks.OXYGEN_STORAGE_MODULE.get(), GCBlocks.OXYGEN_DISTRIBUTOR.get(), GCBlocks.OXYGEN_SEALER.get(),
                 GCBlocks.OXYGEN_DETECTOR.get(),

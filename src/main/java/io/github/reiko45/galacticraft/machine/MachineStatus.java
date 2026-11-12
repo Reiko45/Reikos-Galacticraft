@@ -34,7 +34,17 @@ public enum MachineStatus {
     UNSEALED("gui.galacticraftcore.status.unsealed", ChatFormatting.DARK_RED),
     SEALED("gui.galacticraftcore.status.sealed", ChatFormatting.DARK_GREEN),
     // Fuel Loader (1.12.2 GuiFuelLoader#getStatus)
-    NO_FUEL("gui.galacticraftcore.status.no_fuel", ChatFormatting.DARK_RED);
+    NO_FUEL("gui.galacticraftcore.status.no_fuel", ChatFormatting.DARK_RED),
+    // Mars gas machines (1.12.2 GuiWaterElectrolyzer, GuiMethaneSynthesizer, GuiGasLiquefier)
+    LOW_ENERGY("gui.galacticraftcore.status.low_energy", ChatFormatting.DARK_RED),
+    NO_WATER("gui.galacticraftcore.status.no_water", ChatFormatting.DARK_RED),
+    NO_GAS("gui.galacticraftcore.status.no_gas", ChatFormatting.DARK_RED),
+    NEEDS_CARBON("gui.galacticraftcore.status.needs_carbon", ChatFormatting.DARK_RED),
+    TANK_FULL("gui.galacticraftcore.status.tank_full", ChatFormatting.DARK_RED),
+    TANKS_FULL("gui.galacticraftcore.status.tanks_full", ChatFormatting.DARK_RED),
+    SYNTHESIZING("gui.galacticraftcore.status.synthesizing", ChatFormatting.GREEN),
+    LIQUEFYING("gui.galacticraftcore.status.liquefying", ChatFormatting.GREEN),
+    UNKNOWN("gui.galacticraftcore.status.unknown", ChatFormatting.DARK_RED);
 
     private final String key;
     private final ChatFormatting color;

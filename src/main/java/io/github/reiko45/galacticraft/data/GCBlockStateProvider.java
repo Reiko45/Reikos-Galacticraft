@@ -114,6 +114,18 @@ public class GCBlockStateProvider extends BlockStateProvider {
         horizontalBlock(GCBlocks.REFINERY.get(), models().cube("refinery", tex("machine"), tex("machine_input"), tex("refinery_front"),
                 tex("refinery_side"), tex("machine_oil_input"), tex("machine_fuel_input")).texture("particle", tex("machine")));
         itemModels().withExistingParent("refinery", modLoc("block/refinery"));
+        // 1.12.2 gas_liquefier_model, methane_synthesizer_model, electrolyzer_model: power in at the bottom; gas in on the
+        // left (east), out on the right (west); the electrolyzer's water in on the left, oxygen out the back, hydrogen right.
+        gasMachine(GCBlocks.GAS_LIQUEFIER.get(), "gas_liquefier", "machine_side_warning", "machine_oxygen_input_warning", "machine_oxygen_output_warning");
+        gasMachine(GCBlocks.METHANE_SYNTHESIZER.get(), "methane_synthesizer", "machine_side_warning", "machine_oxygen_input_warning",
+                "machine_oxygen_output_warning");
+        gasMachine(GCBlocks.ELECTROLYZER.get(), "electrolyzer", "machine_oxygen_output_warning", "machine_water_input_warning",
+                "machine_oxygen_output_warning");
+        // 1.12.2 terraformer_model: the panel front and back, power in on the left (east).
+        horizontalBlock(GCBlocks.TERRAFORMER.get(), models().cube("terraformer", tex("machine"), tex("machine"), tex("terraformer"),
+                tex("terraformer"), tex("machine_input"), tex("machine")).texture("particle", tex("machine")));
+        itemModels().withExistingParent("terraformer", modLoc("block/terraformer"));
+        cryogenicChamber();
         fluidTank();
         fluidPipe();
         liquid(GCFluids.OIL_BLOCK.get(), "oil");
@@ -249,6 +261,24 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .transform(ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 315, 0).translation(0, 2.5F, 0).scale(0.375F).end()
                 .transform(ItemDisplayContext.FIRST_PERSON_RIGHT_HAND).rotation(0, 315, 0).scale(0.4F).end()
                 .end();
+    }
+
+    /** 1.12.2 mars_machine cryogenic_chamber (cryo_0) and block_multi cryo_1 / cryo_2: open to the south unrotated. */
+    private void cryogenicChamber() {
+        final ModelFile bottom = models().getExistingFile(modLoc("block/cryogenic_chamber"));
+        final ModelFile middle = models().getExistingFile(modLoc("block/cryogenic_chamber_middle"));
+        final ModelFile top = models().getExistingFile(modLoc("block/cryogenic_chamber_top"));
+        horizontalBlock(GCBlocks.CRYOGENIC_CHAMBER.get(), state -> bottom, 0);
+        getVariantBuilder(GCBlocks.CRYOGENIC_CHAMBER_PART.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(io.github.reiko45.galacticraft.block.CryogenicChamberPartBlock.TOP) ? top : middle)
+                .rotationY((int) state.getValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING).toYRot()).build());
+        itemModels().withExistingParent("cryogenic_chamber", modLoc("block/cryogenic_chamber"));
+    }
+
+    private void gasMachine(Block block, String name, String back, String left, String right) {
+        horizontalBlock(block, models().cube(name, tex("advanced/machine_input"), tex("advanced/machine"), tex(name), tex(back), tex(left), tex(right))
+                .texture("particle", tex("advanced/machine")));
+        itemModels().withExistingParent(name, modLoc("block/" + name));
     }
 
     private ResourceLocation tex(String name) {

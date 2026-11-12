@@ -24,11 +24,19 @@ public final class GCCapabilities {
             registerMachine(event, type.get());
         }
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.REFINERY.get(), RefineryBlockEntity::fluidHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.GAS_LIQUEFIER.get(),
+                io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity::fluidHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.METHANE_SYNTHESIZER.get(),
+                io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity::fluidHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.ELECTROLYZER.get(),
+                io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity::fluidHandler);
+        event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.TERRAFORMER.get(),
+                io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FUEL_LOADER.get(), FuelLoaderBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_TANK.get(), (tank, side) -> tank.stackHandler());
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.FLUID_PIPE.get(), (pipe, side) -> pipe.fluidHandler());
         event.registerItem(Capabilities.FluidHandler.ITEM, (stack, context) -> new LiquidCanisterItem.Handler(stack),
-                GCItems.OIL_CANISTER.get(), GCItems.FUEL_CANISTER.get());
+                LiquidCanisterItem.items());
         for (Supplier<? extends BlockEntityType<? extends OxygenMachineBlockEntity>> type : GCBlockEntities.oxygenMachineTypes()) {
             registerOxygen(event, type.get());
         }

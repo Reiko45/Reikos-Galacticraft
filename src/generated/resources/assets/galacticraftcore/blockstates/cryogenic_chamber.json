@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraftcore:block/cryogenic_chamber",
+      "y": 270
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/cryogenic_chamber",
+      "y": 180
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/cryogenic_chamber"
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/cryogenic_chamber",
+      "y": 90
+    }
+  }
+}

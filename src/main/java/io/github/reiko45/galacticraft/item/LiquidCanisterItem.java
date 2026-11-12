@@ -5,6 +5,7 @@ import io.github.reiko45.galacticraft.registry.GCDataComponents;
 import io.github.reiko45.galacticraft.registry.GCFluids;
 import io.github.reiko45.galacticraft.registry.GCItems;
 import java.util.List;
+import java.util.function.Predicate;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -16,17 +17,79 @@ import net.neoforged.neoforge.fluids.capability.IFluidHandler;
 import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 /**
- * Oil / Fuel Canister (1.12.2 ItemOilCanister, ItemFuelCanister): 1,000 mB. An empty canister is an (empty) oil
- * canister; filling it with fuel turns it into a fuel canister, and a drained fuel canister turns back, as in 1.12.2.
- * Filled and emptied by machines, tanks and other fluid handlers (no world pickup, like 1.12.2).
+ * Liquid canisters, 1,000 mB each: Oil and Fuel (1.12.2 ItemOilCanister, ItemFuelCanister), and the asteroids module's
+ * Methane Gas, Liquid Oxygen and Liquid Nitrogen canisters (ItemCanisterMethane, ItemCanisterLiquidOxygen,
+ * ItemCanisterLiquidNitrogen) that the Mars gas machines fill. An empty canister is an (empty) oil canister; filling
+ * it turns it into the canister for what went in, and a drained canister turns back, as in 1.12.2. Filled and emptied
+ * by machines, tanks and other fluid handlers (no world pickup, like 1.12.2).
  */
 public class LiquidCanisterItem extends Item {
     public static final int CAPACITY = 1000;
-    private final boolean fuel;
 
-    public LiquidCanisterItem(Properties properties, boolean fuel) {
+    /** What a canister holds: its fluid, and its names (full, partial) and tooltip prefix. */
+    public enum Kind {
+        OIL(stack -> stack.is(GCFluidTags.OIL), "item.galacticraftcore.oil_canister", "gui.galacticraftcore.oil"),
+        FUEL(stack -> stack.is(GCFluidTags.FUEL), "item.galacticraftcore.fuel_canister", "gui.galacticraftcore.fuel"),
+        METHANE(stack -> stack.is(GCFluids.METHANE.get()), "item.galacticraftcore.methane_canister", "item.galacticraftcore.methane_canister.contents"),
+        LIQUID_OXYGEN(stack -> stack.is(GCFluids.LIQUID_OXYGEN.get()), "item.galacticraftcore.liquid_oxygen_canister",
+                "item.galacticraftcore.liquid_oxygen_canister.contents"),
+        LIQUID_NITROGEN(stack -> stack.is(GCFluids.LIQUID_NITROGEN.get()), "item.galacticraftcore.liquid_nitrogen_canister",
+                "item.galacticraftcore.liquid_nitrogen_canister.contents");
+
+        private final Predicate<FluidStack> fluid;
+        private final String name;
+        private final String contents;
+
+        Kind(Predicate<FluidStack> fluid, String name, String contents) {
+            this.fluid = fluid;
+            this.name = name;
+            this.contents = contents;
+        }
+
+        public boolean holds(FluidStack stack) {
+            return this.fluid.test(stack);
+        }
+
+        public Item item() {
+            return switch (this) {
+                case OIL -> GCItems.OIL_CANISTER.get();
+                case FUEL -> GCItems.FUEL_CANISTER.get();
+                case METHANE -> GCItems.METHANE_CANISTER.get();
+                case LIQUID_OXYGEN -> GCItems.LIQUID_OXYGEN_CANISTER.get();
+                case LIQUID_NITROGEN -> GCItems.LIQUID_NITROGEN_CANISTER.get();
+            };
+        }
+
+        /** The canister for a fluid, or null if no canister holds it. */
+        static Kind of(FluidStack stack) {
+            for (Kind kind : values()) {
+                if (kind.holds(stack)) {
+                    return kind;
+                }
+            }
+            return null;
+        }
+    }
+
+    private final Kind kind;
+
+    public LiquidCanisterItem(Properties properties, Kind kind) {
         super(properties.stacksTo(1));
-        this.fuel = fuel;
+        this.kind = kind;
+    }
+
+    public Kind kind() {
+        return this.kind;
+    }
+
+    /** Every canister item, for registering their fluid handler and fill-stage textures. */
+    public static Item[] items() {
+        final Kind[] kinds = Kind.values();
+        final Item[] items = new Item[kinds.length];
+        for (int i = 0; i < kinds.length; i++) {
+            items[i] = kinds[i].item();
+        }
+        return items;
     }
 
     public static FluidStack contents(ItemStack stack) {
@@ -41,6 +104,16 @@ public class LiquidCanisterItem extends Item {
         return stack;
     }
 
+    /** A canister holding {@code fluid} (the right kind of canister for it). */
+    public static ItemStack filled(FluidStack fluid) {
+        final Kind kind = Kind.of(fluid);
+        return filled(kind == null ? GCItems.OIL_CANISTER.get() : kind.item(), kind == null ? FluidStack.EMPTY : fluid);
+    }
+
+    public static boolean isEmpty(ItemStack stack) {
+        return stack.getItem() instanceof LiquidCanisterItem && contents(stack).isEmpty();
+    }
+
     /** Fill stage for the 7 textures: 1.12.2 used 6 - 6 * damage / 1001 with damage = 1001 - mB. */
     public static int fillStage(ItemStack stack) {
         final int amount = contents(stack).getAmount();
@@ -50,23 +123,21 @@ public class LiquidCanisterItem extends Item {
     @Override
     public Component getName(ItemStack stack) {
         final int amount = contents(stack).getAmount();
-        final String base = this.fuel ? "item.galacticraftcore.fuel_canister" : "item.galacticraftcore.oil_canister";
         if (amount <= 0) {
             return Component.translatable("item.galacticraftcore.empty_liquid_canister");
         }
-        return Component.translatable(amount >= CAPACITY ? base : base + "_partial");
+        return Component.translatable(amount >= CAPACITY ? this.kind.name : this.kind.name + "_partial");
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         final int amount = contents(stack).getAmount();
         if (amount > 0) {
-            tooltip.add(Component.translatable(this.fuel ? "gui.galacticraftcore.fuel" : "gui.galacticraftcore.oil")
-                    .append(": " + amount).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable(this.kind.contents).append(": " + amount).withStyle(ChatFormatting.GRAY));
         }
     }
 
-    /** Fluid handler that also swaps the item between oil and fuel canister. */
+    /** Fluid handler that also swaps the item to the canister for what it holds. */
     public static final class Handler implements IFluidHandlerItem {
         private ItemStack container;
 
@@ -96,7 +167,7 @@ public class LiquidCanisterItem extends Item {
 
         @Override
         public boolean isFluidValid(int tank, FluidStack stack) {
-            return stack.is(GCFluidTags.OIL) || stack.is(GCFluidTags.FUEL);
+            return Kind.of(stack) != null;
         }
 
         @Override
@@ -138,14 +209,24 @@ public class LiquidCanisterItem extends Item {
         }
 
         private void set(FluidStack fluid) {
-            final Item target = !fluid.isEmpty() && fluid.is(GCFluidTags.FUEL) ? GCItems.FUEL_CANISTER.get() : GCItems.OIL_CANISTER.get();
-            this.container = filled(target, fluid);
+            this.container = filled(fluid);
         }
     }
 
     /** Creative tab / test helper: a full canister of oil or fuel. */
     public static ItemStack full(boolean fuel) {
-        return filled(fuel ? GCItems.FUEL_CANISTER.get() : GCItems.OIL_CANISTER.get(),
-                new FluidStack(fuel ? GCFluids.FUEL.get() : GCFluids.OIL.get(), CAPACITY));
+        return full(fuel ? Kind.FUEL : Kind.OIL);
+    }
+
+    /** Creative tab / test helper: a full canister of its kind. */
+    public static ItemStack full(Kind kind) {
+        final FluidStack fluid = switch (kind) {
+            case OIL -> new FluidStack(GCFluids.OIL.get(), CAPACITY);
+            case FUEL -> new FluidStack(GCFluids.FUEL.get(), CAPACITY);
+            case METHANE -> new FluidStack(GCFluids.METHANE.get(), CAPACITY);
+            case LIQUID_OXYGEN -> new FluidStack(GCFluids.LIQUID_OXYGEN.get(), CAPACITY);
+            case LIQUID_NITROGEN -> new FluidStack(GCFluids.LIQUID_NITROGEN.get(), CAPACITY);
+        };
+        return filled(kind.item(), fluid);
     }
 }

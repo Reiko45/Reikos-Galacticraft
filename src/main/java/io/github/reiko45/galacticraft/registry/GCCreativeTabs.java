@@ -33,8 +33,8 @@ public final class GCCreativeTabs {
                     .map(holder -> holder.get())
                     .filter(item -> !(item instanceof BlockItem))
                     .forEach(item -> {
-                        if (item != GCItems.FUEL_CANISTER.get()) {
-                            output.accept(item); // an empty fuel canister is an empty (oil) canister
+                        if (!(item instanceof LiquidCanisterItem canister) || canister.kind() == LiquidCanisterItem.Kind.OIL) {
+                            output.accept(item); // every empty canister is an empty (oil) canister
                         }
                         if (item instanceof ElectricItem electric) {
                             output.accept(electric.charged());
@@ -55,10 +55,8 @@ public final class GCCreativeTabs {
                                 output.accept(io.github.reiko45.galacticraft.item.BuggyItem.create(storage, 0));
                             }
                         }
-                        if (item == GCItems.OIL_CANISTER.get()) {
-                            output.accept(LiquidCanisterItem.full(false));
-                        } else if (item == GCItems.FUEL_CANISTER.get()) {
-                            output.accept(LiquidCanisterItem.full(true));
+                        if (item instanceof LiquidCanisterItem canister) {
+                            output.accept(LiquidCanisterItem.full(canister.kind()));
                         }
                     }))
             .build());

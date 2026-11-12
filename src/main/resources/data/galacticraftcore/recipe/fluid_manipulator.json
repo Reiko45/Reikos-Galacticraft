@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "tag": "c:ingots/meteoric_iron"
+    },
+    "S": {
+      "tag": "c:slime_balls"
+    },
+    "W": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "X": {
+      "item": "galacticraftcore:oxygen_fan"
+    }
+  },
+  "pattern": [
+    "MXM",
+    "SWS",
+    "MXM"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:fluid_manipulator"
+  }
+}

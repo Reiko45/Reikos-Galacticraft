@@ -51,6 +51,15 @@ public final class GCItems {
     public static final DeferredItem<Item> COMPRESSED_DESH = simple("compressed_desh");
     /** 1.12.2 item_basic_mars:4, the Slimeling Inventory Bag: in a Slimeling's bag slot it carries 27 stacks. */
     public static final DeferredItem<Item> SLIMELING_CARGO = simple("slimeling_cargo");
+    /** 1.12.2 item_basic_mars:6, the Fluid Manipulator: a part of the Mars gas machines. */
+    public static final DeferredItem<Item> FLUID_MANIPULATOR = simple("fluid_manipulator");
+    /** 1.12.2 ItemCarbonFragments: crafted from coal, the Methane Synthesizer's carbon. */
+    public static final DeferredItem<Item> CARBON_FRAGMENTS = simple("carbon_fragments");
+    /**
+     * 1.12.2 ItemAtmosphericValve (asteroids module): in a gas machine's input slot it lets in the planet's air; in an
+     * output slot it vents the machine's product.
+     */
+    public static final DeferredItem<Item> ATMOSPHERIC_VALVE = simple("atmospheric_valve");
     /** 1.12.2 reinforced_plate_t2 ("Heavy-Duty Plate"), the Tier 2 Rocket's hull. */
     public static final DeferredItem<Item> HEAVY_DUTY_PLATE = simple("heavy_duty_plate");
 
@@ -98,11 +107,18 @@ public final class GCItems {
     public static final DeferredItem<WrenchItem> STANDARD_WRENCH = ITEMS.register("standard_wrench",
             () -> new WrenchItem(new Item.Properties().durability(256)));
 
-    // --- Liquid canisters (1.12.2 oil_canister_partial / fuel_canister_partial) ---
+    // --- Liquid canisters (1.12.2 oil_canister_partial / fuel_canister_partial, and the asteroids module's
+    // methane_canister_partial, canister_partial_lox and canister_partial_ln2 that the Mars gas machines fill) ---
     public static final DeferredItem<LiquidCanisterItem> OIL_CANISTER = ITEMS.register("oil_canister",
-            () -> new LiquidCanisterItem(new Item.Properties(), false));
+            () -> new LiquidCanisterItem(new Item.Properties(), LiquidCanisterItem.Kind.OIL));
     public static final DeferredItem<LiquidCanisterItem> FUEL_CANISTER = ITEMS.register("fuel_canister",
-            () -> new LiquidCanisterItem(new Item.Properties(), true));
+            () -> new LiquidCanisterItem(new Item.Properties(), LiquidCanisterItem.Kind.FUEL));
+    public static final DeferredItem<LiquidCanisterItem> METHANE_CANISTER = ITEMS.register("methane_canister",
+            () -> new LiquidCanisterItem(new Item.Properties(), LiquidCanisterItem.Kind.METHANE));
+    public static final DeferredItem<LiquidCanisterItem> LIQUID_OXYGEN_CANISTER = ITEMS.register("liquid_oxygen_canister",
+            () -> new LiquidCanisterItem(new Item.Properties(), LiquidCanisterItem.Kind.LIQUID_OXYGEN));
+    public static final DeferredItem<LiquidCanisterItem> LIQUID_NITROGEN_CANISTER = ITEMS.register("liquid_nitrogen_canister",
+            () -> new LiquidCanisterItem(new Item.Properties(), LiquidCanisterItem.Kind.LIQUID_NITROGEN));
 
     // --- Oxygen gear (1.12.2 ItemOxygenMask, ItemOxygenGear, ItemOxygenTank, ItemCanisterOxygenInfinite, ItemParaChute) ---
     public static final DeferredItem<GearItem> OXYGEN_MASK = ITEMS.register("oxygen_mask",

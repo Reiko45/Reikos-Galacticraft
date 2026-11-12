@@ -1,0 +1,39 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "galacticraftcore:fluid_pipe"
+    },
+    "O": {
+      "item": "galacticraftcore:oxygen_compressor"
+    },
+    "P": {
+      "item": "galacticraftcore:oxygen_decompressor"
+    },
+    "S": {
+      "item": "galacticraftcore:medium_oxygen_tank"
+    },
+    "T": {
+      "item": "galacticraftcore:heavy_oxygen_tank"
+    },
+    "V": {
+      "item": "galacticraftcore:oxygen_vent"
+    },
+    "W": {
+      "item": "galacticraftcore:fluid_manipulator"
+    },
+    "X": {
+      "item": "galacticraftcore:compressed_bronze"
+    }
+  },
+  "pattern": [
+    "TVS",
+    "FWS",
+    "PXO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:gas_liquefier"
+  }
+}

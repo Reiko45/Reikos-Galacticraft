@@ -175,6 +175,25 @@ public final class GCBlocks {
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 3_600_000.0F).sound(SoundType.METAL)
                     .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
 
+    // Mars gas machines (1.12.2 BlockMachineMarsT2: gas_liquefier, methane_synthesizer, electrolyzer)
+    public static final DeferredBlock<MachineBlock> GAS_LIQUEFIER = withItem("gas_liquefier",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> METHANE_SYNTHESIZER = withItem("methane_synthesizer",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity::new));
+    public static final DeferredBlock<MachineBlock> ELECTROLYZER = withItem("electrolyzer",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity::new));
+
+    // Mars machines (1.12.2 BlockMachineMars: terraformer, cryogenic_chamber, launch_controller)
+    public static final DeferredBlock<MachineBlock> TERRAFORMER = withItem("terraformer",
+            () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::new));
+    /** 1.12.2 BlockMachineMars cryogenic_chamber; open at the front, so it neither hides faces nor suffocates. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CryogenicChamberBlock> CRYOGENIC_CHAMBER = withItem("cryogenic_chamber",
+            () -> new io.github.reiko45.galacticraft.block.CryogenicChamberBlock(machine().noOcclusion()
+                    .isViewBlocking((state, level, pos) -> false).isSuffocating((state, level, pos) -> false).pushReaction(PushReaction.BLOCK)));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CryogenicChamberPartBlock> CRYOGENIC_CHAMBER_PART = BLOCKS.register(
+            "cryogenic_chamber_part", () -> new io.github.reiko45.galacticraft.block.CryogenicChamberPartBlock(machine().noOcclusion().noLootTable()
+                    .isViewBlocking((state, level, pos) -> false).isSuffocating((state, level, pos) -> false).pushReaction(PushReaction.BLOCK)));
+
     // Oil processing (1.12.2 BlockRefinery, BlockFluidTank, BlockFluidPipe)
     public static final DeferredBlock<MachineBlock> REFINERY = withItem("refinery",
             () -> new MachineBlock(machine(), RefineryBlockEntity::new));

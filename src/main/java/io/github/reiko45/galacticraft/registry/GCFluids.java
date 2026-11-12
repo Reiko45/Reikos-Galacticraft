@@ -51,6 +51,25 @@ public final class GCFluids {
             FluidType.Properties.create().descriptionId("fluid.galacticraftcore.oxygen").density(0).viscosity(1)
                     .canSwim(false).canDrown(false).canPushEntity(false).canExtinguish(false)));
 
+    // 1.12.2 GCFluids#registerFluids (hydrogen) and AsteroidsModule#registerFluid (the rest): gases and liquids that
+    // only exist in tanks, pipes, machines and canisters, never as blocks or in buckets. Liquid methane is left out: the
+    // Gas Liquefier turns methane into rocket fuel, and nothing else made or used liquid methane.
+    public static final DeferredHolder<FluidType, FluidType> HYDROGEN_TYPE = tankOnly("hydrogen", 0, 1, 295);
+    public static final DeferredHolder<FluidType, FluidType> METHANE_TYPE = tankOnly("methane", 0, 11, 295);
+    public static final DeferredHolder<FluidType, FluidType> ATMOSPHERIC_GASES_TYPE = tankOnly("atmospheric_gases", 0, 13, 295);
+    public static final DeferredHolder<FluidType, FluidType> CARBON_DIOXIDE_TYPE = tankOnly("carbon_dioxide", 0, 20, 295);
+    public static final DeferredHolder<FluidType, FluidType> NITROGEN_TYPE = tankOnly("nitrogen", 0, 12, 295);
+    public static final DeferredHolder<FluidType, FluidType> ARGON_TYPE = tankOnly("argon", 0, 4, 295);
+    public static final DeferredHolder<FluidType, FluidType> LIQUID_OXYGEN_TYPE = tankOnly("liquid_oxygen", 1141, 140, 90);
+    public static final DeferredHolder<FluidType, FluidType> LIQUID_NITROGEN_TYPE = tankOnly("liquid_nitrogen", 808, 130, 90);
+    public static final DeferredHolder<FluidType, FluidType> LIQUID_ARGON_TYPE = tankOnly("liquid_argon", 900, 100, 87);
+
+    private static DeferredHolder<FluidType, FluidType> tankOnly(String name, int density, int viscosity, int temperature) {
+        return FLUID_TYPES.register(name, () -> new FluidType(FluidType.Properties.create().descriptionId("fluid.galacticraftcore." + name)
+                .density(density).viscosity(viscosity).temperature(temperature).canSwim(false).canDrown(false).canPushEntity(false)
+                .canExtinguish(false)));
+    }
+
     private static final BaseFlowingFluid.Properties OIL_PROPERTIES = new BaseFlowingFluid.Properties(
             GCFluids.OIL_TYPE, () -> GCFluids.OIL.get(), () -> GCFluids.FLOWING_OIL.get())
             .bucket(() -> GCFluids.OIL_BUCKET.get()).block(() -> GCFluids.OIL_BLOCK.get())
@@ -76,6 +95,16 @@ public final class GCFluids {
             () -> new BaseFlowingFluid.Flowing(BACTERIAL_SLUDGE_PROPERTIES));
 
     public static final DeferredHolder<Fluid, GasFluid> OXYGEN = FLUIDS.register("oxygen", () -> new GasFluid(GCFluids.OXYGEN_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> HYDROGEN = FLUIDS.register("hydrogen", () -> new GasFluid(GCFluids.HYDROGEN_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> METHANE = FLUIDS.register("methane", () -> new GasFluid(GCFluids.METHANE_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> ATMOSPHERIC_GASES = FLUIDS.register("atmospheric_gases",
+            () -> new GasFluid(GCFluids.ATMOSPHERIC_GASES_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> CARBON_DIOXIDE = FLUIDS.register("carbon_dioxide", () -> new GasFluid(GCFluids.CARBON_DIOXIDE_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> NITROGEN = FLUIDS.register("nitrogen", () -> new GasFluid(GCFluids.NITROGEN_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> ARGON = FLUIDS.register("argon", () -> new GasFluid(GCFluids.ARGON_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> LIQUID_OXYGEN = FLUIDS.register("liquid_oxygen", () -> new GasFluid(GCFluids.LIQUID_OXYGEN_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> LIQUID_NITROGEN = FLUIDS.register("liquid_nitrogen", () -> new GasFluid(GCFluids.LIQUID_NITROGEN_TYPE));
+    public static final DeferredHolder<Fluid, GasFluid> LIQUID_ARGON = FLUIDS.register("liquid_argon", () -> new GasFluid(GCFluids.LIQUID_ARGON_TYPE));
 
     public static final DeferredBlock<GCLiquidBlock> OIL_BLOCK = GCBlocks.BLOCKS.register("oil",
             () -> new GCLiquidBlock(GCFluids.OIL.get(), liquid(MapColor.COLOR_BROWN), false));

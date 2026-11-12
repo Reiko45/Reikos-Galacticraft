@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "galacticraftcore:item/liquid_oxygen_canister_partial_4"
+  }
+}

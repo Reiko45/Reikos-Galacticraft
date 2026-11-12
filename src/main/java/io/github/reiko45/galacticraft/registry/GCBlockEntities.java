@@ -73,6 +73,14 @@ public final class GCBlockEntities {
 
     public static final Supplier<BlockEntityType<RefineryBlockEntity>> REFINERY = machine("refinery",
             RefineryBlockEntity::new, GCBlocks.REFINERY);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity>> GAS_LIQUEFIER = machine("gas_liquefier",
+            io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity::new, GCBlocks.GAS_LIQUEFIER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity>> METHANE_SYNTHESIZER = machine(
+            "methane_synthesizer", io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity::new, GCBlocks.METHANE_SYNTHESIZER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity>> ELECTROLYZER = machine("electrolyzer",
+            io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity::new, GCBlocks.ELECTROLYZER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity>> TERRAFORMER = machine("terraformer",
+            io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity::new, GCBlocks.TERRAFORMER);
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<FluidTankBlockEntity>> FLUID_TANK = BLOCK_ENTITIES.register("fluid_tank",
             () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new, GCBlocks.FLUID_TANK.get()).build(null));

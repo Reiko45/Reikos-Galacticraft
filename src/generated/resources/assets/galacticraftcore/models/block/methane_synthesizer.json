@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/advanced/machine_input",
+    "east": "galacticraftcore:block/machine_oxygen_input_warning",
+    "north": "galacticraftcore:block/methane_synthesizer",
+    "particle": "galacticraftcore:block/advanced/machine",
+    "south": "galacticraftcore:block/machine_side_warning",
+    "up": "galacticraftcore:block/advanced/machine",
+    "west": "galacticraftcore:block/machine_oxygen_output_warning"
+  }
+}

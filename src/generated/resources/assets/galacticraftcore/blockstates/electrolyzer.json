@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraftcore:block/electrolyzer",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/electrolyzer"
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/electrolyzer",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/electrolyzer",
+      "y": 270
+    }
+  }
+}

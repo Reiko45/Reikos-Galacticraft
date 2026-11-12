@@ -25,7 +25,7 @@ import net.minecraft.world.phys.AABB;
  * running its breathable bubble grows by 0.01 blocks per tick up to a radius of 10; without power or oxygen it shrinks
  * by 0.1 per tick. Torches inside light up. The bubble can be shown or hidden. Slots: 0 battery, 1 oxygen supply.
  */
-public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
+public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity implements BubbleProvider {
     public static final float MAX_BUBBLE = 10.0F;
     private static final Map<Level, Set<OxygenDistributorBlockEntity>> LOADED = new WeakHashMap<>();
 
@@ -153,6 +153,12 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
         return dx * dx + dz * dz + dy * dy < r2;
     }
 
+    @Override
+    public float[] bubbleColor() {
+        return new float[]{0.125F, 0.125F, 0.5F};
+    }
+
+    @Override
     public float bubbleSize() {
         return this.bubbleSize;
     }
@@ -161,6 +167,7 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
         this.bubbleSize = Mth.clamp(size, 0.0F, MAX_BUBBLE);
     }
 
+    @Override
     public boolean bubbleVisible() {
         return this.bubbleVisible;
     }
@@ -171,6 +178,7 @@ public class OxygenDistributorBlockEntity extends OxygenMachineBlockEntity {
         sync();
     }
 
+    @Override
     public AABB renderBounds() {
         return new AABB(this.worldPosition).inflate(MAX_BUBBLE);
     }

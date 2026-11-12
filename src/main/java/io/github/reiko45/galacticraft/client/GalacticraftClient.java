@@ -91,6 +91,8 @@ public final class GalacticraftClient {
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::pre);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::post);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
         ScreenshotTour.registerIfEnabled();
     }
@@ -130,6 +132,7 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_PIPE.get(), FluidPipeRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.OXYGEN_DISTRIBUTOR.get(), BubbleRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.TERRAFORMER.get(), BubbleRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_1_ROCKET.get(), Tier1RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.TIER_2_ROCKET.get(), io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer::new);
         event.registerEntityRenderer(GCEntities.LANDING_BALLOONS.get(), io.github.reiko45.galacticraft.client.render.entity.LandingBalloonsRenderer::new);
@@ -178,8 +181,8 @@ public final class GalacticraftClient {
 
     private static void clientSetup(FMLClientSetupEvent event) {
         event.enqueueWork(() -> {
-            // Canister textures oil/fuel_canister_partial_0..6 are picked by the "fill" stage.
-            for (Item canister : new Item[]{GCItems.OIL_CANISTER.get(), GCItems.FUEL_CANISTER.get()}) {
+            // Canister textures <canister>_partial_0..6 are picked by the "fill" stage.
+            for (Item canister : LiquidCanisterItem.items()) {
                 ItemProperties.register(canister, GalacticraftCore.id("fill"),
                         (stack, level, entity, seed) -> LiquidCanisterItem.fillStage(stack));
             }
@@ -232,18 +235,32 @@ public final class GalacticraftClient {
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         event.registerFluidType(liquid("bacterial_sludge"), GCFluids.BACTERIAL_SLUDGE_TYPE.get());
-        final ResourceLocation oxygen = GalacticraftCore.id("block/fluids/oxygen_gas");
-        event.registerFluidType(new IClientFluidTypeExtensions() {
+        event.registerFluidType(tankOnly("oxygen_gas"), GCFluids.OXYGEN_TYPE.get());
+        event.registerFluidType(tankOnly("hydrogen_gas"), GCFluids.HYDROGEN_TYPE.get());
+        event.registerFluidType(tankOnly("methane"), GCFluids.METHANE_TYPE.get());
+        event.registerFluidType(tankOnly("atmospheric_gases"), GCFluids.ATMOSPHERIC_GASES_TYPE.get());
+        event.registerFluidType(tankOnly("carbon_dioxide"), GCFluids.CARBON_DIOXIDE_TYPE.get());
+        event.registerFluidType(tankOnly("nitrogen"), GCFluids.NITROGEN_TYPE.get());
+        event.registerFluidType(tankOnly("argon"), GCFluids.ARGON_TYPE.get());
+        event.registerFluidType(tankOnly("liquid_oxygen"), GCFluids.LIQUID_OXYGEN_TYPE.get());
+        event.registerFluidType(tankOnly("liquid_nitrogen"), GCFluids.LIQUID_NITROGEN_TYPE.get());
+        event.registerFluidType(tankOnly("liquid_argon"), GCFluids.LIQUID_ARGON_TYPE.get());
+    }
+
+    /** A gas or liquid that only shows inside tanks and pipes: one (animated) texture for still and flowing. */
+    private static IClientFluidTypeExtensions tankOnly(String texture) {
+        final ResourceLocation location = GalacticraftCore.id("block/fluids/" + texture);
+        return new IClientFluidTypeExtensions() {
             @Override
             public ResourceLocation getStillTexture() {
-                return oxygen;
+                return location;
             }
 
             @Override
             public ResourceLocation getFlowingTexture() {
-                return oxygen;
+                return location;
             }
-        }, GCFluids.OXYGEN_TYPE.get());
+        };
     }
 
     /** Still/flowing textures and the 1.12.2 "under liquid" screen overlay. */
@@ -289,6 +306,10 @@ public final class GalacticraftClient {
         event.register(GCMenus.EXTENDED_INVENTORY.get(), ExtendedInventoryScreen::new);
         event.register(GCMenus.FUEL_LOADER.get(), FuelLoaderScreen::new);
         event.register(GCMenus.CARGO.get(), CargoScreen::new);
+        event.register(GCMenus.GAS_LIQUEFIER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
+        event.register(GCMenus.METHANE_SYNTHESIZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
+        event.register(GCMenus.ELECTROLYZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
+        event.register(GCMenus.TERRAFORMER.get(), io.github.reiko45.galacticraft.client.screen.TerraformerScreen::new);
         event.register(GCMenus.SLIMELING.get(), io.github.reiko45.galacticraft.client.screen.SlimelingInventoryScreen::new);
         event.register(GCMenus.NASA_WORKBENCH.get(), NasaWorkbenchScreen::new);
         event.register(GCMenus.BUGGY_BENCH.get(), io.github.reiko45.galacticraft.client.screen.BuggyBenchScreen::new);

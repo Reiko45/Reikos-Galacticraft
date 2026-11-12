@@ -1,0 +1,34 @@
+{
+  "variants": {
+    "facing=east,top=false": {
+      "model": "galacticraftcore:block/cryogenic_chamber_middle",
+      "y": 270
+    },
+    "facing=east,top=true": {
+      "model": "galacticraftcore:block/cryogenic_chamber_top",
+      "y": 270
+    },
+    "facing=north,top=false": {
+      "model": "galacticraftcore:block/cryogenic_chamber_middle",
+      "y": 180
+    },
+    "facing=north,top=true": {
+      "model": "galacticraftcore:block/cryogenic_chamber_top",
+      "y": 180
+    },
+    "facing=south,top=false": {
+      "model": "galacticraftcore:block/cryogenic_chamber_middle"
+    },
+    "facing=south,top=true": {
+      "model": "galacticraftcore:block/cryogenic_chamber_top"
+    },
+    "facing=west,top=false": {
+      "model": "galacticraftcore:block/cryogenic_chamber_middle",
+      "y": 90
+    },
+    "facing=west,top=true": {
+      "model": "galacticraftcore:block/cryogenic_chamber_top",
+      "y": 90
+    }
+  }
+}
