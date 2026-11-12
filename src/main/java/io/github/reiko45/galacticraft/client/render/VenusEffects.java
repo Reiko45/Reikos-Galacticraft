@@ -270,17 +270,25 @@ public final class VenusEffects extends DimensionSpecialEffects {
         }
     }
 
-    /** A distant bolt and its thunder (also used by the screenshot tour). */
+    /** A distant bolt and its thunder. */
     public static void strike(double fromX, double fromZ, RandomSource random) {
-        final Minecraft minecraft = Minecraft.getInstance();
         final double angle = random.nextDouble() * Math.PI * 2.0D;
-        final double x = fromX + 180.0D * Math.cos(angle);
-        final double z = fromZ + 180.0D * Math.sin(angle);
+        strikeAt(fromX + 180.0D * Math.cos(angle), fromZ + 180.0D * Math.sin(angle), random);
+    }
+
+    /** A bolt at y 70 here, lasting a second. */
+    public static void strikeAt(double x, double z, RandomSource random) {
+        strikeAt(x, z, random, 20);
+    }
+
+    /** A bolt at y 70 here, lasting this many ticks (the screenshot tour holds one longer). */
+    public static void strikeAt(double x, double z, RandomSource random, int ticks) {
+        final Minecraft minecraft = Minecraft.getInstance();
         if (minecraft.level != null && minecraft.player != null) {
             minecraft.level.playLocalSound(x, 70.0D, z, SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.WEATHER, 500.0F + random.nextFloat() * 500.0F,
                     1.0F + random.nextFloat() * 0.2F, false);
         }
-        LIGHTNING.put(BlockPos.containing(x, 70.0D, z), 20);
+        LIGHTNING.put(BlockPos.containing(x, 70.0D, z), ticks);
     }
 
     public static void onRenderLevel(RenderLevelStageEvent event) {
@@ -288,8 +296,8 @@ public final class VenusEffects extends DimensionSpecialEffects {
             return;
         }
         final Vec3 cam = event.getCamera().getPosition();
+        // The model-view matrix already holds the camera rotation during this pass; positions are camera-relative.
         final com.mojang.blaze3d.vertex.PoseStack pose = new com.mojang.blaze3d.vertex.PoseStack();
-        pose.mulPose(event.getModelViewMatrix());
         RenderSystem.enableBlend();
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         RenderSystem.depthMask(false);

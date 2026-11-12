@@ -47,6 +47,16 @@ public final class VenusWeather {
         state.advance(level);
     }
 
+    /** Sets the rain now (and aims the cycle at it), telling the players there (the screenshot tour). */
+    public static void set(ServerLevel level, boolean raining, float strength) {
+        force(level, raining, strength);
+        level.setRainLevel(strength);
+        level.getServer().getPlayerList().broadcastAll(new ClientboundGameEventPacket(raining ? ClientboundGameEventPacket.START_RAINING
+                : ClientboundGameEventPacket.STOP_RAINING, 0.0F), level.dimension());
+        level.getServer().getPlayerList().broadcastAll(new ClientboundGameEventPacket(ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, strength),
+                level.dimension());
+    }
+
     /** For tests: start (or stop) a spell of rain now, aiming for this strength. */
     public static void force(ServerLevel level, boolean raining, float target) {
         synchronized (STATES) {

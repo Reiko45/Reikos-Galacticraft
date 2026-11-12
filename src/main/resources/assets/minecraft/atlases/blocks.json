@@ -39,6 +39,10 @@
     },
     {
       "type": "single",
+      "resource": "galacticraftcore:model/pod_flame"
+    },
+    {
+      "type": "single",
       "resource": "galacticraftcore:model/flag0"
     },
     {

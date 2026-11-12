@@ -1772,8 +1772,361 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> shoot(minecraft, "hollow_asteroid"));
         addVillageSteps();
         addSpaceRaceSteps();
-        this.lastGroup = this.extras.size();
         addAsteroidMachineSteps();
+        this.lastGroup = this.extras.size();
+        addVenusSteps();
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusSpot;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos venusProbe;
+
+    @org.jetbrains.annotations.Nullable
+    private static ServerLevel venus(MinecraftServer server) {
+        final ServerLevel venus = server.getLevel(GCDimensions.VENUS);
+        if (venus == null) {
+            GalacticraftCore.LOGGER.warn("Screenshot tour: no Venus dimension");
+        }
+        return venus;
+    }
+
+    /** The quart cell nearest the origin deep inside a biome (its whole 7 x 7 neighbourhood the same). */
+    private static BlockPos venusBiomeCentre(ServerLevel venus, int biome) {
+        final io.github.reiko45.galacticraft.world.VenusBiomeSource source =
+                ((io.github.reiko45.galacticraft.world.VenusChunkGenerator) venus.getChunkSource().getGenerator()).venusBiomes();
+        for (int r = 0; r < 120; r++) {
+            for (int qx = -r; qx <= r; qx++) {
+                for (int qz = -r; qz <= r; qz++) {
+                    if (Math.max(Math.abs(qx), Math.abs(qz)) != r) {
+                        continue;
+                    }
+                    boolean all = true;
+                    for (int dx = -3; dx <= 3 && all; dx++) {
+                        for (int dz = -3; dz <= 3 && all; dz++) {
+                            all = source.biomeAt(qx + dx, qz + dz) == biome;
+                        }
+                    }
+                    if (all) {
+                        return new BlockPos(qx * 4 + 2, 0, qz * 4 + 2);
+                    }
+                }
+            }
+        }
+        return BlockPos.ZERO;
+    }
+
+    /**
+     * Phase 7f: Venus picked on the celestial map; the arrival in the Venus Entry Pod, burning through the air, then under
+     * its parachute; the flats, a valley and the mountains; the sky by day and night; acid rain and lightning; the
+     * planet's blocks; a vapor pool cut open under its spout; a crashed probe in its crater and its salvage; a lava lake;
+     * Isothermal Padding worn.
+     */
+    private void addVenusSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.setGear(GearSlot.MASK, new ItemStack(GCItems.OXYGEN_MASK.get()));
+            data.setGear(GearSlot.GEAR, new ItemStack(GCItems.OXYGEN_GEAR.get()));
+            data.setGear(GearSlot.LEFT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+            data.setGear(GearSlot.RIGHT_TANK, new ItemStack(GCItems.INFINITE_OXYGEN.get()));
+            data.setGear(GearSlot.THERMAL_HELMET, new ItemStack(GCItems.ISOTHERMAL_PADDING_HELMET.get()));
+            data.setGear(GearSlot.THERMAL_CHESTPLATE, new ItemStack(GCItems.ISOTHERMAL_PADDING_CHESTPLATE.get()));
+            data.setGear(GearSlot.THERMAL_LEGGINGS, new ItemStack(GCItems.ISOTHERMAL_PADDING_LEGGINGS.get()));
+            data.setGear(GearSlot.THERMAL_BOOTS, new ItemStack(GCItems.ISOTHERMAL_PADDING_BOOTS.get()));
+            data.setGear(GearSlot.SHIELD_CONTROLLER, new ItemStack(GCItems.SHIELD_CONTROLLER.get()));
+            data.markGearChanged();
+            data.inSpace = true;
+            data.spacePos = p.position();
+            data.rocketTier = 3;
+            data.rocketStorage = 1;
+            data.rocketFuel = 300;
+            data.rocketCargo = NonNullList.withSize(20, ItemStack.EMPTY);
+            data.launchedFromX = 8.5D;
+            data.launchedFromZ = 8.5D;
+            GCNetwork.sendToPlayer(p, SpaceTravel.selectionPayload(p));
+        }));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen selection) {
+                selection.select(GCDimensions.VENUS);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_venus"));
+        // The entry pod: 40 ticks for the ground, then down from y 900 at 2.5 blocks a tick, burning
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_BACK);
+            srv.overworld().setDayTime(5000L);
+            srv.execute(() -> {
+                SpaceTravel.choose(tourPlayer(srv), GCDimensions.VENUS);
+                // clear skies for the landscape views (the acid rain gets its own)
+                final ServerLevel venus = venus(srv);
+                if (venus != null) {
+                    io.github.reiko45.galacticraft.world.VenusWeather.set(venus, false, 0.0F);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                if (tourPlayer(srv).getVehicle() instanceof io.github.reiko45.galacticraft.entity.VenusEntryPodEntity pod) {
+                    GalacticraftCore.LOGGER.info("Screenshot tour: Venus pod at y {} moving {}", pod.getY(), pod.getDeltaMovement().y);
+                }
+            });
+            shoot(minecraft, "venus_entry_pod_flame");
+        });
+        // Lower down, under the parachute
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null && tourPlayer(srv).getVehicle() instanceof io.github.reiko45.galacticraft.entity.VenusEntryPodEntity pod) {
+                pod.setPos(pod.getX(), surface(venus, pod.getBlockX(), pod.getBlockZ()) + 40.0D, pod.getZ());
+                pod.setDeltaMovement(0.0D, -0.4D, 0.0D);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                if (tourPlayer(srv).getVehicle() instanceof io.github.reiko45.galacticraft.entity.VenusEntryPodEntity pod) {
+                    GalacticraftCore.LOGGER.info("Screenshot tour: Venus pod at y {}, parachute {}", pod.getY(), pod.parachuteOpen());
+                }
+            });
+            shoot(minecraft, "venus_entry_pod_parachute");
+        });
+        // The flats by day
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerLevel venus = venus(srv);
+                final ServerPlayer p = tourPlayer(srv);
+                if (venus == null) {
+                    return;
+                }
+                if (p.getVehicle() != null) {
+                    final Entity vehicle = p.getVehicle();
+                    p.stopRiding();
+                    vehicle.discard();
+                }
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+                srv.overworld().setDayTime(4000L);
+                final BlockPos flat = venusBiomeCentre(venus, io.github.reiko45.galacticraft.world.VenusBiomeSource.FLAT);
+                GalacticraftCore.LOGGER.info("Screenshot tour: Venus flats at {}", flat);
+                this.venusSpot = flat;
+                p.teleportTo(venus, flat.getX() + 0.5D, surface(venus, flat.getX(), flat.getZ()) + 5.0D, flat.getZ() + 0.5D, 135.0F, 10.0F);
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_flats"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null) {
+                final BlockPos valley = venusBiomeCentre(venus, io.github.reiko45.galacticraft.world.VenusBiomeSource.VALLEY);
+                GalacticraftCore.LOGGER.info("Screenshot tour: Venus valley at {}", valley);
+                tourPlayer(srv).teleportTo(venus, valley.getX() + 0.5D, surface(venus, valley.getX(), valley.getZ()) + 14.0D, valley.getZ() + 0.5D,
+                        45.0F, 25.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_valley"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null) {
+                final BlockPos mountain = venusBiomeCentre(venus, io.github.reiko45.galacticraft.world.VenusBiomeSource.MOUNTAIN);
+                GalacticraftCore.LOGGER.info("Screenshot tour: Venus mountains at {}", mountain);
+                tourPlayer(srv).teleportTo(venus, mountain.getX() + 0.5D, surface(venus, mountain.getX(), mountain.getZ()) + 30.0D,
+                        mountain.getZ() + 0.5D, -60.0F, 15.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_mountains"));
+        // The sky: the haze around the hidden sun by day, the dull brown night
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null && this.venusSpot != null) {
+                srv.overworld().setDayTime(5000L);
+                tourPlayer(srv).teleportTo(venus, this.venusSpot.getX() + 0.5D, surface(venus, this.venusSpot.getX(), this.venusSpot.getZ()) + 3.0D,
+                        this.venusSpot.getZ() + 0.5D, 90.0F, -68.0F);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_sky_day"));
+        this.extras.add((minecraft, srv) -> srv.overworld().setDayTime(17000L));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_sky_night"));
+        // Acid rain, and a bolt of lightning off in the distance
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                final ServerLevel venus = venus(srv);
+                if (venus != null && this.venusSpot != null) {
+                    srv.overworld().setDayTime(6000L);
+                    io.github.reiko45.galacticraft.world.VenusWeather.set(venus, true, io.github.reiko45.galacticraft.world.VenusWeather.MAX_STRENGTH);
+                    tourPlayer(srv).teleportTo(venus, this.venusSpot.getX() + 0.5D,
+                            surface(venus, this.venusSpot.getX(), this.venusSpot.getZ()) + 2.0D, this.venusSpot.getZ() + 0.5D, 0.0F, 5.0F);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_acid_rain"));
+        this.extras.add((minecraft, srv) -> {
+            srv.overworld().setDayTime(17000L);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.teleportTo(p.serverLevel(), p.getX(), p.getY(), p.getZ(), 0.0F, -20.0F);
+            });
+            if (minecraft.player != null) {
+                // dead ahead (south), 40 blocks off; faint grey on the night sky
+                io.github.reiko45.galacticraft.client.render.VenusEffects.strikeAt(minecraft.player.getX(), minecraft.player.getZ() + 40.0D,
+                        minecraft.player.getRandom(), 45);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_lightning"));
+        // The planet's blocks on a slab of hard rock
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> {
+                final ServerLevel venus = venus(srv);
+                if (venus == null || this.venusSpot == null) {
+                    return;
+                }
+                io.github.reiko45.galacticraft.world.VenusWeather.set(venus, false, 0.0F);
+                final BlockPos o = this.venusSpot.atY(surface(venus, this.venusSpot.getX(), this.venusSpot.getZ()) + 1).offset(20, 0, 0);
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(-9, -1, -4), o.offset(9, 6, 4))) {
+                    venus.setBlockAndUpdate(pos, pos.getY() == o.getY() - 1 ? GCBlocks.VENUS_HARD_ROCK.get().defaultBlockState() : Blocks.AIR.defaultBlockState());
+                }
+                final net.minecraft.world.level.block.Block[] row1 = {GCBlocks.VENUS_SOFT_ROCK.get(), GCBlocks.VENUS_HARD_ROCK.get(),
+                        GCBlocks.VENUS_VOLCANIC_ROCK.get(), GCBlocks.PUMICE.get(), GCBlocks.SCORCHED_VENUS_ROCK.get(), GCBlocks.VENUS_DUNGEON_BRICK_1.get(),
+                        GCBlocks.VENUS_DUNGEON_BRICK_2.get(), GCBlocks.LEAD_BLOCK.get(), GCBlocks.VAPOR_SPOUT.get()};
+                final net.minecraft.world.level.block.Block[] row2 = {GCBlocks.VENUS_ALUMINUM_ORE.get(), GCBlocks.VENUS_COPPER_ORE.get(),
+                        GCBlocks.GALENA_ORE.get(), GCBlocks.VENUS_QUARTZ_ORE.get(), GCBlocks.VENUS_SILICON_ORE.get(), GCBlocks.VENUS_TIN_ORE.get(),
+                        GCBlocks.SOLAR_ORE.get()};
+                for (int i = 0; i < row1.length; i++) {
+                    venus.setBlockAndUpdate(o.offset(i * 2 - 8, 0, 2), row1[i].defaultBlockState());
+                }
+                for (int i = 0; i < row2.length; i++) {
+                    venus.setBlockAndUpdate(o.offset(i * 2 - 6, 0, 0), row2[i].defaultBlockState());
+                }
+                // Web string and a web torch hanging from a ledge, a crashed probe, a pool of acid
+                for (int x = -8; x <= -5; x++) {
+                    venus.setBlockAndUpdate(o.offset(x, 3, -2), GCBlocks.VENUS_HARD_ROCK.get().defaultBlockState());
+                }
+                venus.setBlockAndUpdate(o.offset(-7, 2, -2), GCBlocks.WEB_STRING.get().defaultBlockState());
+                venus.setBlockAndUpdate(o.offset(-7, 1, -2), GCBlocks.WEB_STRING.get().defaultBlockState());
+                venus.setBlockAndUpdate(o.offset(-6, 2, -2), GCBlocks.WEB_TORCH.get().defaultBlockState());
+                venus.setBlockAndUpdate(o.offset(-2, 0, -2), GCBlocks.CRASHED_PROBE.get().defaultBlockState()
+                        .setValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING, Direction.SOUTH));
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(2, -1, -3), o.offset(4, -1, -1))) {
+                    venus.setBlockAndUpdate(pos, GCFluids.SULPHURIC_ACID_BLOCK.get().defaultBlockState());
+                }
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(1, -2, -4), o.offset(5, -2, 0))) {
+                    venus.setBlockAndUpdate(pos, GCBlocks.VENUS_HARD_ROCK.get().defaultBlockState());
+                }
+                srv.overworld().setDayTime(5000L);
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 4, 10)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 0, 0)));
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_blocks"));
+        // A vapor pool, cut open on the near side, under its spout
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusSpot == null) {
+                return;
+            }
+            final BlockPos top = this.venusSpot.offset(-30, 0, 0);
+            final int ground = surface(venus, top.getX(), top.getZ());
+            final BlockPos centre = top.atY(ground - 12);
+            io.github.reiko45.galacticraft.world.VenusFeature.vaporPool(venus, venus.getRandom(), centre);
+            for (BlockPos pos : BlockPos.betweenClosed(centre.offset(-10, -10, 1), centre.offset(10, 30, 24))) {
+                if (!venus.getBlockState(pos).isAir()) {
+                    venus.setBlock(pos, Blocks.AIR.defaultBlockState(), net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                }
+            }
+            srv.overworld().setDayTime(6000L);
+            lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(centre.offset(0, 6, 17)), net.minecraft.world.phys.Vec3.atCenterOf(centre.offset(0, 3, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "vapor_pool"));
+        // A crashed probe at the bottom of its crater, and what it holds
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusSpot == null) {
+                return;
+            }
+            final BlockPos spot = this.venusSpot.offset(0, 0, -40);
+            final BlockPos start = spot.atY(surface(venus, spot.getX(), spot.getZ()) + 1);
+            final boolean placed = io.github.reiko45.galacticraft.world.VenusFeature.crashedProbe(venus, net.minecraft.util.RandomSource.create(2L), start);
+            this.venusProbe = null;
+            for (BlockPos pos : BlockPos.betweenClosed(start.offset(-9, -12, -9), start.offset(9, 2, 9))) {
+                if (venus.getBlockState(pos).is(GCBlocks.CRASHED_PROBE.get())) {
+                    this.venusProbe = pos.immutable();
+                }
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: crashed probe placed {} at {}", placed, this.venusProbe);
+            if (this.venusProbe != null) {
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusProbe.offset(0, 7, 5)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.venusProbe));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "crashed_probe"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel venus = venus(srv);
+            if (venus != null && this.venusProbe != null
+                    && venus.getBlockEntity(this.venusProbe) instanceof io.github.reiko45.galacticraft.block.entity.CrashedProbeBlockEntity probe) {
+                // (a menu closes itself more than 8 blocks away)
+                lookFrom(tourPlayer(srv), venus, net.minecraft.world.phys.Vec3.atCenterOf(this.venusProbe.offset(0, 2, 2)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.venusProbe));
+                tourPlayer(srv).openMenu(probe);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "crashed_probe_gui"));
+        // A lava lake rimmed with volcanic rock
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel venus = venus(srv);
+            if (venus == null || this.venusSpot == null) {
+                return;
+            }
+            final BlockPos corner = this.venusSpot.offset(30, 0, -30);
+            final int ground = surface(venus, corner.getX() + 8, corner.getZ() + 8);
+            // level ground for it (lakes need solid rock all round), cleared above
+            for (BlockPos pos : BlockPos.betweenClosed(corner.offset(-6, ground - 12 - corner.getY(), -6), corner.offset(22, ground + 20 - corner.getY(), 22))) {
+                venus.setBlock(pos, pos.getY() < ground ? GCBlocks.VENUS_HARD_ROCK.get().defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            final BlockPos start = corner.atY(ground);
+            boolean placed = false;
+            for (long seed = 1L; seed < 20L && !placed; seed++) {
+                placed = io.github.reiko45.galacticraft.world.VenusFeature.lake(venus, net.minecraft.util.RandomSource.create(seed), start);
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: lava lake placed {}", placed);
+            lookFrom(p, venus, net.minecraft.world.phys.Vec3.atCenterOf(start.offset(8, 14, 18)), net.minecraft.world.phys.Vec3.atCenterOf(start.offset(8, -3, 8)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "venus_lava_lake"));
+        // Isothermal Padding worn
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
+            srv.execute(() -> {
+                final ServerLevel venus = venus(srv);
+                if (venus != null && this.venusSpot != null) {
+                    final ServerPlayer p = tourPlayer(srv);
+                    p.getAbilities().flying = false;
+                    p.onUpdateAbilities();
+                    p.teleportTo(venus, this.venusSpot.getX() + 0.5D, surface(venus, this.venusSpot.getX(), this.venusSpot.getZ()),
+                            this.venusSpot.getZ() + 0.5D, 200.0F, 10.0F);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+            shoot(minecraft, "isothermal_padding");
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+        });
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */
