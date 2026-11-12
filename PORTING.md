@@ -191,12 +191,20 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 - [x] Buggy Fueling Pad: joins 3x3 like the launch pad (never with it); an attached Fuel Loader fills a parked buggy
 - [x] Fire needs oxygen: burning entities on the Moon outside breathable air are put out when the flames first hurt
       them (1.12.2 EventHandlerGC#onEntityDamaged, missed in Phase 3)
-- [ ] Deferred to Phase 5c: Moon villages and Alien Villagers (1.12.2 MapGenVillageMoon, its eleven building pieces
-      and EntityAlienVillager trading for lunar sapphires). The Tier 2 Rocket schematic drops there; its page
-      came with the Tier 2 Rocket in Phase 7a.
+- [x] Moon villages and Alien Villagers: see Phase 5c. The Tier 2 Rocket schematic drops there; its page came with the
+      Tier 2 Rocket in Phase 7a.
 
-### Phase 5c – Moon villages
-- [ ] Moon village structure and pieces, Alien Villager with its trades
+### Phase 5c – Moon villages ✅
+- [x] Moon villages (MapGenVillageMoon, StructureVillageStartMoon, StructureVillagePiecesMoon): the pre-1.14 vanilla
+      village layout 1.12.2 copied, with its weights and limits (wood huts, houses, sapling fields and crop fields, a
+      lamp post when nothing else fits), plank paths 7-21 blocks long and a range of 112 blocks from the well. The well,
+      paths, lamp posts (StructureComponentVillageTorch), fields (Field, Field2) and the domed houses (House, WoodHut)
+      are built block for block, each settling onto the average ground height of the first chunk that builds it
+- [x] Alien Villager (EntityAlienVillager, ModelAlienVillager, RenderAlienVillager): four to a house; breathes without
+      air, never despawns, keeps away from zombies, picks up food; trades only with a player wearing a Frequency Module,
+      for Lunar Sapphires: oxygen gear, a part-filled tank, a fuel canister and battery, a parachute, a wafer, the Moon
+      Buggy / Tier 2 Rocket schematic swap, compressed copper and tin, canned carrots, and a sapphire for jungle
+      saplings; it restocks after trading and turns into a witch when struck by lightning; spawn egg
 
 ### Phase 6 – Space stations ✅
 - [x] Earth orbit dimension (`galacticraftcore:overworld_orbit`, 1.12.2 WorldProviderOverworldOrbit): empty space, the
@@ -516,6 +524,18 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   1.12.2 camera zoom and default third-person view in the pod are not ported.
 * The thermal check spares spectators as well as creative players. Thermal padding pieces sync with the rest of the
   gear look (1.12.2 PlayerGearData) rather than separate gear ids.
+* Moon villages come one per 32x32 chunk region, at a random chunk of its first 24x24, the rule 1.12.2's /locate used.
+  1.12.2's own check seeded each chunk with that chunk's coordinates instead of the region's, so its villages came at
+  random (about one per region on average, sometimes none or several) and /locate pointed elsewhere.
+* As in 1.12.2, a village well is oriented by a random facing among down, up, north and south; with up or down it has
+  no horizontal orientation, so (in 1.12.2 too) half of the wells are not built. The paths still start from it.
+* The village pieces settle on the surface height map (1.12.2 getTopSolidOrLiquidBlock, which skipped liquids; the
+  1.21 height map counts them, which makes no difference on the Moon).
+* Alien Villagers have no 1.12.2 village (door and reputation) system to belong to, as their 1.12.2 counterparts had
+  none on the Moon either (no doors). Their restock gives sold-out trades 2-12 more uses as 1.12.2 did, but no longer
+  appends a second copy of the whole trade list each time (1.12.2's populateBuyingList added the list again).
+  The canned carrot trade accepts any oil canister (1.12.2: only an empty one). Struck by lightning they turn into a
+  vanilla witch until the Evolved Witch is ported. The Sensor Glasses' mob texture isn't drawn (no Sensor Glasses yet).
 
 ## Workflow for porting more content
 

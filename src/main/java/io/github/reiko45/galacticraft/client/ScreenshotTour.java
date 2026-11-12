@@ -1767,6 +1767,143 @@ public final class ScreenshotTour {
         this.extras.add((minecraft, srv) -> {
         });
         this.extras.add((minecraft, srv) -> shoot(minecraft, "hollow_asteroid"));
+        addVillageSteps();
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos villageCentre;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos villageHouse;
+    @org.jetbrains.annotations.Nullable
+    private Direction villageHouseFacing;
+
+    /**
+     * Phase 5c: the first Moon village (built where its structure set puts it, like the dungeon), from above and up
+     * close, Alien Villagers, and their trades.
+     */
+    private void addVillageSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null) {
+                return;
+            }
+            final var structure = moon.registryAccess().registryOrThrow(Registries.STRUCTURE)
+                    .getHolderOrThrow(io.github.reiko45.galacticraft.data.GCWorldgenProvider.MOON_VILLAGE);
+            final var generator = moon.getChunkSource().getGenerator();
+            final var placement = (net.minecraft.world.level.levelgen.structure.placement.RandomSpreadStructurePlacement)
+                    moon.getChunkSource().getGeneratorState().getPlacementsForStructure(structure).get(0);
+            final net.minecraft.world.level.ChunkPos chunk = placement.getPotentialStructureChunk(moon.getSeed(), 0, 0);
+            final net.minecraft.world.level.levelgen.structure.StructureStart start = structure.value().generate(moon.registryAccess(), generator,
+                    generator.getBiomeSource(), moon.getChunkSource().randomState(), moon.getStructureManager(), moon.getSeed(), chunk, 0, moon,
+                    biome -> true);
+            if (!start.isValid()) {
+                GalacticraftCore.LOGGER.warn("Screenshot tour: no Moon village start at {}", chunk);
+                return;
+            }
+            final var box = start.getBoundingBox();
+            net.minecraft.world.level.ChunkPos.rangeClosed(new net.minecraft.world.level.ChunkPos(box.minX() >> 4, box.minZ() >> 4),
+                    new net.minecraft.world.level.ChunkPos(box.maxX() >> 4, box.maxZ() >> 4)).forEach(pos -> {
+                moon.getChunk(pos.x, pos.z);
+                start.placeInChunk(moon, moon.structureManager(), generator, moon.getRandom(), new net.minecraft.world.level.levelgen.structure.BoundingBox(
+                        pos.getMinBlockX(), moon.getMinBuildHeight(), pos.getMinBlockZ(), pos.getMaxBlockX(), moon.getMaxBuildHeight(), pos.getMaxBlockZ()), pos);
+            });
+            int houses = 0;
+            for (var piece : start.getPieces()) {
+                if (piece instanceof io.github.reiko45.galacticraft.world.village.MoonVillagePiece villagePiece) {
+                    if (villagePiece.kind() == io.github.reiko45.galacticraft.world.village.MoonVillagePiece.Kind.WELL) {
+                        this.villageCentre = villagePiece.getBoundingBox().getCenter();
+                    } else if ((villagePiece.kind() == io.github.reiko45.galacticraft.world.village.MoonVillagePiece.Kind.HOUSE
+                            || villagePiece.kind() == io.github.reiko45.galacticraft.world.village.MoonVillagePiece.Kind.WOOD_HUT) && this.villageHouse == null) {
+                        final var houseBox = villagePiece.getBoundingBox();
+                        this.villageHouse = new BlockPos(houseBox.getCenter().getX(), houseBox.minY(), houseBox.getCenter().getZ());
+                        this.villageHouseFacing = villagePiece.getOrientation();
+                    }
+                    if (villagePiece.kind() == io.github.reiko45.galacticraft.world.village.MoonVillagePiece.Kind.HOUSE
+                            || villagePiece.kind() == io.github.reiko45.galacticraft.world.village.MoonVillagePiece.Kind.WOOD_HUT) {
+                        houses++;
+                    }
+                }
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: Moon village at {} ({} pieces, {} houses), well {}, house {} facing {}", chunk,
+                    start.getPieces().size(), houses, this.villageCentre, this.villageHouse, this.villageHouseFacing);
+            final ServerPlayer p = tourPlayer(srv);
+            p.setGameMode(GameType.CREATIVE);
+            p.getAbilities().flying = true;
+            p.onUpdateAbilities();
+            srv.overworld().setDayTime(4000L);
+            if (this.villageCentre != null) {
+                final int top = surface(moon, this.villageCentre.getX(), this.villageCentre.getZ());
+                p.teleportTo(moon, this.villageCentre.getX() + 0.5D, top + 34.0D, this.villageCentre.getZ() + 38.5D, 180.0F, 38.0F);
+            }
+        }));
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the village's chunks reach the client
+        }
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_village"));
+        // A house, seen from its front doorway's side
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.villageHouse == null || this.villageHouseFacing == null) {
+                return;
+            }
+            final Direction out = this.villageHouseFacing.getOpposite();
+            final double x = this.villageHouse.getX() + 0.5D + out.getStepX() * 18.0D + 4.0D;
+            final double z = this.villageHouse.getZ() + 0.5D + out.getStepZ() * 18.0D + 4.0D;
+            final float yaw = (float) Math.toDegrees(Math.atan2(-(this.villageHouse.getX() + 0.5D - x), this.villageHouse.getZ() + 0.5D - z));
+            tourPlayer(srv).teleportTo(moon, x, this.villageHouse.getY() + 6.0D, z, yaw, 14.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_village_house"));
+        // Alien Villagers up close: two adults and a child, standing still
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null || this.villageCentre == null) {
+                return;
+            }
+            final int x = this.villageCentre.getX() + 9;
+            final int z = this.villageCentre.getZ() + 9;
+            final int y = surface(moon, x, z);
+            for (BlockPos pos : BlockPos.betweenClosed(x - 3, y - 1, z - 2, x + 3, y - 1, z + 6)) {
+                moon.setBlockAndUpdate(pos, GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+            }
+            for (BlockPos pos : BlockPos.betweenClosed(x - 3, y, z - 2, x + 3, y + 4, z + 6)) {
+                moon.setBlockAndUpdate(pos, Blocks.AIR.defaultBlockState());
+            }
+            for (int i = 0; i < 3; i++) {
+                final io.github.reiko45.galacticraft.entity.AlienVillagerEntity villager = io.github.reiko45.galacticraft.registry.GCEntities.ALIEN_VILLAGER.get().create(moon);
+                if (villager == null) {
+                    continue;
+                }
+                villager.moveTo(x - 1.5D + i * 1.5D, y, z + 0.5D, 0.0F, 0.0F);
+                villager.setYHeadRot(0.0F);
+                villager.setYBodyRot(0.0F);
+                villager.setNoAi(true);
+                if (i == 2) {
+                    villager.setAge(-24000);
+                }
+                moon.addFreshEntity(villager);
+            }
+            tourPlayer(srv).teleportTo(moon, x + 0.5D, y + 1.2D, z + 5.0D, 180.0F, 12.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "alien_villagers"));
+        // Trading, with a Frequency Module in the Galacticraft inventory
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            final ServerPlayer p = tourPlayer(srv);
+            GCPlayerData.get(p).setGear(GearSlot.FREQUENCY_MODULE, new ItemStack(GCItems.FREQUENCY_MODULE.get()));
+            if (moon != null) {
+                final var villagers = moon.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.AlienVillagerEntity.class, p.getBoundingBox().inflate(8.0D),
+                        villager -> !villager.isBaby());
+                if (!villagers.isEmpty()) {
+                    villagers.get(0).mobInteract(p, InteractionHand.MAIN_HAND);
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "gui_alien_villager_trades"));
     }
 
     /** The nearest asteroid to (0, 0) that is (or isn't) hollow, big ones first for the outside view. */

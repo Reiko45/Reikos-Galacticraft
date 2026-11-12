@@ -26,6 +26,9 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
   fall distance is ×0.18, and dropped items and arrows float too, the same as 1.12.2. The black sky shows stars even
   at noon and the Earth hanging overhead. You leave footprints in the moon turf, and meteor showers rain down hot
   Fallen Meteors (they burn you while they glow, then cool down to be mined for meteoric iron).
+* **Moon villages**: villages of domed houses, plank paths, lamp posts, fields and a water well dot the Moon (one in
+  each 32x32 chunk area). Their big-brained Alien Villagers breathe without air and trade oxygen gear, fuel, batteries,
+  wafers and schematics for Lunar Sapphires, if you wear a Frequency Module to talk to them.
 * **Moon mobs and dungeons**: Evolved Zombies, Skeletons, Spiders, Creepers and Endermen (wearing oxygen gear, tougher
   than vanilla, with rare drops of Galacticraft parts) spawn on the Moon. Each 704x704 area has a dungeon under a crater:
   corridors and rooms with spawners, cobwebs and loot chests lead to the Skeleton Boss, which grabs and throws you and
@@ -231,6 +234,12 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 | ![The destination screen with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
 
 ![An Entry Pod settled on an asteroid, lit by its Bright Air](docs/screenshots/entry_pod_landed.png)
+
+![A Moon village from above: domed houses along plank paths, fields and lamp posts](docs/screenshots/moon_village.png)
+
+| A Moon village house | Alien Villagers and their trades |
+|---|---|
+| ![A domed house of tin decoration blocks with glowstone torches](docs/screenshots/moon_village_house.png) | ![Two Alien Villagers and a child, and their trading screen](docs/screenshots/alien_villagers_and_trades.png) |
 
 ### Visiting the Moon, Mars and the asteroids
 
