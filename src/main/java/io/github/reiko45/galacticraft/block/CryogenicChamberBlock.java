@@ -114,6 +114,13 @@ public class CryogenicChamberBlock extends HorizontalDirectionalBlock {
         }
         player.startSleeping(pos);
         player.refreshDimensions();
+        // Facing out of the opening
+        final float yaw = player.level().getBlockState(pos).getValue(FACING).toYRot();
+        player.setYRot(yaw);
+        player.setYHeadRot(yaw);
+        if (player.connection != null) {
+            player.connection.teleport(player.getX(), player.getY(), player.getZ(), yaw, 0.0F);
+        }
         ((ServerLevel) player.level()).updateSleepingPlayerList();
         return true;
     }

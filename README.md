@@ -193,6 +193,20 @@ back and you come down by parachute, with your cargo following in a Para-chest. 
 
 ![A slimeling's panel, its feeding screen and its inventory with the bag](docs/screenshots/slimeling_screens.png)
 
+![A Mars base: Water Electrolyzer, Methane Synthesizer and Gas Liquefier, a Cryogenic Chamber, and a Cargo Rocket on its pad with a Cargo Loader, a Cargo Unloader and a Launch Controller; a Terraformer's bubble behind](docs/screenshots/mars_machines_and_cargo_rocket.png)
+
+![The Water Electrolyzer, Methane Synthesizer and Gas Liquefier GUIs](docs/screenshots/gas_machine_screens.png)
+
+| A Terraformer greening Mars | Looking out of a Cryogenic Chamber |
+|---|---|
+| ![A Terraformer's green bubble over grass, saplings and trees on Mars regolith](docs/screenshots/terraformer_bubble.png) | ![The view out of a Cryogenic Chamber while asleep in it](docs/screenshots/cryogenic_chamber_inside.png) |
+
+![The Cargo Loader, the Launch Controller's two pages and a Cargo Rocket's cargo with its Launch button](docs/screenshots/cargo_screens.png)
+
+| The Terraformer and the Cargo Rocket page | A Cargo Rocket lifting off |
+|---|---|
+| ![The Terraformer GUI and the Cargo Rocket's NASA Workbench page](docs/screenshots/terraformer_and_cargo_bench_screens.png) | ![A Cargo Rocket launching from its pad, which its Launch Controller keeps](docs/screenshots/cargo_rocket_launch.png) |
+
 ### Visiting the Moon and Mars
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
