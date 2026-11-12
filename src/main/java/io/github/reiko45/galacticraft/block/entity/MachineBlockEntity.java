@@ -153,7 +153,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements MenuProv
         if (stack.getItem() instanceof ElectricItem electric) {
             final float wanted = Math.min(this.energy.getCapacityGJ() - this.energy.getStoredGJ(), this.energy.maxReceive());
             if (wanted > 0.0F && this.energy.generate(electric.discharge(stack, wanted, false)) > 0.0F) {
-                this.energy.setPoweredTier(1);
+                this.energy.setPoweredTier(electric.tier());
             }
         }
     }

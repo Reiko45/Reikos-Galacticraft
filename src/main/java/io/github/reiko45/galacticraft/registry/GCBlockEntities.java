@@ -121,6 +121,15 @@ public final class GCBlockEntities {
             () -> BlockEntityType.Builder.of(FallenMeteorBlockEntity::new, GCBlocks.FALLEN_METEOR.get()).build(null));
 
     @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.VaporSpoutBlockEntity>> VAPOR_SPOUT = BLOCK_ENTITIES.register(
+            "vapor_spout", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.VaporSpoutBlockEntity::new,
+                    GCBlocks.VAPOR_SPOUT.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.CrashedProbeBlockEntity>> CRASHED_PROBE = BLOCK_ENTITIES.register(
+            "crashed_probe", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.CrashedProbeBlockEntity::new,
+                    GCBlocks.CRASHED_PROBE.get()).build(null));
+
+    @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity>> SLIMELING_EGG = BLOCK_ENTITIES.register("slimeling_egg",
             () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity::new, GCBlocks.RED_SLIMELING_EGG.get(),
                     GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get()).build(null));

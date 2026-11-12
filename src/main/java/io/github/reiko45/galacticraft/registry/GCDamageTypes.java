@@ -21,6 +21,9 @@ public final class GCDamageTypes {
     /** 1.12.2 DamageSourceGC.thermal: bypasses armour, absolute. "%1$s forgot thermal protection". */
     public static final ResourceKey<DamageType> THERMAL = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("thermal"));
 
+    /** 1.12.2 DamageSourceGC.acid ("sulphuric_acid"): armour helps. "%1$s dissolved in sulphuric acid!". */
+    public static final ResourceKey<DamageType> SULPHURIC_ACID = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("sulphuric_acid"));
+
     private GCDamageTypes() {
     }
 
@@ -30,6 +33,10 @@ public final class GCDamageTypes {
 
     public static DamageSource crash(Level level) {
         return level.damageSources().source(SPACESHIP_CRASH);
+    }
+
+    public static DamageSource acid(Level level) {
+        return level.damageSources().source(SULPHURIC_ACID);
     }
 
     public static DamageSource thermal(Level level) {

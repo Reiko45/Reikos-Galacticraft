@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftcore:block/venus_soft_rock"
+      },
+      {
+        "model": "galacticraftcore:block/venus_soft_rock",
+        "y": 90
+      },
+      {
+        "model": "galacticraftcore:block/venus_soft_rock",
+        "y": 180
+      },
+      {
+        "model": "galacticraftcore:block/venus_soft_rock",
+        "y": 270
+      }
+    ]
+  }
+}

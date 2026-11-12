@@ -1,0 +1,24 @@
+{
+  "type": "galacticraftcore:circuit_fabricating",
+  "ingredients": [
+    {
+      "tag": "c:gems/diamond"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "tag": "c:silicon"
+    },
+    {
+      "tag": "c:dusts/redstone"
+    },
+    {
+      "item": "galacticraftcore:solar_dust"
+    }
+  ],
+  "result": {
+    "count": 3,
+    "id": "galacticraftcore:solar_array_wafer"
+  }
+}

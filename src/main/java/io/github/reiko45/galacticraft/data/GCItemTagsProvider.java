@@ -52,10 +52,16 @@ public class GCItemTagsProvider extends ItemTagsProvider {
         tag(Tags.Items.DUSTS).addTag(GCTags.item("dusts/titanium"));
         tag(GCTags.item("shards/titanium")).add(GCItems.TITANIUM_SHARD.get());
         tag(GCTags.item("shards/iron")).add(GCItems.IRON_SHARD.get());
-        tag(GCModTags.THERMAL_HELMETS).add(GCItems.THERMAL_PADDING_HELMET.get());
-        tag(GCModTags.THERMAL_CHESTPLATES).add(GCItems.THERMAL_PADDING_CHESTPLATE.get());
-        tag(GCModTags.THERMAL_LEGGINGS).add(GCItems.THERMAL_PADDING_LEGGINGS.get());
-        tag(GCModTags.THERMAL_BOOTS).add(GCItems.THERMAL_PADDING_BOOTS.get());
+        tag(GCModTags.THERMAL_HELMETS).add(GCItems.THERMAL_PADDING_HELMET.get(), GCItems.ISOTHERMAL_PADDING_HELMET.get());
+        tag(GCModTags.THERMAL_CHESTPLATES).add(GCItems.THERMAL_PADDING_CHESTPLATE.get(), GCItems.ISOTHERMAL_PADDING_CHESTPLATE.get());
+        tag(GCModTags.THERMAL_LEGGINGS).add(GCItems.THERMAL_PADDING_LEGGINGS.get(), GCItems.ISOTHERMAL_PADDING_LEGGINGS.get());
+        tag(GCModTags.THERMAL_BOOTS).add(GCItems.THERMAL_PADDING_BOOTS.get(), GCItems.ISOTHERMAL_PADDING_BOOTS.get());
+        tag(GCModTags.SHIELD_CONTROLLERS).add(GCItems.SHIELD_CONTROLLER.get());
+        // 1.12.2 RecipeManagerVenus: ingotLead, waferSolarThin
+        tag(GCTags.item("ingots/lead")).add(GCItems.LEAD_INGOT.get());
+        tag(Tags.Items.INGOTS).addTag(GCTags.item("ingots/lead"));
+        tag(GCTags.item("dusts/solar")).add(GCItems.SOLAR_DUST.get());
+        tag(Tags.Items.DUSTS).addTag(GCTags.item("dusts/solar"));
 
         tag(GCTags.item("raw_materials/meteoric_iron")).add(GCItems.METEORIC_IRON_RAW.get());
         tag(GCTags.item("raw_materials/desh")).add(GCItems.RAW_DESH.get());
@@ -80,7 +86,8 @@ public class GCItemTagsProvider extends ItemTagsProvider {
                 GCTags.item("plates/desh"), GCTags.item("plates/titanium"));
 
         // Vanilla tool/armor tags drive enchantability since 1.21.
-        tag(ItemTags.PICKAXES).add(GCItems.HEAVY_DUTY_PICKAXE.get(), GCItems.DESH_PICKAXE.get(), GCItems.STICKY_DESH_PICKAXE.get(), GCItems.TITANIUM_PICKAXE.get());
+        tag(ItemTags.PICKAXES).add(GCItems.HEAVY_DUTY_PICKAXE.get(), GCItems.DESH_PICKAXE.get(), GCItems.STICKY_DESH_PICKAXE.get(), GCItems.TITANIUM_PICKAXE.get(),
+                GCItems.VOLCANIC_PICKAXE.get());
         tag(ItemTags.AXES).add(GCItems.HEAVY_DUTY_AXE.get(), GCItems.DESH_AXE.get(), GCItems.TITANIUM_AXE.get());
         tag(ItemTags.SHOVELS).add(GCItems.HEAVY_DUTY_SHOVEL.get(), GCItems.DESH_SHOVEL.get(), GCItems.TITANIUM_SHOVEL.get());
         tag(ItemTags.HOES).add(GCItems.HEAVY_DUTY_HOE.get(), GCItems.DESH_HOE.get(), GCItems.TITANIUM_HOE.get());

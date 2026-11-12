@@ -100,6 +100,13 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
             }
             return createSingleItemTable(block).withPool(applyExplosionCondition(block, dye));
         });
+        // Venus (1.12.2 BlockBasicVenus#getItemDropped, quantityDropped and getExpDrop; BlockSpout, BlockTorchWeb)
+        add(GCBlocks.VENUS_QUARTZ_ORE.get(), block -> createOreDrop(block, net.minecraft.world.item.Items.QUARTZ));
+        add(GCBlocks.VENUS_SILICON_ORE.get(), block -> createOreDrop(block, GCItems.RAW_SILICON.get()));
+        add(GCBlocks.SOLAR_ORE.get(), block -> createOreDrop(block, GCItems.SOLAR_DUST.get()));
+        add(GCBlocks.VAPOR_SPOUT.get(), block -> createSingleItemTableWithSilkTouch(block, GCBlocks.VENUS_SOFT_ROCK.get()));
+        add(GCBlocks.WEB_STRING.get(), createShearsOnlyDrop(GCBlocks.WEB_STRING.get()));
+        add(GCBlocks.WEB_TORCH.get(), createShearsOnlyDrop(GCBlocks.WEB_TORCH.get()));
         // Cheese is eaten, not mined (same as cake).
         add(GCBlocks.CHEESE_BLOCK.get(), noDrop());
         // 1.12.2: 1 + (int)(rand + 0.75) raw meteoric iron, i.e. 1 plus a 75% chance of a second.

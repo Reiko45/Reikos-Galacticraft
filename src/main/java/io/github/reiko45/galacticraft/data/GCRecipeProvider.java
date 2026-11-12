@@ -55,6 +55,12 @@ public class GCRecipeProvider extends RecipeProvider {
         ore(output, GCBlocks.MARS_IRON_ORE.get(), Items.IRON_INGOT, 0.2F);
         // RecipeManagerAsteroids#addUniversalRecipes
         ore(output, GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCItems.ALUMINUM_INGOT.get(), 0.5F);
+        // 1.12.2 RecipeManagerVenus#addUniversalRecipes
+        ore(output, GCBlocks.VENUS_ALUMINUM_ORE.get(), GCItems.ALUMINUM_INGOT.get(), 0.5F);
+        ore(output, GCBlocks.VENUS_COPPER_ORE.get(), net.minecraft.world.item.Items.COPPER_INGOT, 0.5F);
+        ore(output, GCBlocks.GALENA_ORE.get(), GCItems.LEAD_INGOT.get(), 1.0F);
+        ore(output, GCBlocks.VENUS_QUARTZ_ORE.get(), net.minecraft.world.item.Items.QUARTZ, 0.2F);
+        ore(output, GCBlocks.VENUS_TIN_ORE.get(), GCItems.TIN_INGOT.get(), 0.5F);
         ore(output, GCBlocks.ILMENITE_ORE.get(), GCItems.TITANIUM_INGOT.get(), 0.5F);
         ore(output, GCBlocks.ASTEROID_IRON_ORE.get(), Items.IRON_INGOT, 0.5F);
         ore(output, GCItems.IRON_SHARD.get(), Items.IRON_INGOT, 0.5F);
@@ -135,6 +141,8 @@ public class GCRecipeProvider extends RecipeProvider {
         fabricate(output, GCItems.SOLAR_WAFER.get(), 9, tag("gems/lapis"));
         fabricate(output, GCItems.BASIC_WAFER.get(), 3, Ingredient.of(Items.REDSTONE_TORCH));
         fabricate(output, GCItems.ADVANCED_WAFER.get(), 1, Ingredient.of(Items.REPEATER));
+        // 1.12.2 RecipeManagerVenus: three Solar Array Wafers from Solar Dust
+        fabricate(output, GCItems.SOLAR_ARRAY_WAFER.get(), 3, Ingredient.of(GCItems.SOLAR_DUST.get()));
     }
 
     private static void fabricate(RecipeOutput output, ItemLike result, int count, Ingredient extra) {

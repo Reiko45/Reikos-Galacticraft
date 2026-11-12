@@ -36,6 +36,12 @@ public final class GCTiers {
     public static final Tier TITANIUM_AXE = new SimpleTier(BlockTags.INCORRECT_FOR_NETHERITE_TOOL, 768, 5.0F, 2.0F, 8,
             () -> Ingredient.of(GCItems.COMPRESSED_STEEL.get()));
 
+    /**
+     * 1.12.2 TOOL_VOLCANIC: harvest level 3 (diamond), 1561 uses, efficiency 32, +1.5 damage, enchantability 10. No
+     * repair item in 1.12.2, nor here.
+     */
+    public static final Tier VOLCANIC = new SimpleTier(BlockTags.INCORRECT_FOR_DIAMOND_TOOL, 1561, 32.0F, 1.5F, 10, () -> Ingredient.EMPTY);
+
     private GCTiers() {
     }
 }

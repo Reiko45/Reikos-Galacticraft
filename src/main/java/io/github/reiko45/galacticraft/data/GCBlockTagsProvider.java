@@ -61,6 +61,22 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.SHORT_RANGE_TELEPAD.get(), GCBlocks.TELEPAD_FAKE.get());
         tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.ILMENITE_ORE.get());
         tag(BlockTags.ICE).add(GCBlocks.DENSE_ICE.get());
+        // Venus (1.12.2 VenusBlocks#setHarvestLevels: the four rocks and the spout need stone tools, the rest any pickaxe)
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.VENUS_SOFT_ROCK.get(), GCBlocks.VENUS_HARD_ROCK.get(), GCBlocks.VENUS_VOLCANIC_ROCK.get(),
+                GCBlocks.PUMICE.get(), GCBlocks.VENUS_DUNGEON_BRICK_1.get(), GCBlocks.VENUS_DUNGEON_BRICK_2.get(), GCBlocks.VENUS_ALUMINUM_ORE.get(),
+                GCBlocks.VENUS_COPPER_ORE.get(), GCBlocks.GALENA_ORE.get(), GCBlocks.VENUS_QUARTZ_ORE.get(), GCBlocks.VENUS_SILICON_ORE.get(),
+                GCBlocks.VENUS_TIN_ORE.get(), GCBlocks.LEAD_BLOCK.get(), GCBlocks.SOLAR_ORE.get(), GCBlocks.SCORCHED_VENUS_ROCK.get(),
+                GCBlocks.VAPOR_SPOUT.get(), GCBlocks.CRASHED_PROBE.get());
+        tag(BlockTags.NEEDS_STONE_TOOL).add(GCBlocks.VENUS_SOFT_ROCK.get(), GCBlocks.VENUS_HARD_ROCK.get(), GCBlocks.VENUS_VOLCANIC_ROCK.get(),
+                GCBlocks.PUMICE.get(), GCBlocks.VAPOR_SPOUT.get());
+        tag(Tags.Blocks.ORES_COPPER).add(GCBlocks.VENUS_COPPER_ORE.get());
+        tag(Tags.Blocks.ORES_QUARTZ).add(GCBlocks.VENUS_QUARTZ_ORE.get());
+        tag(GCTags.block("ores/aluminum")).add(GCBlocks.VENUS_ALUMINUM_ORE.get());
+        tag(GCTags.block("ores/tin")).add(GCBlocks.VENUS_TIN_ORE.get());
+        tag(GCTags.block("ores/lead")).add(GCBlocks.GALENA_ORE.get());
+        tag(GCTags.block("ores/silicon")).add(GCBlocks.VENUS_SILICON_ORE.get());
+        tag(GCTags.block("ores/solar")).add(GCBlocks.SOLAR_ORE.get());
+        tag(GCTags.block("storage_blocks/lead")).add(GCBlocks.LEAD_BLOCK.get());
         tag(GCTags.block("ores/aluminum")).add(GCBlocks.ASTEROID_ALUMINUM_ORE.get());
         tag(GCTags.block("ores/ilmenite")).add(GCBlocks.ILMENITE_ORE.get());
         tag(Tags.Blocks.ORES_IRON).add(GCBlocks.ASTEROID_IRON_ORE.get());

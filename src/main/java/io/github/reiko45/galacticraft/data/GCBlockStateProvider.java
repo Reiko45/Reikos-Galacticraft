@@ -60,6 +60,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         }
         simpleBlockWithItem(GCBlocks.DESH_ORE.get(), cubeAll(GCBlocks.DESH_ORE.get()));
         asteroids();
+        venus();
         walkways();
         // 1.12.2 vine_0..2 are cross models (vine_model); the item shows the first.
         getVariantBuilder(GCBlocks.CAVERNOUS_VINES.get()).forAllStates(state -> {
@@ -292,6 +293,37 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .modelFile(state.getValue(io.github.reiko45.galacticraft.block.CryogenicChamberPartBlock.TOP) ? top : middle)
                 .rotationY((int) state.getValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING).toYRot()).build());
         itemModels().withExistingParent("cryogenic_chamber", modLoc("block/cryogenic_chamber"));
+    }
+
+    /**
+     * 1.12.2 venus blockstate: the four rocks turned at random (venus_rock_N_model with y 0/90/180/270), the rest plain
+     * cubes; the spout's top is the vent; web string and the web torch are cross models (vine_model).
+     */
+    private void venus() {
+        for (DeferredBlock<? extends Block> rock : java.util.List.of(GCBlocks.VENUS_SOFT_ROCK, GCBlocks.VENUS_HARD_ROCK, GCBlocks.VENUS_VOLCANIC_ROCK,
+                GCBlocks.PUMICE)) {
+            final ModelFile model = cubeAll(rock.get());
+            getVariantBuilder(rock.get()).partialState().setModels(ConfiguredModel.allYRotations(model, 0, false));
+            simpleBlockItem(rock.get(), model);
+        }
+        for (DeferredBlock<? extends Block> block : java.util.List.of(GCBlocks.VENUS_DUNGEON_BRICK_1, GCBlocks.VENUS_DUNGEON_BRICK_2,
+                GCBlocks.VENUS_ALUMINUM_ORE, GCBlocks.VENUS_COPPER_ORE, GCBlocks.GALENA_ORE, GCBlocks.VENUS_QUARTZ_ORE, GCBlocks.VENUS_SILICON_ORE,
+                GCBlocks.VENUS_TIN_ORE, GCBlocks.LEAD_BLOCK, GCBlocks.SOLAR_ORE, GCBlocks.SCORCHED_VENUS_ROCK)) {
+            simpleBlockWithItem(block.get(), cubeAll(block.get()));
+        }
+        final ResourceLocation soft = tex("venus_soft_rock");
+        simpleBlockWithItem(GCBlocks.VAPOR_SPOUT.get(), models().cube("vapor_spout", soft, tex("vapor_spout"), soft, soft, soft, soft)
+                .texture("particle", soft));
+        for (DeferredBlock<? extends Block> web : java.util.List.of(GCBlocks.WEB_STRING, GCBlocks.WEB_TORCH)) {
+            final String name = web.getId().getPath();
+            simpleBlock(web.get(), models().cross(name, tex(name)).renderType("cutout"));
+            itemModels().withExistingParent(name, mcLoc("item/generated")).texture("layer0", tex(name));
+        }
+        // The probe's model comes from the porter (1.12.2 crashed_probe.json); facing north is unturned.
+        final ModelFile probe = models().getExistingFile(modLoc("block/crashed_probe"));
+        horizontalBlock(GCBlocks.CRASHED_PROBE.get(), probe);
+        simpleBlockItem(GCBlocks.CRASHED_PROBE.get(), probe);
+        liquid(GCFluids.SULPHURIC_ACID_BLOCK.get(), "sulphuric_acid");
     }
 
     /** 1.12.2 asteroids_block (rock turned at random, like its four weighted variants) and dense_ice. */

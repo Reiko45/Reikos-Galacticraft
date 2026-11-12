@@ -142,6 +142,48 @@ public final class GCBlocks {
     public static final DeferredBlock<SlabBlock> DARK_DECORATION_SLAB = slab("dark_decoration_slab", DARK_DECORATION_BLOCK);
     public static final DeferredBlock<Block> TITANIUM_BLOCK = withItem("titanium_block", () -> new Block(asteroidRock()
             .instrument(NoteBlockInstrument.IRON_XYLOPHONE).sound(SoundType.METAL)));
+    // --- Venus (1.12.2 BlockBasicVenus "venus" and the planet's other blocks) ---
+    public static final DeferredBlock<Block> VENUS_SOFT_ROCK = withItem("venus_soft_rock", () -> new Block(venusRock(MapColor.TERRACOTTA_YELLOW, 0.9F, 0.5F)));
+    public static final DeferredBlock<Block> VENUS_HARD_ROCK = withItem("venus_hard_rock", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 1.5F, 6.0F)));
+    /** Mined (without Silk Touch) it leaves lava behind. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.VolcanicRockBlock> VENUS_VOLCANIC_ROCK = withItem("venus_volcanic_rock",
+            () -> new io.github.reiko45.galacticraft.block.VolcanicRockBlock(venusRock(MapColor.COLOR_RED, 2.2F, 0.5F)));
+    public static final DeferredBlock<Block> PUMICE = withItem("pumice", () -> new Block(venusRock(MapColor.TERRACOTTA_LIGHT_GRAY, 2.2F, 0.5F)));
+    public static final DeferredBlock<Block> VENUS_DUNGEON_BRICK_1 = withItem("venus_dungeon_brick_1",
+            () -> new Block(venusRock(MapColor.TERRACOTTA_BROWN, 4.0F, 40.0F)));
+    public static final DeferredBlock<Block> VENUS_DUNGEON_BRICK_2 = withItem("venus_dungeon_brick_2",
+            () -> new Block(venusRock(MapColor.TERRACOTTA_BROWN, 4.0F, 40.0F)));
+    public static final DeferredBlock<Block> VENUS_ALUMINUM_ORE = withItem("venus_aluminum_ore", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    public static final DeferredBlock<Block> VENUS_COPPER_ORE = withItem("venus_copper_ore", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    public static final DeferredBlock<Block> GALENA_ORE = withItem("galena_ore", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    /** Drops Nether Quartz and 2-5 experience (1.12.2 getItemDropped, getExpDrop). */
+    public static final DeferredBlock<DropExperienceBlock> VENUS_QUARTZ_ORE = withItem("venus_quartz_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 5), venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    /** Drops Raw Silicon (more with Fortune) and 2-5 experience. */
+    public static final DeferredBlock<DropExperienceBlock> VENUS_SILICON_ORE = withItem("venus_silicon_ore",
+            () -> new DropExperienceBlock(UniformInt.of(2, 5), venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    public static final DeferredBlock<Block> VENUS_TIN_ORE = withItem("venus_tin_ore", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    public static final DeferredBlock<Block> LEAD_BLOCK = withItem("lead_block", () -> new Block(venusRock(MapColor.COLOR_GRAY, 2.2F, 0.5F)));
+    /** Drops Solar Dust (1.12.2 getItemDropped; no experience). */
+    public static final DeferredBlock<Block> SOLAR_ORE = withItem("solar_ore", () -> new Block(venusRock(MapColor.TERRACOTTA_ORANGE, 5.0F, 3.0F)));
+    /** 1.12.2 BlockScorchedRock: hardness 0.9, smoking. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.ScorchedRockBlock> SCORCHED_VENUS_ROCK = withItem("scorched_venus_rock",
+            () -> new io.github.reiko45.galacticraft.block.ScorchedRockBlock(venusRock(MapColor.COLOR_BLACK, 0.9F, 0.5F)));
+    /** 1.12.2 BlockSpout: hardness 4.5; drops Venus Soft Rock. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.VaporSpoutBlock> VAPOR_SPOUT = withItem("vapor_spout",
+            () -> new io.github.reiko45.galacticraft.block.VaporSpoutBlock(venusRock(MapColor.TERRACOTTA_YELLOW, 4.5F, 0.5F)));
+    /** 1.12.2 BlockTorchWeb web_torch_0 and web_torch_1 (the glowing one): Material.CIRCUITS, no hardness. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.WebTorchBlock> WEB_STRING = withItem("web_string",
+            () -> new io.github.reiko45.galacticraft.block.WebTorchBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).noCollission()
+                    .instabreak().noOcclusion().pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY), false));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.WebTorchBlock> WEB_TORCH = withItem("web_torch",
+            () -> new io.github.reiko45.galacticraft.block.WebTorchBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).noCollission()
+                    .instabreak().noOcclusion().lightLevel(state -> 15).pushReaction(net.minecraft.world.level.material.PushReaction.DESTROY), true));
+    /** 1.12.2 BlockCrashedProbe: Material.IRON, hardness 4.5, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CrashedProbeBlock> CRASHED_PROBE = withItem("crashed_probe",
+            () -> new io.github.reiko45.galacticraft.block.CrashedProbeBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(4.5F, 0.5F).sound(SoundType.METAL).noOcclusion()));
+
     /** 1.12.2 BlockIceAsteroids: Material.ICE, slipperiness 0.98, hardness 0.5, glass sounds, translucent. */
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.DenseIceBlock> DENSE_ICE = withItem("dense_ice",
             () -> new io.github.reiko45.galacticraft.block.DenseIceBlock(BlockBehaviour.Properties.of().mapColor(MapColor.ICE).friction(0.98F)
@@ -447,6 +489,15 @@ public final class GCBlocks {
     private static BlockBehaviour.Properties moonStone(float hardness, float resistance) {
         return BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM)
                 .requiresCorrectToolForDrops().strength(hardness, resistance).sound(SoundType.STONE);
+    }
+
+    /**
+     * 1.12.2 BlockBasicVenus "venus": Material.ROCK, hardness 2.2 unless getBlockHardness says otherwise, blast resistance
+     * as getExplosionResistance gave it (0.5 for most).
+     */
+    private static BlockBehaviour.Properties venusRock(MapColor color, float hardness, float resistance) {
+        return BlockBehaviour.Properties.of().mapColor(color).instrument(NoteBlockInstrument.BASEDRUM).requiresCorrectToolForDrops()
+                .strength(hardness, resistance).sound(SoundType.STONE);
     }
 
     private static BlockBehaviour.Properties asteroidRock() {

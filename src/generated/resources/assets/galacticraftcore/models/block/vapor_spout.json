@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/venus_soft_rock",
+    "east": "galacticraftcore:block/venus_soft_rock",
+    "north": "galacticraftcore:block/venus_soft_rock",
+    "particle": "galacticraftcore:block/venus_soft_rock",
+    "south": "galacticraftcore:block/venus_soft_rock",
+    "up": "galacticraftcore:block/vapor_spout",
+    "west": "galacticraftcore:block/venus_soft_rock"
+  }
+}

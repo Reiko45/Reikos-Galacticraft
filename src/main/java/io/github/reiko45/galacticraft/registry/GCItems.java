@@ -319,6 +319,36 @@ public final class GCItems {
     private GCItems() {
     }
 
+    // --- Venus (1.12.2 ItemBasicVenus "basic_item_venus" and the planet's other items) ---
+    /** Worn in its slot of the Galacticraft inventory, it keeps worn armour from corroding on Venus. */
+    public static final DeferredItem<DescribedItem> SHIELD_CONTROLLER = ITEMS.register("shield_controller",
+            () -> new DescribedItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> LEAD_INGOT = simple("lead_ingot");
+    public static final DeferredItem<Item> RADIOISOTOPE_CORE = simple("radioisotope_core");
+    public static final DeferredItem<Item> ISOTHERMAL_FABRIC = simple("isothermal_fabric");
+    public static final DeferredItem<Item> SOLAR_DUST = simple("solar_dust");
+    public static final DeferredItem<Item> SOLAR_ARRAY_PANEL = simple("solar_array_panel");
+    public static final DeferredItem<Item> SOLAR_ARRAY_WAFER = simple("solar_array_wafer");
+    /** 1.12.2 ItemThermalPaddingTier2 (thermal strength 2): Isothermal Padding. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> ISOTHERMAL_PADDING_HELMET = isothermalPadding(
+            "isothermal_padding_helmet", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_HELMET);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> ISOTHERMAL_PADDING_CHESTPLATE = isothermalPadding(
+            "isothermal_padding_chestplate", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_CHESTPLATE);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> ISOTHERMAL_PADDING_LEGGINGS = isothermalPadding(
+            "isothermal_padding_leggings", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_LEGGINGS);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> ISOTHERMAL_PADDING_BOOTS = isothermalPadding(
+            "isothermal_padding_boots", io.github.reiko45.galacticraft.item.gear.GearSlot.THERMAL_BOOTS);
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.VolcanicPickaxeItem> VOLCANIC_PICKAXE = ITEMS.register("volcanic_pickaxe",
+            () -> new io.github.reiko45.galacticraft.item.VolcanicPickaxeItem(GCTiers.VOLCANIC,
+                    new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE).attributes(PickaxeItem.createAttributes(GCTiers.VOLCANIC, 1.0F, -2.8F))));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.AtomicBatteryItem> ATOMIC_BATTERY = ITEMS.register("atomic_battery",
+            () -> new io.github.reiko45.galacticraft.item.AtomicBatteryItem(new Item.Properties()));
+
+    private static DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> isothermalPadding(String name,
+                                                                                                       io.github.reiko45.galacticraft.item.gear.GearSlot slot) {
+        return ITEMS.register(name, () -> new io.github.reiko45.galacticraft.item.ThermalPaddingItem(new Item.Properties(), slot, 2));
+    }
+
     private static DeferredItem<Item> simple(String name) {
         return ITEMS.registerSimpleItem(name);
     }

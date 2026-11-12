@@ -153,6 +153,7 @@
   "container.galacticraftcore.treasure_chest": "Baú de Tesouro",
   "death.attack.oxygen_suffocation": "%1$s ficou sem oxigênio!",
   "death.attack.spaceship_crash": "O foguete de %1$s se esborrachou no chão. Ups.",
+  "death.attack.sulphuric_acid": "%1$s se dissolveu em ácido sulfúrico!",
   "death.attack.thermal": "%1$s se esqueceu da proteção térmica.",
   "entity.galacticraftcore.alien_villager": "Aldeão Alienígena",
   "entity.galacticraftcore.astro_miner": "Astrominerador",

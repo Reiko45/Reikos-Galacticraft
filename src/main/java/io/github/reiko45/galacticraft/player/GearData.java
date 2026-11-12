@@ -11,7 +11,8 @@ import net.minecraft.world.item.ItemStack;
 /**
  * What other players see of someone's Galacticraft gear (1.12.2 PlayerGearData): mask, gear tubes, the two tanks
  * (1 light/green, 2 medium/orange, 3 heavy or infinite/red), frequency module dish, parachute colour (-1 none), whether
- * the parachute is open, and the thermal padding worn (bits 0-3: helmet, chestplate, leggings, boots).
+ * the parachute is open, and the thermal padding worn (bits 0-3: helmet, chestplate, leggings, boots; bits 4-7 the same
+ * pieces when they are tier 2, Isothermal Padding).
  */
 public record GearData(boolean mask, boolean gear, int leftTank, int rightTank, boolean frequencyModule, int parachute, boolean parachuteOpen,
                        int thermalPadding) {
@@ -41,8 +42,12 @@ public record GearData(boolean mask, boolean gear, int leftTank, int rightTank, 
     private static int thermalPadding(GCPlayerData data) {
         int bits = 0;
         for (int i = 0; i < THERMAL_SLOTS.length; i++) {
-            if (!data.gear(THERMAL_SLOTS[i]).isEmpty()) {
+            final ItemStack piece = data.gear(THERMAL_SLOTS[i]);
+            if (!piece.isEmpty()) {
                 bits |= 1 << i;
+                if (piece.getItem() instanceof io.github.reiko45.galacticraft.item.ThermalPaddingItem padding && padding.strength() >= 2) {
+                    bits |= 1 << (i + 4);
+                }
             }
         }
         return bits;

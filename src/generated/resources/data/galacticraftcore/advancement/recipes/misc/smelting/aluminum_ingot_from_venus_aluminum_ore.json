@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraftcore:smelting/aluminum_ingot_from_venus_aluminum_ore"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_venus_aluminum_ore": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:venus_aluminum_ore"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_venus_aluminum_ore"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraftcore:smelting/aluminum_ingot_from_venus_aluminum_ore"
+    ]
+  }
+}

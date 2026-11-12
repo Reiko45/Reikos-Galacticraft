@@ -86,6 +86,8 @@ public final class GalacticraftClient {
         modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
                     io.github.reiko45.galacticraft.client.particle.BacterialDripParticle.Provider::new);
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.ACID_VAPOR.get(),
+                    io.github.reiko45.galacticraft.client.particle.AcidVaporParticle.Provider::new);
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_UP.get(),
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, false));
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_DOWN.get(),
@@ -225,7 +227,8 @@ public final class GalacticraftClient {
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_TORCH.get(), RenderType.cutout());
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_WALL_TORCH.get(), RenderType.cutout());
             for (Fluid fluid : new Fluid[]{GCFluids.OIL.get(), GCFluids.FLOWING_OIL.get(), GCFluids.FUEL.get(), GCFluids.FLOWING_FUEL.get(),
-                    GCFluids.BACTERIAL_SLUDGE.get(), GCFluids.FLOWING_BACTERIAL_SLUDGE.get()}) {
+                    GCFluids.BACTERIAL_SLUDGE.get(), GCFluids.FLOWING_BACTERIAL_SLUDGE.get(), GCFluids.SULPHURIC_ACID.get(),
+                    GCFluids.FLOWING_SULPHURIC_ACID.get()}) {
                 ItemBlockRenderTypes.setRenderLayer(fluid, RenderType.translucent());
             }
         });
@@ -290,6 +293,7 @@ public final class GalacticraftClient {
         event.registerFluidType(liquid("oil"), GCFluids.OIL_TYPE.get());
         event.registerFluidType(liquid("fuel"), GCFluids.FUEL_TYPE.get());
         event.registerFluidType(liquid("bacterial_sludge"), GCFluids.BACTERIAL_SLUDGE_TYPE.get());
+        event.registerFluidType(liquid("sulphuric_acid"), GCFluids.SULPHURIC_ACID_TYPE.get());
         event.registerFluidType(tankOnly("oxygen_gas"), GCFluids.OXYGEN_TYPE.get());
         event.registerFluidType(tankOnly("hydrogen_gas"), GCFluids.HYDROGEN_TYPE.get());
         event.registerFluidType(tankOnly("methane"), GCFluids.METHANE_TYPE.get());
@@ -343,6 +347,7 @@ public final class GalacticraftClient {
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(GCMenus.COAL_GENERATOR.get(), CoalGeneratorScreen::new);
+        event.register(GCMenus.CRASHED_PROBE.get(), io.github.reiko45.galacticraft.client.screen.CrashedProbeScreen::new);
         event.register(GCMenus.ENERGY_STORAGE.get(), EnergyStorageScreen::new);
         event.register(GCMenus.COMPRESSOR.get(), CompressorScreen::new);
         event.register(GCMenus.ELECTRIC_COMPRESSOR.get(), ElectricCompressorScreen::new);

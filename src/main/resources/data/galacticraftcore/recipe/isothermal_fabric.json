@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:thermal_cloth"
+    },
+    "Y": {
+      "tag": "c:ingots/desh"
+    }
+  },
+  "pattern": [
+    "   ",
+    "XYX",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:isothermal_fabric"
+  }
+}

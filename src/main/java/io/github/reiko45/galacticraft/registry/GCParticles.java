@@ -17,6 +17,9 @@ public final class GCParticles {
     public static final Supplier<SimpleParticleType> TELEPAD_UP = PARTICLES.register("telepad_up", () -> new SimpleParticleType(false));
     public static final Supplier<SimpleParticleType> TELEPAD_DOWN = PARTICLES.register("telepad_down", () -> new SimpleParticleType(false));
 
+    /** 1.12.2 "acidVapor" (ParticleAcidVapor): yellow vapor from spouts and the Venus Entry Pod. */
+    public static final Supplier<SimpleParticleType> ACID_VAPOR = PARTICLES.register("acid_vapor", () -> new SimpleParticleType(false));
+
     private GCParticles() {
     }
 }

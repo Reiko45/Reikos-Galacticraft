@@ -68,6 +68,11 @@ public class ElectricItem extends Item {
         return removed;
     }
 
+    /** The power tier a machine running off this item counts as (1.12.2 IItemElectricBase#getTierGC). */
+    public int tier() {
+        return 1;
+    }
+
     /** A copy of this item fully charged (for the creative tab). */
     public ItemStack charged() {
         final ItemStack stack = new ItemStack(this);

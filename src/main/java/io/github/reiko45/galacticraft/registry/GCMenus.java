@@ -75,6 +75,8 @@ public final class GCMenus {
             "astro_miner_dock", () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.AstroMinerDockMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.AstroMinerBenchMenu>> ASTRO_MINER_BENCH = MENUS.register(
             "astro_miner_bench", () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.AstroMinerBenchMenu(id, inventory)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.CrashedProbeMenu>> CRASHED_PROBE = MENUS.register("crashed_probe",
+            () -> new MenuType<>(io.github.reiko45.galacticraft.menu.CrashedProbeMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.ShortRangeTelepadMenu>> SHORT_RANGE_TELEPAD = MENUS.register(
             "short_range_telepad", () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.ShortRangeTelepadMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.TerraformerMenu>> TERRAFORMER = MENUS.register("terraformer",

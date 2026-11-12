@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraftcore:block/pumice"
+      },
+      {
+        "model": "galacticraftcore:block/pumice",
+        "y": 90
+      },
+      {
+        "model": "galacticraftcore:block/pumice",
+        "y": 180
+      },
+      {
+        "model": "galacticraftcore:block/pumice",
+        "y": 270
+      }
+    ]
+  }
+}

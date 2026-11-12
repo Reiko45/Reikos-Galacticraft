@@ -45,6 +45,8 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
     public static final ModelLayerLocation THERMAL_HEAD = new ModelLayerLocation(GalacticraftCore.id("thermal_padding"), "head");
     public static final ModelLayerLocation THERMAL_BODY = new ModelLayerLocation(GalacticraftCore.id("thermal_padding"), "body");
     private static final ResourceLocation THERMAL_TEXTURE = GalacticraftCore.id("textures/misc/thermal_padding_1.png");
+    /** 1.12.2 RenderPlayerGC.thermalPaddingTexture1_T2: Isothermal Padding. */
+    private static final ResourceLocation THERMAL_TEXTURE_T2 = GalacticraftCore.id("textures/misc/thermal_padding_t2_1.png");
     private static final ResourceLocation THERMAL_GLOW = GalacticraftCore.id("textures/misc/thermal_padding_0.png");
     private final PlayerModel<AbstractClientPlayer> thermalHead;
     private final PlayerModel<AbstractClientPlayer> thermalBody;
@@ -108,7 +110,8 @@ public class GearLayer extends RenderLayer<AbstractClientPlayer, PlayerModel<Abs
                     model.leftLeg.visible = true;
                 }
             }
-            model.renderToBuffer(poseStack, buffers.getBuffer(RenderType.armorCutoutNoCull(THERMAL_TEXTURE)), light, OverlayTexture.NO_OVERLAY);
+            final ResourceLocation texture = (pieces & 1 << (piece + 4)) != 0 ? THERMAL_TEXTURE_T2 : THERMAL_TEXTURE;
+            model.renderToBuffer(poseStack, buffers.getBuffer(RenderType.armorCutoutNoCull(texture)), light, OverlayTexture.NO_OVERLAY);
             model.renderToBuffer(poseStack, buffers.getBuffer(RenderType.entityTranslucent(THERMAL_GLOW)), light, OverlayTexture.NO_OVERLAY, glow);
         }
     }

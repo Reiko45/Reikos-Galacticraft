@@ -33,6 +33,7 @@ public class GCChestLootProvider implements LootTableSubProvider {
 
     @Override
     public void generate(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
+        crashedProbe(output);
         output.accept(DungeonPiece.MOON_CHEST, LootTable.lootTable().withPool(LootPool.lootPool().setRolls(UniformGenerator.between(5.0F, 8.0F))
                 .add(item(GCItems.CHEESE_CURD.get(), 10, 1, 4))
                 .add(item(Items.IRON_INGOT, 10, 2, 7))
@@ -70,6 +71,20 @@ public class GCChestLootProvider implements LootTableSubProvider {
                 .add(item(GCItems.DESH_STICK.get(), 5))
                 .add(item(Items.BOOK, 8).apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, ConstantValue.exactly(22.0F))))
                 .add(item(Items.BOOK, 8).apply(EnchantWithLevelsFunction.enchantWithLevels(this.registries, ConstantValue.exactly(24.0F))))));
+    }
+
+    /**
+     * 1.12.2 loot_tables/crashed_probe.json (the tier 3 plate and compressed titanium shared one weight-10 entry by a
+     * random meta 5-6, here two of weight 5).
+     */
+    private static void crashedProbe(BiConsumer<ResourceKey<LootTable>, LootTable.Builder> output) {
+        output.accept(io.github.reiko45.galacticraft.block.entity.CrashedProbeBlockEntity.LOOT, LootTable.lootTable().withPool(LootPool.lootPool()
+                .setRolls(UniformGenerator.between(4.0F, 6.0F))
+                .add(item(GCItems.HEAVY_DUTY_PLATE.get(), 5, 3, 6))
+                .add(item(GCItems.HEAVY_PLATING.get(), 5, 3, 6))
+                .add(item(Items.IRON_INGOT, 5, 5, 9))
+                .add(item(GCItems.HEAVY_DUTY_PLATE_TIER_3.get(), 5, 3, 6))
+                .add(item(GCItems.COMPRESSED_TITANIUM.get(), 5, 3, 6))));
     }
 
     private static LootPoolSingletonContainer.Builder<?> item(ItemLike item, int weight) {

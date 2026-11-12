@@ -43,6 +43,11 @@ public final class GCFluids {
             FluidType.Properties.create().descriptionId("block.galacticraftcore.bacterial_sludge").density(800).viscosity(1500).lightLevel(15)
                     .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
 
+    /** 1.12.2 VenusModule "sulphuricacid": density 6229, viscosity 1400, a faint glow (light 1), 5 quanta per block. */
+    public static final DeferredHolder<FluidType, FluidType> SULPHURIC_ACID_TYPE = FLUID_TYPES.register("sulphuric_acid", () -> new FluidType(
+            FluidType.Properties.create().descriptionId("block.galacticraftcore.sulphuric_acid").density(6229).viscosity(1400).lightLevel(1)
+                    .sound(SoundActions.BUCKET_FILL, SoundEvents.BUCKET_FILL).sound(SoundActions.BUCKET_EMPTY, SoundEvents.BUCKET_EMPTY)));
+
     /**
      * 1.12.2 fluidOxygenGas: a gas with no block or bucket. Machines, tanks and pipes carry it in mB. NeoForge marks
      * gases by a density of 0 or less (1.12.2 had a separate gaseous flag and density 1).
@@ -84,6 +89,16 @@ public final class GCFluids {
             .bucket(() -> GCFluids.BACTERIAL_SLUDGE_BUCKET.get()).block(() -> GCFluids.BACTERIAL_SLUDGE_BLOCK.get())
             .levelDecreasePerBlock(3).slopeFindDistance(2).tickRate(7).explosionResistance(100.0F);
 
+    private static final BaseFlowingFluid.Properties SULPHURIC_ACID_PROPERTIES = new BaseFlowingFluid.Properties(
+            GCFluids.SULPHURIC_ACID_TYPE, () -> GCFluids.SULPHURIC_ACID.get(), () -> GCFluids.FLOWING_SULPHURIC_ACID.get())
+            .bucket(() -> GCFluids.SULPHURIC_ACID_BUCKET.get()).block(() -> GCFluids.SULPHURIC_ACID_BLOCK.get())
+            .levelDecreasePerBlock(2).slopeFindDistance(2).tickRate(7).explosionResistance(100.0F);
+
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> SULPHURIC_ACID = FLUIDS.register("sulphuric_acid",
+            () -> new BaseFlowingFluid.Source(SULPHURIC_ACID_PROPERTIES));
+    public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_SULPHURIC_ACID = FLUIDS.register("flowing_sulphuric_acid",
+            () -> new BaseFlowingFluid.Flowing(SULPHURIC_ACID_PROPERTIES));
+
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> OIL = FLUIDS.register("oil", () -> new BaseFlowingFluid.Source(OIL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Flowing> FLOWING_OIL = FLUIDS.register("flowing_oil", () -> new BaseFlowingFluid.Flowing(OIL_PROPERTIES));
     public static final DeferredHolder<Fluid, BaseFlowingFluid.Source> FUEL = FLUIDS.register("fuel", () -> new BaseFlowingFluid.Source(FUEL_PROPERTIES));
@@ -114,6 +129,12 @@ public final class GCFluids {
     /** Mars caverns pool it on their floors. */
     public static final DeferredBlock<io.github.reiko45.galacticraft.fluid.BacterialSludgeBlock> BACTERIAL_SLUDGE_BLOCK = GCBlocks.BLOCKS.register("bacterial_sludge",
             () -> new io.github.reiko45.galacticraft.fluid.BacterialSludgeBlock(GCFluids.BACTERIAL_SLUDGE.get(), liquid(MapColor.PLANT).lightLevel(state -> 15)));
+
+    /** Venus valleys and vapor pools hold it; it eats at whatever is in it. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.fluid.SulphuricAcidBlock> SULPHURIC_ACID_BLOCK = GCBlocks.BLOCKS.register("sulphuric_acid",
+            () -> new io.github.reiko45.galacticraft.fluid.SulphuricAcidBlock(GCFluids.SULPHURIC_ACID.get(), liquid(MapColor.EMERALD).lightLevel(state -> 1)));
+    public static final DeferredItem<BucketItem> SULPHURIC_ACID_BUCKET = GCItems.ITEMS.register("sulphuric_acid_bucket",
+            () -> new BucketItem(GCFluids.SULPHURIC_ACID.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     public static final DeferredItem<BucketItem> OIL_BUCKET = GCItems.ITEMS.register("oil_bucket",
             () -> new BucketItem(GCFluids.OIL.get(), new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
