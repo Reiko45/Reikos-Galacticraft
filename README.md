@@ -379,6 +379,8 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![A Space Lander falling on its blue-white flame](docs/screenshots/lander_flame.png) | ![Cold mist spilling down the sides of a working Gas Liquefier](docs/screenshots/liquefier_mist.png) |
 
+![The six sealable BuildCraft pipes along the top of a tin wall, each joined from above by BuildCraft Reborn's own stone or cobblestone transport, fluid or kinesis pipe](docs/screenshots/sealable_buildcraft_pipes.png)
+
 | The settings screen | Its server page |
 |---|---|
 | ![The Galacticraft settings screen with its common, client and server pages](docs/screenshots/config_screen.png) | ![The server settings: hard mode, meteors, boss health, stations, rockets and landing border](docs/screenshots/config_server_settings.png) |

@@ -1799,8 +1799,8 @@ public final class ScreenshotTour {
 
     /**
      * The sealable BuildCraft pipes (1.12.2 BlockEnclosed's BuildCraft types) in a tin wall: stone and cobblestone
-     * transport pipes, stone and cobblestone fluid pipes, stone and golden kinesis pipes, each joined from the front by
-     * BuildCraft Reborn's own pipe of its kind (when BuildCraft Reborn is installed: -PbuildcraftJar).
+     * transport pipes, stone and cobblestone fluid pipes, stone and golden kinesis pipes along its top, each joined from
+     * above by BuildCraft Reborn's own pipe of its kind (when BuildCraft Reborn is installed: -PbuildcraftJar).
      */
     private void addSealableBuildCraftPipeSteps() {
         this.extras.add((minecraft, srv) -> {
@@ -1818,7 +1818,7 @@ public final class ScreenshotTour {
                             net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
                 }
                 for (int dx = -7; dx <= 7; dx++) {
-                    for (int dy = 0; dy <= 3; dy++) {
+                    for (int dy = 0; dy <= 1; dy++) {
                         level.setBlockAndUpdate(o.offset(dx, dy, 0), GCBlocks.TIN_DECORATION_BLOCK_2.get().defaultBlockState());
                     }
                 }
@@ -1829,14 +1829,14 @@ public final class ScreenshotTour {
                     level.setBlockAndUpdate(at, sealable.defaultBlockState());
                     sealable.setPlacedBy(level, at, level.getBlockState(at), null, new net.minecraft.world.item.ItemStack(sealable));
                     if (holder != null) {
-                        for (int dz = 1; dz <= 2; dz++) {
-                            final BlockPos front = at.offset(0, 0, dz);
-                            level.setBlockAndUpdate(front, holder.defaultBlockState());
-                            holder.setPlacedBy(level, front, level.getBlockState(front), null, sealable.pipeStack());
+                        for (int dy = 1; dy <= 2; dy++) {
+                            final BlockPos above = at.above(dy);
+                            level.setBlockAndUpdate(above, holder.defaultBlockState());
+                            holder.setPlacedBy(level, above, level.getBlockState(above), null, sealable.pipeStack());
                         }
                     }
                 }
-                p.teleportTo(level, o.getX() + 0.5D, o.getY() + 0.6D, o.getZ() + 6.5D, 180.0F, 8.0F);
+                p.teleportTo(level, o.getX() + 0.5D, o.getY() + 0.8D, o.getZ() + 7.5D, 180.0F, 4.0F);
             });
         });
         for (int i = 0; i < 3; i++) {
