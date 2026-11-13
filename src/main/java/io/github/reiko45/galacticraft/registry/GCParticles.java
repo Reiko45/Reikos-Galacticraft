@@ -24,6 +24,22 @@ public final class GCParticles {
     /** 1.12.2 ParticleOxygen as Sensor Glasses show a leak: a pale blue mote swinging out along its motion and back. */
     public static final Supplier<SimpleParticleType> OXYGEN = PARTICLES.register("oxygen", () -> new SimpleParticleType(false));
 
+    /** 1.12.2 "launchFlameLaunched" (ParticleLaunchFlame): a rocket's exhaust once it has lifted off. */
+    public static final Supplier<SimpleParticleType> LAUNCH_FLAME = PARTICLES.register("launch_flame", () -> new SimpleParticleType(true));
+    /** 1.12.2 "launchFlameIdle": the small flames round a rocket counting down. */
+    public static final Supplier<SimpleParticleType> LAUNCH_FLAME_IDLE = PARTICLES.register("launch_flame_idle", () -> new SimpleParticleType(true));
+    /** 1.12.2 "whiteSmokeLaunched" / "whiteSmokeLargeLaunched" (ParticleLaunchSmoke): what a launch flame leaves behind. */
+    public static final Supplier<SimpleParticleType> LAUNCH_SMOKE = PARTICLES.register("launch_smoke", () -> new SimpleParticleType(true));
+    public static final Supplier<SimpleParticleType> LAUNCH_SMOKE_LARGE = PARTICLES.register("launch_smoke_large", () -> new SimpleParticleType(true));
+    /** 1.12.2 "whiteSmokeIdle" / "whiteSmokeLargeIdle": the smoke rolling off a rocket on the pad. */
+    public static final Supplier<SimpleParticleType> LAUNCH_SMOKE_IDLE = PARTICLES.register("launch_smoke_idle", () -> new SimpleParticleType(true));
+    public static final Supplier<SimpleParticleType> LAUNCH_SMOKE_LARGE_IDLE = PARTICLES.register("launch_smoke_large_idle",
+            () -> new SimpleParticleType(true));
+    /** 1.12.2 ParticleLanderFlame: the lander's blue-white jet. */
+    public static final Supplier<SimpleParticleType> LANDER_FLAME = PARTICLES.register("lander_flame", () -> new SimpleParticleType(true));
+    /** 1.12.2 "whiteSmokeTiny" (ParticleSmokeSmall): the cold mist falling off a working Gas Liquefier. */
+    public static final Supplier<SimpleParticleType> SMALL_SMOKE = PARTICLES.register("small_smoke", () -> new SimpleParticleType(false));
+
     private GCParticles() {
     }
 }

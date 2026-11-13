@@ -4,7 +4,6 @@ import io.github.reiko45.galacticraft.GCConfig;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCEntities;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -59,7 +58,6 @@ public class MeteorEntity extends Entity {
         setDeltaMovement(getDeltaMovement().add(0.0D, -0.03999999910593033D, 0.0D));
         move(MoverType.SELF, getDeltaMovement());
         if (this.level().isClientSide) {
-            spawnParticles();
             return;
         }
         final Vec3 current = position();
@@ -80,14 +78,6 @@ public class MeteorEntity extends Entity {
             onImpact(hit);
         } else if (getY() <= this.level().getMinBuildHeight() - 20 || getY() >= 400.0D) {
             discard();
-        }
-    }
-
-    /** 1.12.2 "distanceSmoke" trail, drawn with vanilla large smoke that is visible from far away. */
-    private void spawnParticles() {
-        for (int i = 0; i < 5; i++) {
-            this.level().addAlwaysVisibleParticle(ParticleTypes.LARGE_SMOKE, true, getX() + (this.random.nextDouble() - 0.5D),
-                    getY() + 1.0D + this.random.nextDouble(), getZ() + (this.random.nextDouble() - 0.5D), 0.0D, 0.0D, 0.0D);
         }
     }
 

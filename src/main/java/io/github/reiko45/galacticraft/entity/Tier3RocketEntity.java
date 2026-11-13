@@ -64,6 +64,6 @@ public class Tier3RocketEntity extends RocketEntity {
 
     @Override
     protected void spawnFlames() {
-        RocketEffects.spawnFlames(this, 3);
+        RocketEffects.tier3(this);
     }
 }

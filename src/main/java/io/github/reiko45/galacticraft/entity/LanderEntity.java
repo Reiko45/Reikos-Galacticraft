@@ -124,6 +124,9 @@ public class LanderEntity extends Entity {
         for (Entity passenger : getPassengers()) {
             passenger.resetFallDistance();
         }
+        if (this.ticks > 40 && inAir() && hasThrusters() && this.tickCount % 5 == 0) {
+            RocketEffects.burnUnderLander(this);
+        }
         fillCanister();
         fly();
     }

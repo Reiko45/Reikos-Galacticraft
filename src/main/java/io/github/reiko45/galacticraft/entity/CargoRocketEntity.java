@@ -121,7 +121,7 @@ public class CargoRocketEntity extends RocketEntity {
 
     @Override
     protected void spawnFlames() {
-        RocketEffects.spawnFlames(this, 1);
+        RocketEffects.cargo(this);
     }
 
     @Override

@@ -102,6 +102,22 @@ public final class GalacticraftClient {
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, false));
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_DOWN.get(),
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, true));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_FLAME.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchFlameParticle.Provider(sprites, true));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_FLAME_IDLE.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchFlameParticle.Provider(sprites, false));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_SMOKE.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchSmokeParticle.Provider(sprites, 1.0F, true));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_SMOKE_LARGE.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchSmokeParticle.Provider(sprites, 2.5F, true));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_SMOKE_IDLE.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchSmokeParticle.Provider(sprites, 1.0F, false));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LAUNCH_SMOKE_LARGE_IDLE.get(),
+                    sprites -> new io.github.reiko45.galacticraft.client.particle.LaunchSmokeParticle.Provider(sprites, 2.5F, false));
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.LANDER_FLAME.get(),
+                    io.github.reiko45.galacticraft.client.particle.LanderFlameParticle.Provider::new);
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.SMALL_SMOKE.get(),
+                    io.github.reiko45.galacticraft.client.particle.SmallSmokeParticle.Provider::new);
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(VehicleCamera::onClientTick);

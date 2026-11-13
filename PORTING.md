@@ -482,7 +482,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       station materials panel with CREATE. The Galaxy Map key (M) opens it as a map only, with EXIT. (Galacticraft
       Legacy's map has no Space Race panel.)
 
-### Phase 10 – Last gaps
+### Phase 10 – Last gaps ✅
 - [x] "Press Shift for more info" (1.12.2 ItemBlockDesc / ItemDesc) on the 80 blocks and items 1.12.2 described, from
       its own texts in every language: the text wrapped to 150 pixels while the sneak key is held, otherwise the prompt
       after "Power required" for machines that draw power (the gJ a tick they use, times 20). One tooltip handler for
@@ -509,7 +509,12 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       world round 0, 0 (a pixel for 8 blocks) recoloured with the Earth icon's palette; a Display Screen's picture 1
       shows, in the Overworld, a map of the 352 blocks round it in 1.12.2's biome colours, elsewhere the Overworld
       turning. Flat worlds have none, as in 1.12.2
-- [ ] 1.12.2's own flame and smoke particles
+- [x] 1.12.2's own exhaust particles: launch flames (ParticleLaunchFlame; big once launched, tiny round a rocket
+      counting down) that burn out into launch smoke (ParticleLaunchSmoke) falling, bouncing and billowing along the
+      ground; the lander's blue-white flame (ParticleLanderFlame); each rocket's jets placed as its 1.12.2
+      spawnParticles placed them (the Tier 2's fireball, the Tier 3's four turned jets, the cargo rocket's tighter jet,
+      pushed harder coming in to land), building up through the countdown; the flames set living things alight for 3
+      seconds, the crew aside; and the cold mist off a working Gas Liquefier (ParticleSmokeSmall)
 
 ## Settings
 
@@ -625,7 +630,10 @@ What they do, where 1.12.2 needed more than a number:
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
-* Rocket and lander exhaust uses vanilla flame and smoke particles instead of 1.12.2's custom flame particles.
+* Exhaust particles are hidden behind blocks like any others (1.12.2 drew them with the depth test off, so they showed
+  through walls), and launch smoke is stopped by Grating like any other block (1.12.2 let it through). The burns are
+  worked out by the server, in the column under a launched rocket or lander and round the foot of a rocket counting
+  down (1.12.2's flames each told the server whom they touched, S_SET_ENTITY_FIRE, which a client could abuse).
 * The Fuel Loader takes power on its left face and fuel on its right until sneak + wrench moves them, as in 1.12.2; the
   layout is a block state (`sides`, shared with the storage modules). A placed loader draws its fuel face with
   `machine_oil_input` and a free side with `machine_side`, as 1.12.2's blockstate did; the item keeps 1.12.2's item
@@ -670,7 +678,7 @@ What they do, where 1.12.2 needed more than a number:
   texture, 8 blocks each, round 0, 0 (1.12.2's strip also wrapped part of the way round); a local map is sampled
   every 4 blocks with the heights blended between (1.12.2: every block), centred on the screen's chunk, and only
   made for screens within 128 blocks of the player asking.
-* Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
+* Meteors leave no trail: 1.12.2 asked for "distanceSmoke" particles, which its client never drew. Meteors spawn
   within the simulation distance rather than the view distance so that they actually move.
 * The Fallen Meteor takes a pickaxe's speed on plain stone, since 1.21's tool rules would leave a pickaxe below diamond
   at hand speed on a block that needs diamond; 1.12.2's pickaxes dug any rock at full speed. Galacticraft's pickaxes
@@ -687,7 +695,8 @@ What they do, where 1.12.2 needed more than a number:
   the port carves and decorates once (same caverns). Sludge pools are ticked once after generation so they settle.
 * ChunkProviderSpace re-tuned two noise generators between terrain passes; they are split into fixed-frequency copies
   with the same seeds. Craters only dug down from y 127, so in taller columns they are hidden pockets, as in 1.12.2.
-* The Tier 2 Rocket's flames are vanilla flame, soul-fire flame and smoke particles. Its item is drawn with the OBJ
+* The Tier 2 Rocket's four "blueflame" jets are left out: 1.12.2 asked for them, but its client never drew them. Its
+  item is drawn with the OBJ
   model at a fixed angle (1.12.2 slowly turned the icon in the inventory).
 * Landing balloons are simulated on the server (1.12.2 let the rider's client move them).
 * Cavernous Vines keep a `hanging` count (vines from here down, up to 5) in their block state, which sets their glow:

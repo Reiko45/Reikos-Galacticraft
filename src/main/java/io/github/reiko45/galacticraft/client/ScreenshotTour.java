@@ -1791,8 +1791,123 @@ public final class ScreenshotTour {
         addShiftDescriptionSteps();
         addWorkbenchPageSteps();
         addPlayerDetailSteps();
-        this.lastGroup = this.extras.size();
         addOverworldPictureSteps();
+        this.lastGroup = this.extras.size();
+        addExhaustSteps();
+    }
+
+    /**
+     * Phase 10 part 4: 1.12.2's own exhaust particles: a Tier 1, 2 and 3 Rocket counting down on their pads (small
+     * flames and rolling smoke), then lifting off (the launch flames and the smoke they leave); a Space Lander coming
+     * down on its flame; and the mist off a working Gas Liquefier.
+     */
+    private void addExhaustSteps() {
+        final BlockPos[] yard = new BlockPos[1];
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                final ServerLevel level = srv.overworld();
+                level.setDayTime(13000L);
+                final BlockPos corner = new BlockPos(900, 0, 300);
+                final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+                yard[0] = o;
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(-14, -1, -6), o.offset(14, 30, 24))) {
+                    level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                            net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                }
+                final int[] xs = {-8, 0, 8};
+                for (int i = 0; i < 3; i++) {
+                    final BlockPos centre = o.offset(xs[i], 0, 0);
+                    for (int dx = -1; dx <= 1; dx++) {
+                        for (int dz = -1; dz <= 1; dz++) {
+                            level.setBlockAndUpdate(centre.offset(dx, 0, dz), GCBlocks.LANDING_PAD.get().defaultBlockState());
+                        }
+                    }
+                    final double x = centre.getX() + 0.5D;
+                    final double y = centre.getY() + 0.4D;
+                    final double z = centre.getZ() + 0.5D;
+                    final io.github.reiko45.galacticraft.entity.RocketEntity rocket = switch (i) {
+                        case 0 -> Tier1RocketEntity.create(level, x, y, z, 0, Tier1RocketEntity.FUEL_CAPACITY);
+                        case 1 -> io.github.reiko45.galacticraft.entity.Tier2RocketEntity.create(level, x, y, z, 0,
+                                io.github.reiko45.galacticraft.entity.Tier2RocketEntity.FUEL_CAPACITY);
+                        default -> io.github.reiko45.galacticraft.entity.Tier3RocketEntity.create(level, x, y, z, 0,
+                                io.github.reiko45.galacticraft.entity.Tier3RocketEntity.FUEL_CAPACITY);
+                    };
+                    level.addFreshEntity(rocket);
+                    rocket.ignite();
+                }
+                // the Gas Liquefier, liquefying methane, off to one side
+                final BlockPos liquefier = o.offset(12, 0, 10);
+                level.setBlockAndUpdate(liquefier, GCBlocks.GAS_LIQUEFIER.get().defaultBlockState());
+                if (level.getBlockEntity(liquefier) instanceof io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity machine) {
+                    machine.energy().setStored(16_000.0F);
+                    machine.inventory().setStackInSlot(1, io.github.reiko45.galacticraft.item.LiquidCanisterItem.full(
+                            io.github.reiko45.galacticraft.item.LiquidCanisterItem.Kind.METHANE));
+                }
+                p.teleportTo(level, o.getX() + 0.5D, o.getY(), o.getZ() + 17.5D, 180.0F, -6.0F);
+            });
+        });
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the smoke builds up
+        }
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "exhaust_countdown"));
+        // The Gas Liquefier's mist, close up, while the countdown runs on
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos m = yard[0].offset(12, 0, 10);
+            srv.overworld().setDayTime(6000L);
+            tourPlayer(srv).teleportTo(srv.overworld(), m.getX() + 0.5D, m.getY(), m.getZ() + 2.6D, 180.0F, 32.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "liquefier_mist"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final BlockPos o = yard[0];
+            srv.overworld().setDayTime(13000L);
+            tourPlayer(srv).teleportTo(srv.overworld(), o.getX() + 0.5D, o.getY(), o.getZ() + 19.5D, 180.0F, -14.0F);
+        }));
+        // 400 ticks after ignition they lift off
+        for (int i = 0; i < 4; i++) {
+            this.extras.add((minecraft, srv) -> {
+            });
+        }
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "exhaust_launch"));
+        // A Space Lander coming down on its flame
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel level = srv.overworld();
+            final BlockPos o = yard[0];
+            for (io.github.reiko45.galacticraft.entity.RocketEntity rocket : level.getEntitiesOfClass(io.github.reiko45.galacticraft.entity.RocketEntity.class,
+                    new net.minecraft.world.phys.AABB(o).inflate(40.0D, 400.0D, 40.0D))) {
+                rocket.discard();
+            }
+            // ridden, so the vehicle camera follows it down
+            final LanderEntity lander = LanderEntity.create(level, o.getX() + 0.5D, o.getY() + 200.0D, o.getZ() + 0.5D,
+                    NonNullList.withSize(20, ItemStack.EMPTY), 1_000);
+            level.addFreshEntity(lander);
+            final ServerPlayer p = tourPlayer(srv);
+            p.teleportTo(level, o.getX() + 0.5D, o.getY() + 200.0D, o.getZ() + 0.5D, 30.0F, 25.0F);
+            p.startRiding(lander, true);
+        }));
+        this.extras.add(ScreenshotTour::tidy); // it hangs for 40 ticks, then drops
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "lander_flame"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final net.minecraft.world.entity.Entity lander = p.getVehicle();
+                p.stopRiding();
+                if (lander != null) {
+                    lander.discard();
+                }
+                p.teleportTo(srv.overworld(), yard[0].getX() + 0.5D, yard[0].getY(), yard[0].getZ() + 12.5D, 180.0F, 0.0F);
+            });
+        });
+        this.extras.add((minecraft, srv) -> srv.execute(() -> srv.overworld().setDayTime(6000L)));
     }
 
     /**

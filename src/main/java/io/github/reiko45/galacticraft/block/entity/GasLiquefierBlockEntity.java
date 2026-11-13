@@ -41,6 +41,8 @@ import org.jetbrains.annotations.Nullable;
  * Tanks: gas 4,000, liquid 2,000 mB; the gas tank holds one gas and the liquid tank one liquid at a time.
  */
 public class GasLiquefierBlockEntity extends GasMachineBlockEntity {
+    /** Liquefying, as last sent to clients. */
+    private boolean misting;
     public static final int GAS_CAPACITY = 4000;
     public static final int LIQUID_CAPACITY = 2000;
     /** 1.12.2 OUTPUT_PER_SECOND (pushed every tick). */
@@ -166,6 +168,66 @@ public class GasLiquefierBlockEntity extends GasMachineBlockEntity {
         emptyIntoSlot(2, this.liquidTank);
         super.tick();
         push(this.liquidTank, RelativeSide.RIGHT, LIQUID_OUTPUT_PER_TICK);
+        if (isWorking() != this.misting && this.level != null) {
+            this.misting = isWorking();
+            this.level.sendBlockUpdated(this.worldPosition, getBlockState(), getBlockState(), net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+        }
+    }
+
+    /** Whether it is liquefying (1.12.2 processTicks > 0), as the client knows it, for the mist. */
+    public boolean misting() {
+        return this.misting;
+    }
+
+    /**
+     * 1.12.2 BlockMachineMarsT2#randomDisplayTick: while it works, cold mist spills over the top edge of all four sides
+     * and sinks.
+     */
+    public void animateTick(net.minecraft.util.RandomSource random) {
+        if (!this.misting || this.level == null) {
+            return;
+        }
+        final float x = this.worldPosition.getX() + 0.5F;
+        final float y = this.worldPosition.getY() + 0.8F + 0.05F * random.nextInt(3);
+        final float z = this.worldPosition.getZ() + 0.5F;
+        final net.minecraft.core.particles.SimpleParticleType mist = io.github.reiko45.galacticraft.registry.GCParticles.SMALL_SMOKE.get();
+        for (float i = -0.41F + 0.16F * random.nextFloat(); i < 0.5F; i += 0.167F) {
+            if (random.nextInt(3) == 0) {
+                this.level.addParticle(mist, x + i, y, z - 0.41F, 0.0D, -0.015D, -0.0015D);
+            }
+            if (random.nextInt(3) == 0) {
+                this.level.addParticle(mist, x + i, y, z + 0.537F, 0.0D, -0.015D, 0.0015D);
+            }
+            if (random.nextInt(3) == 0) {
+                this.level.addParticle(mist, x - 0.41F, y, z + i, -0.0015D, -0.015D, 0.0D);
+            }
+            if (random.nextInt(3) == 0) {
+                this.level.addParticle(mist, x + 0.537F, y, z + i, 0.0015D, -0.015D, 0.0D);
+            }
+        }
+    }
+
+    @Override
+    public net.minecraft.nbt.CompoundTag getUpdateTag(net.minecraft.core.HolderLookup.Provider registries) {
+        final net.minecraft.nbt.CompoundTag tag = new net.minecraft.nbt.CompoundTag();
+        tag.putBoolean("Misting", this.misting);
+        return tag;
+    }
+
+    @Override
+    public void handleUpdateTag(net.minecraft.nbt.CompoundTag tag, net.minecraft.core.HolderLookup.Provider registries) {
+        this.misting = tag.getBoolean("Misting");
+    }
+
+    @Override
+    public net.minecraft.network.protocol.Packet<net.minecraft.network.protocol.game.ClientGamePacketListener> getUpdatePacket() {
+        return net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket.create(this);
+    }
+
+    @Override
+    public void onDataPacket(net.minecraft.network.Connection connection, net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket packet,
+                             net.minecraft.core.HolderLookup.Provider registries) {
+        handleUpdateTag(packet.getTag(), registries);
     }
 
     /** 1.12.2 update: the input slot's valve (the world's air) or container. */

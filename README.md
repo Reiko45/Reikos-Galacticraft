@@ -365,6 +365,14 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![The Earth overhead in the Moon sky, drawn from the Overworld's land and sea](docs/screenshots/moon_sky_overworld.png) | ![The galaxy map zoomed in on the Earth, drawn from the Overworld's picture](docs/screenshots/galaxy_map_overworld.png) |
 
+| Rockets counting down | And lifting off |
+|---|---|
+| ![Tier 1, 2 and 3 Rockets on their pads, small flames and smoke rolling out round them](docs/screenshots/exhaust_countdown.png) | ![The three rockets lifting off on columns of flame, smoke billowing over the pads](docs/screenshots/exhaust_launch.png) |
+
+| A Space Lander coming down | A Gas Liquefier at work |
+|---|---|
+| ![A Space Lander falling on its blue-white flame](docs/screenshots/lander_flame.png) | ![Cold mist spilling down the sides of a working Gas Liquefier](docs/screenshots/liquefier_mist.png) |
+
 | The settings screen | Its server page |
 |---|---|
 | ![The Galacticraft settings screen with its common, client and server pages](docs/screenshots/config_screen.png) | ![The server settings: hard mode, meteors, boss health, stations, rockets and landing border](docs/screenshots/config_server_settings.png) |

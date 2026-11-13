@@ -64,6 +64,14 @@ public class MachineBlock extends Block implements EntityBlock {
         return state.setValue(FACING, mirror.mirror(state.getValue(FACING)));
     }
 
+    /** 1.12.2 BlockMachineMarsT2#randomDisplayTick: a working Gas Liquefier's mist. */
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, net.minecraft.util.RandomSource random) {
+        if (level.getBlockEntity(pos) instanceof io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity liquefier) {
+            liquefier.animateTick(random);
+        }
+    }
+
     @Override
     public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
         return this.factory.apply(pos, state);

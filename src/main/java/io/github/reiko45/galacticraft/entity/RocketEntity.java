@@ -245,13 +245,16 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         }
         if (this.level().isClientSide) {
             io.github.reiko45.galacticraft.client.sound.RocketSound.ensure(this);
-            if (phase() == Phase.IGNITED || launched() && hasFuel()) {
+            if (RocketEffects.showsExhaust(this)) {
                 spawnFlames();
             }
             return;
         }
         if (this.launchCooldown > 0) {
             this.launchCooldown--;
+        }
+        if ((phase() == Phase.IGNITED || launched()) && hasFuel() && this.tickCount % 5 == 0) {
+            RocketEffects.burn(this);
         }
         if (this.shipDamage > 0) {
             this.shipDamage--;
