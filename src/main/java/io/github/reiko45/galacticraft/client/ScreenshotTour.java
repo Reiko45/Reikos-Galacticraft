@@ -104,6 +104,9 @@ public final class ScreenshotTour {
     private java.util.UUID rocketId;
     /** Steps after the machine GUIs, one every 30 ticks. */
     private final List<BiConsumer<Minecraft, MinecraftServer>> extras = new ArrayList<>();
+    /** Run every client tick while set: for moments shorter than a step (it clears itself once done). */
+    @org.jetbrains.annotations.Nullable
+    private Runnable watcher;
     private boolean worldRequested;
     private int ticks;
     private int step;
@@ -136,6 +139,9 @@ public final class ScreenshotTour {
             return;
         }
         this.ticks++;
+        if (this.watcher != null) {
+            this.watcher.run();
+        }
         if (this.ticks == 40) {
             server.execute(() -> build(server));
         } else if (this.ticks == 160) {
@@ -1775,8 +1781,10 @@ public final class ScreenshotTour {
         addAsteroidMachineSteps();
         addVenusSteps();
         addSpaceBaseSteps();
-        this.lastGroup = this.extras.size();
         addBaseUtilitySteps();
+        this.lastGroup = this.extras.size();
+        addBaseBlockSteps();
+        addLaserTurretSteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2715,6 +2723,188 @@ public final class ScreenshotTour {
                 }
                 io.github.reiko45.galacticraft.network.PaintNetwork.setGlassColors(p, -1, -1, -1);
             });
+        });
+    }
+
+    /**
+     * Phase 7g part 1: Space Glass of the three kinds (plain and tin frames), a shut Air Lock with its controller, an Arc
+     * Lamp, the five Lighting Panels and Grating.
+     */
+    private void addBaseBlockSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel level = srv.overworld();
+            level.setDayTime(6000L);
+            final BlockPos corner = p.blockPosition().offset(300, 0, -300);
+            final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-10, -1, -6), o.offset(10, 10, 12))) {
+                level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            // glass: vanilla, clear and strong, plain frames below and tin frames above
+            final net.minecraft.world.level.block.Block[][] glass = {
+                    {GCBlocks.SPACE_GLASS_VANILLA.get(), GCBlocks.SPACE_GLASS_VANILLA_TIN.get()},
+                    {GCBlocks.SPACE_GLASS_CLEAR.get(), GCBlocks.SPACE_GLASS_CLEAR_TIN.get()},
+                    {GCBlocks.SPACE_GLASS_STRONG.get(), GCBlocks.SPACE_GLASS_STRONG_TIN.get()}};
+            for (int kind = 0; kind < 3; kind++) {
+                for (int x = 0; x < 2; x++) {
+                    for (int y = 0; y < 4; y++) {
+                        level.setBlockAndUpdate(o.offset(-8 + kind * 2 + x, y, 0), glass[kind][y < 2 ? 0 : 1].defaultBlockState());
+                    }
+                }
+            }
+            // a 4 x 4 air lock ring, its controller in the bottom edge; with nobody near it shuts
+            for (int x = 0; x <= 3; x++) {
+                for (int y = 0; y <= 3; y++) {
+                    if (x == 0 || x == 3 || y == 0 || y == 3) {
+                        level.setBlockAndUpdate(o.offset(x, y, 0), (x == 1 && y == 0 ? GCBlocks.AIR_LOCK_CONTROLLER : GCBlocks.AIR_LOCK_FRAME).get().defaultBlockState());
+                    }
+                }
+            }
+            level.setBlockAndUpdate(o.offset(5, 0, 0), GCBlocks.ARC_LAMP.get().defaultBlockState());
+            final net.minecraft.world.level.block.Block[] panels = {GCBlocks.LIGHTING_PANEL_SQUARE.get(), GCBlocks.LIGHTING_PANEL_SPOTS.get(),
+                    GCBlocks.LIGHTING_PANEL_LINEAR.get(), GCBlocks.LIGHTING_PANEL_SF.get(), GCBlocks.LIGHTING_PANEL_SFDIAG.get()};
+            for (int i = 0; i < panels.length; i++) {
+                level.setBlockAndUpdate(o.offset(-6 + i, 0, 3), panels[i].defaultBlockState()
+                        .setValue(io.github.reiko45.galacticraft.block.LightingPanelBlock.FACING, net.minecraft.core.Direction.UP));
+            }
+            for (int x = 1; x <= 3; x++) {
+                for (int z = 2; z <= 4; z++) {
+                    level.setBlockAndUpdate(o.offset(x, 0, z), GCBlocks.GRATING.get().defaultBlockState());
+                }
+            }
+            lookFrom(p, level, new net.minecraft.world.phys.Vec3(o.getX() - 1.5D, o.getY() + 4.5D, o.getZ() + 10.5D),
+                    new net.minecraft.world.phys.Vec3(o.getX() - 1.5D, o.getY() + 1.2D, o.getZ() + 0.5D));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // the air lock shuts on its controller's next check
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "space_base_blocks"));
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos turretSpot;
+
+    @org.jetbrains.annotations.Nullable
+    private io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity clientTurret(Minecraft minecraft) {
+        return this.turretSpot != null && minecraft.level != null
+                && minecraft.level.getBlockEntity(this.turretSpot) instanceof io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret
+                ? turret : null;
+    }
+
+    /** Stop the world (server and client) so a moment of a few ticks can be photographed. */
+    private static void freeze(Minecraft minecraft, MinecraftServer srv, boolean frozen) {
+        if (minecraft.level != null) {
+            minecraft.level.tickRateManager().setFrozen(frozen);
+        }
+        srv.execute(() -> srv.tickRateManager().setFrozen(frozen));
+    }
+
+    /**
+     * Phase 7g part 4: a Laser Turret, owned by the tour player, charging (the orb at its muzzle) and firing at a
+     * mooshroom (kept from harm), then its screen, its list and its priorities.
+     */
+    private void addLaserTurretSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel level = srv.overworld();
+            level.setDayTime(6000L);
+            final BlockPos corner = p.blockPosition().offset(-300, 0, -300);
+            final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-10, -1, -8), o.offset(10, 10, 12))) {
+                level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            this.turretSpot = o;
+            level.setBlockAndUpdate(o, GCBlocks.LASER_TURRET.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.MachineBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            io.github.reiko45.galacticraft.block.LaserTurretBlock.placePart(level, o);
+            if (level.getBlockEntity(o) instanceof io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret) {
+                turret.setOwner(p);
+                turret.addPlayer("Alex");
+                turret.addEntity(net.minecraft.world.entity.EntityType.getKey(net.minecraft.world.entity.EntityType.COW));
+                turret.addEntity(net.minecraft.world.entity.EntityType.getKey(net.minecraft.world.entity.EntityType.VILLAGER));
+                turret.energy().setStored(io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity.CAPACITY);
+            }
+            final net.minecraft.world.entity.Mob target = net.minecraft.world.entity.EntityType.MOOSHROOM.create(level);
+            if (target != null) {
+                target.moveTo(o.getX() - 5.5D, o.getY(), o.getZ() + 5.5D, 60.0F, 0.0F);
+                target.setYHeadRot(60.0F);
+                target.setNoAi(true);
+                target.setInvulnerable(true);
+                target.setPersistenceRequired();
+                level.addFreshEntity(target);
+            }
+            // aimed just over the turret, so its block outline isn't drawn
+            lookFrom(p, level, new net.minecraft.world.phys.Vec3(o.getX() + 3.0D, o.getY() + 2.9D, o.getZ() + 3.2D),
+                    new net.minecraft.world.phys.Vec3(o.getX() + 0.2D, o.getY() + 2.2D, o.getZ() + 0.2D));
+        }));
+        // the orb grows as it charges: stop the world part way through a charge
+        this.extras.add((minecraft, srv) -> this.watcher = () -> {
+            final io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret = clientTurret(minecraft);
+            if (turret != null && turret.active() && turret.chargeLevel() >= 44) {
+                freeze(minecraft, srv, true);
+                this.watcher = null;
+            }
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "laser_turret_charging"));
+        this.extras.add((minecraft, srv) -> {
+            if (this.turretSpot != null) {
+                final BlockPos o = this.turretSpot;
+                srv.execute(() -> lookFrom(tourPlayer(srv), srv.overworld(), new net.minecraft.world.phys.Vec3(o.getX() + 4.5D, o.getY() + 4.0D, o.getZ() + 9.0D),
+                        new net.minecraft.world.phys.Vec3(o.getX() - 2.0D, o.getY() + 1.2D, o.getZ() + 3.0D)));
+            }
+            freeze(minecraft, srv, false);
+            // and the beam lasts a few ticks after a shot: stop the world as one is drawn
+            this.watcher = () -> {
+                final io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret = clientTurret(minecraft);
+                if (turret != null && turret.active() && turret.timeSinceShot >= 1 && turret.timeSinceShot <= 2 && turret.chargeLevel() < 5) {
+                    freeze(minecraft, srv, true);
+                    this.watcher = null;
+                }
+            };
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "laser_turret_firing"));
+        this.extras.add((minecraft, srv) -> {
+            this.watcher = null;
+            freeze(minecraft, srv, false);
+            srv.execute(() -> {
+                if (this.turretSpot != null && srv.overworld().getBlockEntity(this.turretSpot)
+                        instanceof io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret) {
+                    final BlockPos o = this.turretSpot;
+                    lookFrom(tourPlayer(srv), srv.overworld(), new net.minecraft.world.phys.Vec3(o.getX() + 0.5D, o.getY() + 2.5D, o.getZ() + 3.0D),
+                            new net.minecraft.world.phys.Vec3(o.getX() + 0.5D, o.getY() + 1.0D, o.getZ() + 0.5D));
+                    turret.openMenu(tourPlayer(srv));
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "laser_turret_gui"));
+        this.extras.add((minecraft, srv) -> {
+            final io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret = clientTurret(minecraft);
+            if (turret != null) {
+                minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.LaserTurretListScreen(turret));
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "laser_turret_list"));
+        this.extras.add((minecraft, srv) -> {
+            final io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity turret = clientTurret(minecraft);
+            if (turret != null) {
+                minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.LaserTurretPriorityScreen(turret));
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "laser_turret_priority"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> tourPlayer(srv).closeContainer());
         });
     }
 

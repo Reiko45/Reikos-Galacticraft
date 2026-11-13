@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7f of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: Phase 7g of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -16,7 +16,8 @@ wear Thermal Padding. Out there, send Astro Miners to tunnel through the asteroi
 machines, hop between Short Range Telepads, swing across on a grapple, and explore abandoned alien bases for their
 treasure. The Tier 3 Rocket also takes you to Venus, burning down through its thick air in an Entry Pod onto
 scorching plains and valleys under acid rain, where crashed probes hold salvage, Geothermal Generators tap the vapor
-spouts and Solar Arrays drink in the sun, and the Spider Queen waits in the Venus dungeons. From a rocket
+spouts and Solar Arrays drink in the sun, and the Spider Queen waits in the Venus dungeons. Fit out your bases with
+space glass, air locks, lighting, screens and telemetry, and guard them with Laser Turrets. From a rocket
 you can build your own space station in Earth orbit, float around it in zero gravity and spin it with thrusters. Fly
 back and you come down by parachute, with your cargo following in a Para-chest. Team up in the Space Race: name your
 team, draw its flag, share unlocked schematics and plant your flag wherever you land. Galacticraft's power system,
@@ -97,6 +98,18 @@ machines, solar panels and oil processing work. See
   ebbs, puffing yellow exhaust. Solar Array Modules laid side by side feed a Solar Array Controller 6.3 gJ/t each in
   the sun, up to 1,000 gJ/t, more on a space station or high up on Venus. Also lead, Atomic Batteries that never run
   down, and Isothermal Padding.
+* **Base building**: Space Glass (clear, vanilla, strong; plain or tin framed, paintable with the Chromatic
+  Applicator), Air Locks that seal when you walk away, Arc Lamps that keep mobs off, Lighting Panels, Grating,
+  concealed redstone and sealable wires and pipes. Display Screens join into big screens showing the Earth, the solar
+  system or a Telemetry Unit's readings; a Communications Dish turns on its post. Sensor Glasses point out ores, mobs
+  and the leak in a sealed room. A Magnetic Crafting Table remembers its recipe and can be fed by hoppers; a
+  Deconstructor takes things apart again; Hydraulic Platforms lift you between floors; an Emergency Post lights the
+  dark and holds an Emergency Kit. Also the Compact NASA Workbench, Throwable Meteor Chunks and the Prelaunch
+  Checklist.
+* **Laser Turret**: powered, it charges for three seconds and fires at whatever it is set to: by default everything
+  but you, your team and your pets, and the players and mob types on its whitelist (or, in blacklist mode, only those
+  on its list), meteors too. It picks the closest, the weakest or the strongest first, and needs a clear line of
+  sight. Only its owner can change it.
 * **Temperature**: on Mars and among the asteroids your body cools down, faster without Thermal Padding (four pieces
   in the Galacticraft inventory, worn over your body with a pulsing glow). A full set, or a sealed room with an Ambient
   Thermal Controller, keeps you warm; otherwise the HUD thermometer warns you, then you slow down and freeze. Venus
@@ -329,6 +342,38 @@ machines, solar panels and oil processing work. See
 ![A Geothermal Generator puffing acid exhaust on a vapor spout, and a Solar Array with its controller](docs/screenshots/venus_machines.png)
 
 ![The Geothermal Generator and Solar Array Controller GUIs](docs/screenshots/venus_machine_screens.png)
+
+![Space Glass in its three kinds and two frames, a shut Air Lock, Lighting Panels, Grating and an Arc Lamp](docs/screenshots/space_base_blocks.png)
+
+| Display Screens joined into one | The screens' pictures |
+|---|---|
+| ![A row of single screens and a joined 3 x 2 screen showing the solar system, with a Telemetry Unit and its pig](docs/screenshots/display_screens.png) | ![Single screens showing a pig's telemetry, the planet test, the Earth and the Moon, the Earth, and a blank screen](docs/screenshots/display_screen_pictures.png) |
+
+| Telemetry on a screen | The Communications Dish and Compact Workbench |
+|---|---|
+| ![A Display Screen showing a pig's readings from a Telemetry Unit](docs/screenshots/telemetry_screen.png) | ![The Communications Dish on its post, with a Compact NASA Workbench and a Magnetic Crafting Table](docs/screenshots/comms_dish_and_workbench.png) |
+
+| Sensor Glasses | The Magnetic Crafting Table |
+|---|---|
+| ![Ores marked through the visor, and a glowing alien villager](docs/screenshots/sensor_glasses.png) | ![The Magnetic Crafting Table GUI with its remembered recipe](docs/screenshots/magnetic_crafting_table_gui.png) |
+
+![An Emergency Post with its door open, Hydraulic Platforms, a Deconstructor and a Chromatic Applicator before painted glass, and meteor chunks](docs/screenshots/emergency_post_and_platforms.png)
+
+| The Deconstructor | The Chromatic Applicator |
+|---|---|
+| ![The Deconstructor taking a rocket apart](docs/screenshots/deconstructor_gui.png) | ![The Chromatic Applicator mixing a pink](docs/screenshots/chromatic_applicator_gui.png) |
+
+![The Prelaunch Checklist](docs/screenshots/prelaunch_checklist.png)
+
+| A Laser Turret charging | And firing |
+|---|---|
+| ![The Laser Turret with its charge orb glowing at the muzzle](docs/screenshots/laser_turret_charging.png) | ![The Laser Turret's green beam hitting a mooshroom](docs/screenshots/laser_turret_firing.png) |
+
+![The Laser Turret GUI](docs/screenshots/laser_turret_gui.png)
+
+| Its list | Its priorities |
+|---|---|
+| ![The whitelist: players and entity types](docs/screenshots/laser_turret_list.png) | ![The priority spinners: closest, lowest health, highest health](docs/screenshots/laser_turret_priority.png) |
 
 ### Visiting the Moon, Mars, the asteroids and Venus
 

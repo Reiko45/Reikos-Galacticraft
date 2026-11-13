@@ -167,6 +167,7 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.ARC_LAMP.get(), io.github.reiko45.galacticraft.client.render.ArcLampRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.DISPLAY_SCREEN.get(), io.github.reiko45.galacticraft.client.render.DisplayScreenRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.COMMS_DISH.get(), io.github.reiko45.galacticraft.client.render.CommsDishRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.LASER_TURRET.get(), io.github.reiko45.galacticraft.client.render.LaserTurretRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.EMERGENCY_POST.get(), io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.HYDRAULIC_PLATFORM.get(), io.github.reiko45.galacticraft.client.render.HydraulicPlatformRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
@@ -259,6 +260,7 @@ public final class GalacticraftClient {
         event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.SUPPORT);
         event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.FORK);
         event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.DISH);
+        io.github.reiko45.galacticraft.client.render.LaserTurretRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
@@ -444,6 +446,7 @@ public final class GalacticraftClient {
         event.register(GCMenus.ELECTROLYZER.get(), io.github.reiko45.galacticraft.client.screen.GasMachineScreen::new);
         event.register(GCMenus.TERRAFORMER.get(), io.github.reiko45.galacticraft.client.screen.TerraformerScreen::new);
         event.register(GCMenus.LAUNCH_CONTROLLER.get(), io.github.reiko45.galacticraft.client.screen.LaunchControllerScreen::new);
+        event.register(GCMenus.LASER_TURRET.get(), io.github.reiko45.galacticraft.client.screen.LaserTurretScreen::new);
         event.register(GCMenus.SHORT_RANGE_TELEPAD.get(), io.github.reiko45.galacticraft.client.screen.ShortRangeTelepadScreen::new);
         event.register(GCMenus.ASTRO_MINER_DOCK.get(), io.github.reiko45.galacticraft.client.screen.AstroMinerDockScreen::new);
         event.register(GCMenus.ASTRO_MINER_BENCH.get(), io.github.reiko45.galacticraft.client.screen.AstroMinerBenchScreen::new);

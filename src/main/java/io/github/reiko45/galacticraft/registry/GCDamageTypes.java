@@ -25,6 +25,8 @@ public final class GCDamageTypes {
     public static final ResourceKey<DamageType> SULPHURIC_ACID = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("sulphuric_acid"));
     /** 1.12.2 EntityDamageSourceIndirect("meteor_chunk"), a projectile. */
     public static final ResourceKey<DamageType> METEOR_CHUNK = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("meteor_chunk"));
+    /** 1.12.2 DamageSourceGC.laserTurret. */
+    public static final ResourceKey<DamageType> LASER_TURRET = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("laser_turret"));
 
     private GCDamageTypes() {
     }

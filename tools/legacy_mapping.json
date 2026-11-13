@@ -616,7 +616,12 @@
     "block/deconstructor": "blocks/deconstructor",
     "block/chromatic_applicator": "blocks/machine_painter",
     "gui/deconstructor": "gui/deconstructor",
-    "gui/chromatic_applicator": "gui/painter"
+    "gui/chromatic_applicator": "gui/painter",
+    "block/laser_turret": "planets:blocks/laser",
+    "block/laser_turret_off": "planets:blocks/laser_off",
+    "block/laser_turret_orb": "planets:blocks/orb",
+    "gui/laser_turret": "planets:gui/laser_turret",
+    "gui/laser_turret_edit": "planets:gui/laser_turret_edit"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -636,7 +641,9 @@
     "entity/astrominer": "entity/astrominer",
     "player/openairlock": "player/openairlock",
     "player/closeairlock": "player/closeairlock",
-    "block/deconstructor": "deconstructor"
+    "block/deconstructor": "deconstructor",
+    "block/laser_charge": "laser/charge",
+    "block/laser_shoot": "laser/shoot"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -845,7 +852,8 @@
     "block/hydraulic_platform_unset": {
       "from": "block/platform_unset",
       "render_type": "minecraft:cutout"
-    }
+    },
+    "item/laser_turret": "planets:item/laser_turret"
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -1657,7 +1665,28 @@
     "block.galacticraftcore.chromatic_applicator.desc": "tile.painter.description",
     "gui.galacticraftcore.button.paintapply": "gui.button.paintapply.name",
     "gui.galacticraftcore.button.paintmix": "gui.button.paintmix.name",
-    "gui.galacticraftcore.button.paintreset": "gui.button.paintreset.name"
+    "gui.galacticraftcore.button.paintreset": "gui.button.paintreset.name",
+    "block.galacticraftcore.laser_turret": "planets:tile.laser_turret.name",
+    "block.galacticraftcore.laser_turret.description": "planets:tile.laser_turret.description",
+    "gui.galacticraftcore.button.add_blacklist": "planets:gui.button.add_blacklist.name",
+    "gui.galacticraftcore.button.add_whitelist": "planets:gui.button.add_whitelist.name",
+    "gui.galacticraftcore.button.add_entity": "planets:gui.button.add_entity.name",
+    "gui.galacticraftcore.button.add_player": "planets:gui.button.add_player.name",
+    "gui.galacticraftcore.button.edit_blacklist": "planets:gui.button.edit_blacklist.name",
+    "gui.galacticraftcore.button.edit_whitelist": "planets:gui.button.edit_whitelist.name",
+    "gui.galacticraftcore.button.edit_priority": "planets:gui.button.edit_priority.name",
+    "gui.galacticraftcore.button.never_fire_team": "planets:gui.button.never_fire_team.name",
+    "gui.galacticraftcore.button.remove_selected": "planets:gui.button.remove_selected.name",
+    "gui.galacticraftcore.message.blacklist_mode": "planets:gui.message.blacklist_mode.name",
+    "gui.galacticraftcore.message.target_meteors": "planets:gui.message.target_meteors.name",
+    "gui.galacticraftcore.message.enter_entity": "planets:gui.message.enter_entity.name",
+    "gui.galacticraftcore.message.enter_player": "planets:gui.message.enter_player.name",
+    "gui.galacticraftcore.message.player": "planets:gui.message.player.name",
+    "gui.galacticraftcore.message.priority_closest": "planets:gui.message.priority_closest.name",
+    "gui.galacticraftcore.message.priority_health_high": "planets:gui.message.priority_health_high.name",
+    "gui.galacticraftcore.message.priority_health_low": "planets:gui.message.priority_health_low.name",
+    "gui.galacticraftcore.message.priority_low": "planets:gui.message.priority_low.name",
+    "block.galacticraftcore.laser_turret_part": "planets:tile.laser_turret.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1712,7 +1741,11 @@
     "block.galacticraftcore.lighting_panel.desc": "Lighting panel for use in space! The wrench turns it.",
     "subtitles.galacticraftcore.block.air_lock.seal": "Air lock shuts",
     "subtitles.galacticraftcore.block.air_lock.unseal": "Air lock opens",
-    "subtitles.galacticraftcore.block.deconstructor": "Deconstructor grinds"
+    "subtitles.galacticraftcore.block.deconstructor": "Deconstructor grinds",
+    "death.attack.laser_turret": "%1$s was shot by a laser turret",
+    "death.attack.laser_turret.player": "%1$s was shot by a laser turret whilst fighting %2$s",
+    "subtitles.galacticraftcore.block.laser_turret.charge": "Laser Turret charges",
+    "subtitles.galacticraftcore.block.laser_turret.shoot": "Laser Turret fires"
   },
   "recipes": {
     "skip_conditions": [
@@ -2273,6 +2306,8 @@
     "entity/telesupport": {
       "from": "telesupport",
       "default_map": "galacticraftcore:model/telesupport"
-    }
+    },
+    "entity/laser_turret": "planets:laser",
+    "entity/laser_turret_orb": "planets:orb"
   }
 }

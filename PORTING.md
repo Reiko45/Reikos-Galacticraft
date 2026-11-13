@@ -450,8 +450,10 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Emergency Post (lights up the air round it, keeps the evolved mobs off) and the Emergency Kit inside it, which
       puts on a mask, gear, tanks and a parachute and hands over the rest
 - [x] Throwable Meteor Chunk (hot and cold, thrown or fired from a dispenser) and the Prelaunch Checklist book
-- [ ] Laser Turret (TileEntityLaserTurret, Venus): left out of phase 7f. 1.12.2 Legacy has no recipe for it (only the
-      creative menu), and its targeting, owner lists and GUI are about 1,700 lines
+- [x] Laser Turret (TileEntityLaserTurret, Venus): charges for 3 seconds and fires at the meteors and living things
+      around it, sparing its owner, their team and pets; whitelist or blacklist of players and entity types, target
+      priorities, line of sight; its GUI, list and priority screens; the turning turret, charge orb and beam. As in
+      1.12.2 it has no recipe (creative menu only)
 
 ### Phase 8 – Polish
 - [ ] Advancements, sounds/music (check the provenance of the `*_jc.ogg` tracks first), manual, Jade/EMI integration
@@ -690,7 +692,17 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   world, so a low roof over the controller doesn't matter. Its sun-visible tooltip follows the array live (1.12.2
   worked it out once, when the screen opened), and its status and sun icon still read "blocked" unless every module in
   range sees the sun.
-* The Laser Turret is not ported yet (phase 7g).
+* The Laser Turret looks for targets once a second in a box round it: living things within 15 blocks and meteors within
+  90 across (1.12.2 kept a list of every living thing in the world, and of meteors as they appeared). Spectators are
+  left alone. The owner's Space Race team is looked up when a target is chosen (1.12.2 remembered it from when the
+  turret loaded), and its pets' owners by UUID (1.12.2 needed the owner online).
+* Only the turret's owner, within reach, can change it: the server checks (1.12.2 checked only in the GUI). A list
+  holds at most 64 names. The three priorities go to the server together, and the edit screens open over the turret's
+  own, Escape going back to it. Kept from 1.12.2: blacklist mode fires only at what is listed, meteors too; with
+  "never fire at your team" off, the owner is on the list like anyone else; a meteor is picked without a sight check;
+  priorities only order things, so spinners can climb past 3.
+* The turret's barrels are drawn turning smoothly between ticks (1.12.2 moved them a tick at a time). Its death message
+  is new English (1.12.2 had none), and the "BETA Testing Phase" lines in its tooltip are left out.
 * A Lighting Panel can't take on the look of the block it is placed against by sneaking. Grating holds water only.
 * An Air Lock Controller never loads a chunk to look for its frame (1.12.2 did, so a controller at the edge of the
   loaded area kept loading more), and its frame search starts from the widest box (1.12.2 started from +-6,000,000, so

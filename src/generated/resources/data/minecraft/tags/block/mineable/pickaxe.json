@@ -144,6 +144,7 @@
     "galacticraftcore:hydraulic_platform",
     "galacticraftcore:deconstructor",
     "galacticraftcore:chromatic_applicator",
-    "galacticraftcore:nasa_workbench_part"
+    "galacticraftcore:nasa_workbench_part",
+    "galacticraftcore:laser_turret"
   ]
 }

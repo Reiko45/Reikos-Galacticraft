@@ -1,0 +1,49 @@
+{
+  "variants": {
+    "facing=east,input=back": {
+      "model": "galacticraftcore:block/laser_turret_input_back",
+      "y": 90
+    },
+    "facing=east,input=left": {
+      "model": "galacticraftcore:block/laser_turret",
+      "y": 90
+    },
+    "facing=east,input=right": {
+      "model": "galacticraftcore:block/laser_turret_input_right",
+      "y": 90
+    },
+    "facing=north,input=back": {
+      "model": "galacticraftcore:block/laser_turret_input_back"
+    },
+    "facing=north,input=left": {
+      "model": "galacticraftcore:block/laser_turret"
+    },
+    "facing=north,input=right": {
+      "model": "galacticraftcore:block/laser_turret_input_right"
+    },
+    "facing=south,input=back": {
+      "model": "galacticraftcore:block/laser_turret_input_back",
+      "y": 180
+    },
+    "facing=south,input=left": {
+      "model": "galacticraftcore:block/laser_turret",
+      "y": 180
+    },
+    "facing=south,input=right": {
+      "model": "galacticraftcore:block/laser_turret_input_right",
+      "y": 180
+    },
+    "facing=west,input=back": {
+      "model": "galacticraftcore:block/laser_turret_input_back",
+      "y": 270
+    },
+    "facing=west,input=left": {
+      "model": "galacticraftcore:block/laser_turret",
+      "y": 270
+    },
+    "facing=west,input=right": {
+      "model": "galacticraftcore:block/laser_turret_input_right",
+      "y": 270
+    }
+  }
+}

@@ -273,6 +273,7 @@ public final class GCNetwork {
         ChecklistNetwork.register(registrar);
         PlatformNetwork.register(registrar);
         PaintNetwork.register(registrar);
+        TurretNetwork.register(registrar);
         registrar.playToServer(OpenExtendedInventory.TYPE, OpenExtendedInventory.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> ExtendedInventoryMenu.open(context.player())));
         registrar.playToClient(OpenCelestialSelection.TYPE, OpenCelestialSelection.STREAM_CODEC,

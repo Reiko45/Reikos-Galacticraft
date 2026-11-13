@@ -13,6 +13,8 @@ public final class GCSounds {
     public static final Supplier<SoundEvent> BOSS_LAUGH = sound("entity.boss_laugh");
     /** 1.12.2 "block.deconstructor". */
     public static final Supplier<SoundEvent> DECONSTRUCTOR = sound("block.deconstructor");
+    public static final Supplier<SoundEvent> LASER_CHARGE = sound("block.laser_turret.charge");
+    public static final Supplier<SoundEvent> LASER_SHOOT = sound("block.laser_turret.shoot");
     public static final Supplier<SoundEvent> BOSS_DEATH = sound("entity.boss_death");
     public static final Supplier<SoundEvent> BOSS_OOH = sound("entity.boss_ooh");
     /** The Creeper Boss's hurt sound (1.12.2 bossOuch). */

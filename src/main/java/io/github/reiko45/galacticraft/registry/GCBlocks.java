@@ -435,6 +435,14 @@ public final class GCBlocks {
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.HydraulicPlatformBlock> HYDRAULIC_PLATFORM = withItem("hydraulic_platform",
             () -> new io.github.reiko45.galacticraft.block.HydraulicPlatformBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .strength(1.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    /** 1.12.2 BlockLaserTurret: Material.IRON, hardness 2.5, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LaserTurretBlock> LASER_TURRET = withItem("laser_turret",
+            () -> new io.github.reiko45.galacticraft.block.LaserTurretBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(2.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    /** 1.12.2 BlockMulti LASER_TURRET: the invisible block the turret stands on. */
+    public static final DeferredBlock<SolarPartBlock> LASER_TURRET_PART = BLOCKS.register("laser_turret_part", () -> new SolarPartBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 3_600_000.0F).sound(SoundType.METAL)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final DeferredBlock<SolarPartBlock> NASA_WORKBENCH_PART = BLOCKS.register("nasa_workbench_part", () -> new SolarPartBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 3_600_000.0F).sound(SoundType.METAL)
                     .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));

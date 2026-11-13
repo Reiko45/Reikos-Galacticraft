@@ -98,5 +98,17 @@
     "sounds": [
       "galacticraftcore:block/deconstructor"
     ]
+  },
+  "block.laser_turret.charge": {
+    "subtitle": "subtitles.galacticraftcore.block.laser_turret.charge",
+    "sounds": [
+      "galacticraftcore:block/laser_charge"
+    ]
+  },
+  "block.laser_turret.shoot": {
+    "subtitle": "subtitles.galacticraftcore.block.laser_turret.shoot",
+    "sounds": [
+      "galacticraftcore:block/laser_shoot"
+    ]
   }
 }

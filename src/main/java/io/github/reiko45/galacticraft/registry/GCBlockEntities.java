@@ -77,7 +77,7 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<SolarPartBlockEntity>> SOLAR_PART = BLOCK_ENTITIES.register("solar_panel_part",
             () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get(), GCBlocks.NASA_WORKBENCH_PART.get(),
-                    GCBlocks.COMMS_DISH_PART.get()).build(null));
+                    GCBlocks.COMMS_DISH_PART.get(), GCBlocks.LASER_TURRET_PART.get()).build(null));
 
     public static final Supplier<BlockEntityType<RefineryBlockEntity>> REFINERY = machine("refinery",
             RefineryBlockEntity::new, GCBlocks.REFINERY);
@@ -87,6 +87,8 @@ public final class GCBlockEntities {
             "methane_synthesizer", io.github.reiko45.galacticraft.block.entity.MethaneSynthesizerBlockEntity::new, GCBlocks.METHANE_SYNTHESIZER);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity>> ELECTROLYZER = machine("electrolyzer",
             io.github.reiko45.galacticraft.block.entity.ElectrolyzerBlockEntity::new, GCBlocks.ELECTROLYZER);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity>> LASER_TURRET = machine(
+            "laser_turret", io.github.reiko45.galacticraft.block.entity.LaserTurretBlockEntity::new, GCBlocks.LASER_TURRET);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity>> LAUNCH_CONTROLLER = machine(
             "launch_controller", io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity::new, GCBlocks.LAUNCH_CONTROLLER);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TerraformerBlockEntity>> TERRAFORMER = machine("terraformer",

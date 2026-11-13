@@ -75,6 +75,8 @@ public final class GCMenus {
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.GasMachineMenu>> ELECTROLYZER = MENUS.register("electrolyzer",
             () -> IMenuTypeExtension.create((id, inventory, buf) -> new io.github.reiko45.galacticraft.menu.GasMachineMenu(
                     io.github.reiko45.galacticraft.menu.GasMachineMenu.Kind.ELECTROLYZER, id, inventory, buf)));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.LaserTurretMenu>> LASER_TURRET = MENUS.register("laser_turret",
+            () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.LaserTurretMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.LaunchControllerMenu>> LAUNCH_CONTROLLER = MENUS.register("launch_controller",
             () -> IMenuTypeExtension.create(io.github.reiko45.galacticraft.menu.LaunchControllerMenu::new));
     public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.AstroMinerDockMenu>> ASTRO_MINER_DOCK = MENUS.register(

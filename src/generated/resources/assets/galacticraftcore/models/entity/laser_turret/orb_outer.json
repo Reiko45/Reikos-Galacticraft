@@ -1,0 +1,9 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/laser_turret_orb.obj",
+  "visibility": {
+    "inner_Icosphere": false,
+    "outer_Icosphere.001": true
+  }
+}

@@ -542,6 +542,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
         for (String part : new String[] {"telesupport", "telefork", "teledish"}) {
             models().getBuilder("entity/" + part).customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/entity/" + part + ".obj")).flipV(true).end();
         }
+        laserTurret();
     }
 
     /**
@@ -637,6 +638,46 @@ public class GCBlockStateProvider extends BlockStateProvider {
      * Electric machine whose input face (machine_input texture) can be left/back/right of the front. 1.12.2 models put the
      * front on north, so left = east, back = south, right = west.
      */
+    /**
+     * 1.12.2 laser_turret: the machine casing all round with machine_input on the energy face (left, east when facing
+     * north); the turret itself is drawn by LaserTurretRenderer from laser.obj's parts (1.12.2 baked them apart) and the
+     * charge orb. The item model is 1.12.2's, ported as it was.
+     */
+    private void laserTurret() {
+        final ResourceLocation casing = tex("machine");
+        final ResourceLocation input = tex("machine_input");
+        final Map<InputSide, ModelFile> models = new EnumMap<>(InputSide.class);
+        for (InputSide config : InputSide.values()) {
+            final String model = config == InputSide.LEFT ? "laser_turret" : "laser_turret_input_" + config.getSerializedName();
+            models.put(config, models().cube(model, casing, casing, casing, config == InputSide.BACK ? input : casing,
+                    config == InputSide.LEFT ? input : casing, config == InputSide.RIGHT ? input : casing).texture("particle", casing));
+        }
+        getVariantBuilder(GCBlocks.LASER_TURRET.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(models.get(state.getValue(ConfigurableMachineBlock.INPUT)))
+                .rotationY(facingRotation(state))
+                .build());
+        simpleBlock(GCBlocks.LASER_TURRET_PART.get(), models().getBuilder("laser_turret_part").texture("particle", casing));
+        final String[] groups = {"baseCube", "baseConnector0", "baseConnector1", "phalangeAxle", "turretLeft", "turretRight", "turretLeft_off",
+                "turretRight_off", "phalange"};
+        final String[][] parts = {{"base", "baseConnector0", "baseConnector1"}, {"phalange", "phalange"}, {"axle", "phalangeAxle"},
+                {"turrets", "turretLeft", "turretRight"}, {"turrets_off", "turretLeft_off", "turretRight_off"}};
+        for (String[] part : parts) {
+            final var loader = models().getBuilder("entity/laser_turret/" + part[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/laser_turret.obj")).flipV(true);
+            for (String group : groups) {
+                loader.visibility(group, java.util.Arrays.asList(part).subList(1, part.length).contains(group));
+            }
+            loader.end();
+        }
+        final String[][] orbs = {{"orb_inner", "inner_Icosphere"}, {"orb_outer", "outer_Icosphere.001"}};
+        for (String[] orb : orbs) {
+            models().getBuilder("entity/laser_turret/" + orb[0]).customLoader(ObjModelBuilder::begin)
+                    .modelLocation(modLoc("models/entity/laser_turret_orb.obj")).flipV(true)
+                    .visibility("inner_Icosphere", orb[1].equals("inner_Icosphere"))
+                    .visibility("outer_Icosphere.001", orb[1].equals("outer_Icosphere.001")).end();
+        }
+    }
+
     private void configurableMachine(Block block, String tier, String front) {
         final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
         final ResourceLocation casing = tex(tier + "machine");

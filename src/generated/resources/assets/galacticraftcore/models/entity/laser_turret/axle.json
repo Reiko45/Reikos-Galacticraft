@@ -1,0 +1,16 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/laser_turret.obj",
+  "visibility": {
+    "baseConnector0": false,
+    "baseConnector1": false,
+    "baseCube": false,
+    "phalange": false,
+    "phalangeAxle": true,
+    "turretLeft": false,
+    "turretLeft_off": false,
+    "turretRight": false,
+    "turretRight_off": false
+  }
+}

@@ -111,7 +111,8 @@ public class SolarPartBlock extends Block implements EntityBlock {
             final BlockPos main = part.mainPos();
             if (main != null && (level.getBlockState(main).getBlock() instanceof SolarPanelBlock
                     || level.getBlockState(main).getBlock() instanceof NasaWorkbenchBlock
-                    || level.getBlockState(main).getBlock() instanceof CommsDishBlock)) {
+                    || level.getBlockState(main).getBlock() instanceof CommsDishBlock
+                    || level.getBlockState(main).getBlock() instanceof LaserTurretBlock)) {
                 level.destroyBlock(main, true);
             }
         }

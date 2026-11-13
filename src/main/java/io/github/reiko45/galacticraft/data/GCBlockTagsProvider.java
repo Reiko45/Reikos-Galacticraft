@@ -121,7 +121,7 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.NASA_WORKBENCH.get(),
                 GCBlocks.COMPACT_NASA_WORKBENCH.get(), GCBlocks.MAGNETIC_CRAFTING_TABLE.get(), GCBlocks.TELEMETRY.get(), GCBlocks.COMMS_DISH.get(),
                 GCBlocks.EMERGENCY_POST.get(), GCBlocks.HYDRAULIC_PLATFORM.get(), GCBlocks.DECONSTRUCTOR.get(), GCBlocks.CHROMATIC_APPLICATOR.get(),
-                GCBlocks.NASA_WORKBENCH_PART.get());
+                GCBlocks.NASA_WORKBENCH_PART.get(), GCBlocks.LASER_TURRET.get());
         tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST.get());
         // Oxygen sealing (1.12.2 OxygenPressureProtocol): glass panes seal, gravel/wool/sponge let air through
         // 1.12.2 isValueable: the Overworld (copper here is vanilla's), Moon, Mars, asteroid and Venus ores
