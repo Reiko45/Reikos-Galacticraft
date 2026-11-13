@@ -24,23 +24,28 @@ public class NasaWorkbenchMenu extends PartBenchMenu {
 
     public NasaWorkbenchMenu(int id, Inventory playerInventory, ContainerLevelAccess access) {
         super(GCMenus.NASA_WORKBENCH.get(), id, playerInventory, access, Schematics.ROCKET_T1, MATRIX_SIZE);
-        addResultSlot(142, 69 + OFFSET);
-        addPartSlot(1, 48, -8 + OFFSET);
-        for (int i = 0; i < 4; i++) {
-            addPartSlot(2 + i, 39, -6 + i * 18 + 16 + OFFSET);
-        }
-        for (int i = 0; i < 4; i++) {
-            addPartSlot(6 + i, 57, -6 + i * 18 + 16 + OFFSET);
-        }
-        addPartSlot(10, 21, 64 + OFFSET);
-        addPartSlot(11, 21, 82 + OFFSET);
-        addPartSlot(12, 48, 82 + OFFSET);
-        addPartSlot(13, 75, 64 + OFFSET);
-        addPartSlot(14, 75, 82 + OFFSET);
-        for (int i = 0; i < 3; i++) {
-            addPartSlot(15 + i, 93 + i * 26, -15 + OFFSET);
-        }
+        layout(slots());
         addPlayerInventory(playerInventory, 111 + OFFSET);
+    }
+
+    /** Where this page's slots go (shared with the JEI and EMI pages). */
+    public static void layout(Layout layout) {
+        layout.result(142, 69 + OFFSET);
+        layout.part(1, 48, -8 + OFFSET);
+        for (int i = 0; i < 4; i++) {
+            layout.part(2 + i, 39, -6 + i * 18 + 16 + OFFSET);
+        }
+        for (int i = 0; i < 4; i++) {
+            layout.part(6 + i, 57, -6 + i * 18 + 16 + OFFSET);
+        }
+        layout.part(10, 21, 64 + OFFSET);
+        layout.part(11, 21, 82 + OFFSET);
+        layout.part(12, 48, 82 + OFFSET);
+        layout.part(13, 75, 64 + OFFSET);
+        layout.part(14, 75, 82 + OFFSET);
+        for (int i = 0; i < 3; i++) {
+            layout.part(15 + i, 93 + i * 26, -15 + OFFSET);
+        }
     }
 
     @Override

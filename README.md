@@ -176,8 +176,9 @@ machines, solar panels and oil processing work. See
 * **Sounds and music**: rockets roar from ignition to the edge of space, parachutes flap open, compressors clank, and
   the space music plays in Galacticraft's worlds. Only one of 1.12.2's five tracks ships with the mod (see
   [Music](#music)).
-* **JEI, EMI and Jade** (all optional): recipe pages for the Compressor, Circuit Fabricator and Refinery in JEI or
-  EMI (EMI also fills the Magnetic Crafting Table); Jade shows a machine's energy in gJ, its progress and status, and
+* **JEI, EMI and Jade** (all optional): recipe pages for the Compressor, Circuit Fabricator, Refinery, Oxygen
+  Compressor, Gas Liquefier and Methane Synthesizer and every NASA Workbench page (rockets, buggy, Astro Miner, each
+  number of chests) in JEI or EMI (EMI also fills the Magnetic Crafting Table); Jade shows a machine's energy in gJ, its progress and status, and
   who owns a Launch Controller or Laser Turret.
 * **Tooltips**: hold Shift over a Galacticraft machine or block for 1.12.2's description of it, and see what power a
   machine needs. Creative mode also has the Infinite Battery and the Dungeon Locator, a compass that points to the
@@ -338,6 +339,10 @@ machines, solar panels and oil processing work. See
 | Zoomed in on Earth | The Galaxy Map key's map |
 |---|---|
 | ![Earth zoomed in, with the Moon and a space station on their orbits](docs/screenshots/galaxy_map_earth.png) | ![The map opened with the Galaxy Map key, Jupiter selected and out of reach](docs/screenshots/galaxy_map_key.png) |
+
+| JEI: the Tier 1 Rocket page | EMI: the Tier 2 Rocket page |
+|---|---|
+| ![The NASA Workbench's Tier 1 Rocket page in JEI](docs/screenshots/jei_workbench_rocket_t1.png) | ![The Tier 2 Rocket page in EMI](docs/screenshots/emi_workbench_rocket_t2.png) |
 
 | Tooltips | Holding Shift |
 |---|---|

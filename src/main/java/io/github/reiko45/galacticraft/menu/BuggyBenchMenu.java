@@ -23,24 +23,29 @@ public class BuggyBenchMenu extends PartBenchMenu {
 
     public BuggyBenchMenu(int id, Inventory playerInventory, ContainerLevelAccess access) {
         super(GCMenus.BUGGY_BENCH.get(), id, playerInventory, access, Schematics.MOON_BUGGY, MATRIX_SIZE);
-        addResultSlot(142, 79 + OFFSET);
+        layout(slots());
+        addPlayerInventory(playerInventory, 111 + OFFSET);
+    }
+
+    /** Where this page's slots go (shared with the JEI and EMI pages). */
+    public static void layout(Layout layout) {
+        layout.result(142, 79 + OFFSET);
         // Body: a 3 x 4 grid, numbered down the columns
         for (int row = 0; row < 4; row++) {
             for (int col = 0; col < 3; col++) {
-                addPartSlot(col * 4 + row + 1, 39 + col * 18, 14 + row * 18 + OFFSET);
+                layout.part(col * 4 + row + 1, 39 + col * 18, 14 + row * 18 + OFFSET);
             }
         }
         // Wheels at the corners
         for (int row = 0; row < 2; row++) {
             for (int col = 0; col < 2; col++) {
-                addPartSlot(col * 2 + row + 13, 21 + col * 72, 14 + row * 54 + OFFSET);
+                layout.part(col * 2 + row + 13, 21 + col * 72, 14 + row * 54 + OFFSET);
             }
         }
         // Storage boxes
         for (int i = 0; i < 3; i++) {
-            addPartSlot(17 + i, 93 + i * 26, -15 + OFFSET);
+            layout.part(17 + i, 93 + i * 26, -15 + OFFSET);
         }
-        addPlayerInventory(playerInventory, 111 + OFFSET);
     }
 
     @Override

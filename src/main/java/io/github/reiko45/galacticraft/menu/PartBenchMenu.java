@@ -33,6 +33,28 @@ public abstract class PartBenchMenu extends SchematicPageMenu {
         };
     }
 
+    /** Where a page puts its result and part slots, as its menu and the JEI and EMI pages read it. */
+    public interface Layout {
+        void result(int x, int y);
+
+        void part(int index, int x, int y);
+    }
+
+    /** A layout that adds the slots to this menu. */
+    protected Layout slots() {
+        return new Layout() {
+            @Override
+            public void result(int x, int y) {
+                addResultSlot(x, y);
+            }
+
+            @Override
+            public void part(int index, int x, int y) {
+                addPartSlot(index, x, y);
+            }
+        };
+    }
+
     /** Whether matrix slot {@code index} takes this item. */
     protected abstract boolean accepts(int index, ItemStack stack);
 

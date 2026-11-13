@@ -46,6 +46,15 @@ public class GalacticraftJeiPlugin implements IModPlugin {
         runtime = null;
     }
 
+    /** Screenshot tour: open a NASA Workbench page or 1.12.2 machine page. */
+    public static boolean showType(mezz.jei.api.recipe.RecipeType<?> type) {
+        if (runtime == null) {
+            return false;
+        }
+        runtime.getRecipesGui().showTypes(List.of(type));
+        return true;
+    }
+
     /** Screenshot tour: open the recipe view of our categories (0 compressing, 1 circuit fabricating, 2 refining). */
     public static boolean showCategory(int index) {
         if (runtime == null) {
@@ -63,6 +72,12 @@ public class GalacticraftJeiPlugin implements IModPlugin {
     public void registerCategories(IRecipeCategoryRegistration registration) {
         final IGuiHelper guiHelper = registration.getJeiHelpers().getGuiHelper();
         registration.addRecipeCategories(new CompressingCategory(guiHelper), new CircuitFabricatingCategory(guiHelper), new RefiningCategory(guiHelper));
+        for (io.github.reiko45.galacticraft.menu.Workbenches.Bench bench : io.github.reiko45.galacticraft.menu.Workbenches.ALL) {
+            registration.addRecipeCategories(new WorkbenchCategory(guiHelper, bench));
+        }
+        for (io.github.reiko45.galacticraft.menu.MachinePages.Page page : io.github.reiko45.galacticraft.menu.MachinePages.ALL) {
+            registration.addRecipeCategories(new MachinePageCategory(guiHelper, page));
+        }
     }
 
     @Override
@@ -71,6 +86,12 @@ public class GalacticraftJeiPlugin implements IModPlugin {
         registration.addRecipes(CompressingCategory.TYPE, recipes.getAllRecipesFor(GCRecipes.COMPRESSING.get()));
         registration.addRecipes(CircuitFabricatingCategory.TYPE, recipes.getAllRecipesFor(GCRecipes.CIRCUIT_FABRICATING.get()));
         registration.addRecipes(RefiningCategory.TYPE, RefiningCategory.recipes());
+        for (io.github.reiko45.galacticraft.menu.Workbenches.Bench bench : io.github.reiko45.galacticraft.menu.Workbenches.ALL) {
+            registration.addRecipes(WorkbenchCategory.type(bench), io.github.reiko45.galacticraft.menu.Workbenches.recipes(bench));
+        }
+        for (io.github.reiko45.galacticraft.menu.MachinePages.Page page : io.github.reiko45.galacticraft.menu.MachinePages.ALL) {
+            registration.addRecipes(MachinePageCategory.type(page), io.github.reiko45.galacticraft.menu.MachinePages.conversions(page));
+        }
         registration.addItemStackInfo(new net.minecraft.world.item.ItemStack(GCBlocks.MAGNETIC_CRAFTING_TABLE.get()),
                 net.minecraft.network.chat.Component.translatable("jei.galacticraftcore.magnetic_crafting.info"));
     }
@@ -88,6 +109,12 @@ public class GalacticraftJeiPlugin implements IModPlugin {
                 GCBlocks.COMPRESSOR.get(), GCBlocks.ELECTRIC_COMPRESSOR.get(), GCBlocks.ADVANCED_COMPRESSOR.get());
         registration.addRecipeCatalysts(CircuitFabricatingCategory.TYPE, GCBlocks.CIRCUIT_FABRICATOR.get());
         registration.addRecipeCatalysts(RefiningCategory.TYPE, GCBlocks.REFINERY.get());
+        for (io.github.reiko45.galacticraft.menu.Workbenches.Bench bench : io.github.reiko45.galacticraft.menu.Workbenches.ALL) {
+            registration.addRecipeCatalysts(WorkbenchCategory.type(bench), GCBlocks.NASA_WORKBENCH.get());
+        }
+        for (io.github.reiko45.galacticraft.menu.MachinePages.Page page : io.github.reiko45.galacticraft.menu.MachinePages.ALL) {
+            registration.addRecipeCatalysts(MachinePageCategory.type(page), page.machine().get());
+        }
         registration.addRecipeCatalysts(RecipeTypes.SMELTING, GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get());
         registration.addRecipeCatalysts(RecipeTypes.CRAFTING, GCBlocks.MAGNETIC_CRAFTING_TABLE.get());
     }

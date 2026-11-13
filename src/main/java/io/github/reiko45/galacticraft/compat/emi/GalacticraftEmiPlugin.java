@@ -82,6 +82,27 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
             }
         }
 
+        // the NASA Workbench pages and 1.12.2's machine pages
+        for (io.github.reiko45.galacticraft.menu.Workbenches.Bench bench : io.github.reiko45.galacticraft.menu.Workbenches.ALL) {
+            final EmiRecipeCategory category = named(GalacticraftCore.id("workbench_" + bench.id()), EmiStack.of(GCBlocks.NASA_WORKBENCH.get()),
+                    Component.translatable(bench.page().title()));
+            registry.addCategory(category);
+            registry.addWorkstation(category, EmiStack.of(GCBlocks.NASA_WORKBENCH.get()));
+            final List<io.github.reiko45.galacticraft.menu.Workbenches.Recipe> recipes = io.github.reiko45.galacticraft.menu.Workbenches.recipes(bench);
+            for (int i = 0; i < recipes.size(); i++) {
+                registry.addRecipe(new Workbench(category, GalacticraftCore.id("/workbench/" + bench.id() + "/" + i), recipes.get(i)));
+            }
+        }
+        for (io.github.reiko45.galacticraft.menu.MachinePages.Page page : io.github.reiko45.galacticraft.menu.MachinePages.ALL) {
+            final EmiRecipeCategory category = named(GalacticraftCore.id(page.id()), EmiStack.of(page.machine().get()), page.machine().get().getName());
+            registry.addCategory(category);
+            registry.addWorkstation(category, EmiStack.of(page.machine().get()));
+            final List<io.github.reiko45.galacticraft.menu.MachinePages.Conversion> conversions = io.github.reiko45.galacticraft.menu.MachinePages.conversions(page);
+            for (int i = 0; i < conversions.size(); i++) {
+                registry.addRecipe(new Conversion(category, GalacticraftCore.id("/" + page.id() + "/" + i), conversions.get(i)));
+            }
+        }
+
         registry.addRecipe(new EmiInfoRecipe(List.of(EmiStack.of(GCBlocks.MAGNETIC_CRAFTING_TABLE.get())),
                 List.of(Component.translatable("jei.galacticraftcore.magnetic_crafting.info")), GalacticraftCore.id("/info/magnetic_crafting_table")));
         registry.addRecipeHandler(GCMenus.MAGNETIC_CRAFTING.get(), new MagneticCrafting());
@@ -160,6 +181,65 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
             widgets.addAnimatedTexture(REFINERY_GUI, 114, 24, 16, 38, 192, 0, ANIMATION_MS, false, true, false);
             widgets.addSlot(this.inputs.get(0), 39, 2).drawBack(false);
             widgets.addSlot(this.outputs.get(0), 113, 2).drawBack(false).recipeContext(this);
+        }
+    }
+
+    /** A category named by a translation of our own (EMI would look for an "emi.category" key). */
+    private static EmiRecipeCategory named(ResourceLocation id, EmiStack icon, Component name) {
+        return new EmiRecipeCategory(id, icon) {
+            @Override
+            public Component getName() {
+                return name;
+            }
+        };
+    }
+
+    /** A NASA Workbench page: a crop of its GUI with the parts and the result where the page has them. */
+    static final class Workbench extends BasicEmiRecipe {
+        private final io.github.reiko45.galacticraft.menu.Workbenches.Recipe recipe;
+        private final int[] area;
+        private final List<Integer> partSlots = new ArrayList<>();
+
+        Workbench(EmiRecipeCategory category, ResourceLocation id, io.github.reiko45.galacticraft.menu.Workbenches.Recipe recipe) {
+            super(category, id, recipe.bench().area()[2], recipe.bench().area()[3]);
+            this.recipe = recipe;
+            this.area = recipe.bench().area();
+            for (int i = 0; i < recipe.parts().size(); i++) {
+                final var part = recipe.parts().get(i);
+                if (!part.items().isEmpty()) {
+                    this.partSlots.add(i);
+                    this.inputs.add(EmiIngredient.of(part.items().stream().map(EmiStack::of).toList()));
+                }
+            }
+            this.outputs.add(EmiStack.of(recipe.result()));
+        }
+
+        @Override
+        public void addWidgets(WidgetHolder widgets) {
+            widgets.addTexture(this.recipe.bench().texture(), 0, 0, this.area[2], this.area[3], this.area[0],
+                    this.area[1] + this.recipe.bench().textureTop());
+            for (int i = 0; i < this.partSlots.size(); i++) {
+                final var part = this.recipe.parts().get(this.partSlots.get(i));
+                widgets.addSlot(this.inputs.get(i), part.x() - this.area[0] - 1, part.y() - this.area[1] - 1).drawBack(false);
+            }
+            widgets.addSlot(this.outputs.get(0), this.recipe.resultX() - this.area[0] - 1, this.recipe.resultY() - this.area[1] - 1)
+                    .drawBack(false).recipeContext(this);
+        }
+    }
+
+    /** What a machine turns into what. */
+    static final class Conversion extends BasicEmiRecipe {
+        Conversion(EmiRecipeCategory category, ResourceLocation id, io.github.reiko45.galacticraft.menu.MachinePages.Conversion conversion) {
+            super(category, id, 82, 20);
+            this.inputs.add(EmiStack.of(conversion.input()));
+            this.outputs.add(EmiStack.of(conversion.output()));
+        }
+
+        @Override
+        public void addWidgets(WidgetHolder widgets) {
+            widgets.addSlot(this.inputs.get(0), 1, 1);
+            widgets.addTexture(dev.emi.emi.api.render.EmiTexture.EMPTY_ARROW, 28, 2);
+            widgets.addSlot(this.outputs.get(0), 61, 1).recipeContext(this);
         }
     }
 

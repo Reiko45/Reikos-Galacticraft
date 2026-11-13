@@ -28,25 +28,30 @@ public class Tier3RocketBenchMenu extends PartBenchMenu {
 
     public Tier3RocketBenchMenu(int id, Inventory playerInventory, ContainerLevelAccess access) {
         super(GCMenus.TIER_3_ROCKET_BENCH.get(), id, playerInventory, access, Schematics.ROCKET_T3, MATRIX_SIZE);
-        addResultSlot(142, 18 + 69 + OFFSET);
-        addPartSlot(1, 48, -8 + OFFSET);
-        for (int i = 0; i < 5; i++) {
-            addPartSlot(2 + i, 39, -6 + i * 18 + 16 + OFFSET);
-        }
-        for (int i = 0; i < 5; i++) {
-            addPartSlot(7 + i, 57, -6 + i * 18 + 16 + OFFSET);
-        }
-        addPartSlot(12, 21, 64 + OFFSET);
-        addPartSlot(13, 21, 82 + OFFSET);
-        addPartSlot(14, 21, 100 + OFFSET);
-        addPartSlot(15, 48, 100 + OFFSET);
-        addPartSlot(16, 75, 64 + OFFSET);
-        addPartSlot(17, 75, 82 + OFFSET);
-        addPartSlot(18, 75, 100 + OFFSET);
-        for (int i = 0; i < 3; i++) {
-            addPartSlot(19 + i, 93 + i * 26, -15 + OFFSET);
-        }
+        layout(slots());
         addPlayerInventory(playerInventory, 129 + OFFSET);
+    }
+
+    /** Where this page's slots go (shared with the JEI and EMI pages). */
+    public static void layout(Layout layout) {
+        layout.result(142, 18 + 69 + OFFSET);
+        layout.part(1, 48, -8 + OFFSET);
+        for (int i = 0; i < 5; i++) {
+            layout.part(2 + i, 39, -6 + i * 18 + 16 + OFFSET);
+        }
+        for (int i = 0; i < 5; i++) {
+            layout.part(7 + i, 57, -6 + i * 18 + 16 + OFFSET);
+        }
+        layout.part(12, 21, 64 + OFFSET);
+        layout.part(13, 21, 82 + OFFSET);
+        layout.part(14, 21, 100 + OFFSET);
+        layout.part(15, 48, 100 + OFFSET);
+        layout.part(16, 75, 64 + OFFSET);
+        layout.part(17, 75, 82 + OFFSET);
+        layout.part(18, 75, 100 + OFFSET);
+        for (int i = 0; i < 3; i++) {
+            layout.part(19 + i, 93 + i * 26, -15 + OFFSET);
+        }
     }
 
     @Override

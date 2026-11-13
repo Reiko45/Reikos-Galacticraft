@@ -28,21 +28,26 @@ public class AstroMinerBenchMenu extends PartBenchMenu {
 
     public AstroMinerBenchMenu(int id, Inventory playerInventory, ContainerLevelAccess access) {
         super(GCMenus.ASTRO_MINER_BENCH.get(), id, playerInventory, access, Schematics.ASTRO_MINER, MATRIX_SIZE);
-        addResultSlot(142, 72);
+        layout(slots());
+        addPlayerInventory(playerInventory, 140 - 26);
+    }
+
+    /** Where this page's slots go (shared with the JEI and EMI pages). */
+    public static void layout(Layout layout) {
+        layout.result(142, 72);
         int index = 1;
         for (int i = 0; i < 4; i++) {
-            addPartSlot(index++, 27 + i * 18, 35);
+            layout.part(index++, 27 + i * 18, 35);
         }
         for (int i = 0; i < 5; i++) {
-            addPartSlot(index++, 16 + i * 18, 53);
+            layout.part(index++, 16 + i * 18, 53);
         }
         for (int i = 0; i < 3; i++) {
-            addPartSlot(index++, 44 + i * 18, 71);
+            layout.part(index++, 44 + i * 18, 71);
         }
         for (int i = 0; i < 2; i++) {
-            addPartSlot(index++, 8 + i * 18, 77);
+            layout.part(index++, 8 + i * 18, 77);
         }
-        addPlayerInventory(playerInventory, 140 - 26);
     }
 
     @Override

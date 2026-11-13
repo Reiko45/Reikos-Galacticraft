@@ -1788,8 +1788,37 @@ public final class ScreenshotTour {
         addEvolvedWitchSteps();
         addConfigSteps();
         addGalaxyMapSteps();
-        this.lastGroup = this.extras.size();
         addShiftDescriptionSteps();
+        this.lastGroup = this.extras.size();
+        addWorkbenchPageSteps();
+    }
+
+    /**
+     * Phase 10 part 2: the NASA Workbench pages (Tier 1 Rocket, Astro Miner) and the Gas Liquefier page in JEI, and the
+     * Tier 2 Rocket page in EMI when EMI is there.
+     */
+    private void addWorkbenchPageSteps() {
+        final Object[][] pages = {{io.github.reiko45.galacticraft.compat.jei.WorkbenchCategory.type(io.github.reiko45.galacticraft.menu.Workbenches.ROCKET_T1),
+                "jei_workbench_rocket_t1"}, {io.github.reiko45.galacticraft.compat.jei.WorkbenchCategory.type(
+                io.github.reiko45.galacticraft.menu.Workbenches.ASTRO_MINER), "jei_workbench_astro_miner"},
+                {io.github.reiko45.galacticraft.compat.jei.MachinePageCategory.type(io.github.reiko45.galacticraft.menu.MachinePages.GAS_LIQUEFYING),
+                        "jei_gas_liquefying"}};
+        if (ModList.get().isLoaded("jei")) {
+            for (Object[] page : pages) {
+                this.extras.add((minecraft, srv) -> {
+                    if (!GalacticraftJeiPlugin.showType((mezz.jei.api.recipe.RecipeType<?>) page[0])) {
+                        GalacticraftCore.LOGGER.warn("Screenshot tour: JEI runtime not available");
+                    }
+                });
+                this.extras.add((minecraft, srv) -> shoot(minecraft, (String) page[1]));
+                this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
+            }
+        }
+        if (ModList.get().isLoaded("emi")) {
+            this.extras.add((minecraft, srv) -> io.github.reiko45.galacticraft.compat.emi.EmiTour.show("workbench_rocket_t2"));
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "emi_workbench_rocket_t2"));
+            this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
+        }
     }
 
     /** Item tooltips side by side, as the inventory shows them under the cursor. */

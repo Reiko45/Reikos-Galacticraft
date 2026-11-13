@@ -490,7 +490,10 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Dungeon Locator (1.12.2 "dungeonfinder", creative only): a compass whose needle swings to the nearest dungeon
       (on the asteroids, the nearest abandoned base), its 32 frames split from 1.12.2's strip by the porter
 - [x] Infinite Battery (creative only): gives a machine all it can take, as tier 3 power, and never runs down
-- [ ] NASA Workbench recipes in JEI and EMI
+- [x] NASA Workbench recipes in JEI and EMI: a page for each workbench page (Tier 1, 2 and 3 Rockets, Moon Buggy,
+      Cargo Rocket, Astro Miner) drawn on a crop of its own GUI, every part slot showing what it takes, one recipe for
+      each number of chests; the slot layouts are the menus' own. Also 1.12.2's Oxygen Compressor, Gas Liquefier and
+      Methane Synthesizer pages
 - [ ] Zero-g jetpack boost, Fuel Loader side configuration, the Fallen Meteor's pickaxe bonus, grapple arm poses
 - [ ] The live Overworld pictures (Display Screen map, the Moon sky's Earth) and 1.12.2's own flame and smoke particles
 
@@ -602,8 +605,8 @@ What they do, where 1.12.2 needed more than a number:
   times over. Stations are listed one per station (1.12.2 keyed them by owner, one each); Escape cancels a rename
   instead of unselecting the station under the dialog; LAUNCH closes the map at once (1.12.2 showed its "teleporting"
   screen; if the trip doesn't go through, the server opens the map again).
-* The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
-  not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
+* The NASA Workbench recipes are hard-coded as in 1.12.2 (`RecipeManagerGC`), not JSON recipes; JEI and EMI show them
+  from the pages' own rules. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
   configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id).
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
