@@ -177,6 +177,7 @@ public final class GCItems {
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_SPIDER_SPAWN_EGG = egg("evolved_spider", GCEntities.EVOLVED_SPIDER, 3419431, 11013646);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_CREEPER_SPAWN_EGG = egg("evolved_creeper", GCEntities.EVOLVED_CREEPER, 894731, 0);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_ENDERMAN_SPAWN_EGG = egg("evolved_enderman", GCEntities.EVOLVED_ENDERMAN, 1447446, 0);
+    public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> EVOLVED_WITCH_SPAWN_EGG = egg("evolved_witch", GCEntities.EVOLVED_WITCH, 3407872, 5349438);
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> SKELETON_BOSS_SPAWN_EGG = egg("skeleton_boss", GCEntities.SKELETON_BOSS, 12698049, 4802889);
     // 1.12.2 MarsModule#registerCreatures: all three Mars creatures share these egg colours.
     public static final DeferredItem<net.neoforged.neoforge.common.DeferredSpawnEggItem> CREEPER_BOSS_SPAWN_EGG = egg("creeper_boss", GCEntities.CREEPER_BOSS, 0x003200, 0x009600);

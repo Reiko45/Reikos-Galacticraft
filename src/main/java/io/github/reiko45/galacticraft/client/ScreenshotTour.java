@@ -1784,8 +1784,9 @@ public final class ScreenshotTour {
         addBaseUtilitySteps();
         addBaseBlockSteps();
         addLaserTurretSteps();
-        this.lastGroup = this.extras.size();
         addPolishSteps();
+        this.lastGroup = this.extras.size();
+        addEvolvedWitchSteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2970,6 +2971,42 @@ public final class ScreenshotTour {
             this.extras.add((minecraft, srv) -> shoot(minecraft, "emi_refining"));
             this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
         }
+    }
+
+    /** Phase 9: the Evolved Witch beside an Alien Villager (what she was before the lightning) and an Evolved Enderman. */
+    private void addEvolvedWitchSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            srv.setDifficulty(Difficulty.NORMAL, true); // monsters vanish on Peaceful
+            final ServerLevel level = srv.overworld();
+            level.setDayTime(6000L);
+            final BlockPos corner = p.blockPosition().offset(600, 0, -300);
+            final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-6, -1, -4), o.offset(6, 5, 8))) {
+                level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            final net.minecraft.world.entity.EntityType<?>[] types = {GCEntities.ALIEN_VILLAGER.get(), GCEntities.EVOLVED_WITCH.get(),
+                    GCEntities.EVOLVED_ENDERMAN.get()};
+            for (int i = 0; i < types.length; i++) {
+                if (types[i].create(level) instanceof net.minecraft.world.entity.Mob mob) {
+                    // facing the camera (south), turned a little towards the middle
+                    mob.moveTo(o.getX() - 2.0D + i * 2.0D + 0.5D, o.getY(), o.getZ() + 0.5D, 25.0F - i * 25.0F, 0.0F);
+                    mob.setYHeadRot(25.0F - i * 25.0F);
+                    mob.setYBodyRot(25.0F - i * 25.0F);
+                    mob.setNoAi(true);
+                    mob.setPersistenceRequired();
+                    level.addFreshEntity(mob);
+                }
+            }
+            lookFrom(p, level, new net.minecraft.world.phys.Vec3(o.getX() + 0.5D, o.getY() + 2.2D, o.getZ() + 5.5D),
+                    new net.minecraft.world.phys.Vec3(o.getX() + 0.5D, o.getY() + 1.4D, o.getZ() + 0.5D));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "evolved_witch"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> srv.setDifficulty(Difficulty.PEACEFUL, true)));
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */

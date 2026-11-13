@@ -20,6 +20,7 @@ public final class EvolvedMobModels {
     public static final ModelLayerLocation CREEPER = layer("evolved_creeper");
     public static final ModelLayerLocation SPIDER = layer("evolved_spider");
     public static final ModelLayerLocation ENDERMAN = layer("evolved_enderman");
+    public static final ModelLayerLocation WITCH = layer("evolved_witch");
 
     private EvolvedMobModels() {
     }
@@ -192,4 +193,39 @@ public final class EvolvedMobModels {
         return LayerDefinition.create(mesh, 64, 64);
     }
 
+
+    /**
+     * 1.12.2 ModelEvolvedWitch: the witch with two tanks on her back, eighteen tube links over her shoulders and an
+     * oxygen mask that turns with her head (64 x 128 texture, as the witch's).
+     */
+    public static LayerDefinition witch() {
+        final MeshDefinition mesh = net.minecraft.client.model.VillagerModel.createBodyModel();
+        final PartDefinition root = mesh.getRoot();
+        // vanilla WitchModel#createBodyLayer
+        final PartDefinition head = root.addOrReplaceChild("head", CubeListBuilder.create().texOffs(0, 0).addBox(-4.0F, -10.0F, -4.0F, 8.0F, 10.0F, 8.0F), PartPose.ZERO);
+        final PartDefinition hat = head.addOrReplaceChild("hat", CubeListBuilder.create().texOffs(0, 64).addBox(0.0F, 0.0F, 0.0F, 10.0F, 2.0F, 10.0F),
+                PartPose.offset(-5.0F, -10.03125F, -5.0F));
+        final PartDefinition hat2 = hat.addOrReplaceChild("hat2", CubeListBuilder.create().texOffs(0, 76).addBox(0.0F, 0.0F, 0.0F, 7.0F, 4.0F, 7.0F),
+                PartPose.offsetAndRotation(1.75F, -4.0F, 2.0F, -0.05235988F, 0.0F, 0.02617994F));
+        final PartDefinition hat3 = hat2.addOrReplaceChild("hat3", CubeListBuilder.create().texOffs(0, 87).addBox(0.0F, 0.0F, 0.0F, 4.0F, 4.0F, 4.0F),
+                PartPose.offsetAndRotation(1.75F, -4.0F, 2.0F, -0.10471976F, 0.0F, 0.05235988F));
+        hat3.addOrReplaceChild("hat4", CubeListBuilder.create().texOffs(0, 95).addBox(0.0F, 0.0F, 0.0F, 1.0F, 2.0F, 1.0F, new CubeDeformation(0.25F)),
+                PartPose.offsetAndRotation(1.75F, -2.0F, 2.0F, (float) (-Math.PI / 15), 0.0F, 0.10471976F));
+        head.getChild("nose").addOrReplaceChild("mole", CubeListBuilder.create().texOffs(0, 0).addBox(0.0F, 3.0F, -6.75F, 1.0F, 1.0F, 1.0F,
+                new CubeDeformation(-0.25F)), PartPose.offset(0.0F, -2.0F, 0.0F));
+        // 1.12.2's gear, all drawn from the model's origin
+        root.addOrReplaceChild("tank1", CubeListBuilder.create().texOffs(52, 66).addBox(0.0F, 0.0F, 0.0F, 3.0F, 7.0F, 3.0F), PartPose.offset(0.0F, 4.0F, 3.0F));
+        root.addOrReplaceChild("tank2", CubeListBuilder.create().texOffs(52, 66).addBox(0.0F, 0.0F, 0.0F, 3.0F, 7.0F, 3.0F), PartPose.offset(-3.0F, 4.0F, 3.0F));
+        root.addOrReplaceChild("oxygen_mask", CubeListBuilder.create().texOffs(24, 90).addBox(-5.0F, -9.0F, -5.0F, 10.0F, 10.0F, 10.0F),
+                PartPose.offset(0.0F, 1.0F, 0.0F));
+        final float[][] tubes = {{4.5F, 6.0F}, {3.5F, 7.0F}, {2.5F, 7.5F}, {1.5F, 7.5F}, {0.5F, 7.5F}, {-0.5F, 7.0F}, {-1.5F, 6.0F}, {-2.5F, 5.0F},
+                {-3.0F, 4.0F}};
+        for (int side = 0; side < 2; side++) {
+            for (int i = 0; i < tubes.length; i++) {
+                root.addOrReplaceChild("tube" + (side * tubes.length + i + 1), CubeListBuilder.create().texOffs(60, 76).addBox(0.0F, 0.0F, 0.0F, 1.0F, 1.0F, 1.0F),
+                        PartPose.offset(side == 0 ? 1.0F : -2.0F, tubes[i][0], tubes[i][1]));
+            }
+        }
+        return LayerDefinition.create(mesh, 64, 128);
+    }
 }

@@ -222,4 +222,24 @@ public final class VillageTests {
             helper.succeed();
         });
     }
+
+    /** 1.12.2 onStruckByLightning: an Alien Villager becomes an Evolved Witch, which breathes anywhere and drops a witch's loot. */
+    @GameTest(template = AIR)
+    public static void alienVillagerTurnsIntoEvolvedWitch(GameTestHelper helper) {
+        final AlienVillagerEntity villager = helper.spawn(GCEntities.ALIEN_VILLAGER.get(), new BlockPos(6, 1, 6));
+        villager.setCustomName(net.minecraft.network.chat.Component.literal("Zorg"));
+        final net.minecraft.world.entity.LightningBolt bolt = net.minecraft.world.entity.EntityType.LIGHTNING_BOLT.create(helper.getLevel());
+        villager.thunderHit(helper.getLevel(), bolt);
+        helper.assertTrue(villager.isRemoved(), "the villager is gone");
+        final List<io.github.reiko45.galacticraft.entity.monster.EvolvedWitch> witches = helper.getLevel().getEntitiesOfClass(
+                io.github.reiko45.galacticraft.entity.monster.EvolvedWitch.class, new net.minecraft.world.phys.AABB(helper.absolutePos(new BlockPos(6, 1, 6))).inflate(1.0D));
+        helper.assertValueEqual(witches.size(), 1, "one evolved witch");
+        final io.github.reiko45.galacticraft.entity.monster.EvolvedWitch witch = witches.get(0);
+        helper.assertTrue(witch.hasCustomName() && "Zorg".equals(witch.getCustomName().getString()), "keeps its name");
+        helper.assertTrue(witch.getType().is(GCModTags.BREATHES_IN_SPACE), "breathes in space");
+        final net.minecraft.world.level.storage.loot.LootTable loot = helper.getLevel().getServer().reloadableRegistries().getLootTable(witch.getLootTable());
+        helper.assertTrue(loot != net.minecraft.world.level.storage.loot.LootTable.EMPTY, "has its loot table");
+        witch.discard();
+        helper.succeed();
+    }
 }

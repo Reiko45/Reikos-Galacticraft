@@ -139,6 +139,7 @@ public final class GalacticraftClient {
         event.registerLayerDefinition(EvolvedMobModels.CREEPER, EvolvedMobModels::creeper);
         event.registerLayerDefinition(EvolvedMobModels.SPIDER, EvolvedMobModels::spider);
         event.registerLayerDefinition(EvolvedMobModels.ENDERMAN, EvolvedMobModels::enderman);
+        event.registerLayerDefinition(EvolvedMobModels.WITCH, EvolvedMobModels::witch);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel.LAYER,
                 io.github.reiko45.galacticraft.client.render.entity.SkeletonBossModel::createLayer);
         event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.CreeperBossModel.LAYER,
@@ -195,6 +196,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.EVOLVED_SPIDER.get(), EvolvedRenderers.Spiders::new);
         event.registerEntityRenderer(GCEntities.EVOLVED_CREEPER.get(), EvolvedRenderers.Creepers::new);
         event.registerEntityRenderer(GCEntities.EVOLVED_ENDERMAN.get(), EvolvedRenderers.Endermen::new);
+        event.registerEntityRenderer(GCEntities.EVOLVED_WITCH.get(), EvolvedRenderers.Witches::new);
         event.registerEntityRenderer(GCEntities.BUGGY.get(), io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer::new);
         event.registerEntityRenderer(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.SkeletonBossRenderer::new);
         event.registerEntityRenderer(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.client.render.entity.CreeperBossRenderer::new);
@@ -222,7 +224,7 @@ public final class GalacticraftClient {
         }
         // 1.12.2: the mobs whose renderers drew the Sensor Glasses view
         for (net.minecraft.world.entity.EntityType<?> type : java.util.List.of(GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(),
-                GCEntities.EVOLVED_SPIDER.get(), GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get(), GCEntities.ALIEN_VILLAGER.get(),
+                GCEntities.EVOLVED_SPIDER.get(), GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get(), GCEntities.EVOLVED_WITCH.get(), GCEntities.ALIEN_VILLAGER.get(),
                 GCEntities.SLIMELING.get(), GCEntities.SLUDGELING.get(), GCEntities.JUICER.get())) {
             addSensorLayer(event.getRenderer(type));
         }

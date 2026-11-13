@@ -96,6 +96,10 @@ public final class GCEntities {
     public static final Supplier<EntityType<EvolvedEnderman>> EVOLVED_ENDERMAN = ENTITY_TYPES.register("evolved_enderman",
             () -> EntityType.Builder.<EvolvedEnderman>of(EvolvedEnderman::new, MobCategory.MONSTER).sized(0.6F, 2.9F).eyeHeight(2.55F)
                     .passengerAttachments(2.80625F).clientTrackingRange(8).build("evolved_enderman"));
+    /** 1.12.2 EntityEvolvedWitch: a witch's size. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.monster.EvolvedWitch>> EVOLVED_WITCH = ENTITY_TYPES.register("evolved_witch",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.monster.EvolvedWitch>of(io.github.reiko45.galacticraft.entity.monster.EvolvedWitch::new,
+                    MobCategory.MONSTER).sized(0.6F, 1.95F).eyeHeight(1.62F).passengerAttachments(2.2625F).clientTrackingRange(8).build("evolved_witch"));
 
     /** 1.12.2 EntityBuggy setSize(1.4, 0.6). */
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.BuggyEntity>> BUGGY = ENTITY_TYPES.register("buggy",

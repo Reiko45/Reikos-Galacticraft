@@ -28,6 +28,7 @@ public final class GCEntityEvents {
         event.put(GCEntities.EVOLVED_SPIDER.get(), EvolvedSpider.createAttributes().build());
         event.put(GCEntities.EVOLVED_CREEPER.get(), EvolvedCreeper.createAttributes().build());
         event.put(GCEntities.EVOLVED_ENDERMAN.get(), EvolvedEnderman.createAttributes().build());
+        event.put(GCEntities.EVOLVED_WITCH.get(), io.github.reiko45.galacticraft.entity.monster.EvolvedWitch.createAttributes().build());
         event.put(GCEntities.SKELETON_BOSS.get(), io.github.reiko45.galacticraft.entity.SkeletonBossEntity.createAttributes().build());
         event.put(GCEntities.CREEPER_BOSS.get(), io.github.reiko45.galacticraft.entity.CreeperBossEntity.createAttributes().build());
         event.put(GCEntities.SPIDER_QUEEN.get(), io.github.reiko45.galacticraft.entity.SpiderQueenEntity.createAttributes().build());

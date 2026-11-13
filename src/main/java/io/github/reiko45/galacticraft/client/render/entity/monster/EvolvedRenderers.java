@@ -139,6 +139,38 @@ public final class EvolvedRenderers {
         }
     }
 
+    /** 1.12.2 RenderEvolvedWitch: the witch's renderer (0.9375 scale, held item) on the evolved mesh and texture. */
+    public static class Witches extends net.minecraft.client.renderer.entity.WitchRenderer {
+        private static final ResourceLocation TEXTURE = texture("evolved_witch");
+
+        public Witches(EntityRendererProvider.Context context) {
+            super(context);
+            this.model = new EvolvedWitchModel<>(context.bakeLayer(EvolvedMobModels.WITCH));
+        }
+
+        @Override
+        public ResourceLocation getTextureLocation(net.minecraft.world.entity.monster.Witch entity) {
+            return TEXTURE;
+        }
+    }
+
+    /** 1.12.2 ModelEvolvedWitch#setRotationAngles: the mask turns with the head. */
+    public static class EvolvedWitchModel<T extends Entity> extends net.minecraft.client.model.WitchModel<T> {
+        private final net.minecraft.client.model.geom.ModelPart mask;
+
+        public EvolvedWitchModel(net.minecraft.client.model.geom.ModelPart root) {
+            super(root);
+            this.mask = root.getChild("oxygen_mask");
+        }
+
+        @Override
+        public void setupAnim(T entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
+            super.setupAnim(entity, limbSwing, limbSwingAmount, ageInTicks, netHeadYaw, headPitch);
+            this.mask.yRot = getHead().yRot;
+            this.mask.xRot = getHead().xRot;
+        }
+    }
+
     /** Glowing eyes with the 1.12.2 eye textures, laid out for the evolved meshes. */
     private static final class Eyes<T extends Entity, M extends EntityModel<T>> extends EyesLayer<T, M> {
         private final RenderType renderType;

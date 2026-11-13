@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: all 8 phases ported (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: all 8 roadmap phases ported, phase 9 (the remaining gaps) under way (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -35,7 +35,8 @@ machines, solar panels and oil processing work. See
   Fallen Meteors (they burn you while they glow, then cool down to be mined for meteoric iron).
 * **Moon villages**: villages of domed houses, plank paths, lamp posts, fields and a water well dot the Moon (one in
   each 32x32 chunk area). Their big-brained Alien Villagers breathe without air and trade oxygen gear, fuel, batteries,
-  wafers and schematics for Lunar Sapphires, if you wear a Frequency Module to talk to them.
+  wafers and schematics for Lunar Sapphires, if you wear a Frequency Module to talk to them. Struck by lightning, one
+  turns into an Evolved Witch.
 * **Moon mobs and dungeons**: Evolved Zombies, Skeletons, Spiders, Creepers and Endermen (wearing oxygen gear, tougher
   than vanilla, with rare drops of Galacticraft parts) spawn on the Moon. Each 704x704 area has a dungeon under a crater:
   corridors and rooms with spawners, cobwebs and loot chests lead to the Skeleton Boss, which grabs and throws you and
@@ -309,6 +310,8 @@ machines, solar panels and oil processing work. See
 | A Moon village house | Alien Villagers and their trades |
 |---|---|
 | ![A domed house of tin decoration blocks with glowstone torches](docs/screenshots/moon_village_house.png) | ![Two Alien Villagers and a child, and their trading screen](docs/screenshots/alien_villagers_and_trades.png) |
+
+![An Alien Villager, the Evolved Witch one becomes when struck by lightning, and an Evolved Enderman](docs/screenshots/evolved_witch.png)
 
 ![A planted team flag waving beside a Tier 3 Rocket with a team-coloured nose cone](docs/screenshots/space_race_flag.png)
 

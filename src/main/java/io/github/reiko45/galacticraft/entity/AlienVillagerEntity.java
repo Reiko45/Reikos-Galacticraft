@@ -248,13 +248,13 @@ public class AlienVillagerEntity extends AbstractVillager {
         return false;
     }
 
-    /** 1.12.2: into an Evolved Witch (not ported yet: a vanilla witch). */
+    /** 1.12.2: into an Evolved Witch. */
     @Override
     public void thunderHit(ServerLevel level, LightningBolt lightning) {
         if (isRemoved()) {
             return;
         }
-        final Witch witch = EntityType.WITCH.create(level);
+        final Witch witch = io.github.reiko45.galacticraft.registry.GCEntities.EVOLVED_WITCH.get().create(level);
         if (witch == null) {
             return;
         }

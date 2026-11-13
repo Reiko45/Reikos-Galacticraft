@@ -622,7 +622,8 @@
     "block/laser_turret_orb": "planets:blocks/orb",
     "gui/laser_turret": "planets:gui/laser_turret",
     "gui/laser_turret_edit": "planets:gui/laser_turret_edit",
-    "gui/galacticraft_background": "gui/galacticraft_background"
+    "gui/galacticraft_background": "gui/galacticraft_background",
+    "model/evolved_witch": "model/evolved_witch"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1750,7 +1751,8 @@
     "advancements.galacticraftcore.moon_buggy.description": "advancement.galacticraft.moon_buggy.description",
     "emi.category.galacticraftcore.compressing": "tile.machine.3.name",
     "emi.category.galacticraftcore.circuit_fabricating": "tile.machine2.5.name",
-    "emi.category.galacticraftcore.refining": "tile.refinery.name"
+    "emi.category.galacticraftcore.refining": "tile.refinery.name",
+    "entity.galacticraftcore.evolved_witch": "entity.evolved_witch.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1857,7 +1859,8 @@
     "tag.item.galacticraftcore.thermal_padding.boots": "Thermal Padding Boots",
     "tag.item.galacticraftcore.thermal_padding.chestplate": "Thermal Padding Chestplate",
     "tag.item.galacticraftcore.thermal_padding.helmet": "Thermal Padding Helmet",
-    "tag.item.galacticraftcore.thermal_padding.leggings": "Thermal Padding Leggings"
+    "tag.item.galacticraftcore.thermal_padding.leggings": "Thermal Padding Leggings",
+    "item.galacticraftcore.evolved_witch_spawn_egg": "Evolved Witch Spawn Egg"
   },
   "recipes": {
     "skip_conditions": [

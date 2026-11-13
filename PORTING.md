@@ -149,8 +149,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
       fill, shared between sealers, edge checks), Detector, with the 1.12.2 GUIs
 - [x] Airless worlds: players breathe from tanks or suffocate, mobs suffocate, torches only burn in oxygen, breathable
       air, oxygen HUD and warning
-- [ ] Later: parachute deployment (with landers), thermal padding and heat (Asteroids), frequency module dish and
-      sensor glasses rendering, the Arc Lamp's bright air
+- [x] Later, and done in later phases: parachute deployment (phase 4), thermal padding and heat (7d), the frequency
+      module, Communications Dish and Sensor Glasses (7g), the Arc Lamp's bright air (7g)
 
 ### Phase 4 – Rockets and travel ✅
 - [x] NASA Workbench (3x3x4 multiblock, 1.12.2 OBJ model through the NeoForge OBJ loader) with the Tier 1 Rocket page;
@@ -177,7 +177,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 ### Phase 5b – Things to fight and find ✅
 - [x] Evolved Zombie, Skeleton, Spider, Creeper and Enderman (1.12.2 models with oxygen gear, converted by
       `tools/convert_java_model.py`; 1.12.2 health, speed and damage; common drops plus the rare player-kill drops),
-      spawning on the Moon (weights 8/8/8/8/10), with spawn eggs
+      spawning on the Moon (weights 8/8/8/8/10), with spawn eggs; the Evolved Witch (an Alien Villager struck by
+      lightning) followed in phase 9
 - [x] Moon dungeon (1.12.2 MapGenDungeon: one per 704x704 block region, a crater down to y 25, 10-25 corridors and
       rooms with spawners, cobwebs and loot chests, then the boss room, a low corridor and the treasure room)
 - [x] Skeleton Boss (150 health × `dungeonBossHealthMod`, two bows, grabs and throws its target, boss bar, leaves
@@ -465,6 +466,13 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] The manual: nothing to port. 1.12.2 never loaded `manuals/gettingstarted.xml`, a placeholder whose pages hold
       another mod's tool text
 
+### Phase 9 – The rest
+- [x] Evolved Witch (EntityEvolvedWitch): what an Alien Villager becomes when struck by lightning, in an oxygen mask with
+      tanks (1.12.2 ModelEvolvedWitch), breathing anywhere, a witch's drops plus rare Galacticraft gear; spawn egg
+- [ ] The commands not ported yet: `/gckit`, `/gcinv`, `/gckeepdim`, `/planettp`, `/gcenergyunits`, `/gcastrominer`, `/gchelp`
+- [ ] The 1.12.2 config options (game modes, suffocation, oil and ore generation, rocket fuel, ...)
+- [ ] The full galaxy map (zoom, catalogue panels, space stations, the Space Race panel)
+
 ## Intentional differences from 1.12.2 (so far)
 
 * Mod id `galacticraftcore` is kept so that asset paths and translation keys map 1:1. The display name marks
@@ -523,7 +531,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   a stop on the ground when out of fuel (1.12.2 coasted). The 1.12.2 radar dish had no texture (drawn white); it uses
   white concrete. The item's hand and GUI transforms approximate the 1.12.2 matrices.
 * Evolved Zombies don't call reinforcements (vanilla would spawn plain zombies), don't drown into anything, and Evolved
-  Skeletons don't freeze into strays. The Evolved Witch (Mars) and 1.12.2 "challenge mode" drops are not ported.
+  Skeletons don't freeze into strays. 1.12.2 "challenge mode" drops are not ported. The Evolved Enderman's rare drops
+  leave out the oxygen mask: 1.12.2 listed it as an eleventh case of a ten-way roll, so it never dropped.
 * The Skeleton Boss's treasure goes into the treasure chest its dungeon was built with (1.12.2 searched for the
   nearest Tier 1 chest within 1,000 blocks; that search is kept, within 32 blocks, as a fallback). The boss respawns
   15 minutes after a kill when a player enters again. Its rare bow drop is a plain bow (1.12.2 enchanted it when the
@@ -641,8 +650,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Alien Villagers have no 1.12.2 village (door and reputation) system to belong to, as their 1.12.2 counterparts had
   none on the Moon either (no doors). Their restock gives sold-out trades 2-12 more uses as 1.12.2 did, but no longer
   appends a second copy of the whole trade list each time (1.12.2's populateBuyingList added the list again).
-  The canned carrot trade accepts any oil canister (1.12.2: only an empty one). Struck by lightning they turn into a
-  vanilla witch until the Evolved Witch is ported. The Sensor Glasses' mob texture isn't drawn (no Sensor Glasses yet).
+  The canned carrot trade accepts any oil canister (1.12.2: only an empty one). Struck by lightning they turn into an
+  Evolved Witch, as in 1.12.2.
 
 * Space Race members are kept by UUID (with the name last seen, updated at login); 1.12.2 kept names only, so a renamed
   player lost their team. Team ids come from a saved counter (1.12.2 counted from 1 again after every restart, so a
@@ -719,7 +728,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Sensor Glasses point out the blocks tagged `galacticraftcore:sensor_valuable` (1.12.2: blocks that called themselves
   valuable, plus a config list). The leak they show follows each block's own way in from the sealer (1.12.2 started its
   trace one step the wrong way, so it seldom found one); the client asks the nearest sealer within 96 blocks once a
-  second. Mobs are drawn glowing by an extra render layer on the same mobs as 1.12.2 (there is no Evolved Witch here).
+  second. Mobs are drawn glowing by an extra render layer on the same mobs as 1.12.2.
 * The Magnetic Crafting Table shows its remembered result in a slot that can't be used (1.12.2 drew it). Shift-clicking
   into it, the hoppers' rules and the results kept for the next take are 1.12.2's.
 * A Telemetry Unit keeps its link as the entity's UUID, so it finds a respawned player, or one coming back, again
