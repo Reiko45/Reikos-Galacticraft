@@ -534,4 +534,9 @@ public class MinerBaseBlockEntity extends MachineBlockEntity {
     public void onDataPacket(net.minecraft.network.Connection connection, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
         handleUpdateTag(packet.getTag(), registries);
     }
+
+    @Override
+    public float powerDraw() {
+        return energyUse();
+    }
 }

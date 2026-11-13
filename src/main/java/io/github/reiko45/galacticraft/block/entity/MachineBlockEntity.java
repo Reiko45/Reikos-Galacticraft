@@ -63,6 +63,14 @@ public abstract class MachineBlockEntity extends BlockEntity implements MenuProv
     /** Called every server tick. */
     protected abstract void tick();
 
+    /**
+     * gJ a tick it uses while it works, for the "Power required" line under its item (1.12.2 ItemBlockDesc showed
+     * storage.getMaxExtract() of machines that use power); 0 for machines that make or store it.
+     */
+    public float powerDraw() {
+        return 0.0F;
+    }
+
     /** Extra GUI values after the energy/capacity ints (menu slots 0-3). */
     protected void addSyncedData(SyncedData data) {
     }

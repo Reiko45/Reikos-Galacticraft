@@ -391,4 +391,9 @@ public abstract class OxygenMachineBlockEntity extends MachineBlockEntity {
         this.oxygen.readFromNBT(registries, tag.getCompound("Oxygen"));
         this.disabled = tag.getBoolean("Disabled");
     }
+
+    @Override
+    public float powerDraw() {
+        return energyUse();
+    }
 }

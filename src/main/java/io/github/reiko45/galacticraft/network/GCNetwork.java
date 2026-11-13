@@ -75,6 +75,18 @@ public final class GCNetwork {
         }
     }
 
+    /** The bearing to the nearest dungeon, for a carried Dungeon Locator (1.12.2 C_UPDATE_DUNGEON_DIRECTION). */
+    public record DungeonDirection(float degrees) implements CustomPacketPayload {
+        public static final Type<DungeonDirection> TYPE = new Type<>(GalacticraftCore.id("dungeon_direction"));
+        public static final StreamCodec<ByteBuf, DungeonDirection> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.FLOAT,
+                DungeonDirection::degrees, DungeonDirection::new);
+
+        @Override
+        public Type<DungeonDirection> type() {
+            return TYPE;
+        }
+    }
+
     public record OxygenState(int air1, int air2, boolean valid, int thermalLevel, boolean thermalNormalising) implements CustomPacketPayload {
         public static final Type<OxygenState> TYPE = new Type<>(GalacticraftCore.id("oxygen_state"));
         public static final StreamCodec<ByteBuf, OxygenState> STREAM_CODEC = StreamCodec.composite(
@@ -328,6 +340,8 @@ public final class GCNetwork {
         }));
         registrar.playToClient(StationSpinSync.TYPE, StationSpinSync.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.world.station.StationSpin.Client.update(payload)));
+        registrar.playToClient(DungeonDirection.TYPE, DungeonDirection.STREAM_CODEC, (payload, context) -> context.enqueueWork(
+                () -> io.github.reiko45.galacticraft.client.DungeonLocatorAngle.setDirection(payload.degrees())));
         registrar.playToClient(EnergyUnits.TYPE, EnergyUnits.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
             final io.github.reiko45.galacticraft.GCConfig.EnergyUnit[] units = io.github.reiko45.galacticraft.GCConfig.EnergyUnit.values();
             if (payload.unit() >= 0 && payload.unit() < units.length) {

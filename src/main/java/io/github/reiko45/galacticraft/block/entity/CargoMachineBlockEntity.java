@@ -217,4 +217,9 @@ public abstract class CargoMachineBlockEntity extends MachineBlockEntity {
         this.disabled = tag.getBoolean("Disabled");
         this.locked = tag.getBoolean("Locked");
     }
+
+    @Override
+    public float powerDraw() {
+        return ENERGY_USE;
+    }
 }

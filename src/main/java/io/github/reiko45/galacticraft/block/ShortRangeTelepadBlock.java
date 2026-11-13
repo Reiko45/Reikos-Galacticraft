@@ -184,9 +184,4 @@ public class ShortRangeTelepadBlock extends BaseEntityBlock {
                     0.0D, -2.95D, 0.0D);
         }
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(getDescriptionId() + ".desc").withStyle(ChatFormatting.GRAY));
-    }
 }

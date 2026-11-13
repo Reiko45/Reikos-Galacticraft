@@ -49,10 +49,4 @@ public class WalkwayPipeBlock extends FluidPipeBlock {
     @Override
     public void toggleMode(Level level, BlockPos pos, BlockState state) {
     }
-
-    @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context,
-                                java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-        tooltip.add(net.minecraft.network.chat.Component.translatable(getDescriptionId() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY));
-    }
 }

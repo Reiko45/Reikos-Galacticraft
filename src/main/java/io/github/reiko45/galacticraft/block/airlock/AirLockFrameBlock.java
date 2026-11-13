@@ -27,9 +27,4 @@ public class AirLockFrameBlock extends Block {
     public static boolean isAirLock(BlockState state) {
         return state.is(GCBlocks.AIR_LOCK_FRAME.get()) || state.is(GCBlocks.AIR_LOCK_CONTROLLER.get());
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.air_lock_frame.desc").withStyle(ChatFormatting.GRAY));
-    }
 }

@@ -24,7 +24,9 @@ import json
 import re
 import os
 import shutil
+import struct
 import sys
+import zlib
 
 MOD_ID = "galacticraftcore"
 
@@ -82,6 +84,72 @@ def port_textures(mapping, legacy_assets, out_assets):
             shutil.copyfile(src + ".mcmeta", dst + ".mcmeta")
         count += 1
     print(f"textures: {count} copied")
+
+
+def read_png_rgba(path):
+    """Decode an 8-bit RGBA, non-interlaced PNG (all the porter needs) into (width, height, rows of bytes)."""
+    with open(path, "rb") as f:
+        data = f.read()
+    if data[:8] != b"\x89PNG\r\n\x1a\n":
+        raise SystemExit(f"{path} is not a PNG")
+    pos, idat, header = 8, b"", None
+    while pos < len(data):
+        length, kind = struct.unpack(">I4s", data[pos:pos + 8])
+        chunk = data[pos + 8:pos + 8 + length]
+        if kind == b"IHDR":
+            header = struct.unpack(">IIBBBBB", chunk)
+        elif kind == b"IDAT":
+            idat += chunk
+        pos += 12 + length
+    width, height, depth, colour, _, _, interlace = header
+    if depth != 8 or colour != 6 or interlace != 0:
+        raise SystemExit(f"{path}: only 8-bit RGBA, non-interlaced PNGs can be split")
+    raw, stride, rows, previous = zlib.decompress(idat), width * 4, [], bytearray(width * 4)
+    for y in range(height):
+        kind = raw[y * (stride + 1)]
+        line = bytearray(raw[y * (stride + 1) + 1:(y + 1) * (stride + 1)])
+        for x in range(stride):
+            left = line[x - 4] if x >= 4 else 0
+            up = previous[x]
+            corner = previous[x - 4] if x >= 4 else 0
+            if kind == 1:
+                line[x] = (line[x] + left) & 0xFF
+            elif kind == 2:
+                line[x] = (line[x] + up) & 0xFF
+            elif kind == 3:
+                line[x] = (line[x] + (left + up) // 2) & 0xFF
+            elif kind == 4:
+                p = left + up - corner
+                pa, pb, pc = abs(p - left), abs(p - up), abs(p - corner)
+                line[x] = (line[x] + (left if pa <= pb and pa <= pc else up if pb <= pc else corner)) & 0xFF
+        rows.append(bytes(line))
+        previous = line
+    return width, height, rows
+
+
+def write_png_rgba(path, width, rows):
+    def chunk(kind, body):
+        return struct.pack(">I", len(body)) + kind + body + struct.pack(">I", zlib.crc32(kind + body) & 0xFFFFFFFF)
+    header = struct.pack(">IIBBBBB", width, len(rows), 8, 6, 0, 0, 0)
+    body = zlib.compress(b"".join(b"\x00" + row for row in rows), 9)
+    os.makedirs(os.path.dirname(path), exist_ok=True)
+    with open(path, "wb") as f:
+        f.write(b"\x89PNG\r\n\x1a\n" + chunk(b"IHDR", header) + chunk(b"IDAT", body) + chunk(b"IEND", b""))
+
+
+def port_texture_frames(mapping, legacy_assets, out_assets):
+    """
+    Split 1.12.2's compass-style strips (square frames stacked top to bottom, picked by angle rather than played in
+    turn) into one texture a frame, {new}/00.png and on, for item models chosen by a property.
+    """
+    count = 0
+    for new, old in mapping.get("texture_frames", {}).items():
+        root, path = asset_source(legacy_assets, old)
+        width, height, rows = read_png_rgba(os.path.join(root, "textures", path + ".png"))
+        for frame in range(height // width):
+            write_png_rgba(os.path.join(out_assets, "textures", new, f"{frame:02d}.png"), width, rows[frame * width:(frame + 1) * width])
+            count += 1
+    print(f"texture frames: {count} written")
 
 
 def port_sounds(mapping, legacy_assets, out_assets):
@@ -403,6 +471,7 @@ def main():
     out_data = os.path.join(resources, "data", MOD_ID)
 
     port_textures(mapping, legacy_assets, out_assets)
+    port_texture_frames(mapping, legacy_assets, out_assets)
     port_sounds(mapping, legacy_assets, out_assets)
     port_models(mapping, legacy_assets, out_assets)
     port_lang(mapping, legacy_assets, out_assets)

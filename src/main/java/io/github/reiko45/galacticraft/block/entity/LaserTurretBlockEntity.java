@@ -614,4 +614,9 @@ public class LaserTurretBlockEntity extends MachineBlockEntity {
     public AABB renderBox() {
         return new AABB(this.worldPosition).expandTowards(0.0D, 1.0D, 0.0D);
     }
+
+    @Override
+    public float powerDraw() {
+        return this.energy.maxExtract();
+    }
 }

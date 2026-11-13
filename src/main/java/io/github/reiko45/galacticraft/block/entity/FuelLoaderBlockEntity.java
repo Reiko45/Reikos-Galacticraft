@@ -308,4 +308,9 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         this.tank.readFromNBT(registries, tag.getCompound("FuelTank"));
         this.disabled = tag.getBoolean("Disabled");
     }
+
+    @Override
+    public float powerDraw() {
+        return ENERGY_USE;
+    }
 }

@@ -342,8 +342,8 @@ public final class GCItems {
 
     // --- Venus (1.12.2 ItemBasicVenus "basic_item_venus" and the planet's other items) ---
     /** Worn in its slot of the Galacticraft inventory, it keeps worn armour from corroding on Venus. */
-    public static final DeferredItem<DescribedItem> SHIELD_CONTROLLER = ITEMS.register("shield_controller",
-            () -> new DescribedItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<Item> SHIELD_CONTROLLER = ITEMS.register("shield_controller",
+            () -> new Item(new Item.Properties().stacksTo(1)));
     public static final DeferredItem<Item> LEAD_INGOT = simple("lead_ingot");
     public static final DeferredItem<Item> RADIOISOTOPE_CORE = simple("radioisotope_core");
     public static final DeferredItem<Item> ISOTHERMAL_FABRIC = simple("isothermal_fabric");
@@ -364,6 +364,11 @@ public final class GCItems {
                     new Item.Properties().rarity(net.minecraft.world.item.Rarity.RARE).attributes(PickaxeItem.createAttributes(GCTiers.VOLCANIC, 1.0F, -2.8F))));
     public static final DeferredItem<io.github.reiko45.galacticraft.item.AtomicBatteryItem> ATOMIC_BATTERY = ITEMS.register("atomic_battery",
             () -> new io.github.reiko45.galacticraft.item.AtomicBatteryItem(new Item.Properties()));
+    /** 1.12.2 ItemBatteryInfinite and the "dungeonfinder", both creative only. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.InfiniteBatteryItem> INFINITE_BATTERY = ITEMS.register(
+            "infinite_battery", () -> new io.github.reiko45.galacticraft.item.InfiniteBatteryItem(new Item.Properties()));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.DungeonLocatorItem> DUNGEON_LOCATOR = ITEMS.register(
+            "dungeon_locator", () -> new io.github.reiko45.galacticraft.item.DungeonLocatorItem(new Item.Properties()));
 
     private static DeferredItem<io.github.reiko45.galacticraft.item.ThermalPaddingItem> isothermalPadding(String name,
                                                                                                        io.github.reiko45.galacticraft.item.gear.GearSlot slot) {

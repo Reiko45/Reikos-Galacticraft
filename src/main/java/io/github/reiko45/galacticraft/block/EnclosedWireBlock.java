@@ -25,7 +25,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * Sealable Aluminum Wire and Sealable Heavy Aluminum Wire (1.12.2 BlockEnclosed): a wire run through a full tin
  * decoration block, so a wall can carry power and still keep the air in. It joins power networks like any wire.
  */
-public class EnclosedWireBlock extends AluminumWireBlock implements PartialSealable {
+public class EnclosedWireBlock extends AluminumWireBlock implements io.github.reiko45.galacticraft.item.ShiftDescribed, PartialSealable {
     public EnclosedWireBlock(Properties properties, boolean heavy) {
         super(properties, heavy);
     }
@@ -40,8 +40,9 @@ public class EnclosedWireBlock extends AluminumWireBlock implements PartialSeala
         return true;
     }
 
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.enclosed.desc").withStyle(ChatFormatting.GRAY));
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return "block.galacticraftcore.enclosed.description";
     }
 }

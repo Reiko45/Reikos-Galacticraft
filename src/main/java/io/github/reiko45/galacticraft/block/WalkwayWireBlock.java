@@ -33,10 +33,4 @@ public class WalkwayWireBlock extends AluminumWireBlock {
     protected VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
         return state.getValue(CONNECTIONS.get(Direction.DOWN)) ? WalkwayBlock.SHAPE_DOWN : WalkwayBlock.SHAPE;
     }
-
-    @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context,
-                                java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-        tooltip.add(net.minecraft.network.chat.Component.translatable(getDescriptionId() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY));
-    }
 }

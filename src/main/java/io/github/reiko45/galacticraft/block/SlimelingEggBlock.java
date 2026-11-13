@@ -49,7 +49,7 @@ import org.jetbrains.annotations.Nullable;
  * already tame and belonging to whoever cracked it. A pickaxe of diamond strength collects the egg instead, and a Desh
  * Pickaxe with Silk Touch comes away from it coated in slime: a Sticky Desh Pickaxe.
  */
-public class SlimelingEggBlock extends BaseEntityBlock {
+public class SlimelingEggBlock extends BaseEntityBlock implements io.github.reiko45.galacticraft.item.ShiftDescribed {
     public static final MapCodec<SlimelingEggBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Color.CODEC.fieldOf("color").forGetter(SlimelingEggBlock::color), propertiesCodec()).apply(instance, SlimelingEggBlock::new));
     public static final BooleanProperty BROKEN = BooleanProperty.create("broken");
@@ -169,8 +169,9 @@ public class SlimelingEggBlock extends BaseEntityBlock {
         }
     }
 
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.slimeling_egg.desc").withStyle(ChatFormatting.GRAY));
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return "block.galacticraftcore.slimeling_egg.description";
     }
 }

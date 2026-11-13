@@ -1787,8 +1787,72 @@ public final class ScreenshotTour {
         addPolishSteps();
         addEvolvedWitchSteps();
         addConfigSteps();
-        this.lastGroup = this.extras.size();
         addGalaxyMapSteps();
+        this.lastGroup = this.extras.size();
+        addShiftDescriptionSteps();
+    }
+
+    /** Item tooltips side by side, as the inventory shows them under the cursor. */
+    private static final class TooltipBoard extends net.minecraft.client.gui.screens.Screen {
+        private final List<ItemStack> stacks;
+
+        TooltipBoard(List<ItemStack> stacks) {
+            super(Component.literal("tooltips"));
+            this.stacks = stacks;
+        }
+
+        @Override
+        public void render(net.minecraft.client.gui.GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+            super.render(graphics, mouseX, mouseY, partialTick);
+            // three to a row, each tooltip under its item
+            for (int i = 0; i < this.stacks.size(); i++) {
+                final ItemStack stack = this.stacks.get(i);
+                final int x = 12 + i % 3 * (this.width - 24) / 3;
+                final int y = 14 + i / 3 * 110;
+                graphics.renderItem(stack, x, y);
+                graphics.renderTooltip(this.font, net.minecraft.client.gui.screens.Screen.getTooltipFromItem(this.minecraft, stack),
+                        java.util.Optional.empty(), x - 12, y + 34);
+            }
+        }
+
+        @Override
+        public boolean isPauseScreen() {
+            return false;
+        }
+    }
+
+    /**
+     * Phase 10 part 1: the "Press Shift for more info" tooltips (with the power a machine draws), then with Shift held;
+     * the Infinite Battery and Dungeon Locator among them; then the Dungeon Locator in hand on the Moon.
+     */
+    private void addShiftDescriptionSteps() {
+        final List<ItemStack> stacks = List.of(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR.get()), new ItemStack(GCBlocks.OXYGEN_SEALER.get()),
+                new ItemStack(GCBlocks.FUEL_LOADER.get()), new ItemStack(GCItems.INFINITE_BATTERY.get()), new ItemStack(GCItems.DUNGEON_LOCATOR.get()));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(new TooltipBoard(stacks)));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "shift_descriptions"));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(new TooltipBoard(List.of(stacks.get(0), stacks.get(1), stacks.get(2)))));
+        this.extras.add((minecraft, srv) -> io.github.reiko45.galacticraft.client.ShiftDescriptions.forceSneak = true);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "shift_descriptions_held"));
+        this.extras.add((minecraft, srv) -> {
+            io.github.reiko45.galacticraft.client.ShiftDescriptions.forceSneak = false;
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+                if (moon != null) {
+                    final ServerPlayer p = tourPlayer(srv);
+                    srv.overworld().setDayTime(6000L);
+                    p.teleportTo(moon, 40.5D, surface(moon, 40, 40) + 1.0D, 40.5D, 0.0F, 20.0F);
+                    p.getInventory().selected = 0;
+                    p.getInventory().setItem(0, new ItemStack(GCItems.DUNGEON_LOCATOR.get()));
+                }
+            });
+        });
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the bearing arrives and the needle settles
+        }
+        this.extras.add((minecraft, srv) -> minecraft.getToasts().clear());
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "dungeon_locator"));
     }
 
     /**

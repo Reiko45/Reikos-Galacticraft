@@ -179,6 +179,9 @@ machines, solar panels and oil processing work. See
 * **JEI, EMI and Jade** (all optional): recipe pages for the Compressor, Circuit Fabricator and Refinery in JEI or
   EMI (EMI also fills the Magnetic Crafting Table); Jade shows a machine's energy in gJ, its progress and status, and
   who owns a Launch Controller or Laser Turret.
+* **Tooltips**: hold Shift over a Galacticraft machine or block for 1.12.2's description of it, and see what power a
+  machine needs. Creative mode also has the Infinite Battery and the Dungeon Locator, a compass that points to the
+  nearest dungeon (or, on the asteroids, abandoned base).
 * **Settings** (Mods → Galacticraft → Config, or the `galacticraftcore-*.toml` files): 1.12.2's own, with their 1.12.2
   names in every language. Quick mode (more wire and batteries per recipe, double compressor plates, extra silicon),
   hard mode (hungrier machines, harder meteors, slower drifting and mining in orbit, growing suffocation damage),
@@ -335,6 +338,10 @@ machines, solar panels and oil processing work. See
 | Zoomed in on Earth | The Galaxy Map key's map |
 |---|---|
 | ![Earth zoomed in, with the Moon and a space station on their orbits](docs/screenshots/galaxy_map_earth.png) | ![The map opened with the Galaxy Map key, Jupiter selected and out of reach](docs/screenshots/galaxy_map_key.png) |
+
+| Tooltips | Holding Shift |
+|---|---|
+| ![Power required and "Press Left Shift for more info" under machines; the Infinite Battery and Dungeon Locator](docs/screenshots/shift_descriptions.png) | ![The Circuit Fabricator's, Oxygen Sealer's and Fuel Loader's descriptions](docs/screenshots/shift_descriptions_held.png) |
 
 | The settings screen | Its server page |
 |---|---|

@@ -46,6 +46,11 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
         return energyPerTick();
     }
 
+    @Override
+    public float powerDraw() {
+        return energyPerTick();
+    }
+
     /** Ticks into the current job (for Jade). */
     public int progress() {
         return this.progress;

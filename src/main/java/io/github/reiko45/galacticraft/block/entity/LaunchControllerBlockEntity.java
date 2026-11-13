@@ -432,4 +432,9 @@ public class LaunchControllerBlockEntity extends MachineBlockEntity {
         this.disabled = tag.getBoolean("Disabled");
         this.chunkForced = tag.getBoolean("ChunkForced");
     }
+
+    @Override
+    public float powerDraw() {
+        return ENERGY_USE;
+    }
 }

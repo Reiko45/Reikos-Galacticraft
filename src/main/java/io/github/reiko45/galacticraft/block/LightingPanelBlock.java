@@ -31,7 +31,7 @@ import org.jetbrains.annotations.Nullable;
  * wrench turns the patterned ones (Linear and Dark a quarter turn, the diagonal Dark one through four) before swinging
  * the panel round to the next face: down, up, north, east, south, west.
  */
-public class LightingPanelBlock extends Block implements Wrenchable {
+public class LightingPanelBlock extends Block implements io.github.reiko45.galacticraft.item.ShiftDescribed, Wrenchable {
     public static final DirectionProperty FACING = BlockStateProperties.FACING;
     public static final IntegerProperty ROTATION = IntegerProperty.create("rotation", 0, 3);
     public static final BooleanProperty LIT = BlockStateProperties.LIT;
@@ -87,11 +87,6 @@ public class LightingPanelBlock extends Block implements Wrenchable {
         return true;
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.lighting_panel.desc").withStyle(ChatFormatting.GRAY));
-    }
-
     /** 1.12.2 PanelType: its texture, light and how many ways the wrench turns it. */
     public enum PanelType {
         SQUARE("square", 11, 1), SPOTS("spots", 7, 1), LINEAR("linear", 9, 2), SF("sf", 2, 2), SFDIAG("sfdiag", 2, 4);
@@ -117,5 +112,11 @@ public class LightingPanelBlock extends Block implements Wrenchable {
         public int rotations() {
             return this.rotations;
         }
+    }
+
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
+    @Override
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return "block.galacticraftcore.lighting_panel.description";
     }
 }

@@ -66,9 +66,4 @@ public class VolcanicPickaxeItem extends PickaxeItem {
         }
         return result;
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("item.galacticraftcore.volcanic_pickaxe.desc").withStyle(ChatFormatting.GRAY));
-    }
 }

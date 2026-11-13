@@ -105,6 +105,7 @@ public final class GalacticraftClient {
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(VehicleCamera::onClientTick);
+        NeoForge.EVENT_BUS.addListener(ShiftDescriptions::onTooltip);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen::onClientTick);
         NeoForge.EVENT_BUS.addListener(VehicleCamera::onCameraDistance);
         NeoForge.EVENT_BUS.addListener(SpaceMusic::onSelectMusic);
@@ -299,6 +300,7 @@ public final class GalacticraftClient {
             ItemProperties.register(GCBlocks.EMERGENCY_POST_ITEM.get(), GalacticraftCore.id("kit"),
                     (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.EmergencyPostItem.hasKit(stack) ? 1.0F : 0.0F);
             // 1.12.2 meteor_chunk_hot (metadata 1)
+            ItemProperties.register(GCItems.DUNGEON_LOCATOR.get(), GalacticraftCore.id("angle"), DungeonLocatorAngle::get);
             ItemProperties.register(GCItems.METEOR_CHUNK.get(), GalacticraftCore.id("hot"),
                     (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.MeteorChunkItem.isHot(stack) ? 1.0F : 0.0F);
             ItemProperties.register(GCItems.BUGGY.get(), GalacticraftCore.id("storage"),

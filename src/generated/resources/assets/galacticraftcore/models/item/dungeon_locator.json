@@ -1,0 +1,191 @@
+{
+  "parent": "galacticraftcore:item/dungeon_locator/00",
+  "overrides": [
+    {
+      "model": "galacticraftcore:item/dungeon_locator/01",
+      "predicate": {
+        "galacticraftcore:angle": 0.03125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/02",
+      "predicate": {
+        "galacticraftcore:angle": 0.0625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/03",
+      "predicate": {
+        "galacticraftcore:angle": 0.09375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/04",
+      "predicate": {
+        "galacticraftcore:angle": 0.125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/05",
+      "predicate": {
+        "galacticraftcore:angle": 0.15625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/06",
+      "predicate": {
+        "galacticraftcore:angle": 0.1875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/07",
+      "predicate": {
+        "galacticraftcore:angle": 0.21875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/08",
+      "predicate": {
+        "galacticraftcore:angle": 0.25
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/09",
+      "predicate": {
+        "galacticraftcore:angle": 0.28125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/10",
+      "predicate": {
+        "galacticraftcore:angle": 0.3125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/11",
+      "predicate": {
+        "galacticraftcore:angle": 0.34375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/12",
+      "predicate": {
+        "galacticraftcore:angle": 0.375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/13",
+      "predicate": {
+        "galacticraftcore:angle": 0.40625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/14",
+      "predicate": {
+        "galacticraftcore:angle": 0.4375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/15",
+      "predicate": {
+        "galacticraftcore:angle": 0.46875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/16",
+      "predicate": {
+        "galacticraftcore:angle": 0.5
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/17",
+      "predicate": {
+        "galacticraftcore:angle": 0.53125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/18",
+      "predicate": {
+        "galacticraftcore:angle": 0.5625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/19",
+      "predicate": {
+        "galacticraftcore:angle": 0.59375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/20",
+      "predicate": {
+        "galacticraftcore:angle": 0.625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/21",
+      "predicate": {
+        "galacticraftcore:angle": 0.65625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/22",
+      "predicate": {
+        "galacticraftcore:angle": 0.6875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/23",
+      "predicate": {
+        "galacticraftcore:angle": 0.71875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/24",
+      "predicate": {
+        "galacticraftcore:angle": 0.75
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/25",
+      "predicate": {
+        "galacticraftcore:angle": 0.78125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/26",
+      "predicate": {
+        "galacticraftcore:angle": 0.8125
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/27",
+      "predicate": {
+        "galacticraftcore:angle": 0.84375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/28",
+      "predicate": {
+        "galacticraftcore:angle": 0.875
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/29",
+      "predicate": {
+        "galacticraftcore:angle": 0.90625
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/30",
+      "predicate": {
+        "galacticraftcore:angle": 0.9375
+      }
+    },
+    {
+      "model": "galacticraftcore:item/dungeon_locator/31",
+      "predicate": {
+        "galacticraftcore:angle": 0.96875
+      }
+    }
+  ]
+}

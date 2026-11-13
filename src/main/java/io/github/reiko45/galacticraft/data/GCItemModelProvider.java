@@ -41,6 +41,11 @@ public class GCItemModelProvider extends ItemModelProvider {
                 rocket(holder.getId().getPath());
             } else if (item instanceof LiquidCanisterItem) {
                 canister(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.DungeonLocatorItem) {
+                dungeonLocator(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.InfiniteBatteryItem) {
+                // 1.12.2 drew it with the battery's texture (and the enchantment glint)
+                withExistingParent(holder.getId().getPath(), mcLoc("item/generated")).texture("layer0", modLoc("item/battery"));
             } else if (item instanceof io.github.reiko45.galacticraft.item.MeteorChunkItem) {
                 // the porter's 1.12.2 lump models, cold and hot
                 withExistingParent(holder.getId().getPath(), modLoc("item/meteor_chunk/cold")).override()
@@ -51,6 +56,24 @@ public class GCItemModelProvider extends ItemModelProvider {
             } else {
                 basicItem(item);
             }
+        }
+    }
+
+    /**
+     * 1.12.2 TextureDungeonFinder's 32 needle frames, one model each under {@code item/dungeon_locator/}, picked by the
+     * {@code galacticraftcore:angle} property as the compass picks its frames.
+     */
+    private void dungeonLocator(String name) {
+        final int frames = 32;
+        for (int i = 0; i < frames; i++) {
+            final String frame = String.format(java.util.Locale.ROOT, "%02d", i);
+            withExistingParent("item/" + name + "/" + frame, mcLoc("item/generated")).texture("layer0", modLoc("item/" + name + "/" + frame));
+        }
+        final var model = withExistingParent(name, modLoc("item/" + name + "/00"));
+        for (int i = 1; i < frames; i++) {
+            model.override().predicate(io.github.reiko45.galacticraft.GalacticraftCore.id("angle"), i / (float) frames)
+                    .model(new net.neoforged.neoforge.client.model.generators.ModelFile.UncheckedModelFile(
+                            modLoc(String.format(java.util.Locale.ROOT, "item/%s/%02d", name, i)))).end();
         }
     }
 

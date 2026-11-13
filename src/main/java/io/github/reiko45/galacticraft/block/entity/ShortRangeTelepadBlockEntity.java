@@ -391,4 +391,9 @@ public class ShortRangeTelepadBlockEntity extends MachineBlockEntity {
             setAddress(loaded);
         }
     }
+
+    @Override
+    public float powerDraw() {
+        return energyUse();
+    }
 }

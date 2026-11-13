@@ -142,9 +142,4 @@ public class SpinThrusterBlock extends HorizontalDirectionalBlock {
         level.addParticle(ParticleTypes.SMOKE, pos.getX() + 0.5D + facing.getStepX() * 0.27D, pos.getY() + 0.92D,
                 pos.getZ() + 0.5D + facing.getStepZ() * 0.27D, 0.0D, 0.0D, 0.0D);
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.spin_thruster.desc").withStyle(ChatFormatting.GRAY));
-    }
 }

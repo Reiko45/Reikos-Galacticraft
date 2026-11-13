@@ -76,6 +76,7 @@ public final class GCPlayerHandler {
         Thermal.check(player, data);
         checkShield(player, data);
         io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity.frequencyModuleTick(player);
+        io.github.reiko45.galacticraft.item.DungeonLocatorItem.tick(player);
         sendState(player, data);
         if (data.takeGearChanged()) {
             broadcastGear(player, data);

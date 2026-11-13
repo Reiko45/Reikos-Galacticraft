@@ -506,4 +506,9 @@ public class TerraformerBlockEntity extends MachineBlockEntity implements Bubble
     public void onDataPacket(Connection connection, ClientboundBlockEntityDataPacket packet, HolderLookup.Provider registries) {
         handleUpdateTag(packet.getTag(), registries);
     }
+
+    @Override
+    public float powerDraw() {
+        return energyPerTick();
+    }
 }

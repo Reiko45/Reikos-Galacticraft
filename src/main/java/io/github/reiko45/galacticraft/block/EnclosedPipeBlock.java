@@ -31,7 +31,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * full tin decoration block. It is part of any pipe network beside it and keeps the air in; it can't be dyed or set to
  * pull, like the walkway pipe.
  */
-public class EnclosedPipeBlock extends FluidPipeBlock implements PartialSealable {
+public class EnclosedPipeBlock extends FluidPipeBlock implements io.github.reiko45.galacticraft.item.ShiftDescribed, PartialSealable {
     public static final MapCodec<EnclosedPipeBlock> CODEC = simpleCodec(EnclosedPipeBlock::new);
 
     public EnclosedPipeBlock(Properties properties) {
@@ -63,8 +63,9 @@ public class EnclosedPipeBlock extends FluidPipeBlock implements PartialSealable
         return true;
     }
 
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.enclosed.desc").withStyle(ChatFormatting.GRAY));
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return "block.galacticraftcore.enclosed.description";
     }
 }

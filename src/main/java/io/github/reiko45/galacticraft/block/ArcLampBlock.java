@@ -119,9 +119,4 @@ public class ArcLampBlock extends BaseEntityBlock implements Wrenchable {
         }
         super.onRemove(state, level, pos, newState, movedByPiston);
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.arc_lamp.desc").withStyle(ChatFormatting.GRAY));
-    }
 }

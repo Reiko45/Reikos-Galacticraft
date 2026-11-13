@@ -80,10 +80,4 @@ public class WalkwayBlock extends Block {
         final BooleanProperty side = SIDES.get(direction);
         return side == null ? state : state.setValue(side, connects(level, pos, direction));
     }
-
-    @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context,
-                                java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-        tooltip.add(net.minecraft.network.chat.Component.translatable(getDescriptionId() + ".desc").withStyle(net.minecraft.ChatFormatting.GRAY));
-    }
 }

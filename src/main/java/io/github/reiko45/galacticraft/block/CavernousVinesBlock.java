@@ -140,9 +140,4 @@ public class CavernousVinesBlock extends Block {
         // Amplifier 20 makes poison hurt every tick it lasts; poison never takes the last half heart.
         living.addEffect(new MobEffectInstance(MobEffects.POISON, 5, 20, false, true));
     }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.cavernous_vines.desc").withStyle(ChatFormatting.GRAY));
-    }
 }

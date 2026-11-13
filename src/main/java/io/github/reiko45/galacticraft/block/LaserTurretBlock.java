@@ -108,10 +108,4 @@ public class LaserTurretBlock extends ConfigurableMachineBlock implements Partia
     public boolean isSealed(Level level, BlockPos pos, BlockState state, Direction direction) {
         return true;
     }
-
-    /** 1.12.2 getShiftDescription. */
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(getDescriptionId() + ".description").withStyle(ChatFormatting.GRAY));
-    }
 }

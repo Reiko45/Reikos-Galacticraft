@@ -482,6 +482,18 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       station materials panel with CREATE. The Galaxy Map key (M) opens it as a map only, with EXIT. (Galacticraft
       Legacy's map has no Space Race panel.)
 
+### Phase 10 – Last gaps
+- [x] "Press Shift for more info" (1.12.2 ItemBlockDesc / ItemDesc) on the 80 blocks and items 1.12.2 described, from
+      its own texts in every language: the text wrapped to 150 pixels while the sneak key is held, otherwise the prompt
+      after "Power required" for machines that draw power (the gJ a tick they use, times 20). One tooltip handler for
+      all of them; the descriptions some blocks showed all the time before are behind Shift now, as in 1.12.2
+- [x] Dungeon Locator (1.12.2 "dungeonfinder", creative only): a compass whose needle swings to the nearest dungeon
+      (on the asteroids, the nearest abandoned base), its 32 frames split from 1.12.2's strip by the porter
+- [x] Infinite Battery (creative only): gives a machine all it can take, as tier 3 power, and never runs down
+- [ ] NASA Workbench recipes in JEI and EMI
+- [ ] Zero-g jetpack boost, Fuel Loader side configuration, the Fallen Meteor's pickaxe bonus, grapple arm poses
+- [ ] The live Overworld pictures (Display Screen map, the Moon sky's Earth) and 1.12.2's own flame and smoke particles
+
 ## Settings
 
 Three files, all editable from the mod list's settings screen; their names come from 1.12.2's own `gc.configgui`
@@ -542,6 +554,9 @@ What they do, where 1.12.2 needed more than a number:
 
 ## Intentional differences from 1.12.2 (so far)
 
+* Shift descriptions are drawn in the tooltip's own colour (1.12.2 also left them plain), and every Dungeon Locator
+  shows the same needle (1.12.2 animated one shared texture). In Earth orbit, with no dungeons, its needle spins (1.12.2
+  pointed it north there, from a dungeon spacing of 0).
 * Mod id `galacticraftcore` is kept so that asset paths and translation keys map 1:1. The display name marks
   the mod as an unofficial port, and it doesn't clash with Galacticraft 5's `galacticraft` id.
 * Copper ore, copper ingot and copper block are vanilla's. Galacticraft's copper items map to them.
@@ -589,8 +604,7 @@ What they do, where 1.12.2 needed more than a number:
   screen; if the trip doesn't go through, the server opens the map again).
 * The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
   not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
-  configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id). A
-  schematic whose page doesn't exist yet (Tier 3 Rocket, Astro Miner) is not used up by Unlock Schematic.
+  configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id).
 * Rocket types 0-3 (18/36/54 cargo slots) are a `rocket_storage` data component on one item instead of item damage; the
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
@@ -628,7 +642,7 @@ What they do, where 1.12.2 needed more than a number:
   on your own client). They are still not saved. Prints sit on top of the turf; 1.12.2's server put other players'
   prints one block lower.
 * The Moon sky leaves out 1.12.2's live picture of the Overworld (`S_REQUEST_OVERWORLD_IMAGE`) and always shows the
-  Earth icon. The "more stars" client option is not ported.
+  Earth icon.
 * Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
   within the simulation distance rather than the view distance so that they actually move.
 * The Fallen Meteor's mining speed bonus for better pickaxes (1.12.2 divided by 30 instead of 100) is not ported.
@@ -709,8 +723,7 @@ What they do, where 1.12.2 needed more than a number:
 * Titanium tools are repaired with titanium ingots; the titanium axe (1.12.2: the TOOL_STEEL material, 768 uses) with
   compressed steel. Asteroid rock has no blast resistance, as in 1.12.2.
 * The Tier 3 Rocket's recipe takes one to three chests in any chest slots, like the Tier 2's.
-* The Entry Pod falls under its own rules on the server (1.12.2 moved it on the client and sent its position up); the
-  1.12.2 camera zoom and default third-person view in the pod are not ported.
+* The Entry Pod falls under its own rules on the server (1.12.2 moved it on the client and sent its position up).
 * The thermal check spares spectators as well as creative players. Thermal padding pieces sync with the rest of the
   gear look (1.12.2 PlayerGearData) rather than separate gear ids.
 * Moon villages come one per 32x32 chunk region, at a random chunk of its first 24x24, the rule 1.12.2's /locate used.

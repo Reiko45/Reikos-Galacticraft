@@ -37,7 +37,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
  * again whenever a neighbour changes, so a change two blocks away (the frame of the glass beside it) reaches it through
  * that neighbour's own update.
  */
-public class SpaceGlassBlock extends Block implements PartialSealable {
+public class SpaceGlassBlock extends Block implements io.github.reiko45.galacticraft.item.ShiftDescribed, PartialSealable {
     public static final EnumProperty<GlassModel> MODEL = EnumProperty.create("modeltype", GlassModel.class);
     public static final EnumProperty<GlassRotation> ROTATION = EnumProperty.create("rot", GlassRotation.class);
 
@@ -585,15 +585,6 @@ public class SpaceGlassBlock extends Block implements PartialSealable {
         return direction.getAxis().isHorizontal();
     }
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable(switch (this.type) {
-            case CLEAR -> "block.galacticraftcore.space_glass.clear.desc";
-            case VANILLA -> "block.galacticraftcore.space_glass.desc";
-            case STRONG -> "block.galacticraftcore.space_glass.strong.desc";
-        }).withStyle(ChatFormatting.GRAY));
-    }
-
     /** 1.12.2 GlassModel: the 18 pane shapes. */
     public enum GlassModel implements StringRepresentable {
         STANDARD_PANE("standard", "ns", null), CORNER("corner", "ne", null), T_JUNCTION("joint", "nse", null), CROSSROADS("joinx", "nsew", null),
@@ -681,5 +672,15 @@ public class SpaceGlassBlock extends Block implements PartialSealable {
         public int color() {
             return this.color;
         }
+    }
+
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
+    @Override
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return switch (this.type) {
+            case CLEAR -> "block.galacticraftcore.space_glass.clear.description";
+            case VANILLA -> "block.galacticraftcore.space_glass.description";
+            case STRONG -> "block.galacticraftcore.space_glass.strong.description";
+        };
     }
 }

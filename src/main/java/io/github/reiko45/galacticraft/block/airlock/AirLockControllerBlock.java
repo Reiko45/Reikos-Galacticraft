@@ -36,7 +36,7 @@ import org.jetbrains.annotations.Nullable;
  * Air Lock Controller (1.12.2 BlockAirLockFrame, air_lock_controller): part of an air lock's frame, with a settings
  * screen for its owner. ACTIVE (sealed) is a block state so open screens can show it.
  */
-public class AirLockControllerBlock extends BaseEntityBlock {
+public class AirLockControllerBlock extends BaseEntityBlock implements io.github.reiko45.galacticraft.item.ShiftDescribed {
     public static final MapCodec<AirLockControllerBlock> CODEC = simpleCodec(AirLockControllerBlock::new);
     public static final BooleanProperty ACTIVE = BooleanProperty.create("active");
 
@@ -101,8 +101,9 @@ public class AirLockControllerBlock extends BaseEntityBlock {
         return true;
     }
 
+    /** 1.12.2 getShiftDescription: a text shared with others like it. */
     @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        tooltip.add(Component.translatable("block.galacticraftcore.air_lock_frame.desc").withStyle(ChatFormatting.GRAY));
+    public String shiftDescriptionKey(net.minecraft.world.item.ItemStack stack) {
+        return "block.galacticraftcore.air_lock_frame.description";
     }
 }

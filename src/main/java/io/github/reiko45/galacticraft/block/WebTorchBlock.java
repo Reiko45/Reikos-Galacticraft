@@ -74,14 +74,4 @@ public class WebTorchBlock extends Block {
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         return direction == Direction.UP && !canSurvive(state, level, pos) ? Blocks.AIR.defaultBlockState() : state;
     }
-
-    /** 1.12.2 web_torch_1's description: "Glowstone Torch". */
-    @Override
-    public void appendHoverText(net.minecraft.world.item.ItemStack stack, net.minecraft.world.item.Item.TooltipContext context,
-                                java.util.List<net.minecraft.network.chat.Component> tooltip, net.minecraft.world.item.TooltipFlag flag) {
-        if (this.torch) {
-            tooltip.add(net.minecraft.network.chat.Component.translatable(getDescriptionId() + ".desc")
-                    .withStyle(net.minecraft.ChatFormatting.GRAY));
-        }
-    }
 }
