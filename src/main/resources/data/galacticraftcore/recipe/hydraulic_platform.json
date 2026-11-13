@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:dusts/glowstone"
+    },
+    "B": {
+      "tag": "c:plates/steel"
+    },
+    "P": {
+      "item": "minecraft:piston"
+    },
+    "X": {
+      "item": "galacticraftcore:basic_wafer"
+    }
+  },
+  "pattern": [
+    "PAP",
+    "BXB",
+    "PAP"
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraftcore:hydraulic_platform"
+  }
+}

@@ -36,6 +36,10 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         }
     };
 
+    /** 1.12.2 glassColor1-3: the Space Glass colours this player is shown (-1 unpainted), from the nearest applicator. */
+    private final int[] glassColors = {-1, -1, -1};
+    /** 1.12.2 panelLightingColor: the Lighting Panels' colour this player last applied. */
+    private int panelLightingColor = 0xF0F0E0;
     /** Oxygen left in each tank (1.12.2 airRemaining/airRemaining2, raw tank units). */
     private int airRemaining;
     private int airRemaining2;
@@ -142,6 +146,27 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         return this.airRemaining;
     }
 
+    public int glassColor(int type) {
+        return this.glassColors[type];
+    }
+
+    /** Returns whether anything changed. */
+    public boolean setGlassColors(int color1, int color2, int color3) {
+        final boolean changed = this.glassColors[0] != color1 || this.glassColors[1] != color2 || this.glassColors[2] != color3;
+        this.glassColors[0] = color1;
+        this.glassColors[1] = color2;
+        this.glassColors[2] = color3;
+        return changed;
+    }
+
+    public int panelLightingColor() {
+        return this.panelLightingColor;
+    }
+
+    public void setPanelLightingColor(int color) {
+        this.panelLightingColor = color;
+    }
+
     public int airRemaining2() {
         return this.airRemaining2;
     }
@@ -225,6 +250,10 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         final CompoundTag tag = new CompoundTag();
         tag.put("ExtendedInventory", this.inventory.serializeNBT(provider));
         tag.putInt("AirRemaining", this.airRemaining);
+        tag.putInt("GlassColor1", this.glassColors[0]);
+        tag.putInt("GlassColor2", this.glassColors[1]);
+        tag.putInt("GlassColor3", this.glassColors[2]);
+        tag.putInt("PanCo", this.panelLightingColor);
         tag.putInt("AirRemaining2", this.airRemaining2);
         tag.putInt("DamageCounter", this.damageCounter);
         tag.putInt("CryogenicChamberCooldown", this.cryogenicChamberCooldown);
@@ -275,6 +304,12 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         inventoryTag.remove("Size"); // always GearSlot.COUNT slots
         this.inventory.deserializeNBT(provider, inventoryTag);
         this.airRemaining = tag.getInt("AirRemaining");
+        if (tag.contains("PanCo")) {
+            this.glassColors[0] = tag.getInt("GlassColor1");
+            this.glassColors[1] = tag.getInt("GlassColor2");
+            this.glassColors[2] = tag.getInt("GlassColor3");
+            this.panelLightingColor = tag.getInt("PanCo");
+        }
         this.airRemaining2 = tag.getInt("AirRemaining2");
         this.damageCounter = tag.getInt("DamageCounter");
         this.cryogenicChamberCooldown = tag.getInt("CryogenicChamberCooldown");

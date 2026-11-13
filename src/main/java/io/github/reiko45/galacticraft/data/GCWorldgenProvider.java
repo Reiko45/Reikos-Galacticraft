@@ -135,6 +135,7 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 context.register(GCDamageTypes.SPACESHIP_CRASH, new DamageType("spaceship_crash", DamageScaling.NEVER, 0.1F));
                 context.register(GCDamageTypes.THERMAL, new DamageType("thermal", DamageScaling.NEVER, 0.0F));
                 context.register(GCDamageTypes.SULPHURIC_ACID, new DamageType("sulphuric_acid", DamageScaling.NEVER, 0.0F));
+                context.register(GCDamageTypes.METEOR_CHUNK, new DamageType("meteor_chunk", 0.1F));
                 context.register(GCDamageTypes.SLIMELING, new DamageType("slimeling", DamageScaling.WHEN_CAUSED_BY_LIVING_NON_PLAYER, 0.1F));
             });
 

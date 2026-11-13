@@ -120,6 +120,10 @@ public final class GCEntities {
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.JuicerEntity>of(io.github.reiko45.galacticraft.entity.JuicerEntity::new,
                     MobCategory.MONSTER).sized(0.95F, 0.6F).clientTrackingRange(5).build("juicer"));
     /** 1.12.2 EntityWebShot setSize(0.5, 0.5), tracked every tick. */
+    /** 1.12.2 EntityMeteorChunk: "meteor_chunk", 0.25 x 0.25 (0.5 when thrown by hand), tracked every 5 ticks. */
+    public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.MeteorChunkEntity>> METEOR_CHUNK = ENTITY_TYPES.register("meteor_chunk",
+            () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.MeteorChunkEntity>of(io.github.reiko45.galacticraft.entity.MeteorChunkEntity::new,
+                    MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(9).updateInterval(5).build("meteor_chunk"));
     public static final Supplier<EntityType<io.github.reiko45.galacticraft.entity.WebShotEntity>> WEB_SHOT = ENTITY_TYPES.register("web_shot",
             () -> EntityType.Builder.<io.github.reiko45.galacticraft.entity.WebShotEntity>of(io.github.reiko45.galacticraft.entity.WebShotEntity::new,
                     MobCategory.MISC).sized(0.5F, 0.5F).clientTrackingRange(10).updateInterval(1).build("web_shot"));

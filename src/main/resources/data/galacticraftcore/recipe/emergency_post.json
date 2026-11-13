@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:glowstone_torch"
+    },
+    "Y": {
+      "item": "galacticraftcore:compressed_tin"
+    }
+  },
+  "pattern": [
+    "XYX",
+    "Y Y",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:emergency_post"
+  }
+}

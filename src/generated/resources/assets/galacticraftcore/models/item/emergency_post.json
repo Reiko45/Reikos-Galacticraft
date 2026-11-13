@@ -1,0 +1,11 @@
+{
+  "parent": "galacticraftcore:block/emergency_post",
+  "overrides": [
+    {
+      "model": "galacticraftcore:block/emergency_post_filled",
+      "predicate": {
+        "galacticraftcore:kit": 1.0
+      }
+    }
+  ]
+}

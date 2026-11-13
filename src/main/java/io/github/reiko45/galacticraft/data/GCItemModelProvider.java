@@ -41,6 +41,11 @@ public class GCItemModelProvider extends ItemModelProvider {
                 rocket(holder.getId().getPath());
             } else if (item instanceof LiquidCanisterItem) {
                 canister(holder.getId().getPath());
+            } else if (item instanceof io.github.reiko45.galacticraft.item.MeteorChunkItem) {
+                // the porter's 1.12.2 lump models, cold and hot
+                withExistingParent(holder.getId().getPath(), modLoc("item/meteor_chunk/cold")).override()
+                        .predicate(io.github.reiko45.galacticraft.GalacticraftCore.id("hot"), 1.0F)
+                        .model(getExistingFile(modLoc("item/meteor_chunk/hot"))).end();
             } else if (item instanceof TieredItem || item instanceof WrenchItem) {
                 handheldItem(item);
             } else {

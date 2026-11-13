@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "tag": "c:dyes/red"
+    },
+    {
+      "item": "galacticraftcore:canvas"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:prelaunch_checklist"
+  }
+}

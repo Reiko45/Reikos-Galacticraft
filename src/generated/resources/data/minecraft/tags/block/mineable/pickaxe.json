@@ -140,6 +140,10 @@
     "galacticraftcore:magnetic_crafting_table",
     "galacticraftcore:telemetry",
     "galacticraftcore:comms_dish",
+    "galacticraftcore:emergency_post",
+    "galacticraftcore:hydraulic_platform",
+    "galacticraftcore:deconstructor",
+    "galacticraftcore:chromatic_applicator",
     "galacticraftcore:nasa_workbench_part"
   ]
 }

@@ -120,6 +120,7 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.LANDING_PAD.get(), GCBlocks.BUGGY_FUELING_PAD.get(), GCBlocks.FUEL_LOADER.get(), GCBlocks.CARGO_LOADER.get(), GCBlocks.CARGO_UNLOADER.get(),
                 GCBlocks.NASA_WORKBENCH.get(),
                 GCBlocks.COMPACT_NASA_WORKBENCH.get(), GCBlocks.MAGNETIC_CRAFTING_TABLE.get(), GCBlocks.TELEMETRY.get(), GCBlocks.COMMS_DISH.get(),
+                GCBlocks.EMERGENCY_POST.get(), GCBlocks.HYDRAULIC_PLATFORM.get(), GCBlocks.DECONSTRUCTOR.get(), GCBlocks.CHROMATIC_APPLICATOR.get(),
                 GCBlocks.NASA_WORKBENCH_PART.get());
         tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST.get());
         // Oxygen sealing (1.12.2 OxygenPressureProtocol): glass panes seal, gravel/wool/sponge let air through

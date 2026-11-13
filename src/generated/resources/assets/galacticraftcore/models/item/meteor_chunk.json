@@ -1,0 +1,11 @@
+{
+  "parent": "galacticraftcore:item/meteor_chunk/cold",
+  "overrides": [
+    {
+      "model": "galacticraftcore:item/meteor_chunk/hot",
+      "predicate": {
+        "galacticraftcore:hot": 1.0
+      }
+    }
+  ]
+}

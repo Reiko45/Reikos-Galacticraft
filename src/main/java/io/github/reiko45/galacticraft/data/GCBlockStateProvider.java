@@ -107,6 +107,11 @@ public class GCBlockStateProvider extends BlockStateProvider {
         configurableMachine(GCBlocks.ELECTRIC_COMPRESSOR.get(), "", "electric_compressor");
         configurableMachine(GCBlocks.ADVANCED_COMPRESSOR.get(), "advanced/", "electric_compressor");
         configurableMachine(GCBlocks.ELECTRIC_FURNACE.get(), "", "electric_furnace");
+        configurableMachine(GCBlocks.DECONSTRUCTOR.get(), "", "deconstructor");
+        // 1.12.2 painter_model: the applicator's panels on top, bottom, front and back, plain machine sides
+        horizontalBlock(GCBlocks.CHROMATIC_APPLICATOR.get(), models().cube("chromatic_applicator", tex("chromatic_applicator"), tex("chromatic_applicator"),
+                tex("chromatic_applicator"), tex("chromatic_applicator"), tex("machine"), tex("machine")).texture("particle", tex("machine")));
+        itemModels().withExistingParent("chromatic_applicator", modLoc("block/chromatic_applicator"));
         configurableMachine(GCBlocks.ELECTRIC_ARC_FURNACE.get(), "advanced/", "electric_furnace");
         configurableMachine(GCBlocks.CIRCUIT_FABRICATOR.get(), "", "circuit_fabricator");
         solarBase(GCBlocks.BASIC_SOLAR_PANEL.get(), "solar_basic");
@@ -511,6 +516,26 @@ public class GCBlockStateProvider extends BlockStateProvider {
                     .modelFile(models().getExistingFile(modLoc(name.isEmpty() ? "block/display_screen" : "block/display_screen_" + name))).rotationY(y).build();
         });
         itemModels().withExistingParent("display_screen", modLoc("block/display_screen"));
+        // 1.12.2 emergency_box: the frame for both states (the flaps are drawn by EmergencyPostRenderer); the item with a
+        // kit shows the kit inside (1.12.2 emergency_box_filled)
+        simpleBlock(GCBlocks.EMERGENCY_POST.get(), models().getExistingFile(modLoc("block/emergency_post")));
+        // 1.12.2 platform blockstate: a full slab until joined, then each corner its quarter turned to its place
+        getVariantBuilder(GCBlocks.HYDRAULIC_PLATFORM.get()).forAllStates(state -> {
+            final var corner = state.getValue(io.github.reiko45.galacticraft.block.HydraulicPlatformBlock.TYPE);
+            // by the 1.12.2 blockstate's names, which are the corners' swapped: "sw" (north-west) 0, "nw" 270, "se" 90, "ne" 180
+            final int y = switch (corner) {
+                case SW -> 270;
+                case NE -> 90;
+                case SE -> 180;
+                default -> 0;
+            };
+            return net.neoforged.neoforge.client.model.generators.ConfiguredModel.builder().modelFile(models().getExistingFile(modLoc(
+                    corner == io.github.reiko45.galacticraft.block.HydraulicPlatformBlock.Corner.NONE ? "block/hydraulic_platform_unset"
+                            : "block/hydraulic_platform"))).rotationY(y).build();
+        });
+        itemModels().withExistingParent("hydraulic_platform", modLoc("block/hydraulic_platform_unset"));
+        itemModels().withExistingParent("emergency_post", modLoc("block/emergency_post")).override()
+                .predicate(GalacticraftCore.id("kit"), 1.0F).model(models().getExistingFile(modLoc("block/emergency_post_filled"))).end();
         simpleBlock(GCBlocks.COMMS_DISH.get(), models().cubeAll("comms_dish", tex("comms_dish")));
         itemModels().withExistingParent("comms_dish", mcLoc("item/generated")).texture("layer0", modLoc("item/comms_dish"));
         simpleBlock(GCBlocks.COMMS_DISH_PART.get(), models().getBuilder("comms_dish_part").texture("particle", tex("comms_dish")));

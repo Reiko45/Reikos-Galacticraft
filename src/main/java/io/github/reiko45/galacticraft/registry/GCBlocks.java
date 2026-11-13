@@ -231,6 +231,12 @@ public final class GCBlocks {
             () -> new ConfigurableMachineBlock(machine(), ElectricFurnaceBlockEntity::furnace));
     public static final DeferredBlock<ConfigurableMachineBlock> ELECTRIC_ARC_FURNACE = withItem("electric_arc_furnace",
             () -> new ConfigurableMachineBlock(machine(), ElectricFurnaceBlockEntity::arcFurnace));
+    /** 1.12.2 BlockMachine2 type 10 (Deconstructor). */
+    public static final DeferredBlock<ConfigurableMachineBlock> DECONSTRUCTOR = withItem("deconstructor",
+            () -> new ConfigurableMachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.DeconstructorBlockEntity::new));
+    /** 1.12.2 BlockMachine3 type 9 (painter: Chromatic Applicator). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.ChromaticApplicatorBlock> CHROMATIC_APPLICATOR = withItem("chromatic_applicator",
+            () -> new io.github.reiko45.galacticraft.block.ChromaticApplicatorBlock(machine()));
     public static final DeferredBlock<ConfigurableMachineBlock> CIRCUIT_FABRICATOR = withItem("circuit_fabricator",
             () -> new ConfigurableMachineBlock(machine(), CircuitFabricatorBlockEntity::new));
 
@@ -419,6 +425,16 @@ public final class GCBlocks {
     public static final DeferredBlock<SolarPartBlock> COMMS_DISH_PART = BLOCKS.register("comms_dish_part", () -> new SolarPartBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 3_600_000.0F).sound(SoundType.METAL)
                     .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
+    /** 1.12.2 BlockEmergencyBox: Material.IRON, hardness 4, resistance 70 (42 against blasts), light 15, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EmergencyPostBlock> EMERGENCY_POST = BLOCKS.register("emergency_post",
+            () -> new io.github.reiko45.galacticraft.block.EmergencyPostBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(4.0F, 42.0F).sound(SoundType.METAL).lightLevel(state -> 15).requiresCorrectToolForDrops().noOcclusion()));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.EmergencyPostItem> EMERGENCY_POST_ITEM = GCItems.ITEMS.register("emergency_post",
+            () -> new io.github.reiko45.galacticraft.item.EmergencyPostItem(EMERGENCY_POST.get(), new Item.Properties()));
+    /** 1.12.2 BlockPlatform: Material.IRON, hardness 1, resistance 10 (6 against blasts), metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.HydraulicPlatformBlock> HYDRAULIC_PLATFORM = withItem("hydraulic_platform",
+            () -> new io.github.reiko45.galacticraft.block.HydraulicPlatformBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(1.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
     public static final DeferredBlock<SolarPartBlock> NASA_WORKBENCH_PART = BLOCKS.register("nasa_workbench_part", () -> new SolarPartBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 3_600_000.0F).sound(SoundType.METAL)
                     .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));

@@ -1774,8 +1774,9 @@ public final class ScreenshotTour {
         addSpaceRaceSteps();
         addAsteroidMachineSteps();
         addVenusSteps();
-        this.lastGroup = this.extras.size();
         addSpaceBaseSteps();
+        this.lastGroup = this.extras.size();
+        addBaseUtilitySteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2573,6 +2574,148 @@ public final class ScreenshotTour {
         }); // the ores are found once a second
         this.extras.add((minecraft, srv) -> shoot(minecraft, "sensor_glasses"));
         this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, ItemStack.EMPTY)));
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos utilitySpot;
+
+    /**
+     * Phase 7g part 3: an Emergency Post with its kit and a door open, two Hydraulic Platforms one above the other, a
+     * Deconstructor and a Chromatic Applicator in front of the glass it painted, and meteor chunks hot and cold; then the
+     * Deconstructor and Applicator GUIs and the Prelaunch Checklist.
+     */
+    private void addBaseUtilitySteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            p.setItemInHand(net.minecraft.world.InteractionHand.MAIN_HAND, ItemStack.EMPTY);
+            final ServerLevel level = srv.overworld();
+            level.setDayTime(6000L);
+            final BlockPos corner = p.blockPosition().offset(-300, 0, 300);
+            final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-10, -1, -6), o.offset(10, 10, 14))) {
+                level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            this.utilitySpot = o;
+            // the applicator, its colours mixed and put on the three kinds of Space Glass (a wall behind)
+            final BlockPos applicator = o.offset(-4, 0, 0);
+            level.setBlockAndUpdate(applicator, GCBlocks.CHROMATIC_APPLICATOR.get().defaultBlockState());
+            if (level.getBlockEntity(applicator) instanceof io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity painter) {
+                final net.minecraft.world.item.Item[][] mixes = {
+                        {net.minecraft.world.item.Items.LIGHT_BLUE_DYE, net.minecraft.world.item.Items.CYAN_DYE},
+                        {net.minecraft.world.item.Items.LIME_DYE},
+                        {net.minecraft.world.item.Items.ORANGE_DYE, net.minecraft.world.item.Items.YELLOW_DYE}};
+                final net.minecraft.world.level.block.Block[] glass = {GCBlocks.SPACE_GLASS_VANILLA.get(), GCBlocks.SPACE_GLASS_CLEAR.get(),
+                        GCBlocks.SPACE_GLASS_STRONG.get()};
+                for (int i = 0; i < 3; i++) {
+                    painter.buttonPressed(2, p);
+                    for (net.minecraft.world.item.Item dye : mixes[i]) {
+                        painter.inventory().setStackInSlot(0, new ItemStack(dye));
+                        painter.buttonPressed(1, p);
+                    }
+                    painter.inventory().setStackInSlot(1, new ItemStack(glass[i]));
+                    painter.buttonPressed(0, p);
+                }
+                painter.inventory().setStackInSlot(0, new ItemStack(net.minecraft.world.item.Items.PINK_DYE));
+                painter.inventory().setStackInSlot(1, new ItemStack(GCBlocks.SPACE_GLASS_CLEAR.get(), 4));
+                painter.buttonPressed(2, p);
+                painter.buttonPressed(1, p);
+            }
+            for (int x = -9; x <= 9; x++) {
+                for (int y = 0; y <= 2; y++) {
+                    level.setBlockAndUpdate(o.offset(x, y, -3), (x < -3 ? GCBlocks.SPACE_GLASS_VANILLA : x <= 3 ? GCBlocks.SPACE_GLASS_CLEAR
+                            : GCBlocks.SPACE_GLASS_STRONG).get().defaultBlockState());
+                }
+            }
+            // the deconstructor, a Tier 1 Rocket going in
+            final BlockPos deconstructor = o.offset(-6, 0, 0);
+            level.setBlockAndUpdate(deconstructor, GCBlocks.DECONSTRUCTOR.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.MachineBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            if (level.getBlockEntity(deconstructor) instanceof io.github.reiko45.galacticraft.block.entity.DeconstructorBlockEntity machine) {
+                machine.energy().setStored(16_000.0F);
+                machine.inventory().setStackInSlot(1, new ItemStack(GCItems.TIER_1_ROCKET.get()));
+                machine.inventory().setStackInSlot(2, new ItemStack(GCItems.HEAVY_PLATING.get(), 6));
+                machine.inventory().setStackInSlot(3, new ItemStack(GCItems.COMPRESSED_STEEL.get(), 9));
+                machine.inventory().setStackInSlot(4, new ItemStack(GCItems.COMPRESSED_TIN.get(), 4));
+            }
+            // the emergency post, kit in, its south door open
+            final BlockPos post = o.offset(0, 0, 0);
+            level.setBlockAndUpdate(post, GCBlocks.EMERGENCY_POST.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.EmergencyPostBlock.KIT, true));
+            if (level.getBlockEntity(post) instanceof io.github.reiko45.galacticraft.block.entity.EmergencyPostBlockEntity box) {
+                box.click(p, net.minecraft.core.Direction.SOUTH, false);
+            }
+            // two hydraulic platforms, four blocks apart
+            for (int y : new int[] {0, 4}) {
+                for (int x = 4; x <= 5; x++) {
+                    for (int z = -1; z <= 0; z++) {
+                        level.setBlockAndUpdate(o.offset(x, y, z), GCBlocks.HYDRAULIC_PLATFORM.get().defaultBlockState());
+                    }
+                }
+            }
+            // meteor chunks: one cold, one hot
+            final ItemStack[] chunks = {new ItemStack(GCItems.METEOR_CHUNK.get()),
+                    io.github.reiko45.galacticraft.item.MeteorChunkItem.hot(new ItemStack(GCItems.METEOR_CHUNK.get()))};
+            for (int i = 0; i < chunks.length; i++) {
+                final net.minecraft.world.entity.item.ItemEntity item = new net.minecraft.world.entity.item.ItemEntity(level,
+                        o.getX() + 1.6D + 0.8D * i, o.getY(), o.getZ() + 2.5D, chunks[i], 0.0D, 0.0D, 0.0D);
+                item.setNeverPickUp();
+                item.setUnlimitedLifetime();
+                level.addFreshEntity(item);
+            }
+            lookFrom(p, level, new net.minecraft.world.phys.Vec3(o.getX() - 0.5D, o.getY() + 3.2D, o.getZ() + 8.5D),
+                    new net.minecraft.world.phys.Vec3(o.getX() - 0.5D, o.getY() + 1.2D, o.getZ()));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "emergency_post_and_platforms"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.utilitySpot != null && srv.overworld().getBlockEntity(this.utilitySpot.offset(-6, 0, 0))
+                    instanceof io.github.reiko45.galacticraft.block.entity.DeconstructorBlockEntity machine) {
+                machine.energy().setStored(16_000.0F);
+                lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(this.utilitySpot.offset(-5, 2, 3)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.utilitySpot.offset(-5, 0, 0)));
+                tourPlayer(srv).openMenu(machine, this.utilitySpot.offset(-6, 0, 0));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "deconstructor_gui"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (this.utilitySpot != null && srv.overworld().getBlockEntity(this.utilitySpot.offset(-4, 0, 0))
+                    instanceof io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity painter) {
+                p.openMenu(painter);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "chromatic_applicator_gui"));
+        this.extras.add((minecraft, srv) -> {
+            srv.execute(() -> tourPlayer(srv).closeContainer());
+        });
+        this.extras.add((minecraft, srv) -> {
+            final net.minecraft.nbt.CompoundTag ticks = new net.minecraft.nbt.CompoundTag();
+            ticks.putBoolean("planet.galacticraftcore.overworld", true);
+            ticks.putBoolean("planet.galacticraftcore.overworld.equip_parachute", true);
+            ticks.putBoolean("moon.galacticraftcore.moon.equip_oxygen_suit", true);
+            minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.PrelaunchChecklistScreen(net.minecraft.world.InteractionHand.MAIN_HAND, ticks));
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "prelaunch_checklist"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                if (this.utilitySpot != null) {
+                    srv.overworld().setBlockAndUpdate(this.utilitySpot.offset(-4, 0, 0), Blocks.AIR.defaultBlockState());
+                }
+                io.github.reiko45.galacticraft.network.PaintNetwork.setGlassColors(p, -1, -1, -1);
+            });
+        });
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */

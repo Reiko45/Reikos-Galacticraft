@@ -57,6 +57,12 @@ public final class GCBlockEntities {
             ElectricCompressorBlockEntity::normal, GCBlocks.ELECTRIC_COMPRESSOR);
     public static final Supplier<BlockEntityType<ElectricCompressorBlockEntity>> ADVANCED_COMPRESSOR = machine("advanced_compressor",
             ElectricCompressorBlockEntity::advanced, GCBlocks.ADVANCED_COMPRESSOR);
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.DeconstructorBlockEntity>> DECONSTRUCTOR = machine("deconstructor",
+            io.github.reiko45.galacticraft.block.entity.DeconstructorBlockEntity::new, GCBlocks.DECONSTRUCTOR);
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity>> CHROMATIC_APPLICATOR = BLOCK_ENTITIES.register(
+            "chromatic_applicator", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity::new,
+                    GCBlocks.CHROMATIC_APPLICATOR.get()).build(null));
     public static final Supplier<BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_FURNACE = machine("electric_furnace",
             ElectricFurnaceBlockEntity::furnace, GCBlocks.ELECTRIC_FURNACE);
     public static final Supplier<BlockEntityType<ElectricFurnaceBlockEntity>> ELECTRIC_ARC_FURNACE = machine("electric_arc_furnace",
@@ -137,6 +143,14 @@ public final class GCBlockEntities {
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity>> SOLAR_ARRAY_CONTROLLER = machine(
             "solar_array_controller", io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity::new, GCBlocks.SOLAR_ARRAY_CONTROLLER);
 
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.HydraulicPlatformBlockEntity>> HYDRAULIC_PLATFORM = BLOCK_ENTITIES.register(
+            "hydraulic_platform", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.HydraulicPlatformBlockEntity::new,
+                    GCBlocks.HYDRAULIC_PLATFORM.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.EmergencyPostBlockEntity>> EMERGENCY_POST = BLOCK_ENTITIES.register(
+            "emergency_post", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.EmergencyPostBlockEntity::new,
+                    GCBlocks.EMERGENCY_POST.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity>> TELEMETRY = BLOCK_ENTITIES.register(
             "telemetry", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity::new,

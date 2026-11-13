@@ -26,6 +26,20 @@ public class GearItem extends Item {
         return this.slots.contains(slot);
     }
 
+    /** Put it into the first free slot it fits; what's left (empty if it went in). */
+    public static ItemStack equip(ServerPlayer player, ItemStack stack) {
+        if (stack.getItem() instanceof GearItem gear) {
+            final GCPlayerData data = GCPlayerData.get(player);
+            for (GearSlot slot : gear.slots) {
+                if (data.gear(slot).isEmpty()) {
+                    data.setGear(slot, stack.copy());
+                    return ItemStack.EMPTY;
+                }
+            }
+        }
+        return stack;
+    }
+
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         final ItemStack stack = player.getItemInHand(hand);

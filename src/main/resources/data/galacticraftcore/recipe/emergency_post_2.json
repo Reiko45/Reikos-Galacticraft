@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraftcore:emergency_post"
+    },
+    {
+      "item": "galacticraftcore:emergency_kit"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:emergency_post",
+    "components": {
+      "minecraft:block_state": {
+        "kit": "true"
+      }
+    }
+  }
+}

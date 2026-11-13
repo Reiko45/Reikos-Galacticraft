@@ -60,6 +60,10 @@ public final class GalacticraftCore {
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity::onLevelTick);
+        modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) -> event.enqueueWork(() ->
+                // 1.12.2 GCFluids: dispensers throw meteor chunks
+                net.minecraft.world.level.block.DispenserBlock.registerProjectileBehavior(io.github.reiko45.galacticraft.registry.GCItems.METEOR_CHUNK.get())));
         modBus.addListener(io.github.reiko45.galacticraft.block.entity.LaunchControllerBlockEntity::registerTickets);
         modBus.addListener((net.neoforged.neoforge.common.world.chunk.RegisterTicketControllersEvent event) ->
                 event.register(io.github.reiko45.galacticraft.entity.AstroMinerEntity.TICKETS));

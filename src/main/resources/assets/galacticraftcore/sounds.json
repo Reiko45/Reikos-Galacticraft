@@ -92,5 +92,11 @@
         "stream": false
       }
     ]
+  },
+  "block.deconstructor": {
+    "subtitle": "subtitles.galacticraftcore.block.deconstructor",
+    "sounds": [
+      "galacticraftcore:block/deconstructor"
+    ]
   }
 }

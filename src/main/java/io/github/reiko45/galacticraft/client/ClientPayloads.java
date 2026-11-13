@@ -90,4 +90,9 @@ public final class ClientPayloads {
     public static void openAirLock(io.github.reiko45.galacticraft.network.AirLockNetwork.OpenAirLock payload) {
         net.minecraft.client.Minecraft.getInstance().setScreen(new io.github.reiko45.galacticraft.client.screen.AirLockControllerScreen(payload.pos(), payload.settings()));
     }
+
+    /** 1.12.2 GuiIdsCore.PRE_LAUNCH_CHECKLIST, opened by the item on the client. */
+    public static void openChecklist(net.minecraft.world.InteractionHand hand, net.minecraft.nbt.CompoundTag data) {
+        net.minecraft.client.Minecraft.getInstance().setScreen(new io.github.reiko45.galacticraft.client.screen.PrelaunchChecklistScreen(hand, data));
+    }
 }

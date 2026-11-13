@@ -105,6 +105,15 @@ public final class GCItems {
     public static final DeferredItem<Item> ROCKET_FINS = simple("rocket_fins");
     public static final DeferredItem<Item> NOSE_CONE = simple("nose_cone");
     public static final DeferredItem<Item> SENSOR_LENS = simple("sensor_lens");
+    /** 1.12.2 ItemMeteorChunk (both metadata: hot is a burn time on the stack). */
+    /** 1.12.2 ItemEmergencyKit: stacks of 1. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.EmergencyKitItem> EMERGENCY_KIT = ITEMS.register("emergency_kit",
+            () -> new io.github.reiko45.galacticraft.item.EmergencyKitItem(new Item.Properties().stacksTo(1)));
+    /** 1.12.2 ItemPreLaunchChecklist: stacks of 1. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.PrelaunchChecklistItem> PRELAUNCH_CHECKLIST = ITEMS.register("prelaunch_checklist",
+            () -> new io.github.reiko45.galacticraft.item.PrelaunchChecklistItem(new Item.Properties().stacksTo(1)));
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.MeteorChunkItem> METEOR_CHUNK = ITEMS.register("meteor_chunk",
+            () -> new io.github.reiko45.galacticraft.item.MeteorChunkItem(new Item.Properties().stacksTo(16)));
     public static final DeferredItem<Item> CANVAS = simple("canvas");
     public static final DeferredItem<Item> STEEL_POLE = simple("steel_pole");
     public static final DeferredItem<Item> BUGGY_WHEEL = simple("buggy_wheel");

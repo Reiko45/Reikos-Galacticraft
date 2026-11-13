@@ -442,8 +442,14 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Compact NASA Workbench (and back), Telemetry Unit and frequency module links, Display Screens (six pictures,
       joined up to 9 blocks a side) and the Communications Dish
 - [x] The abandoned asteroid bases use the real blocks (no stand-ins left)
-- [ ] The Deconstructor and the Chromatic Applicator (BlockMachine2/3), the Hydraulic Platform, the Emergency Post and
-      its kit, the Throwable Meteor Chunk and the Prelaunch Checklist
+- [x] Deconstructor (TileEntityDeconstructor): takes things apart through their crafting recipes and the NASA
+      Workbench pages, down to the metals and parts on 1.12.2's salvage list, each piece back three times in four
+- [x] Chromatic Applicator (TileEntityPainter): mixes dyes (or a block's colour) and paints the three kinds of Space
+      Glass and the Lighting Panels for the players near it
+- [x] Hydraulic Platform: four join into a lift platform; jump to rise to the next platform above, sneak to sink
+- [x] Emergency Post (lights up the air round it, keeps the evolved mobs off) and the Emergency Kit inside it, which
+      puts on a mask, gear, tanks and a parachute and hands over the rest
+- [x] Throwable Meteor Chunk (hot and cold, thrown or fired from a dispenser) and the Prelaunch Checklist book
 - [ ] Laser Turret (TileEntityLaserTurret, Venus): left out of phase 7f. 1.12.2 Legacy has no recipe for it (only the
       creative menu), and its targeting, owner lists and GUI are about 1,700 lines
 
@@ -685,8 +691,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   worked it out once, when the screen opened), and its status and sun icon still read "blocked" unless every module in
   range sees the sun.
 * The Laser Turret is not ported yet (phase 7g).
-* Space Glass and Lighting Panels can't be painted yet (the Chromatic Applicator is still to come), and a Lighting
-  Panel can't take on the look of the block it is placed against by sneaking. Grating holds water only.
+* A Lighting Panel can't take on the look of the block it is placed against by sneaking. Grating holds water only.
 * An Air Lock Controller never loads a chunk to look for its frame (1.12.2 did, so a controller at the edge of the
   loaded area kept loading more), and its frame search starts from the widest box (1.12.2 started from +-6,000,000, so
   past that its box came out wrong). Its settings screen is opened by the server. Kept from 1.12.2: a flat air lock's
@@ -710,6 +715,20 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   out.
 * Galacticraft's green dye recipe takes any yellow and any blue dye (1.12.2: dandelion yellow and lapis lazuli, which
   was the blue dye then).
+* A hot Meteor Chunk is the same item with a burn time on it (1.12.2: a second metadata), so one smelting recipe heats
+  only a plain cold chunk. Kept from 1.12.2: a hot chunk alight in flight sets what it hits alight for 2 seconds, and
+  cools in 1,800 ticks in an inventory (its tooltip counts half-speed seconds, 22.5 at the start).
+* The Prelaunch Checklist's worlds and their entries are written into it, in 1.12.2's order by rocket tier (1.12.2
+  gathered them from each reachable world in the celestial registry).
+* An Emergency Post keeps its kit in a block state (1.12.2: metadata), so a post broken with one drops a post item that
+  still has it, and crafting a post with a kit gives a post item with that state.
+* While the Hydraulic Platform lift runs, the server lets the player through the platform passed on the way by taking
+  its collision away (1.12.2 turned off the player's collisions with the world).
+* The Deconstructor's NASA Workbench pages are written into it (without their storage chests, as in 1.12.2); crafting
+  recipes are searched in order of their ids (1.12.2: in registration order) for the first that makes just one of the
+  item.
+* Paint colours are kept for each player, as in 1.12.2: everyone near an applicator sees the glass in its colours, and
+  keeps them after walking off. Glass in a tin frame keeps its frame's colour, as in 1.12.2.
 
 ## Workflow for porting more content
 

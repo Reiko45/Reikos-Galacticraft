@@ -246,6 +246,7 @@ public final class GCPlayerHandler {
     public static void onLogin(PlayerEvent.PlayerLoggedInEvent event) {
         GCPlayerData.get(event.getEntity()).markGearChanged();
         if (event.getEntity() instanceof ServerPlayer player) {
+            io.github.reiko45.galacticraft.network.PaintNetwork.sendColors(player);
             io.github.reiko45.galacticraft.race.SpaceRaces.get(player.server).onLogin(player);
             // 1.12.2 loadAstroChunkList: load the chunks this player's Astro Miners were left in, so they carry on
             GCPlayerData.get(player).astroMinerChunks().forEach((miner, chunk) -> {

@@ -31,7 +31,7 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
     protected void generate() {
         for (Block block : getKnownBlocks()) {
             if (block == GCBlocks.GLOWSTONE_WALL_TORCH.get() || block == GCBlocks.UNLIT_WALL_TORCH.get() || block == GCBlocks.SPACE_WART.get()
-                    || block == GCBlocks.MINER_BASE_FULL.get()
+                    || block == GCBlocks.MINER_BASE_FULL.get() || block == GCBlocks.EMERGENCY_POST.get()
                     || block.getLootTable() == BuiltInLootTables.EMPTY) {
                 continue; // wall torches use the standing torch's table; solar parts, liquids and breathable air drop nothing
             }
@@ -41,6 +41,11 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
                 dropSelf(block);
             }
         }
+        // 1.12.2 damageDropped: an Emergency Post drops with its kit still in it
+        add(GCBlocks.EMERGENCY_POST.get(), block -> LootTable.lootTable().withPool(applyExplosionCondition(block, net.minecraft.world.level.storage.loot.LootPool.lootPool()
+                .setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(block)
+                        .apply(net.minecraft.world.level.storage.loot.functions.CopyBlockState.copyState(block)
+                                .copy(io.github.reiko45.galacticraft.block.EmergencyPostBlock.KIT))))));
         // 1.12.2 BlockMinerBaseFull#getDrops: a built base breaks back into the eight blocks it was made of
         add(GCBlocks.MINER_BASE_FULL.get(), block -> LootTable.lootTable().withPool(applyExplosionCondition(block, net.minecraft.world.level.storage.loot.LootPool.lootPool()
                 .setRolls(ConstantValue.exactly(1.0F)).add(LootItem.lootTableItem(GCBlocks.MINER_BASE.get())

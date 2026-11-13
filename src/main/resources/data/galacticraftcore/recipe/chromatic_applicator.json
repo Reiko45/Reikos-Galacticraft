@@ -1,0 +1,42 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "A": {
+      "tag": "c:dyes/red"
+    },
+    "B": {
+      "tag": "c:dyes/magenta"
+    },
+    "C": {
+      "tag": "c:dyes/blue"
+    },
+    "D": {
+      "tag": "c:dyes/orange"
+    },
+    "E": {
+      "tag": "c:plates/steel"
+    },
+    "F": {
+      "tag": "c:dyes/cyan"
+    },
+    "G": {
+      "tag": "c:dyes/yellow"
+    },
+    "H": {
+      "tag": "c:dyes/lime"
+    },
+    "I": {
+      "tag": "c:dyes/green"
+    }
+  },
+  "pattern": [
+    "ABC",
+    "DEF",
+    "GHI"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:chromatic_applicator"
+  }
+}

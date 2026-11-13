@@ -107,4 +107,44 @@ public final class ColorUtil {
     private static double interpolate(double[] array, int i, double mu) {
         return cubic(array[i + 1], array[i], array[i - 1], array[i - 2], mu);
     }
+
+    /** The average of two colours. */
+    public static int addColorsBasic(int color1, int color2) {
+        final int r = ((color1 >> 16 & 255) + (color2 >> 16 & 255)) / 2;
+        final int g = ((color1 >> 8 & 255) + (color2 >> 8 & 255)) / 2;
+        final int b = ((color1 & 255) + (color2 & 255)) / 2;
+        return r << 16 | g << 8 | b;
+    }
+
+    /** Each channel times (1 + factor), at most 255. */
+    public static int lighten(int col, float factor) {
+        final int r = Math.min(255, (int) ((col >> 16 & 255) * (1.0F + factor)));
+        final int g = Math.min(255, (int) ((col >> 8 & 255) * (1.0F + factor)));
+        final int b = Math.min(255, (int) ((col & 255) * (1.0F + factor)));
+        return r << 16 | g << 8 | b;
+    }
+
+    /** Lighten to the given intensity (1.12.2's empirical -24 and delta^0.6 kept). */
+    public static int lightenFully(int col, int intensity) {
+        if (intensity == 0) {
+            return 0;
+        }
+        int rr = 255 - (col >> 16 & 255);
+        int gg = 255 - (col >> 8 & 255);
+        int bb = 255 - (col & 255);
+        final double greyInvert = Math.min(rr, Math.min(gg, bb));
+        double delta = Math.max(rr, Math.max(gg, bb));
+        delta = (delta - greyInvert) / delta;
+        if (greyInvert >= intensity) {
+            return col;
+        }
+        final double factor = (intensity - greyInvert) / intensity / Math.pow(delta, 0.6);
+        rr = (int) ((rr - 24) * factor);
+        gg = (int) ((gg - 24) * factor);
+        bb = (int) ((bb - 24) * factor);
+        rr = 255 - Math.min(255, rr);
+        gg = 255 - Math.min(255, gg);
+        bb = 255 - Math.min(255, bb);
+        return Math.min(255, rr) << 16 | Math.min(255, gg) << 8 | Math.min(255, bb);
+    }
 }

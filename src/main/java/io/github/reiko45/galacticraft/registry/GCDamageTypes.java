@@ -23,6 +23,8 @@ public final class GCDamageTypes {
 
     /** 1.12.2 DamageSourceGC.acid ("sulphuric_acid"): armour helps. "%1$s dissolved in sulphuric acid!". */
     public static final ResourceKey<DamageType> SULPHURIC_ACID = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("sulphuric_acid"));
+    /** 1.12.2 EntityDamageSourceIndirect("meteor_chunk"), a projectile. */
+    public static final ResourceKey<DamageType> METEOR_CHUNK = ResourceKey.create(Registries.DAMAGE_TYPE, GalacticraftCore.id("meteor_chunk"));
 
     private GCDamageTypes() {
     }

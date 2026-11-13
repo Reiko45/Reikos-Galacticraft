@@ -19,6 +19,7 @@ public class GCDamageTypeTagsProvider extends TagsProvider<DamageType> {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        tag(DamageTypeTags.IS_PROJECTILE).add(GCDamageTypes.METEOR_CHUNK);
         tag(DamageTypeTags.BYPASSES_ARMOR).add(GCDamageTypes.OXYGEN_SUFFOCATION, GCDamageTypes.SPACESHIP_CRASH, GCDamageTypes.THERMAL);
         // 1.12.2 DamageSourceGC.spaceshipCrash: setDamageBypassesArmor().setExplosion()
         tag(DamageTypeTags.IS_EXPLOSION).add(GCDamageTypes.SPACESHIP_CRASH);

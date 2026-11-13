@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.data;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import io.github.reiko45.galacticraft.item.MeteorChunkItem;
 import io.github.reiko45.galacticraft.recipe.CircuitFabricatorRecipe;
 import io.github.reiko45.galacticraft.recipe.CompressingRecipe;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
@@ -9,6 +10,7 @@ import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentPredicate;
 import net.minecraft.data.PackOutput;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
@@ -24,6 +26,7 @@ import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 import net.neoforged.neoforge.common.conditions.NotCondition;
 import net.neoforged.neoforge.common.conditions.TagEmptyCondition;
+import net.neoforged.neoforge.common.crafting.DataComponentIngredient;
 
 /**
  * Furnace and stonecutter recipes. 1.12.2 registered smelting in code ({@code RecipeManagerGC}); crafting
@@ -75,6 +78,11 @@ public class GCRecipeProvider extends RecipeProvider {
                 Ingredient.of(GCItems.TIN_CANISTER.get()), new ItemStack(GCItems.TIN_INGOT.get(), 3), 1.0F, 200), null);
         output.accept(GalacticraftCore.id("smelting/copper_ingot_from_copper_canister"), new SmeltingRecipe("", CookingBookCategory.MISC,
                 Ingredient.of(GCItems.COPPER_CANISTER.get()), new ItemStack(Items.COPPER_INGOT, 3), 1.0F, 200), null);
+
+        // Meteor chunk: a cold one heats up (1.12.2 metadata 0 to 1); strict, so only a plain cold chunk goes in.
+        output.accept(GalacticraftCore.id("smelting/hot_meteor_chunk"), new SmeltingRecipe("", CookingBookCategory.MISC,
+                DataComponentIngredient.of(true, DataComponentPredicate.EMPTY, GCItems.METEOR_CHUNK.get()),
+                MeteorChunkItem.hot(new ItemStack(GCItems.METEOR_CHUNK.get())), 0.1F, 200), null);
 
         // Beef patty: furnace like 1.12.2, plus smoker and campfire like vanilla meat.
         final Ingredient patty = Ingredient.of(GCItems.RAW_BEEF_PATTY.get());

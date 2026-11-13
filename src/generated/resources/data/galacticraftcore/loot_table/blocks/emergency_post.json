@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:block",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "conditions": [
+        {
+          "condition": "minecraft:survives_explosion"
+        }
+      ],
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "block": "galacticraftcore:emergency_post",
+              "function": "minecraft:copy_state",
+              "properties": [
+                "kit"
+              ]
+            }
+          ],
+          "name": "galacticraftcore:emergency_post"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "galacticraftcore:blocks/emergency_post"
+}

@@ -17,6 +17,9 @@ public final class GCDataComponents {
     /** gJ stored in an electric item (battery). */
     public static final Supplier<DataComponentType<Float>> ENERGY = COMPONENTS.registerComponentType("energy",
             builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
+    /** A hot meteor chunk's burn time left (1.12.2 "MeteorBurnTimeF"; it counts down half a tick a tick). */
+    public static final Supplier<DataComponentType<Float>> METEOR_BURN_TIME = COMPONENTS.registerComponentType("meteor_burn_time",
+            builder -> builder.persistent(Codec.FLOAT).networkSynchronized(ByteBufCodecs.FLOAT));
 
     /** Liquid in a canister (1.12.2 stored the fill level as item damage). */
     public static final Supplier<DataComponentType<SimpleFluidContent>> FLUID = COMPONENTS.registerComponentType("fluid",

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/chromatic_applicator",
+    "east": "galacticraftcore:block/machine",
+    "north": "galacticraftcore:block/chromatic_applicator",
+    "particle": "galacticraftcore:block/machine",
+    "south": "galacticraftcore:block/chromatic_applicator",
+    "up": "galacticraftcore:block/chromatic_applicator",
+    "west": "galacticraftcore:block/machine"
+  }
+}

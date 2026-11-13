@@ -284,9 +284,16 @@ def convert_recipe(rules, recipe):
     # a result needs one item, where the ingredient mapping may give a tag (e.g. dye colours): "result_items" wins
     result_key = result["item"] + (f":{result['data']}" if result.get("data") not in (None, 0) else "")
     result_id = rules.get("result_items", {}).get(result_key) or lookup_item(rules["items"], result["item"], result.get("data"))
+    # a "result_items" entry may be {"id", "components"}: a 1.12 metadata variant kept as a component on the stack
+    components = None
+    if isinstance(result_id, dict):
+        components = result_id.get("components")
+        result_id = result_id["id"]
     if not isinstance(result_id, str) or result_id.startswith("#"):
         raise Unmapped("ambiguous result " + result["item"])
     out_result = {"count": result.get("count", 1), "id": result_id}
+    if components:
+        out_result["components"] = components
     if kind in ("minecraft:crafting_shaped", "forge:ore_shaped", f"{MOD_ID}:replacable", f"{PLANETS_ID}:replacable"):
         return {
             "type": "minecraft:crafting_shaped",

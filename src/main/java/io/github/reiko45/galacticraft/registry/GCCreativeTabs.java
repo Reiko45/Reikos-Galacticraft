@@ -22,7 +22,12 @@ public final class GCCreativeTabs {
             .displayItems((params, output) -> GCItems.ITEMS.getEntries().stream()
                     .map(holder -> holder.get())
                     .filter(item -> item instanceof BlockItem && item != GCBlocks.UNLIT_TORCH_ITEM.get()) // 1.12.2 hid space torches
-                    .forEach(output::accept))
+                    .forEach(item -> {
+                        output.accept(item);
+                        if (item == GCBlocks.EMERGENCY_POST_ITEM.get()) {
+                            output.accept(io.github.reiko45.galacticraft.item.EmergencyPostItem.withKit(new ItemStack(item)));
+                        }
+                    }))
             .build());
 
     public static final Supplier<CreativeModeTab> ITEMS = TABS.register("items", () -> CreativeModeTab.builder()
@@ -38,6 +43,9 @@ public final class GCCreativeTabs {
                         }
                         if (item instanceof ElectricItem electric) {
                             output.accept(electric.charged());
+                        }
+                        if (item instanceof io.github.reiko45.galacticraft.item.MeteorChunkItem) {
+                            output.accept(io.github.reiko45.galacticraft.item.MeteorChunkItem.hot(new ItemStack(item)));
                         }
                         if (item instanceof OxygenTankItem tank) {
                             output.accept(tank.full()); // 1.12.2 listed every tank empty and full

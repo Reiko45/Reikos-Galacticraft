@@ -599,7 +599,24 @@
     "misc/planets/io": "misc/planets/io",
     "misc/planets/jupiter_inner": "misc/planets/jupiter_inner",
     "misc/planets/jupiter_upper": "misc/planets/jupiter_upper",
-    "misc/planets/saturn": "misc/planets/saturn"
+    "misc/planets/saturn": "misc/planets/saturn",
+    "block/meteor_chunk": "blocks/meteor_chunk",
+    "block/meteor_chunk_hot": "blocks/meteor_chunk_hot",
+    "item/prelaunch_checklist": "items/prelaunch_checklist",
+    "gui/checklist_book": "gui/checklist_book",
+    "block/emergency_post": "blocks/emergency_box",
+    "block/emergency_post_flap": "blocks/emergency_box_flap",
+    "item/emergency_kit": "items/emergency_kit",
+    "block/hydraulic_platform_base": "blocks/platform_base",
+    "block/hydraulic_platform_haz": "blocks/platform_haz",
+    "block/hydraulic_platform_light": "blocks/platform_light",
+    "block/hydraulic_platform_side": "blocks/platform_side",
+    "block/hydraulic_platform_top": "blocks/platform_top",
+    "model/platform_moving": "model/platform_moving",
+    "block/deconstructor": "blocks/deconstructor",
+    "block/chromatic_applicator": "blocks/machine_painter",
+    "gui/deconstructor": "gui/deconstructor",
+    "gui/chromatic_applicator": "gui/painter"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -618,7 +635,8 @@
     "ambience/singledrip8": "ambience/singledrip8",
     "entity/astrominer": "entity/astrominer",
     "player/openairlock": "player/openairlock",
-    "player/closeairlock": "player/closeairlock"
+    "player/closeairlock": "player/closeairlock",
+    "block/deconstructor": "deconstructor"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -809,7 +827,25 @@
     "block/display_screen_u": "block/screen_u",
     "block/display_screen_ul": "block/screen_ul",
     "block/display_screen_ulr": "block/screen_ulr",
-    "block/display_screen_ur": "block/screen_ur"
+    "block/display_screen_ur": "block/screen_ur",
+    "item/meteor_chunk/cold": "item/meteor_chunk",
+    "item/meteor_chunk/hot": "item/meteor_chunk_hot",
+    "block/emergency_post": {
+      "from": "block/emergency_box",
+      "render_type": "minecraft:cutout"
+    },
+    "block/emergency_post_filled": {
+      "from": "block/emergency_box_filled",
+      "render_type": "minecraft:cutout"
+    },
+    "block/hydraulic_platform": {
+      "from": "block/platform",
+      "render_type": "minecraft:cutout"
+    },
+    "block/hydraulic_platform_unset": {
+      "from": "block/platform_unset",
+      "render_type": "minecraft:cutout"
+    }
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -1593,7 +1629,35 @@
     "gui.galacticraftcore.telemetry_fail_no_frequency_module.message": "gui.telemetry_fail_no_frequency_module.message",
     "gui.galacticraftcore.telemetry_fail_wearing_it.message": "gui.telemetry_fail_wearing_it.message",
     "gui.galacticraftcore.telemetry_succeed.message": "gui.telemetry_succeed.message",
-    "gui.galacticraftcore.tracking.message": "gui.tracking.message"
+    "gui.galacticraftcore.tracking.message": "gui.tracking.message",
+    "item.galacticraftcore.meteor_chunk": "item.meteor_chunk.name",
+    "item.galacticraftcore.meteor_chunk_hot": "item.meteor_chunk_hot.name",
+    "item.galacticraftcore.hot_description": "item.hot_description.name",
+    "entity.galacticraftcore.meteor_chunk": "entity.meteor_chunk.name",
+    "death.attack.meteor_chunk": "death.attack.meteor_chunk",
+    "item.galacticraftcore.prelaunch_checklist": "planets:item.prelaunch_checklist.name",
+    "gui.galacticraftcore.message.prelaunch": "gui.message.prelaunch",
+    "checklist.galacticraftcore.create_grapple": "checklist.create_grapple.key",
+    "checklist.galacticraftcore.equip_oxygen_suit": "checklist.equip_oxygen_suit.key",
+    "checklist.galacticraftcore.equip_parachute": "checklist.equip_parachute.key",
+    "checklist.galacticraftcore.craft_grapple_hook": "planets:checklist.craft_grapple_hook.key",
+    "checklist.galacticraftcore.equip_shield_controller": "planets:checklist.equip_shield_controller.key",
+    "checklist.galacticraftcore.thermal_padding": "planets:checklist.thermal_padding.key",
+    "checklist.galacticraftcore.thermal_padding_t2": "planets:checklist.thermal_padding_t2.key",
+    "block.galacticraftcore.emergency_post": "tile.emergency_box.name",
+    "block.galacticraftcore.emergency_post.filled": "tile.emergency_box.filled.name",
+    "block.galacticraftcore.emergency_post.desc": "tile.emergency_box.description",
+    "item.galacticraftcore.emergency_kit": "item.emergency_kit.name",
+    "item.galacticraftcore.emergency_kit.desc": "item.emergency_kit.description",
+    "block.galacticraftcore.hydraulic_platform": "tile.platform.name",
+    "block.galacticraftcore.hydraulic_platform.desc": "tile.platform.description",
+    "block.galacticraftcore.deconstructor": "tile.machine2.10.name",
+    "block.galacticraftcore.deconstructor.desc": "tile.deconstructor.description",
+    "block.galacticraftcore.chromatic_applicator": "tile.machine3.9.name",
+    "block.galacticraftcore.chromatic_applicator.desc": "tile.painter.description",
+    "gui.galacticraftcore.button.paintapply": "gui.button.paintapply.name",
+    "gui.galacticraftcore.button.paintmix": "gui.button.paintmix.name",
+    "gui.galacticraftcore.button.paintreset": "gui.button.paintreset.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1647,7 +1711,8 @@
     "block.galacticraftcore.bright_breathable_air": "Bright Breathable Air",
     "block.galacticraftcore.lighting_panel.desc": "Lighting panel for use in space! The wrench turns it.",
     "subtitles.galacticraftcore.block.air_lock.seal": "Air lock shuts",
-    "subtitles.galacticraftcore.block.air_lock.unseal": "Air lock opens"
+    "subtitles.galacticraftcore.block.air_lock.unseal": "Air lock opens",
+    "subtitles.galacticraftcore.block.deconstructor": "Deconstructor grinds"
   },
   "recipes": {
     "skip_conditions": [
@@ -1998,10 +2063,28 @@
       "galacticraftcore:magnetic_table": "galacticraftcore:magnetic_crafting_table",
       "galacticraftcore:telemetry": "galacticraftcore:telemetry",
       "galacticraftcore:view_screen": "galacticraftcore:display_screen",
-      "galacticraftcore:dishbase": "galacticraftcore:comms_dish"
+      "galacticraftcore:dishbase": "galacticraftcore:comms_dish",
+      "galacticraftcore:meteor_chunk:0": "galacticraftcore:meteor_chunk",
+      "galacticraftcore:meteor_chunk": "galacticraftcore:meteor_chunk",
+      "galacticraftcore:prelaunch_checklist": "galacticraftcore:prelaunch_checklist",
+      "galacticraftcore:emergency_box:0": "galacticraftcore:emergency_post",
+      "galacticraftcore:emergency_box": "galacticraftcore:emergency_post",
+      "galacticraftcore:emergency_kit": "galacticraftcore:emergency_kit",
+      "galacticraftcore:platform:0": "galacticraftcore:hydraulic_platform",
+      "galacticraftcore:platform": "galacticraftcore:hydraulic_platform",
+      "galacticraftcore:machine2:12": "galacticraftcore:deconstructor",
+      "galacticraftcore:machine3:0": "galacticraftcore:chromatic_applicator"
     },
     "result_items": {
-      "minecraft:dye:2": "minecraft:green_dye"
+      "minecraft:dye:2": "minecraft:green_dye",
+      "galacticraftcore:emergency_box:1": {
+        "id": "galacticraftcore:emergency_post",
+        "components": {
+          "minecraft:block_state": {
+            "kit": "true"
+          }
+        }
+      }
     },
     "ore_dict": {
       "compressedSteel": "#c:plates/steel",

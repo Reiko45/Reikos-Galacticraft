@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:smelting",
+  "category": "misc",
+  "cookingtime": 200,
+  "experience": 0.1,
+  "ingredient": {
+    "type": "neoforge:components",
+    "components": {},
+    "items": "galacticraftcore:meteor_chunk",
+    "strict": true
+  },
+  "result": {
+    "components": {
+      "galacticraftcore:meteor_burn_time": 900.0
+    },
+    "count": 1,
+    "id": "galacticraftcore:meteor_chunk"
+  }
+}

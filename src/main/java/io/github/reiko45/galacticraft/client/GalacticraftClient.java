@@ -100,6 +100,7 @@ public final class GalacticraftClient {
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(SensorGlasses::onClientTick);
+        NeoForge.EVENT_BUS.addListener(PlatformLift::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
@@ -115,6 +116,15 @@ public final class GalacticraftClient {
 
     private static void registerLayers(EntityRenderersEvent.RegisterLayerDefinitions event) {
         event.registerLayerDefinition(SolarPanelRenderer.LAYER, SolarPanelRenderer::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.HydraulicPlatformRenderer.LAYER,
+                io.github.reiko45.galacticraft.client.render.HydraulicPlatformRenderer::createLayer);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer.FLAP, io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::createFlap);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer.PLINTH, io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::createPlinth);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer.MASK, io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::createMask);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer.TANK, io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::createTank);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer.PACK, io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::createPack);
+        event.registerLayerDefinition(io.github.reiko45.galacticraft.client.render.entity.MeteorChunkRenderer.LAYER,
+                io.github.reiko45.galacticraft.client.render.entity.MeteorChunkRenderer::createLayer);
         event.registerLayerDefinition(GearLayer.MASK, GearLayer::createMask);
         event.registerLayerDefinition(GearLayer.GEAR, GearLayer::createGear);
         event.registerLayerDefinition(GearLayer.PARACHUTE, GearLayer::createParachute);
@@ -157,6 +167,8 @@ public final class GalacticraftClient {
         event.registerBlockEntityRenderer(GCBlockEntities.ARC_LAMP.get(), io.github.reiko45.galacticraft.client.render.ArcLampRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.DISPLAY_SCREEN.get(), io.github.reiko45.galacticraft.client.render.DisplayScreenRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.COMMS_DISH.get(), io.github.reiko45.galacticraft.client.render.CommsDishRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.EMERGENCY_POST.get(), io.github.reiko45.galacticraft.client.render.EmergencyPostRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.HYDRAULIC_PLATFORM.get(), io.github.reiko45.galacticraft.client.render.HydraulicPlatformRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.BEAM_REFLECTOR.get(), io.github.reiko45.galacticraft.client.render.BeamRenderers.Reflector::new);
@@ -187,6 +199,7 @@ public final class GalacticraftClient {
         event.registerEntityRenderer(GCEntities.SPIDER_QUEEN.get(), io.github.reiko45.galacticraft.client.render.entity.SpiderQueenRenderer::new);
         event.registerEntityRenderer(GCEntities.JUICER.get(), io.github.reiko45.galacticraft.client.render.entity.JuicerRenderer::new);
         event.registerEntityRenderer(GCEntities.WEB_SHOT.get(), io.github.reiko45.galacticraft.client.render.entity.WebShotRenderer::new);
+        event.registerEntityRenderer(GCEntities.METEOR_CHUNK.get(), io.github.reiko45.galacticraft.client.render.entity.MeteorChunkRenderer::new);
         event.registerEntityRenderer(GCEntities.TNT_PROJECTILE.get(), io.github.reiko45.galacticraft.client.render.entity.TntProjectileRenderer::new);
         event.registerEntityRenderer(GCEntities.SLUDGELING.get(), io.github.reiko45.galacticraft.client.render.entity.SludgelingRenderer::new);
         event.registerEntityRenderer(GCEntities.SLIMELING.get(), io.github.reiko45.galacticraft.client.render.entity.SlimelingRenderer::new);
@@ -225,10 +238,10 @@ public final class GalacticraftClient {
         event.register((state, level, pos, tintIndex) -> FallenMeteorBlock.tint(level, pos), GCBlocks.FALLEN_METEOR.get());
         // 1.12.2 BlockSpaceGlass#color: the frame's tint (frames are tintindex 0)
         event.register((state, level, pos, tintIndex) -> state.getBlock() instanceof io.github.reiko45.galacticraft.block.SpaceGlassBlock glass
-                ? glass.frame().color() : 0xFFFFFF, GCBlocks.SPACE_GLASS_VANILLA.get(), GCBlocks.SPACE_GLASS_CLEAR.get(), GCBlocks.SPACE_GLASS_STRONG.get(),
+                ? PaintColors.glass(glass) : 0xFFFFFF, GCBlocks.SPACE_GLASS_VANILLA.get(), GCBlocks.SPACE_GLASS_CLEAR.get(), GCBlocks.SPACE_GLASS_STRONG.get(),
                 GCBlocks.SPACE_GLASS_VANILLA_TIN.get(), GCBlocks.SPACE_GLASS_CLEAR_TIN.get(), GCBlocks.SPACE_GLASS_STRONG_TIN.get());
         // 1.12.2 BlockPanelLighting.color: the lit panel's warm white
-        event.register((state, level, pos, tintIndex) -> 0xF0F0E0, GCBlocks.LIGHTING_PANEL_SQUARE.get(), GCBlocks.LIGHTING_PANEL_SPOTS.get(),
+        event.register((state, level, pos, tintIndex) -> PaintColors.panel(), GCBlocks.LIGHTING_PANEL_SQUARE.get(), GCBlocks.LIGHTING_PANEL_SPOTS.get(),
                 GCBlocks.LIGHTING_PANEL_LINEAR.get(), GCBlocks.LIGHTING_PANEL_SF.get(), GCBlocks.LIGHTING_PANEL_SFDIAG.get());
     }
 
@@ -269,6 +282,12 @@ public final class GalacticraftClient {
                         (stack, level, entity, seed) -> LiquidCanisterItem.fillStage(stack));
             }
             // Buggy item: 1.12.2 buggy types 1-3 showed 1-3 storage boxes.
+            // 1.12.2 emergency_box metadata 1: the post with a kit in it
+            ItemProperties.register(GCBlocks.EMERGENCY_POST_ITEM.get(), GalacticraftCore.id("kit"),
+                    (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.EmergencyPostItem.hasKit(stack) ? 1.0F : 0.0F);
+            // 1.12.2 meteor_chunk_hot (metadata 1)
+            ItemProperties.register(GCItems.METEOR_CHUNK.get(), GalacticraftCore.id("hot"),
+                    (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.MeteorChunkItem.isHot(stack) ? 1.0F : 0.0F);
             ItemProperties.register(GCItems.BUGGY.get(), GalacticraftCore.id("storage"),
                     (stack, level, entity, seed) -> io.github.reiko45.galacticraft.item.BuggyItem.storage(stack));
             ItemBlockRenderTypes.setRenderLayer(GCBlocks.UNLIT_TORCH.get(), RenderType.cutout());
@@ -395,6 +414,8 @@ public final class GalacticraftClient {
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(GCMenus.COAL_GENERATOR.get(), CoalGeneratorScreen::new);
         event.register(GCMenus.MAGNETIC_CRAFTING.get(), io.github.reiko45.galacticraft.client.screen.MagneticCraftingScreen::new);
+        event.register(GCMenus.DECONSTRUCTOR.get(), io.github.reiko45.galacticraft.client.screen.DeconstructorScreen::new);
+        event.register(GCMenus.CHROMATIC_APPLICATOR.get(), io.github.reiko45.galacticraft.client.screen.ChromaticApplicatorScreen::new);
         event.register(GCMenus.CRASHED_PROBE.get(), io.github.reiko45.galacticraft.client.screen.CrashedProbeScreen::new);
         event.register(GCMenus.ENERGY_STORAGE.get(), EnergyStorageScreen::new);
         event.register(GCMenus.COMPRESSOR.get(), CompressorScreen::new);
