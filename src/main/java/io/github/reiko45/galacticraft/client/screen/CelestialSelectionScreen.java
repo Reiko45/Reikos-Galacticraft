@@ -1014,7 +1014,9 @@ public class CelestialSelectionScreen extends Screen {
             if (body == ASTEROIDS) {
                 graphics.pose().mulPose(com.mojang.math.Axis.ZP.rotationDegrees(this.clientTicks / 10.0F % 360.0F));
             }
-            texture(graphics, body.icon(), -size / 2, -size / 2, size, size, 0, 0, 16, 16, false, false, 16.0F, 1.0F, 1.0F, 1.0F, alpha);
+            // 1.12.2 EventHandlerClient#onRenderPlanetPre: the Earth drawn from the Overworld's own picture
+            final ResourceLocation icon = body == EARTH ? io.github.reiko45.galacticraft.client.render.OverworldPictures.earthOr(body.icon()) : body.icon();
+            texture(graphics, icon, -size / 2, -size / 2, size, size, 0, 0, 16, 16, false, false, 16.0F, 1.0F, 1.0F, 1.0F, alpha);
             graphics.pose().popPose();
             final float clickSize = 2.0F * s * (body.kind() == Kind.STAR ? 2.0F : 1.0F) * (body == this.selectedBody ? 1.5F : 1.0F);
             this.planetPos.put(body, new float[] {pos[0], pos[1], clickSize});

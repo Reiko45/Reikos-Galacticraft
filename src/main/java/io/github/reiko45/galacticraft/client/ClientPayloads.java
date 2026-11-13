@@ -79,6 +79,7 @@ public final class ClientPayloads {
 
     public static void reset() {
         io.github.reiko45.galacticraft.world.station.StationSpin.Client.reset();
+        io.github.reiko45.galacticraft.client.render.OverworldPictures.reset();
         GEAR.clear();
         air1 = 90;
         air2 = 90;

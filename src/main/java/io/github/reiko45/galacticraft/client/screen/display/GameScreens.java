@@ -68,7 +68,7 @@ public final class GameScreens {
         final float frameBy = sizeY - FRAME;
         switch (type) {
             case 0 -> background(poseStack, buffers, FRAME, FRAME, frameBx, frameBy, 0.09F);
-            case 1 -> earth(poseStack, buffers, sizeX, sizeY, frameBx, frameBy);
+            case 1 -> overworld(driver, poseStack, buffers, sizeX, sizeY, frameBx, frameBy);
             case 2, 3, 4 -> {
                 background(poseStack, buffers, FRAME, FRAME, frameBx, frameBy, 0.0F);
                 final Celestial celestial = new Celestial(poseStack, buffers, sizeX, sizeY, frameBx, frameBy);
@@ -110,8 +110,31 @@ public final class GameScreens {
                 .setLight(LightTexture.FULL_BRIGHT).setNormal(pose, 0.0F, 0.0F, -1.0F);
     }
 
-    /** 1.12.2 GameScreenBasic type 1 without a map: the Earth's icon, cut to the screen's shape. */
-    private static void earth(PoseStack poseStack, MultiBufferSource buffers, float sizeX, float sizeY, float frameBx, float frameBy) {
+    /**
+     * 1.12.2 GameScreenBasic type 1: in the Overworld, the map of the land round the screen once the server has made it;
+     * otherwise the Overworld's picture wrapped round a turning planet; until that comes, the Earth's icon.
+     */
+    private static void overworld(DisplayScreenBlockEntity driver, PoseStack poseStack, MultiBufferSource buffers, float sizeX, float sizeY,
+                                  float frameBx, float frameBy) {
+        if (driver.getLevel() != null && driver.getLevel().dimension().equals(Level.OVERWORLD)) {
+            final ResourceLocation map = io.github.reiko45.galacticraft.client.render.OverworldPictures.localMap(driver.getBlockPos());
+            if (map != null) {
+                earth(poseStack, buffers, map, sizeX, sizeY, frameBx, frameBy);
+                return;
+            }
+        }
+        final ResourceLocation wide = io.github.reiko45.galacticraft.client.render.OverworldPictures.earthWide();
+        if (wide != null) {
+            final Celestial celestial = new Celestial(poseStack, buffers, sizeX, sizeY, frameBx, frameBy);
+            celestial.turningPlanet(wide, Math.min(sizeX, sizeY) - 0.2F);
+            return;
+        }
+        earth(poseStack, buffers, icon("earth"), sizeX, sizeY, frameBx, frameBy);
+    }
+
+    /** 1.12.2 draw2DTexture: a picture across the screen, cut to its shape. */
+    private static void earth(PoseStack poseStack, MultiBufferSource buffers, ResourceLocation picture, float sizeX, float sizeY, float frameBx,
+                              float frameBy) {
         float u0 = 0.0F;
         float v0 = 0.0F;
         float u1 = 1.0F;
@@ -123,7 +146,7 @@ public final class GameScreens {
             v0 = (1.0F - sizeY / sizeX) / 2.0F;
             v1 = 1.0F - v0;
         }
-        texture(poseStack, buffers, icon("earth"), FRAME, FRAME, frameBx, frameBy, 0.0F, u0, v0, u1, v1);
+        texture(poseStack, buffers, picture, FRAME, FRAME, frameBx, frameBy, 0.0F, u0, v0, u1, v1);
     }
 
     /** 1.12.2 GameScreenCelestial. */
@@ -155,16 +178,30 @@ public final class GameScreens {
             for (Body planet : PLANETS) {
                 final float[] pos = position(planet, ticks);
                 circle(planet);
-                body(icon(planet.icon()), pos[0], pos[1], planet.distance() < 1.5F ? 2.0F : 2.8F);
+                body(planet == EARTH ? earthIcon() : icon(planet.icon()), pos[0], pos[1], planet.distance() < 1.5F ? 2.0F : 2.8F);
             }
         }
 
         /** Type 3 (drawCelestialBodiesZ): the Earth and the Moon (1.12.2 also showed the stations it knew of). */
         void earthAndMoon(float ticks) {
-            body(icon("earth"), 0.0F, 0.0F, 11.0F);
+            body(earthIcon(), 0.0F, 0.0F, 11.0F);
             final float[] pos = position(MOON, ticks);
             circle(MOON);
             body(icon(MOON.icon()), pos[0], pos[1], 4.0F);
+        }
+
+        /** 1.12.2 CelestialBodyRenderEvent.Pre: the Earth drawn from the Overworld's own picture once it has come. */
+        private static ResourceLocation earthIcon() {
+            return io.github.reiko45.galacticraft.client.render.OverworldPictures.earthOr(icon("earth"));
+        }
+
+        /** 1.12.2 RenderPlanet.renderPlanet(texture, scale, ticks, 45): a planet in the middle, turning in real time. */
+        void turningPlanet(ResourceLocation texture, float scale) {
+            this.poseStack.pushPose();
+            this.poseStack.translate(this.centreX, this.centreY, 0.0F);
+            final float size = 45.0F / 70.0F * scale;
+            turning(texture, -size / 2, -size / 2, size, size, System.nanoTime() / 50_000_000.0F, 0.0F);
+            this.poseStack.popPose();
         }
 
         /** Type 4 (drawPlanetsTest, RenderPlanet.renderID). */

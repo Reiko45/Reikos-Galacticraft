@@ -504,7 +504,12 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Player poses (1.12.2 ModelBipedGC, IHoldableItem): rockets, the Moon Buggy and the Astro Miner carried overhead in
       a crouch, the flag overhead standing; both arms up under an open parachute; slow swinging limbs while floating in
       a Galacticraft world; onlookers wave at a crewed rocket that is launching
-- [ ] The live Overworld pictures (Display Screen map, the Moon sky's Earth) and 1.12.2's own flame and smoke particles
+- [x] The Overworld's own pictures (1.12.2 MapUtil), made by the server from the terrain generator on a background
+      thread when first wanted: the Earth in the Moon sky, on the galaxy map and on Display Screens is a strip of the
+      world round 0, 0 (a pixel for 8 blocks) recoloured with the Earth icon's palette; a Display Screen's picture 1
+      shows, in the Overworld, a map of the 352 blocks round it in 1.12.2's biome colours, elsewhere the Overworld
+      turning. Flat worlds have none, as in 1.12.2
+- [ ] 1.12.2's own flame and smoke particles
 
 ## Settings
 
@@ -657,8 +662,14 @@ What they do, where 1.12.2 needed more than a number:
 * Footprints are tracked only on the server and sent to players who can see them (1.12.2 also drew your own prints
   on your own client). They are still not saved. Prints sit on top of the turf; 1.12.2's server put other players'
   prints one block lower.
-* The Moon sky leaves out 1.12.2's live picture of the Overworld (`S_REQUEST_OVERWORLD_IMAGE`) and always shows the
-  Earth icon.
+* The Overworld's pictures are worked out again each time the server starts (1.12.2 kept them in files under the save
+  and the client's `assets/galacticraftMaps`), on one low-priority thread, in some seconds. Heights come from the
+  generator's terrain density stepped down from just above its quick estimate (to a block or two of the generator's
+  own heights, six times quicker than asking it); biomes are the generator's, taken in 1.12.2's numbering for its
+  colour table (newer biomes by their nearest kin or their tags). The strip is the 192 x 48 pixels of 1.12.2's
+  texture, 8 blocks each, round 0, 0 (1.12.2's strip also wrapped part of the way round); a local map is sampled
+  every 4 blocks with the heights blended between (1.12.2: every block), centred on the screen's chunk, and only
+  made for screens within 128 blocks of the player asking.
 * Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
   within the simulation distance rather than the view distance so that they actually move.
 * The Fallen Meteor takes a pickaxe's speed on plain stone, since 1.21's tool rules would leave a pickaxe below diamond
@@ -844,8 +855,7 @@ What they do, where 1.12.2 needed more than a number:
 * A Telemetry Unit keeps its link as the entity's UUID, so it finds a respawned player, or one coming back, again
   (1.12.2 held the entity itself). Ocelot skins aren't shown (1.21 ocelots have none).
 * Display Screens are joined on the server, which sends the result (1.12.2's client worked it out again itself), and
-  are drawn once, from a big screen's top left block. Picture 1 is always the Earth's icon (1.12.2 drew a map of the
-  Overworld around the screen once it had made one: 1.12.2 MapUtil isn't ported); picture 3 shows no space stations;
+  are drawn once, from a big screen's top left block. Picture 3 shows no space stations;
   orbit lines are cut at the frame segment by segment (1.12.2 used clip planes). The up-and-down and left-and-right
   middle blocks of a big screen use the full frame model turned to the facing (1.12.2 left them facing south).
 * The Communications Dish needs room for all its parts to be placed (1.12.2 replaced whatever was there). Like 1.12.2 it

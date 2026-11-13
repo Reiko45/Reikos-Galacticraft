@@ -93,7 +93,8 @@ public final class MoonSkyRenderer {
         pose.mulPose(Axis.XP.rotationDegrees(earthRotation));
         pose.mulPose(Axis.XP.rotationDegrees(200.0F));
         matrix = pose.last().pose();
-        RenderSystem.setShaderTexture(0, EARTH);
+        // 1.12.2 SkyProviderMoon: the Overworld's own picture once the server has made it
+        RenderSystem.setShaderTexture(0, OverworldPictures.earthOr(EARTH));
         size = 10.0F;
         builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         builder.addVertex(matrix, -size, -100.0F, size).setUv(0.0F, 1.0F);

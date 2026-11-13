@@ -1790,8 +1790,124 @@ public final class ScreenshotTour {
         addGalaxyMapSteps();
         addShiftDescriptionSteps();
         addWorkbenchPageSteps();
-        this.lastGroup = this.extras.size();
         addPlayerDetailSteps();
+        this.lastGroup = this.extras.size();
+        addOverworldPictureSteps();
+    }
+
+    /**
+     * Phase 10 part 4: the Overworld's own pictures, made by the server from the terrain generator (1.12.2 MapUtil): a
+     * Display Screen in the Overworld showing the land round it, Display Screens on the Moon with the Overworld turning
+     * and the Earth and Moon, the Moon sky's Earth overhead, and the galaxy map's Earth.
+     */
+    private void addOverworldPictureSteps() {
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            // The tour's world is flat, which has no picture (as in 1.12.2): map a standard Overworld with its seed instead
+            io.github.reiko45.galacticraft.client.render.OverworldPictures.reset();
+            srv.execute(() -> {
+                final net.minecraft.core.RegistryAccess access = srv.registryAccess();
+                final net.minecraft.core.Holder<net.minecraft.world.level.levelgen.NoiseGeneratorSettings> settings = access.registryOrThrow(
+                        net.minecraft.core.registries.Registries.NOISE_SETTINGS).getHolderOrThrow(net.minecraft.world.level.levelgen.NoiseGeneratorSettings.OVERWORLD);
+                final net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator generator = new net.minecraft.world.level.levelgen.NoiseBasedChunkGenerator(
+                        net.minecraft.world.level.biome.MultiNoiseBiomeSource.createFromPreset(access.registryOrThrow(
+                                net.minecraft.core.registries.Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST).getHolderOrThrow(
+                                net.minecraft.world.level.biome.MultiNoiseBiomeSourceParameterLists.OVERWORLD)), settings);
+                io.github.reiko45.galacticraft.world.OverworldMap.mapWith(generator, net.minecraft.world.level.levelgen.RandomState.create(settings.value(),
+                        access.lookupOrThrow(net.minecraft.core.registries.Registries.NOISE), srv.overworld().getSeed()));
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                final ServerLevel level = srv.overworld();
+                level.setDayTime(6000L);
+                final BlockPos corner = new BlockPos(600, 0, 300);
+                final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(-6, -1, -2), o.offset(6, 6, 8))) {
+                    level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                            net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                }
+                for (int x = -4; x <= 4; x++) {
+                    for (int y = 0; y <= 4; y++) {
+                        level.setBlockAndUpdate(o.offset(x, y, -1), GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+                    }
+                }
+                bigScreen(level, o.offset(-1, 1, 0), 1);
+                p.teleportTo(level, o.getX() + 0.5D, o.getY(), o.getZ() + 5.5D, 180.0F, 5.0F);
+            });
+        });
+        for (int i = 0; i < 10; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the server maps the land round the screen and the Overworld's strip, then the client draws them
+        }
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "display_overworld_map"));
+        // On the Moon: the Overworld turning on a screen (no local map off the Overworld), and the Earth and Moon
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+            if (moon == null) {
+                return;
+            }
+            final ServerPlayer p = tourPlayer(srv);
+            final BlockPos o = new BlockPos(160, surface(moon, 160, 40), 40);
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-6, -1, -2), o.offset(6, 6, 8))) {
+                moon.setBlock(pos, pos.getY() < o.getY() ? GCBlocks.MOON_ROCK.get().defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            for (int x = -4; x <= 4; x++) {
+                for (int y = 0; y <= 4; y++) {
+                    moon.setBlockAndUpdate(o.offset(x, y, -1), GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+                }
+            }
+            bigScreen(moon, o.offset(-2, 1, 0), 1);
+            final BlockPos single = o.offset(2, 2, 0);
+            moon.setBlockAndUpdate(single, GCBlocks.DISPLAY_SCREEN.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            showOnScreen(moon, single, 3);
+            p.teleportTo(moon, o.getX() + 0.5D, o.getY(), o.getZ() + 5.5D, 180.0F, 5.0F);
+        }));
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "display_moon_earth"));
+        // The Moon sky: the Earth overhead, drawn from the Overworld's picture
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            srv.overworld().setDayTime(18000L);
+            p.teleportTo(p.serverLevel(), p.getX(), p.getY(), p.getZ() - 3.0D, 0.0F, -75.0F);
+        }));
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_sky_overworld"));
+        // The galaxy map zoomed in on the Earth
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(new CelestialSelectionScreen()));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                screen.select(net.minecraft.world.level.Level.OVERWORLD);
+                screen.zoomIn(net.minecraft.world.level.Level.OVERWORLD);
+            }
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // the zoom
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "galaxy_map_overworld"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> srv.overworld().setDayTime(6000L));
+        });
+    }
+
+    /** A 2 x 2 Display Screen, facing south, its top left corner block at {@code pos}, joined and showing {@code type}. */
+    private static void bigScreen(ServerLevel level, BlockPos pos, int type) {
+        final net.minecraft.world.level.block.state.BlockState screen = GCBlocks.DISPLAY_SCREEN.get().defaultBlockState()
+                .setValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.FACING, net.minecraft.core.Direction.SOUTH);
+        for (int x = 0; x <= 1; x++) {
+            for (int y = 0; y <= 1; y++) {
+                level.setBlockAndUpdate(pos.offset(x, y, 0), screen);
+            }
+        }
+        for (BlockPos click : new BlockPos[] {pos.offset(1, 0, 0), pos.offset(1, 1, 0), pos.offset(1, 0, 0)}) {
+            if (level.getBlockEntity(click) instanceof io.github.reiko45.galacticraft.block.entity.DisplayScreenBlockEntity tile) {
+                tile.changeChannel();
+            }
+        }
+        showOnScreen(level, pos, type);
     }
 
     /**

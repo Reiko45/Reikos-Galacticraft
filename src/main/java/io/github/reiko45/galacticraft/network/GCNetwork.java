@@ -293,6 +293,7 @@ public final class GCNetwork {
         AirLockNetwork.register(registrar);
         SensorNetwork.register(registrar);
         DisplayNetwork.register(registrar);
+        MapNetwork.register(registrar);
         ChecklistNetwork.register(registrar);
         PlatformNetwork.register(registrar);
         PaintNetwork.register(registrar);

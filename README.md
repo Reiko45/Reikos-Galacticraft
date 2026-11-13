@@ -101,8 +101,8 @@ machines, solar panels and oil processing work. See
   down, and Isothermal Padding.
 * **Base building**: Space Glass (clear, vanilla, strong; plain or tin framed, paintable with the Chromatic
   Applicator), Air Locks that seal when you walk away, Arc Lamps that keep mobs off, Lighting Panels, Grating,
-  concealed redstone and sealable wires and pipes. Display Screens join into big screens showing the Earth, the solar
-  system or a Telemetry Unit's readings; a Communications Dish turns on its post. Sensor Glasses point out ores, mobs
+  concealed redstone and sealable wires and pipes. Display Screens join into big screens showing a map of the land
+  round them (drawn from the world's own terrain), the Earth, the solar system or a Telemetry Unit's readings; a Communications Dish turns on its post. Sensor Glasses point out ores, mobs
   and the leak in a sealed room. A Magnetic Crafting Table remembers its recipe and can be fed by hoppers; a
   Deconstructor takes things apart again; Hydraulic Platforms lift you between floors; an Emergency Post lights the
   dark and holds an Emergency Kit. Also the Compact NASA Workbench, Throwable Meteor Chunks and the Prelaunch
@@ -356,6 +356,14 @@ machines, solar panels and oil processing work. See
 | Carrying a rocket | Carrying a flag | Under a parachute |
 |---|---|---|
 | ![A player crouching with a Tier 1 Rocket held overhead](docs/screenshots/carry_rocket.png) | ![A player standing with both arms up, holding a flag](docs/screenshots/carry_flag.png) | ![A player hanging from an open parachute, both arms up to its strings](docs/screenshots/parachute_arms.png) |
+
+| A Display Screen's map of the land round it | On the Moon: the Overworld turning, and the Earth and Moon |
+|---|---|
+| ![A Display Screen in the Overworld showing a map of the sea and coast round it](docs/screenshots/display_overworld_map.png) | ![Display Screens on the Moon: the Overworld's picture turning, and the Earth with the Moon](docs/screenshots/display_moon_earth.png) |
+
+| The Moon sky's Earth, from the world's own picture | The galaxy map's Earth |
+|---|---|
+| ![The Earth overhead in the Moon sky, drawn from the Overworld's land and sea](docs/screenshots/moon_sky_overworld.png) | ![The galaxy map zoomed in on the Earth, drawn from the Overworld's picture](docs/screenshots/galaxy_map_overworld.png) |
 
 | The settings screen | Its server page |
 |---|---|
