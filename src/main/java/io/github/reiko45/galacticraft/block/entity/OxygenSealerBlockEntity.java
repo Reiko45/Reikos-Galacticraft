@@ -16,6 +16,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.WeakHashMap;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -54,6 +55,9 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
     private boolean lastDisabled;
     private int cooldown = 126;
     private int cooldownTotal = 126;
+    /** Server: where the air got out at the last failed check (1.12.2 threadSeal.leakTrace), for Sensor Glasses. */
+    @Nullable
+    private List<BlockPos> leakTrace;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntities.OXYGEN_SEALER.get(), pos, state, 3, 10_000, UNSEALED_OXYGEN_PER_TICK, 32_000.0F, 5.0F);
@@ -66,9 +70,11 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
     @Override
     public void onLoad() {
         super.onLoad();
-        if (this.level != null && !this.level.isClientSide) {
+        if (this.level != null) {
             LOADED.computeIfAbsent(this.level, l -> new LinkedHashSet<>()).add(this);
-            this.cooldown = this.cooldownTotal = 126 + countEntities;
+            if (!this.level.isClientSide) {
+                this.cooldown = this.cooldownTotal = 126 + countEntities;
+            }
         }
     }
 
@@ -257,6 +263,30 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
 
     public boolean isSealed() {
         return this.sealed;
+    }
+
+    public void setLeakTrace(@Nullable List<BlockPos> leakTrace) {
+        this.leakTrace = leakTrace;
+    }
+
+    /** The leak to show, or nothing while sealed (1.12.2 sendUpdateToClient, C_LEAK_DATA). */
+    public List<BlockPos> leakTrace() {
+        return this.sealed || this.leakTrace == null ? List.of() : this.leakTrace;
+    }
+
+    /** 1.12.2 getNearestSealer: the closest loaded sealer within 96 blocks, on either side. */
+    @Nullable
+    public static OxygenSealerBlockEntity nearest(Level level, BlockPos pos) {
+        OxygenSealerBlockEntity nearest = null;
+        double best = 96.0D * 96.0D;
+        for (OxygenSealerBlockEntity sealer : LOADED.getOrDefault(level, Set.of())) {
+            final double distance = sealer.getBlockPos().distSqr(pos);
+            if (distance < best && !sealer.isRemoved()) {
+                best = distance;
+                nearest = sealer;
+            }
+        }
+        return nearest;
     }
 
     /** 1.12.2 getScaledThreadCooldown(25) while active. */

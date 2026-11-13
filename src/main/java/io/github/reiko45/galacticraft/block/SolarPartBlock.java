@@ -33,7 +33,7 @@ public class SolarPartBlock extends Block implements EntityBlock {
     private static final VoxelShape PANEL = Block.box(0, 3.2, 0, 16, 12.8, 16);
 
     public enum Part implements StringRepresentable {
-        POLE, PANEL, WORKBENCH;
+        POLE, PANEL, WORKBENCH, DISH;
 
         @Override
         public String getSerializedName() {
@@ -66,7 +66,7 @@ public class SolarPartBlock extends Block implements EntityBlock {
         return switch (state.getValue(PART)) {
             case POLE -> POLE;
             case PANEL -> PANEL;
-            case WORKBENCH -> net.minecraft.world.phys.shapes.Shapes.block();
+            case WORKBENCH, DISH -> net.minecraft.world.phys.shapes.Shapes.block();
         };
     }
 
@@ -110,7 +110,8 @@ public class SolarPartBlock extends Block implements EntityBlock {
         if (!state.is(newState.getBlock()) && !level.isClientSide && level.getBlockEntity(pos) instanceof SolarPartBlockEntity part) {
             final BlockPos main = part.mainPos();
             if (main != null && (level.getBlockState(main).getBlock() instanceof SolarPanelBlock
-                    || level.getBlockState(main).getBlock() instanceof NasaWorkbenchBlock)) {
+                    || level.getBlockState(main).getBlock() instanceof NasaWorkbenchBlock
+                    || level.getBlockState(main).getBlock() instanceof CommsDishBlock)) {
                 level.destroyBlock(main, true);
             }
         }

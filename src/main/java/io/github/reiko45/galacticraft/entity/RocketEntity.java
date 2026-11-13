@@ -39,7 +39,7 @@ import net.minecraft.world.phys.Vec3;
  * the rider reaches space and picks a destination as far as the rocket's tier allows. Out of fuel it falls back and
  * crashes (explosion 5, 81 damage to the rider). Hitting it damages it; enough damage drops it as an item.
  */
-public abstract class RocketEntity extends Entity implements Refuelable, CargoCarrier {
+public abstract class RocketEntity extends Entity implements Refuelable, CargoCarrier, Telemetry {
     public static final int PRE_LAUNCH_WAIT = 400;
     public static final double EXIT_HEIGHT = 1200.0D;
 
@@ -465,5 +465,34 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
             items.set(i, this.cargo.getItem(i));
         }
         ContainerHelper.saveAllItems(tag, items, registryAccess());
+    }
+
+    // ------------------------------------------------------------------ telemetry (1.12.2 EntitySpaceshipBase)
+
+    /** Countdown (the full wait while still on the pad), height, speed (already set), fuel %, pitch. */
+    @Override
+    public void transmitData(int[] data) {
+        data[0] = phase() == Phase.UNIGNITED ? preLaunchWait() : phase() == Phase.IGNITED ? countdown() : 0;
+        data[1] = (int) getY();
+        data[3] = fuelCapacity() <= 0 ? 0 : fuel() * 100 / fuelCapacity();
+        data[4] = (int) getXRot();
+    }
+
+    @Override
+    public void receiveData(int[] data, net.minecraft.network.chat.Component[] lines) {
+        final int countdown = data[0];
+        lines[0] = net.minecraft.network.chat.Component.empty();
+        lines[1] = countdown == preLaunchWait() ? net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.rocket.on_launchpad")
+                : countdown > 0 ? net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.rocket.countdown").append(": " + countdown / 20)
+                : net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.rocket.launched");
+        lines[2] = net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.rocket.height").append(": " + data[1]);
+        lines[3] = io.github.reiko45.galacticraft.client.screen.display.GameScreenText.speed(data[2]);
+        lines[4] = net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.message.fuel").append(": " + data[3] + "%");
+    }
+
+    @Override
+    public void adjustDisplay(int[] data, com.mojang.blaze3d.vertex.PoseStack poseStack) {
+        poseStack.mulPose(com.mojang.math.Axis.XN.rotationDegrees(data[4]));
+        poseStack.translate(0.0F, getBbHeight() / 4, 0.0F);
     }
 }

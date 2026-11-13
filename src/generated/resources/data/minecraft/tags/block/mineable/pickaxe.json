@@ -136,6 +136,10 @@
     "galacticraftcore:cargo_loader",
     "galacticraftcore:cargo_unloader",
     "galacticraftcore:nasa_workbench",
+    "galacticraftcore:compact_nasa_workbench",
+    "galacticraftcore:magnetic_crafting_table",
+    "galacticraftcore:telemetry",
+    "galacticraftcore:comms_dish",
     "galacticraftcore:nasa_workbench_part"
   ]
 }

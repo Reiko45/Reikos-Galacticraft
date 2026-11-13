@@ -70,7 +70,8 @@ public final class GCBlockEntities {
             SolarPanelBlockEntity::advanced, GCBlocks.ADVANCED_SOLAR_PANEL);
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<SolarPartBlockEntity>> SOLAR_PART = BLOCK_ENTITIES.register("solar_panel_part",
-            () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get(), GCBlocks.NASA_WORKBENCH_PART.get()).build(null));
+            () -> BlockEntityType.Builder.of(SolarPartBlockEntity::new, GCBlocks.SOLAR_PART.get(), GCBlocks.NASA_WORKBENCH_PART.get(),
+                    GCBlocks.COMMS_DISH_PART.get()).build(null));
 
     public static final Supplier<BlockEntityType<RefineryBlockEntity>> REFINERY = machine("refinery",
             RefineryBlockEntity::new, GCBlocks.REFINERY);
@@ -136,6 +137,22 @@ public final class GCBlockEntities {
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity>> SOLAR_ARRAY_CONTROLLER = machine(
             "solar_array_controller", io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity::new, GCBlocks.SOLAR_ARRAY_CONTROLLER);
 
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity>> TELEMETRY = BLOCK_ENTITIES.register(
+            "telemetry", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity::new,
+                    GCBlocks.TELEMETRY.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.DisplayScreenBlockEntity>> DISPLAY_SCREEN = BLOCK_ENTITIES.register(
+            "display_screen", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.DisplayScreenBlockEntity::new,
+                    GCBlocks.DISPLAY_SCREEN.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.CommsDishBlockEntity>> COMMS_DISH = BLOCK_ENTITIES.register(
+            "comms_dish", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.CommsDishBlockEntity::new,
+                    GCBlocks.COMMS_DISH.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.MagneticCraftingTableBlockEntity>> MAGNETIC_CRAFTING_TABLE = BLOCK_ENTITIES.register(
+            "magnetic_crafting_table", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.MagneticCraftingTableBlockEntity::new,
+                    GCBlocks.MAGNETIC_CRAFTING_TABLE.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlockEntity>> AIR_LOCK_CONTROLLER = BLOCK_ENTITIES.register(
             "air_lock_controller", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlockEntity::new,

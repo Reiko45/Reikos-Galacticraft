@@ -1,0 +1,244 @@
+{
+  "variants": {
+    "down=false,facing=east,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 270
+    },
+    "down=false,facing=east,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_u",
+      "y": 270
+    },
+    "down=false,facing=east,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_r",
+      "y": 270
+    },
+    "down=false,facing=east,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ur",
+      "y": 270
+    },
+    "down=false,facing=east,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_l",
+      "y": 270
+    },
+    "down=false,facing=east,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_ul",
+      "y": 270
+    },
+    "down=false,facing=east,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 270
+    },
+    "down=false,facing=east,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ulr",
+      "y": 270
+    },
+    "down=false,facing=north,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 180
+    },
+    "down=false,facing=north,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_u",
+      "y": 180
+    },
+    "down=false,facing=north,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_r",
+      "y": 180
+    },
+    "down=false,facing=north,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ur",
+      "y": 180
+    },
+    "down=false,facing=north,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_l",
+      "y": 180
+    },
+    "down=false,facing=north,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_ul",
+      "y": 180
+    },
+    "down=false,facing=north,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 180
+    },
+    "down=false,facing=north,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ulr",
+      "y": 180
+    },
+    "down=false,facing=south,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen"
+    },
+    "down=false,facing=south,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_u"
+    },
+    "down=false,facing=south,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_r"
+    },
+    "down=false,facing=south,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ur"
+    },
+    "down=false,facing=south,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_l"
+    },
+    "down=false,facing=south,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_ul"
+    },
+    "down=false,facing=south,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen"
+    },
+    "down=false,facing=south,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ulr"
+    },
+    "down=false,facing=west,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 90
+    },
+    "down=false,facing=west,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_u",
+      "y": 90
+    },
+    "down=false,facing=west,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_r",
+      "y": 90
+    },
+    "down=false,facing=west,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ur",
+      "y": 90
+    },
+    "down=false,facing=west,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_l",
+      "y": 90
+    },
+    "down=false,facing=west,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_ul",
+      "y": 90
+    },
+    "down=false,facing=west,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 90
+    },
+    "down=false,facing=west,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_ulr",
+      "y": 90
+    },
+    "down=true,facing=east,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_d",
+      "y": 270
+    },
+    "down=true,facing=east,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 270
+    },
+    "down=true,facing=east,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dr",
+      "y": 270
+    },
+    "down=true,facing=east,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dur",
+      "y": 270
+    },
+    "down=true,facing=east,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_dl",
+      "y": 270
+    },
+    "down=true,facing=east,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_dul",
+      "y": 270
+    },
+    "down=true,facing=east,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dlr",
+      "y": 270
+    },
+    "down=true,facing=east,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dulr",
+      "y": 270
+    },
+    "down=true,facing=north,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_d",
+      "y": 180
+    },
+    "down=true,facing=north,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 180
+    },
+    "down=true,facing=north,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dr",
+      "y": 180
+    },
+    "down=true,facing=north,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dur",
+      "y": 180
+    },
+    "down=true,facing=north,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_dl",
+      "y": 180
+    },
+    "down=true,facing=north,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_dul",
+      "y": 180
+    },
+    "down=true,facing=north,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dlr",
+      "y": 180
+    },
+    "down=true,facing=north,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dulr",
+      "y": 180
+    },
+    "down=true,facing=south,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_d"
+    },
+    "down=true,facing=south,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen"
+    },
+    "down=true,facing=south,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dr"
+    },
+    "down=true,facing=south,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dur"
+    },
+    "down=true,facing=south,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_dl"
+    },
+    "down=true,facing=south,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_dul"
+    },
+    "down=true,facing=south,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dlr"
+    },
+    "down=true,facing=south,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dulr"
+    },
+    "down=true,facing=west,left=false,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_d",
+      "y": 90
+    },
+    "down=true,facing=west,left=false,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen",
+      "y": 90
+    },
+    "down=true,facing=west,left=false,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dr",
+      "y": 90
+    },
+    "down=true,facing=west,left=false,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dur",
+      "y": 90
+    },
+    "down=true,facing=west,left=true,right=false,up=false": {
+      "model": "galacticraftcore:block/display_screen_dl",
+      "y": 90
+    },
+    "down=true,facing=west,left=true,right=false,up=true": {
+      "model": "galacticraftcore:block/display_screen_dul",
+      "y": 90
+    },
+    "down=true,facing=west,left=true,right=true,up=false": {
+      "model": "galacticraftcore:block/display_screen_dlr",
+      "y": 90
+    },
+    "down=true,facing=west,left=true,right=true,up=true": {
+      "model": "galacticraftcore:block/display_screen_dulr",
+      "y": 90
+    }
+  }
+}

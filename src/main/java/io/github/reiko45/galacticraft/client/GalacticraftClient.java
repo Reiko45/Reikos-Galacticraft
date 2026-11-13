@@ -82,6 +82,7 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::registerGuiLayers);
         modBus.addListener(GalacticraftClient::addPlayerLayers);
         modBus.addListener(VehicleControls::registerKeys);
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event) -> event.register(SensorGlasses.TOGGLE));
         modBus.addListener(GalacticraftClient::registerBlockColors);
         modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
@@ -90,12 +91,15 @@ public final class GalacticraftClient {
                     io.github.reiko45.galacticraft.client.particle.AcidVaporParticle.Provider::new);
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.ACID_EXHAUST.get(),
                     io.github.reiko45.galacticraft.client.particle.AcidExhaustParticle.Provider::new);
+            event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.OXYGEN.get(),
+                    io.github.reiko45.galacticraft.client.particle.OxygenParticle.Provider::new);
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_UP.get(),
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, false));
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.TELEPAD_DOWN.get(),
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, true));
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
+        NeoForge.EVENT_BUS.addListener(SensorGlasses::onClientTick);
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onClientTick);
         NeoForge.EVENT_BUS.addListener(FootprintRenderer::onRenderLevel);
@@ -151,6 +155,8 @@ public final class GalacticraftClient {
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(GCBlockEntities.BASIC_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ARC_LAMP.get(), io.github.reiko45.galacticraft.client.render.ArcLampRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.DISPLAY_SCREEN.get(), io.github.reiko45.galacticraft.client.render.DisplayScreenRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.COMMS_DISH.get(), io.github.reiko45.galacticraft.client.render.CommsDishRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.BEAM_REFLECTOR.get(), io.github.reiko45.galacticraft.client.render.BeamRenderers.Reflector::new);
@@ -199,6 +205,19 @@ public final class GalacticraftClient {
                 renderer.addLayer(new GearLayer(renderer, event.getEntityModels()));
             }
         }
+        // 1.12.2: the mobs whose renderers drew the Sensor Glasses view
+        for (net.minecraft.world.entity.EntityType<?> type : java.util.List.of(GCEntities.EVOLVED_ZOMBIE.get(), GCEntities.EVOLVED_SKELETON.get(),
+                GCEntities.EVOLVED_SPIDER.get(), GCEntities.EVOLVED_CREEPER.get(), GCEntities.EVOLVED_ENDERMAN.get(), GCEntities.ALIEN_VILLAGER.get(),
+                GCEntities.SLIMELING.get(), GCEntities.SLUDGELING.get(), GCEntities.JUICER.get())) {
+            addSensorLayer(event.getRenderer(type));
+        }
+    }
+
+    @SuppressWarnings({"unchecked", "rawtypes"})
+    private static void addSensorLayer(@javax.annotation.Nullable net.minecraft.client.renderer.entity.EntityRenderer<?> renderer) {
+        if (renderer instanceof net.minecraft.client.renderer.entity.LivingEntityRenderer living) {
+            living.addLayer(new io.github.reiko45.galacticraft.client.render.entity.SensorMobLayer(living));
+        }
     }
 
     /** 1.12.2 ClientProxyCore block colours: the Fallen Meteor glows orange while hot. */
@@ -214,6 +233,8 @@ public final class GalacticraftClient {
     }
 
     private static void registerGuiLayers(RegisterGuiLayersEvent event) {
+        // 1.12.2 renderHelmetOverlay ran with the pumpkin blur, under the rest of the HUD
+        event.registerAbove(VanillaGuiLayers.CAMERA_OVERLAYS, SensorGlasses.LAYER, SensorGlasses::render);
         event.registerAbove(VanillaGuiLayers.HOTBAR, OxygenHud.TANKS_LAYER, OxygenHud::renderTanks);
         event.registerAbove(OxygenHud.TANKS_LAYER, OxygenHud.WARNING_LAYER, OxygenHud::renderWarning);
         event.registerAbove(OxygenHud.WARNING_LAYER, VehicleHud.LAYER, VehicleHud::render);
@@ -222,6 +243,9 @@ public final class GalacticraftClient {
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
         event.register(FluidPipeRenderer.PULL_MODEL);
         event.register(io.github.reiko45.galacticraft.client.render.ArcLampRenderer.LAMP);
+        event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.SUPPORT);
+        event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.FORK);
+        event.register(io.github.reiko45.galacticraft.client.render.CommsDishRenderer.DISH);
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);
@@ -370,6 +394,7 @@ public final class GalacticraftClient {
 
     private static void registerScreens(RegisterMenuScreensEvent event) {
         event.register(GCMenus.COAL_GENERATOR.get(), CoalGeneratorScreen::new);
+        event.register(GCMenus.MAGNETIC_CRAFTING.get(), io.github.reiko45.galacticraft.client.screen.MagneticCraftingScreen::new);
         event.register(GCMenus.CRASHED_PROBE.get(), io.github.reiko45.galacticraft.client.screen.CrashedProbeScreen::new);
         event.register(GCMenus.ENERGY_STORAGE.get(), EnergyStorageScreen::new);
         event.register(GCMenus.COMPRESSOR.get(), CompressorScreen::new);

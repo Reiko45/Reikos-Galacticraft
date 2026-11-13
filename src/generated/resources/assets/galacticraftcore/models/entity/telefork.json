@@ -1,0 +1,5 @@
+{
+  "flip_v": true,
+  "loader": "neoforge:obj",
+  "model": "galacticraftcore:models/entity/telefork.obj"
+}

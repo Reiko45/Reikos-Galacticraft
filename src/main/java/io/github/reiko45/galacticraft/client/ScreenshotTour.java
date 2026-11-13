@@ -1773,8 +1773,9 @@ public final class ScreenshotTour {
         addVillageSteps();
         addSpaceRaceSteps();
         addAsteroidMachineSteps();
-        this.lastGroup = this.extras.size();
         addVenusSteps();
+        this.lastGroup = this.extras.size();
+        addSpaceBaseSteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2408,6 +2409,170 @@ public final class ScreenshotTour {
         }));
         this.extras.add((minecraft, srv) -> shoot(minecraft, "solar_array_gui"));
         this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).closeContainer()));
+    }
+
+    @org.jetbrains.annotations.Nullable
+    private BlockPos baseSpot;
+    @org.jetbrains.annotations.Nullable
+    private BlockPos baseTable;
+
+    /** Click a screen until it shows {@code type}. */
+    private static void showOnScreen(ServerLevel level, BlockPos pos, int type) {
+        for (int i = 0; i < 6 && level.getBlockEntity(pos) instanceof io.github.reiko45.galacticraft.block.entity.DisplayScreenBlockEntity screen
+                && screen.imageType != type; i++) {
+            screen.changeChannel();
+        }
+    }
+
+    /**
+     * Phase 7g part 2, on a stone yard in the Overworld: a 3 x 2 Display Screen (joined the 1.12.2 way, by clicking)
+     * showing the solar system, single screens with the other pictures (one of them the telemetry of a pig, with its
+     * Telemetry Unit), the Communications Dish, the Compact NASA Workbench and the Magnetic Crafting Table (and its
+     * screen, a recipe remembered); then, wearing Sensor Glasses, a wall of ores and an alien villager.
+     */
+    private void addSpaceBaseSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final ServerLevel level = srv.overworld();
+            level.setDayTime(6000L);
+            final BlockPos corner = p.blockPosition().offset(300, 0, 300);
+            final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+            for (BlockPos pos : BlockPos.betweenClosed(o.offset(-12, -1, -6), o.offset(16, 12, 24))) {
+                level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                        net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+            }
+            this.baseSpot = o;
+            // a wall to hang screens on, facing south
+            for (int x = -10; x <= 6; x++) {
+                for (int y = 0; y <= 3; y++) {
+                    level.setBlockAndUpdate(o.offset(x, y, -1), GCBlocks.TIN_DECORATION_BLOCK_1.get().defaultBlockState());
+                }
+            }
+            final net.minecraft.world.level.block.state.BlockState screen = GCBlocks.DISPLAY_SCREEN.get().defaultBlockState()
+                    .setValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.FACING, net.minecraft.core.Direction.SOUTH);
+            // the big screen: x 0..2 (its own left is east), y 1..2; joined as 1.12.2 players did
+            for (int x = 0; x <= 2; x++) {
+                for (int y = 1; y <= 2; y++) {
+                    level.setBlockAndUpdate(o.offset(x, y, 0), screen);
+                }
+            }
+            final java.util.function.Consumer<BlockPos> click = pos -> {
+                if (level.getBlockEntity(pos) instanceof io.github.reiko45.galacticraft.block.entity.DisplayScreenBlockEntity tile) {
+                    tile.changeChannel();
+                }
+            };
+            click.accept(o.offset(2, 1, 0)); // bottom pair (screen right is west)
+            click.accept(o.offset(2, 2, 0)); // top pair
+            click.accept(o.offset(2, 1, 0)); // the two pairs: 2 x 2
+            click.accept(o.offset(0, 1, 0)); // the third column on its own
+            click.accept(o.offset(1, 1, 0)); // and onto the 2 x 2
+            showOnScreen(level, o.offset(1, 1, 0), 2);
+            // single screens, one block apart, with pictures 0, 1, 3, 4 and 5
+            final int[] types = {0, 1, 3, 4, 5};
+            for (int i = 0; i < types.length; i++) {
+                final BlockPos single = o.offset(-2 - 2 * i, 1, 0);
+                level.setBlockAndUpdate(single, screen);
+                showOnScreen(level, single, types[i]);
+            }
+            // the telemetry unit beside the last one, linked to a pig in a pen
+            final BlockPos telemetry = o.offset(-9, 0, 1);
+            level.setBlockAndUpdate(telemetry, GCBlocks.TELEMETRY.get().defaultBlockState());
+            final net.minecraft.world.entity.animal.Pig pig = net.minecraft.world.entity.EntityType.PIG.create(level);
+            if (pig != null) {
+                pig.moveTo(o.getX() - 9.5D, o.getY(), o.getZ() + 4.5D, 0.0F, 0.0F);
+                pig.setNoAi(true);
+                level.addFreshEntity(pig);
+                if (level.getBlockEntity(telemetry) instanceof io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity unit) {
+                    unit.addTrackedEntity(pig.getUUID());
+                }
+            }
+            // the dish, the compact workbench and the magnetic table
+            final BlockPos dish = o.offset(10, 0, 8);
+            level.setBlockAndUpdate(dish, GCBlocks.COMMS_DISH.get().defaultBlockState());
+            io.github.reiko45.galacticraft.block.CommsDishBlock.placeParts(level, dish);
+            level.setBlockAndUpdate(o.offset(4, 0, 4), GCBlocks.COMPACT_NASA_WORKBENCH.get().defaultBlockState()
+                    .setValue(net.minecraft.world.level.block.HorizontalDirectionalBlock.FACING, net.minecraft.core.Direction.SOUTH));
+            final BlockPos table = o.offset(2, 0, 4);
+            level.setBlockAndUpdate(table, GCBlocks.MAGNETIC_CRAFTING_TABLE.get().defaultBlockState());
+            if (level.getBlockEntity(table) instanceof io.github.reiko45.galacticraft.block.entity.MagneticCraftingTableBlockEntity crafting) {
+                crafting.matrix().setItem(1, new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 12));
+                crafting.matrix().setItem(4, new ItemStack(net.minecraft.world.item.Items.OAK_PLANKS, 12));
+                crafting.updateMemory(crafting.result());
+            }
+            this.baseTable = table;
+            lookFrom(p, level, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(-1, 4, 13)), net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 2, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "display_screens"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.baseSpot != null) {
+                lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(this.baseSpot.offset(-6, 2, 4)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.baseSpot.offset(-6, 1, 0)));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "display_screen_pictures"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.baseSpot != null) {
+                lookFrom(tourPlayer(srv), srv.overworld(), new net.minecraft.world.phys.Vec3(this.baseSpot.getX() - 9.5D, this.baseSpot.getY() + 1.5D,
+                        this.baseSpot.getZ() + 2.2D), net.minecraft.world.phys.Vec3.atCenterOf(this.baseSpot.offset(-10, 1, 0)));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "telemetry_screen"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.baseSpot != null) {
+                lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(this.baseSpot.offset(-2, 5, 20)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.baseSpot.offset(8, 4, 6)));
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "comms_dish_and_workbench"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            if (this.baseTable != null && srv.overworld().getBlockEntity(this.baseTable)
+                    instanceof io.github.reiko45.galacticraft.block.entity.MagneticCraftingTableBlockEntity crafting) {
+                lookFrom(tourPlayer(srv), srv.overworld(), net.minecraft.world.phys.Vec3.atCenterOf(this.baseTable.offset(0, 2, 2)),
+                        net.minecraft.world.phys.Vec3.atCenterOf(this.baseTable));
+                tourPlayer(srv).openMenu(crafting);
+            }
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "magnetic_crafting_table_gui"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            if (this.baseSpot == null) {
+                return;
+            }
+            final ServerLevel level = srv.overworld();
+            // a wall of ores a few blocks in front, and someone standing by it
+            final BlockPos wall = this.baseSpot.offset(-4, 0, 14);
+            final net.minecraft.world.level.block.Block[] ores = {Blocks.COPPER_ORE, GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(),
+                    GCBlocks.SILICON_ORE.get(), Blocks.STONE};
+            for (int x = 0; x < 5; x++) {
+                for (int y = 0; y < 3; y++) {
+                    level.setBlockAndUpdate(wall.offset(x, y, 0), ores[(x + y) % ores.length].defaultBlockState());
+                }
+            }
+            // (an alien villager: monsters vanish on the tour world's Peaceful)
+            final net.minecraft.world.entity.Mob alien = io.github.reiko45.galacticraft.registry.GCEntities.ALIEN_VILLAGER.get().create(level);
+            if (alien != null) {
+                alien.moveTo(wall.getX() + 2.0D, wall.getY(), wall.getZ() + 1.4D, 160.0F, 0.0F);
+                alien.setYHeadRot(160.0F);
+                alien.setYBodyRot(160.0F);
+                alien.setNoAi(true);
+                alien.setPersistenceRequired();
+                level.addFreshEntity(alien);
+            }
+            p.setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, new ItemStack(GCItems.SENSOR_GLASSES.get()));
+            // 1.12.2 looks for ores only within 4 blocks of the player's feet
+            lookFrom(p, level, net.minecraft.world.phys.Vec3.atCenterOf(wall.offset(1, 1, 3)), net.minecraft.world.phys.Vec3.atCenterOf(wall.offset(3, 1, 0)));
+        }));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.FIRST_PERSON));
+        this.extras.add((minecraft, srv) -> {
+        }); // the ores are found once a second
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "sensor_glasses"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).setItemSlot(net.minecraft.world.entity.EquipmentSlot.HEAD, ItemStack.EMPTY)));
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */

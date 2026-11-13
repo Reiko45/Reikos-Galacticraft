@@ -72,6 +72,18 @@
     {
       "type": "single",
       "resource": "galacticraftcore:misc/underoil"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/teledish"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/telefork"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:model/telesupport"
     }
   ]
 }

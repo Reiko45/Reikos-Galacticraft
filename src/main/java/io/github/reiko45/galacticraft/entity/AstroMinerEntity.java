@@ -70,7 +70,7 @@ import org.jetbrains.annotations.Nullable;
  * portals, rails, walkways, block entities, crops, lava sources, protected areas). It only works while its owner is
  * online, and keeps its chunk loaded while it does.
  */
-public class AstroMinerEntity extends Entity {
+public class AstroMinerEntity extends Entity implements Telemetry {
     public static final int MINE_LENGTH = 24;
     public static final int MINE_LENGTH_AST = 12;
     public static final int MAX_ENERGY = 12000;
@@ -1202,5 +1202,39 @@ public class AstroMinerEntity extends Entity {
     /** For tests: the points still to mine. */
     public List<BlockPos> minePoints() {
         return new ArrayList<>(this.minePoints);
+    }
+
+    // ------------------------------------------------------------------ telemetry (1.12.2 transmitData / receiveData)
+
+    @Override
+    public void transmitData(int[] data) {
+        data[0] = (int) getX();
+        data[1] = (int) getY();
+        data[2] = (int) getZ();
+        data[3] = this.energyLevel;
+        data[4] = this.aiState;
+    }
+
+    @Override
+    public void receiveData(int[] data, net.minecraft.network.chat.Component[] lines) {
+        lines[1] = net.minecraft.network.chat.Component.literal("x: " + data[0]);
+        lines[2] = net.minecraft.network.chat.Component.literal("y: " + data[1]);
+        lines[3] = net.minecraft.network.chat.Component.literal("z: " + data[2]);
+        lines[4] = net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.energy_storage.desc.1").append(": " + data[3] / 120 + "%");
+        lines[0] = net.minecraft.network.chat.Component.translatable(switch (data[4]) {
+            case AISTATE_STUCK -> "gui.galacticraftcore.message.no_energy";
+            case AISTATE_ATBASE -> "gui.galacticraftcore.miner.docked";
+            case AISTATE_TRAVELLING -> "gui.galacticraftcore.miner.travelling";
+            case AISTATE_MINING -> "gui.galacticraftcore.miner.mining";
+            case AISTATE_RETURNING -> "gui.galacticraftcore.miner.returning";
+            case AISTATE_DOCKING -> "gui.galacticraftcore.miner.docking";
+            case AISTATE_OFFLINE -> "gui.galacticraftcore.miner.offline";
+            default -> "";
+        });
+    }
+
+    @Override
+    public void adjustDisplay(int[] data, com.mojang.blaze3d.vertex.PoseStack poseStack) {
+        poseStack.scale(0.9F, 0.9F, 0.9F);
     }
 }

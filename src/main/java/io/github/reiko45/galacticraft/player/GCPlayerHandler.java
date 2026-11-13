@@ -63,6 +63,7 @@ public final class GCPlayerHandler {
         checkOxygen(player, data, needsOxygen(player, data));
         Thermal.check(player, data);
         checkShield(player, data);
+        io.github.reiko45.galacticraft.block.entity.TelemetryBlockEntity.frequencyModuleTick(player);
         sendState(player, data);
         if (data.takeGearChanged()) {
             broadcastGear(player, data);

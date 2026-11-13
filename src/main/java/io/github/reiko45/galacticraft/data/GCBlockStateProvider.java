@@ -183,6 +183,28 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .modelLocation(modLoc("models/block/nasa_workbench.obj")).flipV(true).end()
                 .texture("particle", tex("assembly"));
         simpleBlock(GCBlocks.NASA_WORKBENCH.get(), workbench);
+        horizontalBlock(GCBlocks.COMPACT_NASA_WORKBENCH.get(), models().getExistingFile(modLoc("block/compact_nasa_workbench")));
+        itemModels().withExistingParent("compact_nasa_workbench", modLoc("block/compact_nasa_workbench"));
+        // 1.12.2 magnetic_table blockstate: the top faces the way it's turned
+        final ModelFile magnetic = models().cube("magnetic_crafting_table", tex("magnetic_crafting_table_base"), tex("magnetic_crafting_table_top"),
+                tex("magnetic_crafting_table_side"), tex("magnetic_crafting_table_side"), tex("magnetic_crafting_table_side"), tex("magnetic_crafting_table_side"))
+                .texture("particle", tex("magnetic_crafting_table_top"));
+        getVariantBuilder(GCBlocks.MAGNETIC_CRAFTING_TABLE.get()).forAllStates(state -> {
+            final net.minecraft.core.Direction facing = state.getValue(io.github.reiko45.galacticraft.block.MagneticCraftingTableBlock.FACING);
+            final int x = switch (facing) {
+                case DOWN -> 180;
+                case UP -> 0;
+                default -> 90;
+            };
+            final int y = switch (facing) {
+                case SOUTH -> 180;
+                case WEST -> 270;
+                case EAST -> 90;
+                default -> 0;
+            };
+            return net.neoforged.neoforge.client.model.generators.ConfiguredModel.builder().modelFile(magnetic).rotationX(x).rotationY(y).build();
+        });
+        itemModels().withExistingParent("magnetic_crafting_table", modLoc("block/magnetic_crafting_table"));
         itemModels().withExistingParent("nasa_workbench", modLoc("block/nasa_workbench")).transforms()
                 .transform(ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -3.5F, 0).scale(0.18F).end()
                 .transform(ItemDisplayContext.GROUND).translation(0, 1, 0).scale(0.12F).end()
@@ -459,6 +481,42 @@ public class GCBlockStateProvider extends BlockStateProvider {
         }
         simpleBlock(GCBlocks.BRIGHT_BREATHABLE_AIR.get(), models().getBuilder("bright_breathable_air").texture("particle", tex("fluids/oxygen_gas")));
         models().getBuilder("entity/arclamp_metal").customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/entity/arclamp_metal.obj")).flipV(true).end();
+        displays();
+    }
+
+    /**
+     * The Telemetry Unit (1.12.2 telemetry_model), the Display Screen (1.12.2 view_screen: a frame model per set of
+     * joined edges, turned to the facing; 1.12.2 left its up-and-down and left-and-right middles unturned, so they
+     * are turned here too) and the Communications Dish base (its dish is drawn by CommsDishRenderer).
+     */
+    private void displays() {
+        simpleBlock(GCBlocks.TELEMETRY.get(), models().cubeAll("telemetry", tex("telemetry")));
+        itemModels().withExistingParent("telemetry", modLoc("block/telemetry"));
+        getVariantBuilder(GCBlocks.DISPLAY_SCREEN.get()).forAllStates(state -> {
+            final boolean up = state.getValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.UP);
+            final boolean down = state.getValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.DOWN);
+            final boolean left = state.getValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.LEFT);
+            final boolean right = state.getValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.RIGHT);
+            String name = (down ? "d" : "") + (up ? "u" : "") + (left ? "l" : "") + (right ? "r" : "");
+            if (name.equals("du") || name.equals("lr")) {
+                name = "";
+            }
+            final int y = switch (state.getValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.FACING)) {
+                case WEST -> 90;
+                case NORTH -> 180;
+                case EAST -> 270;
+                default -> 0;
+            };
+            return net.neoforged.neoforge.client.model.generators.ConfiguredModel.builder()
+                    .modelFile(models().getExistingFile(modLoc(name.isEmpty() ? "block/display_screen" : "block/display_screen_" + name))).rotationY(y).build();
+        });
+        itemModels().withExistingParent("display_screen", modLoc("block/display_screen"));
+        simpleBlock(GCBlocks.COMMS_DISH.get(), models().cubeAll("comms_dish", tex("comms_dish")));
+        itemModels().withExistingParent("comms_dish", mcLoc("item/generated")).texture("layer0", modLoc("item/comms_dish"));
+        simpleBlock(GCBlocks.COMMS_DISH_PART.get(), models().getBuilder("comms_dish_part").texture("particle", tex("comms_dish")));
+        for (String part : new String[] {"telesupport", "telefork", "teledish"}) {
+            models().getBuilder("entity/" + part).customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/entity/" + part + ".obj")).flipV(true).end();
+        }
     }
 
     /**

@@ -23,6 +23,9 @@ public final class GCCapabilities {
         for (Supplier<? extends BlockEntityType<? extends MachineBlockEntity>> type : GCBlockEntities.machineTypes()) {
             registerMachine(event, type.get());
         }
+        // 1.12.2 TileEntityCrafting was an ISidedInventory: hoppers fill the grid and take the results
+        event.registerBlockEntity(Capabilities.ItemHandler.BLOCK, GCBlockEntities.MAGNETIC_CRAFTING_TABLE.get(),
+                (table, side) -> new net.neoforged.neoforge.items.wrapper.SidedInvWrapper(table, side));
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.REFINERY.get(), RefineryBlockEntity::fluidHandler);
         event.registerBlockEntity(Capabilities.FluidHandler.BLOCK, GCBlockEntities.GAS_LIQUEFIER.get(),
                 io.github.reiko45.galacticraft.block.entity.GasLiquefierBlockEntity::fluidHandler);

@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/magnetic_crafting_table_base",
+    "east": "galacticraftcore:block/magnetic_crafting_table_side",
+    "north": "galacticraftcore:block/magnetic_crafting_table_side",
+    "particle": "galacticraftcore:block/magnetic_crafting_table_top",
+    "south": "galacticraftcore:block/magnetic_crafting_table_side",
+    "up": "galacticraftcore:block/magnetic_crafting_table_top",
+    "west": "galacticraftcore:block/magnetic_crafting_table_side"
+  }
+}

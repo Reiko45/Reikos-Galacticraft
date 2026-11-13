@@ -574,7 +574,32 @@
     "block/lighting_panel_linear": "blocks/panel_light_linear",
     "block/lighting_panel_sf": "blocks/panel_light_sf",
     "block/lighting_panel_sfdiag": "blocks/panel_light_sfdiag",
-    "gui/air_lock_controller": "gui/air_lock_controller"
+    "gui/air_lock_controller": "gui/air_lock_controller",
+    "item/sensor_glasses": "items/sensor_glasses",
+    "models/armor/sensor_glasses_layer_1": "model/armor/sensor_1",
+    "gui/sensor_glasses": "gui/hud",
+    "gui/sensor_indicator": "gui/indicator",
+    "entity/sensor_mobs": "blocks/sensor_mobs",
+    "block/compact_nasa_workbench_side": "blocks/workbench/side",
+    "block/compact_nasa_workbench_blueprint": "blocks/workbench/blueprint",
+    "block/compact_nasa_workbench_top": "blocks/workbench/top",
+    "block/compact_nasa_workbench_arm": "blocks/workbench/arm",
+    "block/magnetic_crafting_table_base": "blocks/crafting_table_base",
+    "block/magnetic_crafting_table_side": "blocks/crafting_table_side",
+    "block/magnetic_crafting_table_top": "blocks/crafting_table_top",
+    "gui/magnetic_crafting_table": "gui/crafting_table",
+    "block/telemetry": "blocks/cargo_pad",
+    "block/comms_dish": "blocks/dishbase",
+    "item/comms_dish": "items/dishicon",
+    "model/teledish": "model/teledish",
+    "model/telefork": "model/telefork",
+    "model/telesupport": "model/telesupport",
+    "misc/planets/europa": "misc/planets/europa",
+    "misc/planets/ganymede": "misc/planets/ganymede",
+    "misc/planets/io": "misc/planets/io",
+    "misc/planets/jupiter_inner": "misc/planets/jupiter_inner",
+    "misc/planets/jupiter_upper": "misc/planets/jupiter_upper",
+    "misc/planets/saturn": "misc/planets/saturn"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -769,7 +794,22 @@
     },
     "block/arc_lamp_base": "block/arclamp_base_model",
     "block/arc_lamp_base_side": "block/arclamp_base_side_model",
-    "block/arc_lamp_on": "block/arclamp_on_model"
+    "block/arc_lamp_on": "block/arclamp_on_model",
+    "block/compact_nasa_workbench": "block/compact_workbench",
+    "block/display_screen": "block/screen",
+    "block/display_screen_d": "block/screen_d",
+    "block/display_screen_dl": "block/screen_dl",
+    "block/display_screen_dlr": "block/screen_dlr",
+    "block/display_screen_dr": "block/screen_dr",
+    "block/display_screen_dul": "block/screen_dul",
+    "block/display_screen_dulr": "block/screen_dulr",
+    "block/display_screen_dur": "block/screen_dur",
+    "block/display_screen_l": "block/screen_l",
+    "block/display_screen_r": "block/screen_r",
+    "block/display_screen_u": "block/screen_u",
+    "block/display_screen_ul": "block/screen_ul",
+    "block/display_screen_ulr": "block/screen_ulr",
+    "block/display_screen_ur": "block/screen_ur"
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -1516,7 +1556,44 @@
     "gui.galacticraftcore.dropbox.player_distance.3": "gui.dropbox.player_distance.name.3",
     "gui.galacticraftcore.title.air_lock": "gui.title.air_lock.name",
     "gui.galacticraftcore.status.air_lock_closed": "gui.status.air_lock_closed.name",
-    "gui.galacticraftcore.status.air_lock_open": "gui.status.air_lock_open.name"
+    "gui.galacticraftcore.status.air_lock_open": "gui.status.air_lock_open.name",
+    "item.galacticraftcore.sensor_glasses": "item.sensor_glasses.name",
+    "gui.galacticraftcore.sensor.advanced": "gui.sensor.advanced",
+    "gui.galacticraftcore.sensor.advancedon": "gui.sensor.advancedon",
+    "gui.galacticraftcore.sensor.advancedoff": "gui.sensor.advancedoff",
+    "key.galacticraftcore.sensor_toggle": "keybind.sensortoggle.name",
+    "block.galacticraftcore.compact_nasa_workbench": "tile.compact_workbench.name",
+    "block.galacticraftcore.compact_nasa_workbench.desc": "tile.compact_workbench.description",
+    "block.galacticraftcore.magnetic_crafting_table": "tile.magnetic_table.name",
+    "block.galacticraftcore.magnetic_crafting_table.desc": "tile.magnetic_table.description",
+    "container.galacticraftcore.magnetic_crafting": "container.magneticcrafting.name",
+    "gui.galacticraftcore.crafting_memory.desc.0": "gui.crafting_memory.desc.0",
+    "gui.galacticraftcore.crafting_memory.desc.1": "gui.crafting_memory.desc.1",
+    "jei.galacticraftcore.magnetic_crafting.info": "jei.magnetic_crafting.info",
+    "block.galacticraftcore.telemetry": "tile.telemetry.name",
+    "block.galacticraftcore.telemetry.desc": "tile.telemetry.description",
+    "block.galacticraftcore.display_screen": "tile.view_screen.name",
+    "block.galacticraftcore.display_screen.desc": "tile.view_screen.description",
+    "block.galacticraftcore.comms_dish": "tile.dishbase.name",
+    "block.galacticraftcore.comms_dish.desc": "tile.dishbase.description",
+    "block.galacticraftcore.comms_dish_part": "tile.dishbase.name",
+    "gui.galacticraftcore.display.nolink": "gui.display.nolink",
+    "gui.galacticraftcore.player.ouch": "gui.player.ouch",
+    "gui.galacticraftcore.player.health": "gui.player.health",
+    "gui.galacticraftcore.player.bpm": "gui.player.bpm",
+    "gui.galacticraftcore.player.food": "gui.player.food",
+    "gui.galacticraftcore.seconds": "gui.seconds",
+    "gui.galacticraftcore.rocket.on_launchpad": "gui.rocket.on_launchpad",
+    "gui.galacticraftcore.rocket.countdown": "gui.rocket.countdown",
+    "gui.galacticraftcore.rocket.launched": "gui.rocket.launched",
+    "gui.galacticraftcore.rocket.height": "gui.rocket.height",
+    "gui.galacticraftcore.rocket.speed": "gui.rocket.speed",
+    "gui.galacticraftcore.energy_storage.desc.1": "gui.energy_storage.desc.1",
+    "gui.galacticraftcore.telemetry_fail.message": "gui.telemetry_fail.message",
+    "gui.galacticraftcore.telemetry_fail_no_frequency_module.message": "gui.telemetry_fail_no_frequency_module.message",
+    "gui.galacticraftcore.telemetry_fail_wearing_it.message": "gui.telemetry_fail_wearing_it.message",
+    "gui.galacticraftcore.telemetry_succeed.message": "gui.telemetry_succeed.message",
+    "gui.galacticraftcore.tracking.message": "gui.tracking.message"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1913,7 +1990,15 @@
       "galacticraftcore:panel_lighting:1": "galacticraftcore:lighting_panel_spots",
       "galacticraftcore:panel_lighting:2": "galacticraftcore:lighting_panel_linear",
       "galacticraftcore:panel_lighting:3": "galacticraftcore:lighting_panel_sf",
-      "galacticraftcore:panel_lighting:4": "galacticraftcore:lighting_panel_sfdiag"
+      "galacticraftcore:panel_lighting:4": "galacticraftcore:lighting_panel_sfdiag",
+      "galacticraftcore:sensor_glasses": "galacticraftcore:sensor_glasses",
+      "galacticraftcore:compact_workbench": "galacticraftcore:compact_nasa_workbench",
+      "galacticraftcore:compact_workbench:0": "galacticraftcore:compact_nasa_workbench",
+      "galacticraftcore:rocket_workbench:0": "galacticraftcore:nasa_workbench",
+      "galacticraftcore:magnetic_table": "galacticraftcore:magnetic_crafting_table",
+      "galacticraftcore:telemetry": "galacticraftcore:telemetry",
+      "galacticraftcore:view_screen": "galacticraftcore:display_screen",
+      "galacticraftcore:dishbase": "galacticraftcore:comms_dish"
     },
     "result_items": {
       "minecraft:dye:2": "minecraft:green_dye"
@@ -2093,6 +2178,18 @@
     "entity/arclamp_metal": {
       "from": "arclamp_metal",
       "default_map": "galacticraftcore:misc/underoil"
+    },
+    "entity/teledish": {
+      "from": "teledish",
+      "default_map": "galacticraftcore:model/teledish"
+    },
+    "entity/telefork": {
+      "from": "telefork",
+      "default_map": "galacticraftcore:model/telefork"
+    },
+    "entity/telesupport": {
+      "from": "telesupport",
+      "default_map": "galacticraftcore:model/telesupport"
     }
   }
 }

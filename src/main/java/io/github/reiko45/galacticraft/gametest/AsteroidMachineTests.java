@@ -412,12 +412,13 @@ public final class AsteroidMachineTests {
                 centres++;
             } else if (state.getBlock() instanceof io.github.reiko45.galacticraft.block.SpaceGlassBlock) {
                 glass++;
-            } else if (state.is(net.minecraft.world.level.block.Blocks.SEA_LANTERN) || state.is(net.minecraft.world.level.block.Blocks.GLASS)) {
+            } else if (state.is(net.minecraft.world.level.block.Blocks.SEA_LANTERN) || state.is(net.minecraft.world.level.block.Blocks.GLASS)
+                    || state.is(net.minecraft.world.level.block.Blocks.CRAFTING_TABLE)) {
                 standIns++;
             }
         }
         helper.assertTrue(glass >= 1, "space glass windows");
-        helper.assertValueEqual(standIns, 0, "no stand-ins left for space glass and arc lamps");
+        helper.assertValueEqual(standIns, 0, "no stand-ins left for space glass, arc lamps and magnetic tables");
         helper.assertTrue(loaders >= 1, "a store with its Cargo Loader");
         helper.assertTrue(centres >= 1, "beside a joined launch pad");
         helper.assertTrue(tanks >= 2, "medical tanks: " + tanks);

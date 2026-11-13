@@ -25,6 +25,8 @@ public final class GCMenus {
 
     public static final Supplier<MenuType<CoalGeneratorMenu>> COAL_GENERATOR = MENUS.register("coal_generator",
             () -> IMenuTypeExtension.create(CoalGeneratorMenu::new));
+    public static final Supplier<MenuType<io.github.reiko45.galacticraft.menu.MagneticCraftingMenu>> MAGNETIC_CRAFTING = MENUS.register("magnetic_crafting",
+            () -> new MenuType<>(io.github.reiko45.galacticraft.menu.MagneticCraftingMenu::new, net.minecraft.world.flag.FeatureFlags.DEFAULT_FLAGS));
     public static final Supplier<MenuType<EnergyStorageMenu>> ENERGY_STORAGE = MENUS.register("energy_storage",
             () -> IMenuTypeExtension.create(EnergyStorageMenu::new));
     public static final Supplier<MenuType<CompressorMenu>> COMPRESSOR = MENUS.register("compressor",

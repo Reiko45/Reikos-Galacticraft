@@ -428,12 +428,7 @@ public class BaseRoom extends BasePiece {
                         state = BaseBlocks.concealedDetector(humanoid, facing);
                     } else if (x == maxX - 1) {
                         // 1.12.2 brightLamp meta facingLamp: mounted on the wall it lights the room from
-                        state = BaseBlocks.arcLamp(switch (this.direction) {
-                            case WEST -> 3;
-                            case NORTH -> 5;
-                            case SOUTH -> 4;
-                            default -> 2;
-                        });
+                        state = BaseBlocks.arcLamp(facingLamp());
                     }
                 }
             }
@@ -461,9 +456,10 @@ public class BaseRoom extends BasePiece {
                     if ((x == 1 || x == maxX) && !(z == 0 || z == maxZ)) {
                         state = BaseBlocks.telemetry();
                     } else if ((x == 2 || x == maxX - 1) && !(z == 0 || z == maxZ)) {
-                        state = BaseBlocks.screen();
+                        // 1.12.2: the side screens face into the room, the end ones back down it
+                        state = BaseBlocks.screen(x == 2 ? facingLamp() : facingLamp() ^ 1);
                     } else if (z == maxZ && x > 2 && x < maxX - 1) {
-                        state = BaseBlocks.screen();
+                        state = BaseBlocks.screen(facingScreen());
                     } else if (x == maxX / 2 + 1 && z == maxZ - 2 && y == 2) {
                         state = GCBlocks.BUGGY_FUELING_PAD.get().defaultBlockState();
                     }
@@ -556,5 +552,25 @@ public class BaseRoom extends BasePiece {
         final ItemStack stack = new ItemStack(Items.POTION);
         stack.set(DataComponents.POTION_CONTENTS, new PotionContents(potion));
         return stack;
+    }
+
+    /** 1.12.2 facingLamp: the room's side wall a lamp or side screen hangs on, as a 3D direction index. */
+    private int facingLamp() {
+        return switch (this.direction) {
+            case WEST -> 3;
+            case NORTH -> 5;
+            case SOUTH -> 4;
+            default -> 2;
+        };
+    }
+
+    /** 1.12.2 facingScreen: the way the end screens of the control room face. */
+    private int facingScreen() {
+        return switch (this.direction) {
+            case WEST -> 5;
+            case NORTH -> 2;
+            case SOUTH -> 3;
+            default -> 4;
+        };
     }
 }

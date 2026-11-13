@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "X": {
+      "tag": "c:plates/steel"
+    },
+    "Y": {
+      "item": "galacticraftcore:basic_wafer"
+    }
+  },
+  "pattern": [
+    "XYX",
+    "YGY",
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:display_screen"
+  }
+}

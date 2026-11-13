@@ -429,12 +429,21 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       the sun, up to 1,000 gJ/t, more on space stations and high up on Venus; GUI with Enable / Disable
 
 ### Phase 7g – Core blocks still missing, and the Laser Turret
-- [ ] Air Lock Frame and Controller, Space Glass (clear, vanilla, strong, each plain or tin-framed), Arc Lamp, Concealed
-      Redstone, Repeater and Detector, Magnetic Crafting Table, Telemetry Unit, Display Screen, sealable (enclosed)
-      wires and pipes; then put them in place of their stand-ins in the abandoned bases (`world/base/BaseBlocks`)
-- [ ] Also still missing from the core module: the Deconstructor and the Chromatic Applicator (BlockMachine2/3), the
-      Hydraulic Platform, the Emergency Post and its kit, the Communications Dish, Lighting Panels (five shapes),
-      Grating, the Compact NASA Workbench, Sensor Glasses, the Throwable Meteor Chunk and the Prelaunch Checklist
+- [x] Space Glass (clear, vanilla, strong; plain or tin frame): 1.12.2's connected models and shapes, sealing on its
+      glass sides only (a `PartialSealable` block, which the seal finder and oxygen checks now ask)
+- [x] Air Lock Frame, Controller and Seal: 1.12.2's frame protocol (a closed ring up to 24 blocks round, upright or
+      flat), redstone, player-distance and inverted modes, the owner's settings screen and the seal sounds
+- [x] Arc Lamp (a lit cone of bright air that scares mobs off, off with redstone), Concealed Redstone, Repeater and
+      Detector, the sealable aluminium wires and fluid pipe, Grating and the five Lighting Panels (the wrench turns them)
+- [x] Sensor Glasses: the visor, markers for ores within 4 blocks (K: Advanced Mode), mobs drawn glowing, footprints
+      full bright, and the leak of the nearest unsealed Oxygen Sealer shown as a stream of oxygen
+- [x] Magnetic Crafting Table: keeps its grid, remembers the last recipe crafted, lets hoppers fill it to that recipe
+      and take the results; JEI moves recipes into it
+- [x] Compact NASA Workbench (and back), Telemetry Unit and frequency module links, Display Screens (six pictures,
+      joined up to 9 blocks a side) and the Communications Dish
+- [x] The abandoned asteroid bases use the real blocks (no stand-ins left)
+- [ ] The Deconstructor and the Chromatic Applicator (BlockMachine2/3), the Hydraulic Platform, the Emergency Post and
+      its kit, the Throwable Meteor Chunk and the Prelaunch Checklist
 - [ ] Laser Turret (TileEntityLaserTurret, Venus): left out of phase 7f. 1.12.2 Legacy has no recipe for it (only the
       creative menu), and its targeting, owner lists and GUI are about 1,700 lines
 
@@ -648,11 +657,6 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * An abandoned base is built into the nearest asteroid within 64 blocks of its chunk (1.12.2: the nearest asteroid
   generated so far, however far; a 1.21 structure can't reach more than 8 chunks), or floats at y 148 with none, as in
   1.12.2 before any asteroid had generated. Its blocks are placed after the asteroid's own decoration, as in 1.12.2.
-* Blocks not ported yet stand in for 1.12.2's in the abandoned bases: dark decoration blocks for air lock frames and
-  controllers and for display screens, glass for space glass, sea lanterns for arc lamps, tin decoration blocks (or
-  moon rock) for the concealed redstone, repeaters and detectors they were disguised as, a tin block for telemetry
-  units, a crafting table for the magnetic one (its iron and heads are lost), and heavy aluminium wire for the sealable
-  one. See phase 7g.
 * The bases' NASA Workbenches and Cryogenic Chambers are whole (1.12.2 placed their parts, then overwrote most with
   the rest of the room); the store's launch pad is joined from the start (1.12.2's single pads joined on their first
   tick). Walls, stairs, bars, walkways and wires settle against their neighbours when the chunk is finished (1.12.2
@@ -681,6 +685,29 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   worked it out once, when the screen opened), and its status and sun icon still read "blocked" unless every module in
   range sees the sun.
 * The Laser Turret is not ported yet (phase 7g).
+* Space Glass and Lighting Panels can't be painted yet (the Chromatic Applicator is still to come), and a Lighting
+  Panel can't take on the look of the block it is placed against by sneaking. Grating holds water only.
+* An Air Lock Controller never loads a chunk to look for its frame (1.12.2 did, so a controller at the edge of the
+  loaded area kept loading more), and its frame search starts from the widest box (1.12.2 started from +-6,000,000, so
+  past that its box came out wrong). Its settings screen is opened by the server. Kept from 1.12.2: a flat air lock's
+  seal checks the west side twice (never the east).
+* The Concealed Repeater is one block with a POWERED state (1.12.2: two blocks).
+* Sensor Glasses point out the blocks tagged `galacticraftcore:sensor_valuable` (1.12.2: blocks that called themselves
+  valuable, plus a config list). The leak they show follows each block's own way in from the sealer (1.12.2 started its
+  trace one step the wrong way, so it seldom found one); the client asks the nearest sealer within 96 blocks once a
+  second. Mobs are drawn glowing by an extra render layer on the same mobs as 1.12.2 (there is no Evolved Witch here).
+* The Magnetic Crafting Table shows its remembered result in a slot that can't be used (1.12.2 drew it). Shift-clicking
+  into it, the hoppers' rules and the results kept for the next take are 1.12.2's.
+* A Telemetry Unit keeps its link as the entity's UUID, so it finds a respawned player, or one coming back, again
+  (1.12.2 held the entity itself). Ocelot skins aren't shown (1.21 ocelots have none).
+* Display Screens are joined on the server, which sends the result (1.12.2's client worked it out again itself), and
+  are drawn once, from a big screen's top left block. Picture 1 is always the Earth's icon (1.12.2 drew a map of the
+  Overworld around the screen once it had made one: 1.12.2 MapUtil isn't ported); picture 3 shows no space stations;
+  orbit lines are cut at the frame segment by segment (1.12.2 used clip planes). The up-and-down and left-and-right
+  middle blocks of a big screen use the full frame model turned to the facing (1.12.2 left them facing south).
+* The Communications Dish needs room for all its parts to be placed (1.12.2 replaced whatever was there). Like 1.12.2 it
+  only turns and nods: its sun-following angle (never drawn) and its energy store (which nothing could fill) are left
+  out.
 * Galacticraft's green dye recipe takes any yellow and any blue dye (1.12.2: dandelion yellow and lapis lazuli, which
   was the blue dye then).
 

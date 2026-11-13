@@ -8,6 +8,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.PackOutput;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SlabBlock;
 import net.minecraft.world.level.block.StairBlock;
 import net.minecraft.world.level.block.WallBlock;
@@ -118,9 +119,17 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.OXYGEN_DETECTOR.get(),
                 GCBlocks.LANDING_PAD.get(), GCBlocks.BUGGY_FUELING_PAD.get(), GCBlocks.FUEL_LOADER.get(), GCBlocks.CARGO_LOADER.get(), GCBlocks.CARGO_UNLOADER.get(),
                 GCBlocks.NASA_WORKBENCH.get(),
+                GCBlocks.COMPACT_NASA_WORKBENCH.get(), GCBlocks.MAGNETIC_CRAFTING_TABLE.get(), GCBlocks.TELEMETRY.get(), GCBlocks.COMMS_DISH.get(),
                 GCBlocks.NASA_WORKBENCH_PART.get());
         tag(BlockTags.MINEABLE_WITH_AXE).add(GCBlocks.PARACHEST.get());
         // Oxygen sealing (1.12.2 OxygenPressureProtocol): glass panes seal, gravel/wool/sponge let air through
+        // 1.12.2 isValueable: the Overworld (copper here is vanilla's), Moon, Mars, asteroid and Venus ores
+        tag(GCModTags.SENSOR_VALUABLE).add(Blocks.COPPER_ORE, Blocks.DEEPSLATE_COPPER_ORE, GCBlocks.TIN_ORE.get(), GCBlocks.ALUMINUM_ORE.get(),
+                GCBlocks.SILICON_ORE.get(), GCBlocks.MOON_CHEESE_ORE.get(), GCBlocks.MOON_COPPER_ORE.get(), GCBlocks.MOON_SAPPHIRE_ORE.get(),
+                GCBlocks.MOON_TIN_ORE.get(), GCBlocks.MARS_COPPER_ORE.get(), GCBlocks.MARS_TIN_ORE.get(), GCBlocks.DESH_ORE.get(),
+                GCBlocks.MARS_IRON_ORE.get(), GCBlocks.ASTEROID_ALUMINUM_ORE.get(), GCBlocks.ILMENITE_ORE.get(), GCBlocks.ASTEROID_IRON_ORE.get(),
+                GCBlocks.VENUS_ALUMINUM_ORE.get(), GCBlocks.VENUS_COPPER_ORE.get(), GCBlocks.GALENA_ORE.get(), GCBlocks.VENUS_QUARTZ_ORE.get(),
+                GCBlocks.VENUS_SILICON_ORE.get(), GCBlocks.VENUS_TIN_ORE.get(), GCBlocks.SOLAR_ORE.get());
         tag(GCModTags.SEALABLE).addTag(Tags.Blocks.GLASS_PANES);
         tag(GCModTags.AIR_PERMEABLE).add(net.minecraft.world.level.block.Blocks.GRAVEL, net.minecraft.world.level.block.Blocks.SPONGE,
                 net.minecraft.world.level.block.Blocks.WET_SPONGE).addTag(BlockTags.WOOL);

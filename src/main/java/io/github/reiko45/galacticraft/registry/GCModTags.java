@@ -24,6 +24,8 @@ public final class GCModTags {
     public static final TagKey<Block> SEALABLE = block("sealable");
     /** Full blocks that let air through (1.12.2: gravel, wool, sponge, leaves). */
     public static final TagKey<Block> AIR_PERMEABLE = block("air_permeable");
+    /** Blocks Sensor Glasses point out (1.12.2 IDetectableResource#isValueable and the detectable IDs config). */
+    public static final TagKey<Block> SENSOR_VALUABLE = block("sensor_valuable");
 
     /** Mobs that don't need oxygen on airless worlds (1.12.2 IEntityBreathable, used by the evolved mobs later). */
     public static final TagKey<EntityType<?>> BREATHES_IN_SPACE = TagKey.create(Registries.ENTITY_TYPE, GalacticraftCore.id("breathes_in_space"));

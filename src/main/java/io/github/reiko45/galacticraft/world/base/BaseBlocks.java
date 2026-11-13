@@ -131,21 +131,21 @@ final class BaseBlocks {
         return GCBlocks.ARC_LAMP.get().defaultBlockState().setValue(io.github.reiko45.galacticraft.block.ArcLampBlock.FACING, Direction.from3DDataValue(meta));
     }
 
-    // ---------------------------------------------------------------- stand-ins for blocks not ported yet
-
-    /** 1.12.2 crafting (Magnetic Crafting Table). */
+    /** 1.12.2 crafting meta 1 (Magnetic Crafting Table, facing up). */
     static BlockState magneticTable() {
-        return Blocks.CRAFTING_TABLE.defaultBlockState();
+        return GCBlocks.MAGNETIC_CRAFTING_TABLE.get().defaultBlockState()
+                .setValue(io.github.reiko45.galacticraft.block.MagneticCraftingTableBlock.FACING, Direction.UP);
     }
 
     /** 1.12.2 telemetry (Telemetry Unit). */
     static BlockState telemetry() {
-        return pattern();
+        return GCBlocks.TELEMETRY.get().defaultBlockState();
     }
 
-    /** 1.12.2 screen (Display Screen), whose sides are the Dark Decoration Block's texture. */
-    static BlockState screen() {
-        return dark();
+    /** 1.12.2 screen meta (Display Screen, facing as a 3D direction index). */
+    static BlockState screen(int meta) {
+        return GCBlocks.DISPLAY_SCREEN.get().defaultBlockState()
+                .setValue(io.github.reiko45.galacticraft.block.DisplayScreenBlock.FACING, Direction.from3DDataValue(meta));
     }
 
     /** 1.12.2 sealableBlock meta 15 (Sealable Heavy Aluminium Wire). */

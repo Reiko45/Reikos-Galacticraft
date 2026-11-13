@@ -48,6 +48,6 @@ public abstract class SchematicPageMenu extends AbstractContainerMenu {
 
     @Override
     public boolean stillValid(Player player) {
-        return stillValid(this.access, player, GCBlocks.NASA_WORKBENCH.get());
+        return stillValid(this.access, player, GCBlocks.NASA_WORKBENCH.get()) || stillValid(this.access, player, GCBlocks.COMPACT_NASA_WORKBENCH.get());
     }
 }

@@ -71,6 +71,15 @@ public class GalacticraftJeiPlugin implements IModPlugin {
         registration.addRecipes(CompressingCategory.TYPE, recipes.getAllRecipesFor(GCRecipes.COMPRESSING.get()));
         registration.addRecipes(CircuitFabricatingCategory.TYPE, recipes.getAllRecipesFor(GCRecipes.CIRCUIT_FABRICATING.get()));
         registration.addRecipes(RefiningCategory.TYPE, RefiningCategory.recipes());
+        registration.addItemStackInfo(new net.minecraft.world.item.ItemStack(GCBlocks.MAGNETIC_CRAFTING_TABLE.get()),
+                net.minecraft.network.chat.Component.translatable("jei.galacticraftcore.magnetic_crafting.info"));
+    }
+
+    /** 1.12.2 MagneticCraftingTransferInfo: recipes fill the table's grid (slots 1-9) from the player's 36. */
+    @Override
+    public void registerRecipeTransferHandlers(mezz.jei.api.registration.IRecipeTransferRegistration registration) {
+        registration.addRecipeTransferHandler(io.github.reiko45.galacticraft.menu.MagneticCraftingMenu.class,
+                io.github.reiko45.galacticraft.registry.GCMenus.MAGNETIC_CRAFTING.get(), RecipeTypes.CRAFTING, 1, 9, 10, 36);
     }
 
     @Override
@@ -80,6 +89,7 @@ public class GalacticraftJeiPlugin implements IModPlugin {
         registration.addRecipeCatalysts(CircuitFabricatingCategory.TYPE, GCBlocks.CIRCUIT_FABRICATOR.get());
         registration.addRecipeCatalysts(RefiningCategory.TYPE, GCBlocks.REFINERY.get());
         registration.addRecipeCatalysts(RecipeTypes.SMELTING, GCBlocks.ELECTRIC_FURNACE.get(), GCBlocks.ELECTRIC_ARC_FURNACE.get());
+        registration.addRecipeCatalysts(RecipeTypes.CRAFTING, GCBlocks.MAGNETIC_CRAFTING_TABLE.get());
     }
 
     @Override
@@ -89,5 +99,6 @@ public class GalacticraftJeiPlugin implements IModPlugin {
         registration.addRecipeClickArea(ElectricCompressorScreen.class, 77, 30, 52, 25, CompressingCategory.TYPE);
         registration.addRecipeClickArea(CircuitFabricatorScreen.class, 87, 19, 53, 12, CircuitFabricatingCategory.TYPE);
         registration.addRecipeClickArea(ElectricFurnaceScreen.class, 78, 24, 23, 15, RecipeTypes.SMELTING);
+        registration.addRecipeClickArea(io.github.reiko45.galacticraft.client.screen.MagneticCraftingScreen.class, 88, 32, 28, 23, RecipeTypes.CRAFTING);
     }
 }

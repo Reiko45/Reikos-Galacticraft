@@ -11,6 +11,7 @@ import java.util.List;
 import java.util.Map;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.LevelRenderer;
+import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.texture.OverlayTexture;
@@ -81,6 +82,7 @@ public final class FootprintRenderer {
         final Matrix4f pose = poseStack.last().pose();
         final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         final double scale = 0.5D;
+        final boolean sensor = io.github.reiko45.galacticraft.client.SensorGlasses.worn();
         for (List<Footprint> prints : PRINTS.values()) {
             for (Footprint print : prints) {
                 if (camera.distanceToSqr(print.x(), print.y(), print.z()) > 64.0D * 64.0D) {
@@ -90,7 +92,8 @@ public final class FootprintRenderer {
                 if (!level.getBlockState(pos).is(GCBlocks.MOON_TURF.get())) {
                     continue; // the turf was dug up
                 }
-                final int light = LevelRenderer.getLightColor(level, pos.move(0, 1, 0));
+                // 1.12.2: Sensor Glasses show footprints full-bright
+                final int light = sensor ? LightTexture.FULL_BRIGHT : LevelRenderer.getLightColor(level, pos.move(0, 1, 0));
                 final float fade = 1.0F - print.age() / (float) Footprint.MAX_AGE;
                 final float x = (float) (print.x() - camera.x);
                 final float y = (float) (print.y() - camera.y) + 0.001F;

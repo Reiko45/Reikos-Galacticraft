@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "F": {
+      "item": "galacticraftcore:frequency_module"
+    },
+    "W": {
+      "item": "galacticraftcore:advanced_wafer"
+    },
+    "X": {
+      "tag": "c:plates/aluminum"
+    },
+    "Y": {
+      "tag": "c:storage_blocks/iron"
+    }
+  },
+  "pattern": [
+    "XFX",
+    " X ",
+    "WYW"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:comms_dish"
+  }
+}

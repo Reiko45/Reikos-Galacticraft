@@ -92,7 +92,8 @@ public final class GCItems {
     public static final DeferredItem<Item> ADVANCED_WAFER = simple("advanced_wafer");
     public static final DeferredItem<Item> SINGLE_SOLAR_MODULE = simple("single_solar_module");
     public static final DeferredItem<Item> FULL_SOLAR_PANEL = simple("full_solar_panel");
-    public static final DeferredItem<Item> FREQUENCY_MODULE = simple("frequency_module");
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.FrequencyModuleItem> FREQUENCY_MODULE = ITEMS.register("frequency_module",
+            () -> new io.github.reiko45.galacticraft.item.FrequencyModuleItem(new Item.Properties()));
     public static final DeferredItem<Item> AMBIENT_THERMAL_CONTROLLER = simple("ambient_thermal_controller");
 
     // --- Rocket, oxygen and vehicle parts ---
@@ -255,6 +256,9 @@ public final class GCItems {
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_CHESTPLATE = armor("heavy_duty_chestplate", ArmorItem.Type.CHESTPLATE);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_LEGGINGS = armor("heavy_duty_leggings", ArmorItem.Type.LEGGINGS);
     public static final DeferredItem<ArmorItem> HEAVY_DUTY_BOOTS = armor("heavy_duty_boots", ArmorItem.Type.BOOTS);
+    /** 1.12.2 ItemSensorGlasses: a helmet (durability factor 200) that shows ores, mobs and oxygen leaks. */
+    public static final DeferredItem<io.github.reiko45.galacticraft.item.SensorGlassesItem> SENSOR_GLASSES = ITEMS.register("sensor_glasses",
+            () -> new io.github.reiko45.galacticraft.item.SensorGlassesItem(new Item.Properties().durability(ArmorItem.Type.HELMET.getDurability(200))));
 
     // --- Desh tools and armor (1.12.2 ItemPickaxeMars & co.; attack values from their 1.12.2 ItemTool subclasses) ---
     public static final DeferredItem<PickaxeItem> DESH_PICKAXE = ITEMS.register("desh_pickaxe",

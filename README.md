@@ -81,8 +81,8 @@ machines, solar panels and oil processing work. See
 * **Abandoned bases**: one in each 576x576 area of the belt, built into an asteroid in one of three alien designs, some
   with a vast hangar open to space. Engineering rooms hang the Moon Buggy and Tier 2 Rocket schematics on the wall;
   the store's locked Cargo Loader holds the base's treasure (and rotten supplies) until you load it into a rocket.
-  Medical rooms, crew quarters, power rooms, cryogenic chambers and Space Wart make up the rest. (A few blocks they use
-  aren't ported yet, so look-alikes stand in for them; see PORTING.md.)
+  Medical rooms, crew quarters, power rooms, cryogenic chambers and Space Wart make up the rest, behind air locks and
+  space glass, lit by arc lamps, with display screens and telemetry in the control room.
 * **Venus** (`galacticraftcore:venus`): flats, mountains and deep valleys ported from the 1.12.2 generator, riddled with
   caves and sealed lava tubes, with lava lakes, sulphuric acid pools under Vapor Spouts, and Crashed Probes in their
   craters holding salvage and a Radioisotope Core. Soft, hard and volcanic rock, pumice and seven ores (solar ore gives
@@ -150,7 +150,7 @@ machines, solar panels and oil processing work. See
   it: it flies your team's flag and waves in the wind (gently on Mars, not at all on the Moon). The Tier 3 Rocket's nose
   cone wears your team colour. As in 1.12.2, the server and global stats buttons say "Coming Soon".
 * **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
-* Recipes: 202 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
+* Recipes: 229 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 

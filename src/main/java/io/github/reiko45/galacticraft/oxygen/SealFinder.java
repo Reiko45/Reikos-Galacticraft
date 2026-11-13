@@ -6,9 +6,13 @@ import io.github.reiko45.galacticraft.registry.GCBlocks;
 import io.github.reiko45.galacticraft.registry.GCModTags;
 import java.util.ArrayDeque;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import javax.annotation.Nullable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.Level;
@@ -44,6 +48,10 @@ public final class SealFinder {
     private final List<BlockPos> breathable = new ArrayList<>();
     private final List<BlockPos> torches = new ArrayList<>();
     private final ArrayDeque<Node> queue = new ArrayDeque<>();
+    /** The side each queued block was entered by, to trace a leak back to the sealer. */
+    private final Map<Long, Integer> enteredBy = new HashMap<>();
+    @Nullable
+    private List<BlockPos> leakTrace;
     private int checks;
     private boolean sealed;
     private boolean thermal;
@@ -91,6 +99,7 @@ public final class SealFinder {
         for (OxygenSealerBlockEntity sealer : this.sealers) {
             sealer.onSealChecked(this.sealed, sealer == headSealer);
         }
+        headSealer.setLeakTrace(this.sealed ? null : this.leakTrace);
     }
 
     private void spread() {
@@ -110,6 +119,7 @@ public final class SealFinder {
                     if (!this.level.isInWorldBounds(next)) {
                         // Out into the void or above the build limit
                         this.sealed = false;
+                        traceLeak(node.pos(), next);
                         return;
                     }
                     if (!this.level.isLoaded(next)) {
@@ -119,10 +129,12 @@ public final class SealFinder {
                     if (state.getBlock() instanceof BreathableAirBlock) {
                         this.checked.add(next.asLong());
                         this.queue.add(new Node(next, 0));
+                        this.enteredBy.put(next.asLong(), side);
                         this.breathable.add(next);
                     } else if (state.isAir()) {
                         this.checked.add(next.asLong());
                         this.queue.add(new Node(next, 0));
+                        this.enteredBy.put(next.asLong(), side);
                         this.airToReplace.add(next);
                     } else if (state.is(GCBlocks.OXYGEN_SEALER.get())) {
                         // Another sealer whose vent (top) opens into this space joins in
@@ -136,22 +148,47 @@ public final class SealFinder {
                         final Node passed = enter(state, next, side, travel);
                         if (passed != null) {
                             this.queue.add(passed);
+                            this.enteredBy.put(next.asLong(), side);
                         }
                     }
                 } else {
                     // No checks left: any opening further out means the space is too big or open
                     if (!this.level.isInWorldBounds(next)) {
                         this.sealed = false;
+                        traceLeak(node.pos(), next);
                         return;
                     }
                     final BlockState state = this.level.getBlockState(next);
                     if (state.isAir() || OxygenUtil.canBlockPassAir(this.level, state, next, travel)) {
                         this.sealed = false;
+                        traceLeak(node.pos(), next);
                         return;
                     }
                 }
             }
         }
+    }
+
+    /**
+     * 1.12.2 traceLeak: the way from the sealer's vent to where the air gets out, at most 90 blocks, which Sensor Glasses
+     * show as a stream of oxygen. (1.12.2 started its trace one step the wrong way, from the last block inside back
+     * along the leak's direction, so it seldom found a path; this follows the blocks' own way in.)
+     */
+    private void traceLeak(BlockPos last, BlockPos opening) {
+        final List<BlockPos> route = new ArrayList<>();
+        route.add(opening);
+        BlockPos pos = last;
+        while (!pos.equals(this.head)) {
+            route.add(pos);
+            final Integer side = this.enteredBy.get(pos.asLong());
+            if (side == null || route.size() > 90) {
+                return;
+            }
+            pos = pos.relative(Direction.from3DDataValue(side).getOpposite());
+        }
+        route.add(this.head);
+        Collections.reverse(route);
+        this.leakTrace = route;
     }
 
     /** 1.12.2 canBlockPassAirCheck: can air move into this non-air block, and which of its sides are closed? */

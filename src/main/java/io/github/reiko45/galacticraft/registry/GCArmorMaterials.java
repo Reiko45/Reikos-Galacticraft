@@ -36,6 +36,23 @@ public final class GCArmorMaterials {
             0.0F));
 
     /**
+     * 1.12.2 ARMOR_SENSOR_GLASSES: durability factor 200, no protection, no enchanting, no repair item. Layer texture:
+     * textures/models/armor/sensor_glasses_layer_1.png.
+     */
+    public static final Holder<ArmorMaterial> SENSOR_GLASSES = ARMOR_MATERIALS.register("sensor_glasses", () -> new ArmorMaterial(
+            Util.make(new EnumMap<>(ArmorItem.Type.class), map -> {
+                for (ArmorItem.Type type : ArmorItem.Type.values()) {
+                    map.put(type, 0);
+                }
+            }),
+            0,
+            SoundEvents.ARMOR_EQUIP_IRON,
+            () -> Ingredient.EMPTY,
+            List.of(new ArmorMaterial.Layer(GalacticraftCore.id("sensor_glasses"))),
+            0.0F,
+            0.0F));
+
+    /**
      * 1.12.2 ARMORDESH: durability factor 42, protection 4/7/9/4, enchantability 12, toughness 3, repaired with Desh
      * Ingots. DeshArmorItem picks the three 1.12.2 texture sheets itself.
      */

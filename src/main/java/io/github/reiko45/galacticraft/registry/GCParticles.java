@@ -21,6 +21,8 @@ public final class GCParticles {
     public static final Supplier<SimpleParticleType> ACID_VAPOR = PARTICLES.register("acid_vapor", () -> new SimpleParticleType(false));
     /** 1.12.2 "acidExhaust" (ParticleAcidExhaust): the puffs over a working Geothermal Generator. */
     public static final Supplier<SimpleParticleType> ACID_EXHAUST = PARTICLES.register("acid_exhaust", () -> new SimpleParticleType(false));
+    /** 1.12.2 ParticleOxygen as Sensor Glasses show a leak: a pale blue mote swinging out along its motion and back. */
+    public static final Supplier<SimpleParticleType> OXYGEN = PARTICLES.register("oxygen", () -> new SimpleParticleType(false));
 
     private GCParticles() {
     }

@@ -1,0 +1,27 @@
+{
+  "values": [
+    "minecraft:copper_ore",
+    "minecraft:deepslate_copper_ore",
+    "galacticraftcore:tin_ore",
+    "galacticraftcore:aluminum_ore",
+    "galacticraftcore:silicon_ore",
+    "galacticraftcore:moon_cheese_ore",
+    "galacticraftcore:moon_copper_ore",
+    "galacticraftcore:moon_sapphire_ore",
+    "galacticraftcore:moon_tin_ore",
+    "galacticraftcore:mars_copper_ore",
+    "galacticraftcore:mars_tin_ore",
+    "galacticraftcore:desh_ore",
+    "galacticraftcore:mars_iron_ore",
+    "galacticraftcore:asteroid_aluminum_ore",
+    "galacticraftcore:ilmenite_ore",
+    "galacticraftcore:asteroid_iron_ore",
+    "galacticraftcore:venus_aluminum_ore",
+    "galacticraftcore:venus_copper_ore",
+    "galacticraftcore:galena_ore",
+    "galacticraftcore:venus_quartz_ore",
+    "galacticraftcore:venus_silicon_ore",
+    "galacticraftcore:venus_tin_ore",
+    "galacticraftcore:solar_ore"
+  ]
+}

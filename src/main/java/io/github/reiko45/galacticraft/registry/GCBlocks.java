@@ -395,6 +395,30 @@ public final class GCBlocks {
     /** 1.12.2: Material.IRON, hardness 2.5, metal sound. */
     public static final DeferredBlock<NasaWorkbenchBlock> NASA_WORKBENCH = withItem("nasa_workbench", () -> new NasaWorkbenchBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F).sound(SoundType.METAL).noOcclusion()));
+    /** 1.12.2 BlockCompactNasaWorkbench: Material.IRON, hardness 2.5, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CompactNasaWorkbenchBlock> COMPACT_NASA_WORKBENCH = withItem("compact_nasa_workbench",
+            () -> new io.github.reiko45.galacticraft.block.CompactNasaWorkbenchBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(2.5F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    /** 1.12.2 BlockCrafting (Magnetic Crafting Table): Material.IRON, hardness 0.6. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.MagneticCraftingTableBlock> MAGNETIC_CRAFTING_TABLE = withItem("magnetic_crafting_table",
+            () -> new io.github.reiko45.galacticraft.block.MagneticCraftingTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(0.6F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    /** 1.12.2 BlockTelemetry: Material.IRON, hardness 1, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.TelemetryBlock> TELEMETRY = withItem("telemetry",
+            () -> new io.github.reiko45.galacticraft.block.TelemetryBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(1.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    /** 1.12.2 BlockScreen: Material.CIRCUITS, hardness 0.1, glass sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.DisplayScreenBlock> DISPLAY_SCREEN = withItem("display_screen",
+            () -> new io.github.reiko45.galacticraft.block.DisplayScreenBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLACK)
+                    .strength(0.1F).sound(SoundType.GLASS).noOcclusion()));
+    /** 1.12.2 BlockDish: Material.IRON, hardness 1, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.CommsDishBlock> COMMS_DISH = withItem("comms_dish",
+            () -> new io.github.reiko45.galacticraft.block.CommsDishBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(1.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
+    /** 1.12.2 BlockMulti DISH_LARGE: the dish's invisible upper parts. */
+    public static final DeferredBlock<SolarPartBlock> COMMS_DISH_PART = BLOCKS.register("comms_dish_part", () -> new SolarPartBlock(
+            BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 3_600_000.0F).sound(SoundType.METAL)
+                    .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
     public static final DeferredBlock<SolarPartBlock> NASA_WORKBENCH_PART = BLOCKS.register("nasa_workbench_part", () -> new SolarPartBlock(
             BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(2.5F, 3_600_000.0F).sound(SoundType.METAL)
                     .noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
