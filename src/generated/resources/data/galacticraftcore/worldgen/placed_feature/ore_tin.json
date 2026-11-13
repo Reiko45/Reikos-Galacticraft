@@ -2,6 +2,10 @@
   "feature": "galacticraftcore:ore_tin",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "enableTinOreGen"
+    },
+    {
       "type": "minecraft:count",
       "count": 22
     },

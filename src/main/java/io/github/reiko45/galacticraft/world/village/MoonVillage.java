@@ -48,6 +48,9 @@ public class MoonVillage extends Structure {
 
     @Override
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext context) {
+        if (io.github.reiko45.galacticraft.GCConfig.common(io.github.reiko45.galacticraft.GCConfig.DISABLE_MOON_VILLAGE_GEN)) {
+            return Optional.empty();
+        }
         final int x = context.chunkPos().getMinBlockX() + 2;
         final int z = context.chunkPos().getMinBlockZ() + 2;
         return Optional.of(new GenerationStub(new BlockPos(x, 64, z), builder -> generate(builder, context.random(), x, z)));

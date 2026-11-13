@@ -57,6 +57,11 @@ public class TerraformerBlockEntity extends MachineBlockEntity implements Bubble
     public static final int WATER_CAPACITY = 2000;
     public static final float ENERGY_PER_TICK = 30.0F;
 
+    /** 1.12.2: 60 gJ/t in hard mode. */
+    public static float energyPerTick() {
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 60.0F : ENERGY_PER_TICK;
+    }
+
     private final FluidTank water = new FluidTank(WATER_CAPACITY, stack -> stack.is(FluidTags.WATER)) {
         @Override
         protected void onContentsChanged() {
@@ -177,10 +182,10 @@ public class TerraformerBlockEntity extends MachineBlockEntity implements Bubble
             }
         }
         final boolean switchedOff = this.level.hasNeighborSignal(this.worldPosition);
-        this.hasEnoughEnergy = !switchedOff && this.energy.getStoredGJ() >= ENERGY_PER_TICK;
+        this.hasEnoughEnergy = !switchedOff && this.energy.getStoredGJ() >= energyPerTick();
         final boolean working = !this.grassDisabled || !this.treesDisabled;
         if (working && this.hasEnoughEnergy) {
-            this.energy.consume(ENERGY_PER_TICK);
+            this.energy.consume(energyPerTick());
         } else if (this.ticks % 10 == 0 && this.energy.getStoredGJ() > 0.0F) {
             this.energy.consume(Math.min(5.0F, this.energy.getStoredGJ()));
         }

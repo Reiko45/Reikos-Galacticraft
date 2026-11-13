@@ -41,6 +41,11 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
     /** Ticks for one operation; may depend on {@link #poweredTier()}. */
     public abstract int processTime();
 
+    /** The gJ it uses each tick it works, hard mode included. */
+    public float energyUsePerTick() {
+        return energyPerTick();
+    }
+
     /** Ticks into the current job (for Jade). */
     public int progress() {
         return this.progress;

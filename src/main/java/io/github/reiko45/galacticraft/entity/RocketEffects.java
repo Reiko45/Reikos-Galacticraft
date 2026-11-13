@@ -15,6 +15,10 @@ final class RocketEffects {
      * behind.
      */
     static void spawnFlames(RocketEntity rocket, int tier) {
+        // the client's disableSpaceshipParticles (rockets only; landers keep their flames, as in 1.12.2)
+        if (io.github.reiko45.galacticraft.GCConfig.client(io.github.reiko45.galacticraft.GCConfig.DISABLE_SPACESHIP_PARTICLES)) {
+            return;
+        }
         final RandomSource random = rocket.getRandom();
         final double y = rocket.launched() && tier >= 2 ? rocket.getY() - 1.9D - rocket.getDeltaMovement().y : rocket.getY() - 0.4D;
         if (rocket.launched() && tier >= 3) {

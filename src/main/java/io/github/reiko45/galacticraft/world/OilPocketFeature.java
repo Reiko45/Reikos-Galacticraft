@@ -20,21 +20,25 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 import net.neoforged.neoforge.common.Tags;
 
 /**
- * Underground crude oil pockets (1.12.2 EventHandlerGC#generateOil, default oil gen factor 1.8).
+ * Underground crude oil pockets (1.12.2 EventHandlerGC#generateOil).
  *
- * <p>Per chunk: two rolls at 9% each (half that under mountains, 1.8x under oceans and deserts). A pocket is a
+ * <p>Per chunk: two rolls at 5% times the oil gen factor each, at most 20% (9% at the default factor of 1.8; half that
+ * under mountains, 1.8x under oceans and deserts). A pocket is a
  * flattened ellipsoid {@code x^2 + 3y^2 + z^2 <= r^2}, r 3-7, centred at y 17-30 within the chunk. Positions next to
  * air or another liquid, or below sand or gravel, are left alone so the oil stays sealed in.
  */
 public class OilPocketFeature extends Feature<NoneFeatureConfiguration> {
-    public static final double BASE_CHANCE = Math.min(0.2D, 0.05D * 1.8D);
+    /** The chance of each roll before the biome's share, from the {@code oilGenFactor} setting. */
+    public static double baseChance() {
+        return Math.min(0.2D, 0.05D * io.github.reiko45.galacticraft.GCConfig.common(io.github.reiko45.galacticraft.GCConfig.OIL_GEN_FACTOR));
+    }
 
     public OilPocketFeature(Codec<NoneFeatureConfiguration> codec) {
         super(codec);
     }
 
     public static double chance(Holder<Biome> biome) {
-        double chance = BASE_CHANCE;
+        double chance = baseChance();
         if (biome.is(BiomeTags.IS_MOUNTAIN) || biome.is(BiomeTags.IS_HILL)) {
             chance /= 2.0D;
         }

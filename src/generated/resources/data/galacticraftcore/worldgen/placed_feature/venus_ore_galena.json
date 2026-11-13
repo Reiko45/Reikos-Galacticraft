@@ -2,6 +2,11 @@
   "feature": "galacticraftcore:venus_ore_galena",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "disableGalenaVenus",
+      "value": false
+    },
+    {
       "type": "minecraft:count",
       "count": 18
     },

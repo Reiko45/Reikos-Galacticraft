@@ -42,7 +42,18 @@ public final class CompressorGrid {
     }
 
     public Optional<ItemStack> result(Level level) {
-        return recipe(level).map(recipe -> recipe.assemble(input(), level.registryAccess()));
+        return recipe(level).map(recipe -> quickMode(recipe.assemble(input(), level.registryAccess()), io.github.reiko45.galacticraft.GCConfig.quickMode()));
+    }
+
+    /**
+     * 1.12.2 quick mode: a compressor makes twice as many of anything "compressed" (the plates, not the heavy duty ones),
+     * in both slots of the Electric Compressor. The result is a copy; the recipe's own stack is left alone.
+     */
+    public static ItemStack quickMode(ItemStack result, boolean quick) {
+        if (quick && net.minecraft.core.registries.BuiltInRegistries.ITEM.getKey(result.getItem()).getPath().contains("compressed")) {
+            return result.copyWithCount(result.getCount() * 2);
+        }
+        return result;
     }
 
     /** Use up one of each grid item, leaving container items behind (water bucket -> bucket). */

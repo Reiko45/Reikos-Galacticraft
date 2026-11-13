@@ -44,9 +44,11 @@ public class LaunchControllerBlockEntity extends MachineBlockEntity {
     public static final float ENERGY_USE = 6.0F;
     public static final int MAX_FREQUENCY = 999_999;
     public static final TicketController TICKETS = new TicketController(GalacticraftCore.id("launch_controller"), (level, helper) -> {
-        // Forget chunks whose controller has gone (broken while its chunk was unloaded)
+        // Forget chunks whose controller has gone (broken while its chunk was unloaded), and all of them once
+        // launchControllerChunkLoad is off
+        final boolean chunkLoading = io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.LAUNCH_CONTROLLER_CHUNK_LOAD);
         for (BlockPos owner : Set.copyOf(helper.getBlockTickets().keySet())) {
-            if (!(level.getBlockEntity(owner) instanceof LaunchControllerBlockEntity)) {
+            if (!chunkLoading || !(level.getBlockEntity(owner) instanceof LaunchControllerBlockEntity)) {
                 helper.removeAllTickets(owner);
             }
         }
@@ -151,7 +153,8 @@ public class LaunchControllerBlockEntity extends MachineBlockEntity {
         super.onLoad();
         if (this.level instanceof ServerLevel serverLevel) {
             LOADED.add(this);
-            forceChunk(serverLevel, true);
+            // 1.12.2 ConfigManagerMars#launchControllerChunkLoad: it keeps its chunk loaded unless that is turned off
+            forceChunk(serverLevel, io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.LAUNCH_CONTROLLER_CHUNK_LOAD));
         }
     }
 

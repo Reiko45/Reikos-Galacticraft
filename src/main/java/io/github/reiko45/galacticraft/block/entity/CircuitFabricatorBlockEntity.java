@@ -31,7 +31,7 @@ public class CircuitFabricatorBlockEntity extends ProcessingMachineBlockEntity {
 
     @Override
     protected float energyPerTick() {
-        return 20.0F;
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 40.0F : 20.0F; // 1.12.2: hard mode doubles it
     }
 
     @Override

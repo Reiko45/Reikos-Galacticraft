@@ -2,6 +2,11 @@
   "feature": "galacticraftcore:moon_ore_cheese",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "disableCheeseMoon",
+      "value": false
+    },
+    {
       "type": "minecraft:count",
       "count": 14
     },

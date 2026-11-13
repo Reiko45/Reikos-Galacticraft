@@ -452,7 +452,7 @@ public class AstroMinerEntity extends Entity implements Telemetry {
         this.inventoryDrops = 0;
         if (base.hasEnoughEnergyToRun() && this.energyLevel < MAX_ENERGY) {
             this.energyLevel += 16;
-            base.energy().consume(MinerBaseBlockEntity.ENERGY_USE);
+            base.energy().consume(MinerBaseBlockEntity.energyUse());
         }
         if (this.energyLevel >= MAX_ENERGY && !somethingTransferred && hasHoldSpace()) {
             this.energyLevel = MAX_ENERGY;

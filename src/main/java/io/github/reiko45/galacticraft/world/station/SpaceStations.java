@@ -92,8 +92,14 @@ public final class SpaceStations extends SavedData {
             return player.getUUID().equals(this.owner);
         }
 
-        /** 1.12.2: the owner, allowed players, or anyone when the station is open to all. */
+        /**
+         * 1.12.2: the owner, allowed players, or anyone when the station is open to all; anyone at all once
+         * spaceStationsRequirePermission is off.
+         */
         public boolean canVisit(Player player) {
+            if (!io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.SPACE_STATIONS_REQUIRE_PERMISSION)) {
+                return true;
+            }
             return isOwner(player) || this.allowAll || this.allowed.contains(player.getGameProfile().getName().toLowerCase(Locale.ROOT));
         }
 

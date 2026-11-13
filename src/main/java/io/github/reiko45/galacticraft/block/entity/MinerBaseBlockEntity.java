@@ -50,6 +50,11 @@ public class MinerBaseBlockEntity extends MachineBlockEntity {
     /** 1.12.2 setMaxExtract(12) (20 in hard mode): what charging the miner draws each tick. */
     public static final float ENERGY_USE = 12.0F;
 
+    /** 1.12.2: 20 gJ/t in hard mode. */
+    public static float energyUse() {
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 20.0F : ENERGY_USE;
+    }
+
     private boolean master;
     @Nullable
     private BlockPos masterPos;
@@ -340,7 +345,7 @@ public class MinerBaseBlockEntity extends MachineBlockEntity {
         if (this.energy.getStoredGJ() < this.energy.getCapacityGJ()) {
             dischargeBattery(0);
         }
-        this.hasEnoughEnergyToRun = this.energy.getStoredGJ() > ENERGY_USE;
+        this.hasEnoughEnergyToRun = this.energy.getStoredGJ() > energyUse();
         if (this.ticks % 10 == 0 && this.energy.getStoredGJ() > 0.0F) {
             this.energy.consume(Math.min(5.0F, this.energy.getStoredGJ()));
         }

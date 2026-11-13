@@ -2,6 +2,10 @@
   "feature": "galacticraftcore:ore_silicon",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "enableSiliconOreGen"
+    },
+    {
       "type": "minecraft:count",
       "count": 3
     },

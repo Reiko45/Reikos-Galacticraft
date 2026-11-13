@@ -71,7 +71,10 @@ import net.neoforged.neoforge.client.extensions.common.RegisterClientExtensionsE
 /** Client-only entry point. */
 @Mod(value = GalacticraftCore.MOD_ID, dist = Dist.CLIENT)
 public final class GalacticraftClient {
-    public GalacticraftClient(IEventBus modBus) {
+    public GalacticraftClient(IEventBus modBus, net.neoforged.fml.ModContainer container) {
+        // the settings, editable from the mod list (1.12.2 GuiFactoryCore's config screen)
+        container.registerExtensionPoint(net.neoforged.neoforge.client.gui.IConfigScreenFactory.class,
+                net.neoforged.neoforge.client.gui.ConfigurationScreen::new);
         modBus.addListener(GalacticraftClient::registerDimensionEffects);
         modBus.addListener(GalacticraftClient::registerScreens);
         modBus.addListener(GalacticraftClient::registerLayers);
@@ -99,6 +102,8 @@ public final class GalacticraftClient {
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, true));
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
+        NeoForge.EVENT_BUS.addListener(VehicleCamera::onClientTick);
+        NeoForge.EVENT_BUS.addListener(VehicleCamera::onCameraDistance);
         NeoForge.EVENT_BUS.addListener(SpaceMusic::onSelectMusic);
         NeoForge.EVENT_BUS.addListener(SensorGlasses::onClientTick);
         NeoForge.EVENT_BUS.addListener(PlatformLift::onPlayerTick);

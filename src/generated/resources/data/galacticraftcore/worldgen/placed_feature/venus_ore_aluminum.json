@@ -2,6 +2,11 @@
   "feature": "galacticraftcore:venus_ore_aluminum",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "disableAluminumVenus",
+      "value": false
+    },
+    {
       "type": "minecraft:count",
       "count": 18
     },

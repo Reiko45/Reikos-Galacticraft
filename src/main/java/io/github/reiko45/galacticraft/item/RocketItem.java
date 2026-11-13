@@ -108,7 +108,7 @@ public class RocketItem extends Item {
             tooltip.add(Component.translatable("gui.galacticraftcore.rocket_type.3"));
             tooltip.add(Component.translatable("gui.galacticraftcore.creative_only.desc").withStyle(ChatFormatting.RED, ChatFormatting.ITALIC));
         } else if (stack.has(GCDataComponents.ROCKET_FUEL.get())) {
-            tooltip.add(Component.translatable("gui.galacticraftcore.message.fuel").append(": " + fuel + " / " + this.fuelCapacity));
+            tooltip.add(Component.translatable("gui.galacticraftcore.message.fuel").append(": " + fuel + " / " + this.fuelCapacity * RocketEntity.fuelFactor()));
         }
     }
 }

@@ -312,6 +312,11 @@ def convert_recipe(rules, recipe):
     raise Unmapped("recipe type " + kind)
 
 
+def quick_mode_variant(recipe, quick):
+    """The recipe, loaded only while the quickMode setting is {@code quick} (galacticraftcore:config condition)."""
+    return {"neoforge:conditions": [{"type": f"{MOD_ID}:config", "option": "quickMode", "value": quick}], **recipe}
+
+
 def mirror(recipe):
     if "pattern" not in recipe:
         return recipe
@@ -365,6 +370,15 @@ def port_recipes(mapping, legacy_assets, out_data):
         out_name, n = base, 2
         while out_name in written:
             out_name, n = f"{base}_{n}", n + 1
+        quick = rules.get("quick_mode_counts", {}).get(converted["result"]["id"])
+        if quick is not None:
+            # 1.12.2 RecipeManagerGC#setConfigurableRecipes: quick mode makes more of these; one recipe for each setting
+            write_json(os.path.join(out_dir, out_name + ".json"), quick_mode_variant(converted, False))
+            quick_recipe = quick_mode_variant(converted, True)
+            quick_recipe["result"] = dict(quick_recipe["result"], count=quick)
+            write_json(os.path.join(out_dir, out_name + "_quick_mode.json"), quick_recipe)
+            written += [out_name, out_name + "_quick_mode"]
+            continue
         write_json(os.path.join(out_dir, out_name + ".json"), converted)
         written.append(out_name)
     print(f"recipes: {len(written)} converted, {sum(len(v) for v in skipped.values())} skipped")

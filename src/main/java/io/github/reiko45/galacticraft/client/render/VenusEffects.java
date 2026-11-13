@@ -244,13 +244,15 @@ public final class VenusEffects extends DimensionSpecialEffects {
 
     /**
      * TickHandlerClientVenus#onPlayerTick: each bolt lasts 20 ticks; a new one strikes at y 70, 180 blocks from the
-     * player in a random direction, 1 tick in (300 + 800 x rain strength), with thunder heard from far away.
+     * player in a random direction, 1 tick in (300 + 800 x rain strength), with thunder heard from far away. None at all
+     * with the server's disableAmbientLightning (ConfigManagerVenus).
      */
     public static void onClientTick(ClientTickEvent.Post event) {
         final Minecraft minecraft = Minecraft.getInstance();
         final LocalPlayer player = minecraft.player;
-        if (player == null || minecraft.level == null || minecraft.isPaused() || !minecraft.level.dimension().equals(GCDimensions.VENUS)) {
-            if (minecraft.level == null || !minecraft.level.dimension().equals(GCDimensions.VENUS)) {
+        final boolean disabled = io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.DISABLE_AMBIENT_LIGHTNING);
+        if (player == null || minecraft.level == null || minecraft.isPaused() || !minecraft.level.dimension().equals(GCDimensions.VENUS) || disabled) {
+            if (minecraft.level == null || !minecraft.level.dimension().equals(GCDimensions.VENUS) || disabled) {
                 LIGHTNING.clear();
             }
             return;

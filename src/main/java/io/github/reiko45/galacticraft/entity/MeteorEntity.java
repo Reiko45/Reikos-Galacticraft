@@ -100,7 +100,7 @@ public class MeteorEntity extends Entity {
         } else {
             final Entity target = ((EntityHitResult) hit).getEntity();
             above = this.level().getHeightmapPos(Heightmap.Types.MOTION_BLOCKING, target.blockPosition()).above();
-            target.hurt(this.damageSources().explosion(this, null), 6.0F);
+            target.hurt(this.damageSources().explosion(this, null), io.github.reiko45.galacticraft.GCConfig.hardMode() ? 12.0F : 6.0F);
         }
         if (this.level().getBlockState(above).isAir()) {
             this.level().setBlockAndUpdate(above, GCBlocks.FALLEN_METEOR.get().defaultBlockState());

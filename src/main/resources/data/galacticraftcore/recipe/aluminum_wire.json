@@ -1,4 +1,11 @@
 {
+  "neoforge:conditions": [
+    {
+      "type": "galacticraftcore:config",
+      "option": "quickMode",
+      "value": false
+    }
+  ],
   "type": "minecraft:crafting_shaped",
   "category": "misc",
   "key": {

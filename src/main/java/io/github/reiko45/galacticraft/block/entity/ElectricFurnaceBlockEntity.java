@@ -49,7 +49,7 @@ public class ElectricFurnaceBlockEntity extends ProcessingMachineBlockEntity {
 
     @Override
     protected float energyPerTick() {
-        return this.arc ? 60.0F : 45.0F;
+        return this.arc ? (io.github.reiko45.galacticraft.GCConfig.hardMode() ? 90.0F : 60.0F) : (io.github.reiko45.galacticraft.GCConfig.hardMode() ? 60.0F : 45.0F);
     }
 
     @Override

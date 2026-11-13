@@ -103,7 +103,8 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
             for (Ingredient ingredient : recipe.getIngredients()) {
                 this.inputs.add(EmiIngredient.of(ingredient));
             }
-            this.outputs.add(EmiStack.of(result(recipe)));
+            this.outputs.add(EmiStack.of(io.github.reiko45.galacticraft.machine.CompressorGrid.quickMode(result(recipe),
+                    io.github.reiko45.galacticraft.GCConfig.quickMode())));
         }
 
         @Override

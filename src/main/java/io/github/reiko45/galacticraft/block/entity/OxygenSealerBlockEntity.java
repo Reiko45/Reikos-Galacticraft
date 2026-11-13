@@ -108,9 +108,12 @@ public class OxygenSealerBlockEntity extends OxygenMachineBlockEntity {
         super.onChunkUnloaded();
     }
 
-    /** A block next to breathable air changed: re-check the space around {@code pos} soon (1.12.2 edge check). */
+    /**
+     * A block next to breathable air changed: re-check the space around {@code pos} soon (1.12.2 edge check). Off with
+     * enableSealerEdgeChecks false, as 1.12.2 allowed for performance: sealers then notice leaks only on their own checks.
+     */
     public static void requestRecheck(Level level, BlockPos pos) {
-        if (!level.isClientSide) {
+        if (!level.isClientSide && io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.ENABLE_SEALER_EDGE_CHECKS)) {
             EDGE_CHECKS.computeIfAbsent(level, l -> new LinkedHashSet<>()).add(pos.immutable());
         }
     }

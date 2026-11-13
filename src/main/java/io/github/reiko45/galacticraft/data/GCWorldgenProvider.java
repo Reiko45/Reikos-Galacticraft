@@ -197,9 +197,10 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
     private static void placedFeatures(BootstrapContext<PlacedFeature> context) {
         final HolderGetter<ConfiguredFeature<?, ?>> configured = context.lookup(Registries.CONFIGURED_FEATURE);
         // 1.12.2 picked y = minY + nextInt(maxY - minY), i.e. [minY, maxY - 1].
-        ore(context, ORE_TIN_PLACED, configured, ORE_TIN, 22, 0, 59);
-        ore(context, ORE_ALUMINUM_PLACED, configured, ORE_ALUMINUM, 18, 0, 44);
-        ore(context, ORE_SILICON_PLACED, configured, ORE_SILICON, 3, 0, 24);
+        // the 1.12.2 ore toggles: each ore places only while its setting allows it
+        ore(context, ORE_TIN_PLACED, configured, ORE_TIN, 22, 0, 59, "enableTinOreGen", true);
+        ore(context, ORE_ALUMINUM_PLACED, configured, ORE_ALUMINUM, 18, 0, 44, "enableAluminumOreGen", true);
+        ore(context, ORE_SILICON_PLACED, configured, ORE_SILICON, 3, 0, 24, "enableSiliconOreGen", true);
 
         PlacementUtils.register(context, OIL_POCKET_PLACED, configured.getOrThrow(OIL_POCKET), List.of(BiomeFilter.biome()));
         // 1.12.2 EventHandlerMars#onPlanetDecorated: 2 a chunk at y 24 + nextInt(104)
@@ -207,23 +208,25 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                 InSquarePlacement.spread(), HeightRangePlacement.uniform(VerticalAnchor.absolute(24), VerticalAnchor.absolute(127)), BiomeFilter.biome()));
 
         ore(context, MOON_DIRT_BLOB_PLACED, configured, MOON_DIRT_BLOB, 20, 0, 199);
-        ore(context, MOON_ORE_COPPER_PLACED, configured, MOON_ORE_COPPER, 26, 0, 59);
-        ore(context, MOON_ORE_TIN_PLACED, configured, MOON_ORE_TIN, 23, 0, 59);
-        ore(context, MOON_ORE_CHEESE_PLACED, configured, MOON_ORE_CHEESE, 14, 0, 84);
+        ore(context, MOON_ORE_COPPER_PLACED, configured, MOON_ORE_COPPER, 26, 0, 59, "disableCopperMoon", false);
+        ore(context, MOON_ORE_TIN_PLACED, configured, MOON_ORE_TIN, 23, 0, 59, "disableTinMoon", false);
+        ore(context, MOON_ORE_CHEESE_PLACED, configured, MOON_ORE_CHEESE, 14, 0, 84, "disableCheeseMoon", false);
         ore(context, MARS_ICE_PLACED, configured, MARS_ICE, 4, 60, 119);
         // BiomeDecoratorVenus#generateVenus: per chunk, y 0-59 (solar 0-49)
         final int[] venusCounts = {18, 24, 18, 26, 4, 22, 6};
         for (int i = 0; i < VENUS_ORES.length; i++) {
-            ore(context, venusOrePlaced(VENUS_ORES[i]), configured, venusOre(VENUS_ORES[i]), venusCounts[i], 0, i == 6 ? 49 : 59);
+            ore(context, venusOrePlaced(VENUS_ORES[i]), configured, venusOre(VENUS_ORES[i]), venusCounts[i], 0, i == 6 ? 49 : 59,
+                    "disable" + Character.toUpperCase(VENUS_ORES[i].charAt(0)) + VENUS_ORES[i].substring(1) + "Venus", false);
         }
         PlacementUtils.register(context, VENUS_FEATURES_PLACED, configured.getOrThrow(VENUS_FEATURES), List.of(BiomeFilter.biome()));
         ore(context, MARS_REGOLITH_BLOB_PLACED, configured, MARS_REGOLITH_BLOB, 20, 0, 199);
-        ore(context, MARS_ORE_DESH_PLACED, configured, MARS_ORE_DESH, 15, 20, 63);
-        ore(context, MARS_ORE_COPPER_PLACED, configured, MARS_ORE_COPPER, 26, 0, 59);
-        ore(context, MARS_ORE_TIN_PLACED, configured, MARS_ORE_TIN, 23, 0, 59);
-        ore(context, MARS_ORE_IRON_PLACED, configured, MARS_ORE_IRON, 20, 0, 63);
+        ore(context, MARS_ORE_DESH_PLACED, configured, MARS_ORE_DESH, 15, 20, 63, "disableDeshMars", false);
+        ore(context, MARS_ORE_COPPER_PLACED, configured, MARS_ORE_COPPER, 26, 0, 59, "disableCopperMars", false);
+        ore(context, MARS_ORE_TIN_PLACED, configured, MARS_ORE_TIN, 23, 0, 59, "disableTinMars", false);
+        ore(context, MARS_ORE_IRON_PLACED, configured, MARS_ORE_IRON, 20, 0, 63, "disableIronMars", false);
         // 3 + nextInt(6) attempts per chunk at y = 4 + nextInt(28).
         PlacementUtils.register(context, MOON_ORE_SAPPHIRE_PLACED, configured.getOrThrow(MOON_ORE_SAPPHIRE), List.of(
+                io.github.reiko45.galacticraft.world.ConfigChecks.Filter.when("disableSapphireMoon", false),
                 CountPlacement.of(UniformInt.of(3, 8)), InSquarePlacement.spread(),
                 HeightRangePlacement.uniform(VerticalAnchor.absolute(4), VerticalAnchor.absolute(31)), BiomeFilter.biome()));
     }
@@ -232,6 +235,16 @@ public class GCWorldgenProvider extends DatapackBuiltinEntriesProvider {
                             HolderGetter<ConfiguredFeature<?, ?>> configured, ResourceKey<ConfiguredFeature<?, ?>> feature,
                             int count, int minY, int maxY) {
         PlacementUtils.register(context, key, configured.getOrThrow(feature), List.of(
+                CountPlacement.of(count), InSquarePlacement.spread(),
+                HeightRangePlacement.uniform(VerticalAnchor.absolute(minY), VerticalAnchor.absolute(maxY)), BiomeFilter.biome()));
+    }
+
+    /** An ore that places only while the on/off setting {@code option} is {@code value}, checked once per chunk. */
+    private static void ore(BootstrapContext<PlacedFeature> context, ResourceKey<PlacedFeature> key,
+                            HolderGetter<ConfiguredFeature<?, ?>> configured, ResourceKey<ConfiguredFeature<?, ?>> feature,
+                            int count, int minY, int maxY, String option, boolean value) {
+        PlacementUtils.register(context, key, configured.getOrThrow(feature), List.of(
+                io.github.reiko45.galacticraft.world.ConfigChecks.Filter.when(option, value),
                 CountPlacement.of(count), InSquarePlacement.spread(),
                 HeightRangePlacement.uniform(VerticalAnchor.absolute(minY), VerticalAnchor.absolute(maxY)), BiomeFilter.biome()));
     }

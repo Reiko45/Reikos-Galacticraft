@@ -172,7 +172,8 @@ public final class SpaceTravel {
         final GCPlayerData data = GCPlayerData.get(player);
         final Destination destination = destination(dimension);
         final ServerLevel target = player.server.getLevel(dimension);
-        if (!data.inSpace || destination == null || destination.tier() > selectionTier(data) || target == null) {
+        if (!data.inSpace || destination == null || destination.tier() > selectionTier(data) || target == null
+                || !reachable(dimension)) {
             return;
         }
         final SpaceStations.Station station = dimension.equals(GCDimensions.ORBIT) ? SpaceStations.get(player.server).byId(stationId) : null;
@@ -202,26 +203,40 @@ public final class SpaceTravel {
             data.chestSpawnCooldown = 200;
         } else if (dimension.equals(GCDimensions.ASTEROIDS)) {
             // TeleportTypeAsteroids: an Entry Pod drops from y 310 over the nearest asteroid (within the world border)
-            final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
-            final int x = (int) Math.floor(Math.max(-limit, Math.min(limit, data.launchedFromX)));
-            final int z = (int) Math.floor(Math.max(-limit, Math.min(limit, data.launchedFromZ)));
+            final double[] at = landingSpot(target, data.launchedFromX, data.launchedFromZ);
+            final int x = (int) Math.floor(at[0]);
+            final int z = (int) Math.floor(at[1]);
             final BlockPos spot = AsteroidLanding.find(target, x, z);
             player.teleportTo(target, spot.getX(), spot.getY(), spot.getZ(), player.getYRot(), player.getXRot());
             final EntryPodEntity pod = EntryPodEntity.create(target, spot.getX(), spot.getY(), spot.getZ(), cargo, fuel);
             target.addFreshEntity(pod);
             player.startRiding(pod, true);
+        } else if (dimension.equals(GCDimensions.MOON) && io.github.reiko45.galacticraft.GCConfig.server(
+                io.github.reiko45.galacticraft.GCConfig.DISABLE_LANDER)) {
+            // TeleportTypeMoon with disableLander: down from y 250 by parachute, a para-chest from y 220 within 4 blocks
+            final double[] at = landingSpot(target, data.launchedFromX, data.launchedFromZ);
+            player.teleportTo(target, at[0], 250.0D, at[1], player.getYRot(), player.getXRot());
+            data.usingParachute = !data.gear(GearSlot.PARACHUTE).isEmpty();
+            data.markGearChanged();
+            data.rocketCargo = cargo;
+            data.rocketFuel = fuel;
+            data.chestSpawnPos = new Vec3(at[0] + (player.getRandom().nextDouble() * 2 - 1) * 4.0D, 220.0D,
+                    at[1] + (player.getRandom().nextDouble() * 2 - 1) * 4.0D);
+            data.chestSpawnCooldown = 200;
         } else if (dimension.equals(GCDimensions.MOON) || dimension.equals(GCDimensions.MARS) || dimension.equals(GCDimensions.VENUS)) {
             // TeleportTypeMoon / Mars / Venus: arrive at y 900 in a lander, landing balloons or the Venus entry pod (within
-            // the world border)
-            final double limit = target.getWorldBorder().getSize() / 2.0D - 2.0D;
-            final double x = Math.max(-limit, Math.min(limit, data.launchedFromX));
-            final double z = Math.max(-limit, Math.min(limit, data.launchedFromZ));
-            player.teleportTo(target, x, 900.0D, z, player.getYRot(), player.getXRot());
+            // the world border); with disableLander the balloons start from y 250
+            final double[] at = landingSpot(target, data.launchedFromX, data.launchedFromZ);
+            final double x = at[0];
+            final double z = at[1];
+            final double y = dimension.equals(GCDimensions.MARS) && io.github.reiko45.galacticraft.GCConfig.server(
+                    io.github.reiko45.galacticraft.GCConfig.DISABLE_LANDER) ? 250.0D : 900.0D;
+            player.teleportTo(target, x, y, z, player.getYRot(), player.getXRot());
             final LanderEntity lander = dimension.equals(GCDimensions.MARS)
-                    ? LandingBalloonsEntity.create(target, x, 900.0D, z, cargo, fuel)
+                    ? LandingBalloonsEntity.create(target, x, y, z, cargo, fuel)
                     : dimension.equals(GCDimensions.VENUS)
-                    ? io.github.reiko45.galacticraft.entity.VenusEntryPodEntity.create(target, x, 900.0D, z, cargo, fuel)
-                    : LanderEntity.create(target, x, 900.0D, z, cargo, fuel);
+                    ? io.github.reiko45.galacticraft.entity.VenusEntryPodEntity.create(target, x, y, z, cargo, fuel)
+                    : LanderEntity.create(target, x, y, z, cargo, fuel);
             target.addFreshEntity(lander);
             player.startRiding(lander, true);
         } else {
@@ -236,6 +251,39 @@ public final class SpaceTravel {
             data.chestSpawnCooldown = 200;
         }
         player.resetFallDistance();
+    }
+
+    /** 1.12.2 WorldUtil#getPossibleDimensionsForSpaceshipTier: the Overworld is left off with disableRocketsToOverworld. */
+    public static boolean reachable(ResourceKey<Level> dimension) {
+        return !dimension.equals(Level.OVERWORLD)
+                || !io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.DISABLE_ROCKETS_TO_OVERWORLD);
+    }
+
+    /**
+     * Where on another planet a traveller from (x, z) comes down: 1.12.2 TeleportTypeMoon's otherPlanetWorldBorders (past
+     * the limit, the far coordinate is brought in and the other scaled with it, keeping the direction), then inside the
+     * world's own border.
+     */
+    public static double[] landingSpot(ServerLevel target, double x, double z) {
+        final int limit = io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.OTHER_PLANET_WORLD_BORDERS) - 2;
+        if (limit > 20) {
+            if (x > limit) {
+                z *= limit / x;
+                x = limit;
+            } else if (x < -limit) {
+                z *= -limit / x;
+                x = -limit;
+            }
+            if (z > limit) {
+                x *= limit / z;
+                z = limit;
+            } else if (z < -limit) {
+                x *= -limit / z;
+                z = -limit;
+            }
+        }
+        final double border = target.getWorldBorder().getSize() / 2.0D - 2.0D;
+        return new double[] {Math.max(-border, Math.min(border, x)), Math.max(-border, Math.min(border, z))};
     }
 
     /** The rocket a traveller gets back on arrival (1.12.2 GCPlayerStats rocketItem and rocketType). */

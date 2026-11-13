@@ -51,7 +51,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `GCPlayerStats` capability (~54 fields) | Data attachment `galacticraftcore:player_data` (`GCPlayerData`), synced with payloads | oxygen/gear fields done |
 | Item NBT (battery charge, oxygen in tanks, fuel in canisters, rocket inventory) | Data components (`galacticraftcore:energy`, `galacticraftcore:fluid`, `galacticraftcore:oxygen`, `galacticraftcore:rocket_storage`, `galacticraftcore:rocket_fuel`) | done |
 | `FMLEmbeddedChannel`, `PacketSimple` (78 enum types) | `CustomPacketPayload` + `StreamCodec`, one record per message, `RegisterPayloadHandlersEvent` (`GCNetwork`) | oxygen, gear, inventory tab, rocket/lander controls, destination done |
-| Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
+| Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically), NeoForge's config screen in the mod list | done (see Settings) |
 | TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer` with `LayerDefinition`s converted from the 1.12.2 `ModelRenderer` code (`tools/convert_java_model.py`), NeoForge OBJ loader (`neoforge:obj`), `BlockEntityWithoutLevelRenderer` for item models | solar panel, fluid tank/pipe, rocket, lander, para-chest, NASA Workbench done |
 | Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions`; oxygen is a block-less `GasFluid` | oil, fuel, oxygen done |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` (`GCCommands`, `GCAdminCommands`) | 11 done; `/gckeeploaded` not needed |
@@ -471,8 +471,69 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       tanks (1.12.2 ModelEvolvedWitch), breathing anywhere, a witch's drops plus rare Galacticraft gear; spawn egg
 - [x] The rest of 1.12.2's commands: `/gckit`, `/gcinv save|restore|drop|clear`, `/dimensiontp`,
       `/gcastrominer show|reset|set<n>`, `/gcenergyunits gJ|FE`, `/gchelp` (`/gckeeploaded` has nothing to do in 1.21)
-- [ ] The 1.12.2 config options (game modes, suffocation, oil and ore generation, rocket fuel, ...)
+- [x] The 1.12.2 settings (see Settings below): quick and hard mode, suffocation, oil and ore generation, moon
+      villages, rocket fuel, launch worlds, rocket explosions, landers, landing borders, respawning, station permissions,
+      sealer edge checks, liquids in gratings, Launch Controller chunk loading, Venus lightning, and the client's stars,
+      rocket particles, vehicle camera and oxygen gauge placement; a settings screen in the mod list
 - [ ] The full galaxy map (zoom, catalogue panels, space stations, the Space Race panel)
+
+## Settings
+
+Three files, all editable from the mod list's settings screen; their names come from 1.12.2's own `gc.configgui`
+translations (25 languages).
+
+| File | Read | Settings |
+|---|---|---|
+| `config/galacticraftcore-client.toml` | any time | `energyDisplayUnit`, `moreStars`, `disableSpaceshipParticles`, `disableVehicleCameraChanges`, `oxygenIndicatorLeft`, `oxygenIndicatorBottom` |
+| `config/galacticraftcore-common.toml` | at start-up | `quickMode`; `oilGenFactor`; the ore switches (`enableTinOreGen`, `enableAluminumOreGen`, `enableSiliconOreGen`, `disable<Ore>Moon`, `disable<Ore>Mars`, `disable<Ore>Asteroids`, `disable<Ore>Venus`); `disableMoonVillageGen` |
+| `serverconfig/galacticraftcore-server.toml` (per world, sent to players) | any time | `hardMode`, `meteorSpawnMod`, `meteorBlockDamage`, `dungeonBossHealthMod`, `spaceStationEnergyScalar`, `disableSpaceStationCreation`, `enableSpaceRaceManagerPopup`, `disableSmallAsteroids`, `maximumAstroMiners`, `disableRocketLaunchDimensions`, `disableRocketsToOverworld`, `otherPlanetWorldBorders`, `forceOverworldRespawn`, `disableLander`, `disableSpaceshipGrief`, `spaceStationsRequirePermission`, `suffocationDamage`, `suffocationCooldown`, `enableSealerEdgeChecks`, `rocketFuelFactor`, `allowLiquidGratings`, `launchControllerChunkLoad`, `disableAmbientLightning` |
+
+What they do, where 1.12.2 needed more than a number:
+
+* **Quick mode** (1.12.2 RecipeManagerGC#setConfigurableRecipes): Aluminum Wire makes 9 instead of 6 and Batteries 3
+  instead of 2 (each recipe exists twice, loaded by a `galacticraftcore:config` recipe condition); the Compressor and
+  Electric Compressor make two of anything "compressed"; Silicon Ore drops one more Raw Silicon after Fortune (a
+  `galacticraftcore:config` loot condition). JEI and EMI show the doubled plates.
+* **Hard mode** (a server setting here, as players' own games need it for zero-g drifting): machines use more power
+  (Circuit Fabricator 40, Electric Furnace 60 and Arc Furnace 90, compressors, Refinery, Gas Liquefier, Methane
+  Synthesizer and Deconstructor 90, Electrolyzer 150, Terraformer 60, Short-Range Telepad 115, Astro Miner base 20 gJ a
+  tick), meteors hit for 12 instead of 6, thrown meteor chunks for 3.2 instead of 1.6, drifting in orbit has a third of
+  the thrust and less lift (but a top speed of 0.9), mining in orbit off the floor is no longer five times as fast, and
+  suffocation damage grows by one each time it hurts.
+* **Ore switches** are a `galacticraftcore:config` placement filter on each ore's placed feature (a world made with an
+  ore switched off simply has none of it); the asteroids' ores leave the asteroid cores' block lists, and their loose
+  ore blocks are left out (nothing placed there, as in 1.12.2).
+* **disableRocketLaunchDimensions** takes world ids (`minecraft:the_nether`, `minecraft:the_end` by default) or `*` for
+  every world that isn't the Overworld or Galacticraft's (1.12.2's separate "all non-Galacticraft" switch). A rocket
+  counted down there doesn't take off ("the gyroscopes are spinning wildly").
+* **rocketFuelFactor** multiplies the tank and every mB burned, so a flight takes that many times the fuel; the
+  creative pre-fuelled rocket still comes full.
+* **disableLander**: on the Moon you come down from y 250 by parachute with a para-chest from y 220 within 4 blocks;
+  Mars's landing balloons start from y 250. Other worlds keep their landers.
+* **otherPlanetWorldBorders** (Moon, Mars, the asteroids and Venus): past the limit the far coordinate is brought in and
+  the other scaled with it, so you land in the same direction from spawn; then the world's own border applies.
+* **forceOverworldRespawn** off (the default, as in 1.12.2): dying in a Galacticraft world brings you back in it, on your
+  bed there or at its spawn (the surface above the world spawn; the station you were on; on the asteroids, the top of
+  the column you died in, or the Overworld if that is empty space). With it on, respawning is vanilla's.
+* **disableVehicleCameraChanges** (new to the port with it: the camera itself): getting into a rocket, lander, landing
+  balloons or entry pod switches to third person once, and the third-person camera stands 15 blocks back while riding.
+* **moreStars** (on by default): 20,000 stars on the Moon and in orbit and 35,000 on Mars, Venus and the asteroids, each
+  coordinate pushed out its own random distance; off, 6,000 on a sphere (what the port drew before).
+
+1.12.2 settings with nothing to do in 1.21 or deliberately left out:
+
+* Dimension, biome, schematic and achievement ids, the old oil and fuel fluid ids: registry names replace them.
+* `challengeMode` and its flags (the asteroids start): already mostly stripped in Galacticraft Legacy.
+* `staticLoadDimensions`, `keepLoadedNewSpaceStations`: 1.21 never unloads a world.
+* `enableCopperOreGen`: copper ore is vanilla's. `disableGalacticraftHelium`: there is no helium gas.
+* `sealableIDs`, `detectableIDs`, `otherModsSilicon`, `recipesRequireGCAdvancedMetals`: block and item tags
+  (`galacticraftcore:sealable`, the Sensor Glasses tag, `c:` tags) do this.
+* `externalOilGen`, `retrogenOil`, `oregenIDs`, `enableOtherModsFeatures`, `whitelistCoFHCoreGen`,
+  `enableThaumCraftNodes`: other mods' world generation goes through datapacks and biome modifiers.
+* `alternateCanisterRecipe`: the canister recipe has no conflict to avoid here. `overrideCapes`: no donor capes.
+  `disableUpdateCheck`, `enableDebug`: there is no update check, and logging is set in the log configuration.
+* `launchControllerAllDims`: cargo rockets fly to a controller on any loaded world.
+* `mapScrollInvert`, `mapScrollSensitivity`, `disableRocketIconRotation`: belong to the full galaxy map (phase 9 part 4).
 
 ## Intentional differences from 1.12.2 (so far)
 
@@ -490,11 +551,12 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   connect to any machine face that takes or gives power.
 * Coal Generator heat now survives a world reload (1.12.2 saved and loaded it under different NBT keys).
 * Compressor recipes for steel/bronze ingots load only when some mod puts items in `c:ingots/steel` or
-  `c:ingots/bronze` (the 1.12.2 OreDictionary check). Hard/quick/adventure mode recipe variants are not ported.
+  `c:ingots/bronze` (the 1.12.2 OreDictionary check). Quick mode's recipe counts load by a recipe condition (see
+  Settings); adventure mode's recipes are not ported.
 * Fluid Pipe and Pull Fluid Pipe are one block with a `pull` state that the wrench toggles; there is no separate
   pull pipe item. Pipes only take fluid in; they can't be drained by other blocks, as in 1.12.2.
 * The amount of liquid drawn inside a pipe is synced in 5% steps, and only when it changes.
-* Oil generation uses the default 1.12.2 oil gen factor (1.8) and has no config, retrogen or extra-dimension list yet.
+* Oil generation follows the `oilGenFactor` setting (1.8 by default); there is no retrogen or extra-dimension list.
   Biome chance modifiers use tags: mountains and hills halve the chance, oceans and deserts multiply it by 1.8.
   Pockets are placed before structures, so mineshafts and strongholds cut through them instead of being flooded.
 * A Fluid Tank drains from the bottom tank of a stack; the tanks above pour down into it on the next ticks.
@@ -509,8 +571,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 * Mobs that should breathe in space (1.12.2 IEntityBreathable) go in the `galacticraftcore:breathes_in_space` entity tag.
   Blocks that seal like glass go in `galacticraftcore:sealable` (glass panes by default, the 1.12.2 config default);
   full blocks that let air through go in `galacticraftcore:air_permeable` (gravel, wool, sponge).
-* Suffocation uses the 1.12.2 defaults (2 damage every 100 ticks) without a config yet; hard-mode increasing damage
-  is not ported.
+* Suffocation follows the `suffocationDamage` and `suffocationCooldown` settings (2 damage every 100 ticks by default);
+  in hard mode the damage grows by one each time, as in 1.12.2.
 * Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
   made the Refinery's status flicker).
 * The destination screen is a simplified galaxy map: the Sun, Earth, the Moon and Mars on their orbits with the 1.12.2 icons,
@@ -611,8 +673,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   choice; its pages switch on the client (1.12.2 reopened the container). Its owner is a UUID (1.12.2: the name).
   Values typed into its boxes are sent as they change.
 * Cargo rockets keep the chunk they fly through loaded (a timed ticket refreshed every second), and the destination
-  controller's chunk is force-loaded; 1.12.2 force-loaded the controller's chunk and its pads' chunks with a config
-  option. A cargo rocket can't target a pad on a world that isn't loaded (1.12.2 loaded it; here the controller's
+  controller's chunk is force-loaded unless `launchControllerChunkLoad` is off; 1.12.2 force-loaded the controller's
+  chunk and its pads' chunks. A cargo rocket can't target a pad on a world that isn't loaded (1.12.2 loaded it; here the controller's
   forced chunk keeps it loaded once placed).
 * Rockets, landers and buggies are loaded and unloaded through `CargoCarrier` (1.12.2 ICargoEntity); the loaders find
   the vehicle on their pad themselves (1.12.2 asked the pad's tile entity).

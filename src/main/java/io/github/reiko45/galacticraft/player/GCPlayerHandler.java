@@ -1,6 +1,8 @@
 package io.github.reiko45.galacticraft.player;
 
 import io.github.reiko45.galacticraft.GalacticraftCore;
+import javax.annotation.Nullable;
+import net.minecraft.core.BlockPos;
 import io.github.reiko45.galacticraft.entity.LanderEntity;
 import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.travel.SpaceTravel;
@@ -39,8 +41,18 @@ import net.neoforged.neoforge.event.tick.PlayerTickEvent;
 @EventBusSubscriber(modid = GalacticraftCore.MOD_ID)
 public final class GCPlayerHandler {
     /** 1.12.2 config defaults: Suffocation Cooldown 100 ticks, Suffocation Damage 2. */
+    /** 1.12.2 suffocationCooldown default (the config's "suffocationCooldown"). */
     public static final int SUFFOCATION_COOLDOWN = 100;
+    /** 1.12.2 suffocationDamage default (the config's "suffocationDamage"). */
     public static final int SUFFOCATION_DAMAGE = 2;
+
+    private static int suffocationCooldown() {
+        return io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.SUFFOCATION_COOLDOWN);
+    }
+
+    private static int suffocationDamage() {
+        return io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.SUFFOCATION_DAMAGE);
+    }
 
     private GCPlayerHandler() {
     }
@@ -127,8 +139,12 @@ public final class GCPlayerHandler {
         }
         if (!data.oxygenSetupValid()) {
             if (data.damageCounter() == 0) {
-                data.setDamageCounter(SUFFOCATION_COOLDOWN);
-                player.hurt(GCDamageTypes.suffocation(player.level()), SUFFOCATION_DAMAGE * (2 + data.incrementalDamage()) / 2.0F);
+                data.setDamageCounter(suffocationCooldown());
+                player.hurt(GCDamageTypes.suffocation(player.level()), suffocationDamage() * (2 + data.incrementalDamage()) / 2.0F);
+                // 1.12.2 hard mode: each breathless hit is harder than the last, until the player breathes again
+                if (io.github.reiko45.galacticraft.GCConfig.hardMode()) {
+                    data.setIncrementalDamage(data.incrementalDamage() + 1);
+                }
             }
         } else {
             data.setIncrementalDamage(0);
@@ -231,6 +247,50 @@ public final class GCPlayerHandler {
                 || event.getSpawnLevel().equals(io.github.reiko45.galacticraft.world.GCDimensions.VENUS))) {
             event.setCanceled(true);
         }
+    }
+
+    /**
+     * 1.12.2 WorldProviderSpace#getRespawnDimension: dying in a Galacticraft world brings you back in that world (on a bed
+     * there if you have one, else at its spawn: the surface above the world spawn, or the station you were on), unless
+     * forceOverworldRespawn is set. The asteroids have no surface at the spawn, so there it is the top of the column you
+     * died in, or the Overworld if that is empty space.
+     */
+    @SubscribeEvent
+    public static void onRespawnPosition(net.neoforged.neoforge.event.entity.player.PlayerRespawnPositionEvent event) {
+        if (event.isFromEndFight() || io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.FORCE_OVERWORLD_RESPAWN)
+                || !(event.getEntity() instanceof ServerPlayer player)) {
+            return;
+        }
+        final net.minecraft.server.level.ServerLevel died = player.serverLevel();
+        if (!died.dimension().location().getNamespace().equals(GalacticraftCore.MOD_ID) || event.getDimensionTransition().newLevel() == died) {
+            return;
+        }
+        final net.minecraft.world.phys.Vec3 spot = respawnSpot(died, player);
+        if (spot != null) {
+            event.setDimensionTransition(new net.minecraft.world.level.portal.DimensionTransition(died, spot, net.minecraft.world.phys.Vec3.ZERO,
+                    player.getYRot(), 0.0F, net.minecraft.world.level.portal.DimensionTransition.DO_NOTHING));
+        }
+    }
+
+    @Nullable
+    private static net.minecraft.world.phys.Vec3 respawnSpot(net.minecraft.server.level.ServerLevel level, ServerPlayer player) {
+        if (level.dimension().equals(io.github.reiko45.galacticraft.world.GCDimensions.ORBIT)) {
+            final io.github.reiko45.galacticraft.world.station.SpaceStations stations =
+                    io.github.reiko45.galacticraft.world.station.SpaceStations.get(player.server);
+            io.github.reiko45.galacticraft.world.station.SpaceStations.Station station = stations.at(player.blockPosition());
+            if (station == null) {
+                station = stations.ownedBy(player.getUUID());
+            }
+            return station == null ? null : net.minecraft.world.phys.Vec3.atBottomCenterOf(station.arrival());
+        }
+        final BlockPos spawn = level.getSharedSpawnPos();
+        if (level.dimension().equals(io.github.reiko45.galacticraft.world.GCDimensions.ASTEROIDS)) {
+            final BlockPos at = player.blockPosition();
+            final int top = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, at.getX(), at.getZ());
+            return top <= level.getMinBuildHeight() ? null : new net.minecraft.world.phys.Vec3(at.getX() + 0.5D, top, at.getZ() + 0.5D);
+        }
+        final int y = level.getHeight(net.minecraft.world.level.levelgen.Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, spawn.getX(), spawn.getZ());
+        return new net.minecraft.world.phys.Vec3(spawn.getX() + 0.5D, y, spawn.getZ() + 0.5D);
     }
 
     /** 1.12.2 WorldProviderAsteroids#isDaytime was always true, so beds there always said it wasn't night. */
@@ -342,11 +402,11 @@ public final class GCPlayerHandler {
     @SubscribeEvent
     public static void onEntityTick(EntityTickEvent.Post event) {
         if (!(event.getEntity() instanceof LivingEntity entity) || entity.level().isClientSide || entity instanceof Player
-                || entity instanceof ArmorStand || entity.tickCount % SUFFOCATION_COOLDOWN != 0) {
+                || entity instanceof ArmorStand || entity.tickCount % suffocationCooldown() != 0) {
             return;
         }
         if (CelestialPhysics.isAirless(entity.level()) && !entity.getType().is(GCModTags.BREATHES_IN_SPACE) && !OxygenUtil.isInBreathableAir(entity)) {
-            entity.hurt(GCDamageTypes.suffocation(entity.level()), Math.max(SUFFOCATION_DAMAGE / 2, 1));
+            entity.hurt(GCDamageTypes.suffocation(entity.level()), Math.max(suffocationDamage() / 2, 1));
         }
     }
 }

@@ -142,7 +142,7 @@ public class CargoMenu extends AbstractContainerMenu {
 
     /** The inventory key while riding a rocket (1.12.2 GuiRocketInventory). */
     public static void openRocket(ServerPlayer player, RocketEntity rocket) {
-        open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, rocket.fuelCapacity(),
+        open(player, rocket.getDisplayName(), Layout.ROCKET, rocket.cargo(), rocket::fuel, rocket.tankCapacity(),
                 p -> rocket.isAlive() && p.getVehicle() == rocket);
     }
 
@@ -150,7 +150,7 @@ public class CargoMenu extends AbstractContainerMenu {
     public static void openCargoRocket(ServerPlayer player, io.github.reiko45.galacticraft.entity.CargoRocketEntity rocket) {
         open(player, rocket.getDisplayName(), Layout.CARGO_ROCKET, rocket.cargo(), index -> switch (index) {
             case 0 -> rocket.fuel();
-            case 1 -> rocket.fuelCapacity();
+            case 1 -> rocket.tankCapacity();
             case 2 -> rocket.statusCode();
             case 3 -> rocket.statusCooldown();
             case 4 -> rocket.statusValid() ? 1 : 0;

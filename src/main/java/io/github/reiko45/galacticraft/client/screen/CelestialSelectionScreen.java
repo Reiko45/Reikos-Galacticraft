@@ -138,7 +138,8 @@ public class CelestialSelectionScreen extends Screen {
             return false;
         }
         final SpaceTravel.Destination destination = SpaceTravel.destination(body.dimension());
-        return destination != null && destination.tier() <= this.tier;
+        // the server's settings reach the client, so disableRocketsToOverworld greys the Overworld out here too
+        return destination != null && destination.tier() <= this.tier && SpaceTravel.reachable(body.dimension());
     }
 
     /** Select the (first) body of {@code dimension}, as clicking it would (used by the screenshot tour). */

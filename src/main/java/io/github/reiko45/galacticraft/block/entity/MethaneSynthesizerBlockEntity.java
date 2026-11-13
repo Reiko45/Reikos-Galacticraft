@@ -62,7 +62,7 @@ public class MethaneSynthesizerBlockEntity extends GasMachineBlockEntity {
 
     @Override
     protected float energyPerTick() {
-        return 45.0F;
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 90.0F : 45.0F;
     }
 
     /** 1.12.2 getAirProducts: whether this world's air holds carbon dioxide. */

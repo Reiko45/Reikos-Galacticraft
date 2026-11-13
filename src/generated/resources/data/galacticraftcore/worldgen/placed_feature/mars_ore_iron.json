@@ -2,6 +2,11 @@
   "feature": "galacticraftcore:mars_ore_iron",
   "placement": [
     {
+      "type": "galacticraftcore:config",
+      "option": "disableIronMars",
+      "value": false
+    },
+    {
       "type": "minecraft:count",
       "count": 20
     },

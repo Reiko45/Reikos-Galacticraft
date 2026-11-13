@@ -20,7 +20,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 /**
- * The sky in Earth orbit (1.12.2 SkyProviderOrbit): 6,000 close stars, the orbital sun and the Moon on the celestial
+ * The sky in Earth orbit (1.12.2 SkyProviderOrbit): 6,000 close stars (20,000 with moreStars), the orbital sun and the Moon on the celestial
  * sphere, and the Earth filling the view below, smaller the higher you are. Stars and Earth turn with the station's
  * spin ({@link #spinDegreesPerTick}, set by the Spin Thruster sync).
  */
@@ -36,7 +36,7 @@ public final class OrbitSkyRenderer {
     private static float prevPartialTick;
     private static long prevGameTime;
 
-    private VertexBuffer stars;
+    private final StarField stars = new StarField(StarField.ORBIT);
 
     /** The sky's current spin, for anything that should turn with it. */
     public static float spinAngle() {
@@ -45,9 +45,6 @@ public final class OrbitSkyRenderer {
 
     /** @return true: the vanilla sky is not drawn */
     public boolean render(ClientLevel level, float partialTick, Matrix4f modelView, Camera camera, Matrix4f projection, Runnable setupFog) {
-        if (this.stars == null) {
-            this.stars = buildStars();
-        }
         advanceSpin(level, partialTick);
         final PoseStack pose = new PoseStack();
         pose.mulPose(modelView);
@@ -63,8 +60,9 @@ public final class OrbitSkyRenderer {
         RenderSystem.blendFunc(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE);
         RenderSystem.setShaderColor(0.8F, 0.8F, 0.8F, 0.8F);
         FogRenderer.setupNoFog();
-        this.stars.bind();
-        this.stars.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
+        final VertexBuffer starBuffer = this.stars.get();
+        starBuffer.bind();
+        starBuffer.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
         VertexBuffer.unbind();
         setupFog.run();
 
@@ -153,50 +151,4 @@ public final class OrbitSkyRenderer {
         BufferUploader.drawWithShader(builder.buildOrThrow());
     }
 
-    /** 1.12.2 SkyProviderOrbit#renderStars: closer (50) and smaller stars than the Moon's. */
-    private static VertexBuffer buildStars() {
-        final Random random = new Random(10842L);
-        final BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        for (int i = 0; i < STAR_COUNT; ++i) {
-            double x = random.nextFloat() * 2.0F - 1.0F;
-            double y = random.nextFloat() * 2.0F - 1.0F;
-            double z = random.nextFloat() * 2.0F - 1.0F;
-            final double size = 0.07F + random.nextFloat() * 0.06F;
-            double length = x * x + y * y + z * z;
-            if (length < 1.0D && length > 0.01D) {
-                length = 1.0D / Math.sqrt(length);
-                x *= length;
-                y *= length;
-                z *= length;
-                final double px = x * 50.0D;
-                final double py = y * 50.0D;
-                final double pz = z * 50.0D;
-                final double yaw = Math.atan2(x, z);
-                final double sinYaw = Math.sin(yaw);
-                final double cosYaw = Math.cos(yaw);
-                final double pitch = Math.atan2(Math.sqrt(x * x + z * z), y);
-                final double sinPitch = Math.sin(pitch);
-                final double cosPitch = Math.cos(pitch);
-                final double spin = random.nextDouble() * Math.PI * 2.0D;
-                final double sinSpin = Math.sin(spin);
-                final double cosSpin = Math.cos(spin);
-                for (int corner = 0; corner < 4; ++corner) {
-                    final double a = ((corner & 2) - 1) * size;
-                    final double b = ((corner + 1 & 2) - 1) * size;
-                    final double c = a * cosSpin - b * sinSpin;
-                    final double d = b * cosSpin + a * sinSpin;
-                    final double e = c * sinPitch;
-                    final double f = -c * cosPitch;
-                    final double dx = f * sinYaw - d * cosYaw;
-                    final double dz = d * sinYaw + f * cosYaw;
-                    builder.addVertex((float) (px + dx), (float) (py + e), (float) (pz + dz));
-                }
-            }
-        }
-        final VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        buffer.bind();
-        buffer.upload(builder.buildOrThrow());
-        VertexBuffer.unbind();
-        return buffer;
-    }
 }

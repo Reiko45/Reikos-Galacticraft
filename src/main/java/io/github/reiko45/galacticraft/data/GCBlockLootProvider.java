@@ -65,7 +65,15 @@ public class GCBlockLootProvider extends BlockLootSubProvider {
                                         .setProperties(net.minecraft.advancements.critereon.StatePropertiesPredicate.Builder.properties()
                                                 .hasProperty(net.minecraft.world.level.block.NetherWartBlock.AGE, 3))))))));
         // Ores that drop items (fortune applies, like 1.12.2 quantityDropped).
-        add(GCBlocks.SILICON_ORE.get(), block -> createOreDrop(block, GCItems.RAW_SILICON.get()));
+        // 1.12.2 BlockBasic#quantityDropped: quick mode adds one raw silicon after Fortune
+        add(GCBlocks.SILICON_ORE.get(), block -> {
+            final var fortuneEnchantment = this.registries.lookupOrThrow(net.minecraft.core.registries.Registries.ENCHANTMENT)
+                    .getOrThrow(net.minecraft.world.item.enchantment.Enchantments.FORTUNE);
+            return createSilkTouchDispatchTable(block, applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_SILICON.get())
+                    .apply(net.minecraft.world.level.storage.loot.functions.ApplyBonusCount.addOreBonusCount(fortuneEnchantment))
+                    .apply(SetItemCountFunction.setCount(ConstantValue.exactly(1), true)
+                            .when(() -> new io.github.reiko45.galacticraft.world.ConfigChecks.LootCondition("quickMode", true)))));
+        });
         add(GCBlocks.MOON_CHEESE_ORE.get(), block -> createOreDrop(block, GCItems.CHEESE_CURD.get()));
         add(GCBlocks.MOON_SAPPHIRE_ORE.get(), block -> createOreDrop(block, GCItems.LUNAR_SAPPHIRE.get()));
         // Mars (1.12.2 BlockBasicMars): stone breaks to cobblestone; desh ore gives Raw Desh, and with Fortune a chance of

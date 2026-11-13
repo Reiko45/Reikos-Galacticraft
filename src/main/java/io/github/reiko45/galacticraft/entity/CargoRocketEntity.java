@@ -248,7 +248,7 @@ public class CargoRocketEntity extends RocketEntity {
         if (this.autoLaunchCountdown > 0 && --this.autoLaunchCountdown <= 0) {
             autoLaunch();
         }
-        if (this.autoLaunchSetting == AutoLaunch.ROCKET_IS_FUELED && fuel() >= fuelCapacity()) {
+        if (this.autoLaunchSetting == AutoLaunch.ROCKET_IS_FUELED && fuel() >= tankCapacity()) {
             autoLaunch();
         }
         if (this.autoLaunchSetting == AutoLaunch.INSTANT && this.autoLaunchCountdown == 0) {
@@ -304,7 +304,7 @@ public class CargoRocketEntity extends RocketEntity {
     private void autoLaunch() {
         if (this.autoLaunchSetting != null) {
             final LaunchControllerBlockEntity controller = activeController();
-            if (controller != null && controller.controlEnabled() && fuel() > fuelCapacity() * 2 / 5) {
+            if (controller != null && controller.controlEnabled() && fuel() > tankCapacity() * 2 / 5) {
                 ignite();
             }
             this.autoLaunchSetting = null;

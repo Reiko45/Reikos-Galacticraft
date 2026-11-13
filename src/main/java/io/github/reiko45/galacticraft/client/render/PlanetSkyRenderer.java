@@ -86,7 +86,7 @@ public final class PlanetSkyRenderer {
             0.0F, false, -1.0F, 20.0F, 1.0F / 20.0F);
 
     private final Style style;
-    private VertexBuffer stars;
+    private final StarField stars = new StarField(StarField.PLANET);
     private VertexBuffer skyDisc;
 
     public PlanetSkyRenderer(Style style) {
@@ -105,8 +105,7 @@ public final class PlanetSkyRenderer {
 
     /** @return true: the vanilla sky is not drawn */
     public boolean render(ClientLevel level, float partialTick, Matrix4f modelView, Camera camera, Matrix4f projection, Runnable setupFog) {
-        if (this.stars == null) {
-            this.stars = MoonSkyRenderer.buildStars();
+        if (this.skyDisc == null) {
             this.skyDisc = buildSkyDisc();
         }
         final PoseStack pose = new PoseStack();
@@ -134,8 +133,9 @@ public final class PlanetSkyRenderer {
             pose.mulPose(Axis.YP.rotationDegrees(-19.0F));
             RenderSystem.setShaderColor(stars, stars, stars, stars);
             FogRenderer.setupNoFog();
-            this.stars.bind();
-            this.stars.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
+            final VertexBuffer starBuffer = this.stars.get();
+            starBuffer.bind();
+            starBuffer.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
             VertexBuffer.unbind();
             setupFog.run();
             pose.popPose();

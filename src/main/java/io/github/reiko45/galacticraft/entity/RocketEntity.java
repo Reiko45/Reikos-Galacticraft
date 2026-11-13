@@ -66,7 +66,8 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
     protected static <R extends RocketEntity> R place(R rocket, double x, double y, double z, int storage, int fuel) {
         rocket.setPos(x, y, z);
         rocket.setStorage(storage);
-        rocket.setFuel(fuel);
+        // the creative-only pre-fuelled rocket comes full, whatever the fuel factor (1.12.2 PREFUELED filled the tank)
+        rocket.setFuel(storage == 0 && fuel >= rocket.fuelCapacity() ? rocket.tankCapacity() : fuel);
         return rocket;
     }
 
@@ -77,6 +78,18 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
 
     /** 1.12.2 getFuelTankCapacity, in mB. */
     public abstract int fuelCapacity();
+
+    /**
+     * What the tank really holds: the tier's capacity times the {@code rocketFuelFactor} setting, which also multiplies
+     * every mB burned (1.12.2 EntitySpaceshipBase#fuelTank), so a flight takes that many times the fuel.
+     */
+    public int tankCapacity() {
+        return fuelCapacity() * fuelFactor();
+    }
+
+    public static int fuelFactor() {
+        return io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.ROCKET_FUEL_FACTOR);
+    }
 
     /** The rocket as an item with this much storage and fuel. */
     public abstract ItemStack item(int storage, int fuel);
@@ -126,13 +139,13 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
     }
 
     public void setFuel(int fuel) {
-        this.entityData.set(FUEL, Math.max(0, Math.min(fuelCapacity(), fuel)));
+        this.entityData.set(FUEL, Math.max(0, Math.min(tankCapacity(), fuel)));
     }
 
     /** Fill with fuel (fuel loader); returns the amount taken. */
     @Override
     public int addFuel(int amount, boolean execute) {
-        final int accepted = Math.min(amount, fuelCapacity() - fuel());
+        final int accepted = Math.min(amount, tankCapacity() - fuel());
         if (execute && accepted > 0) {
             setFuel(fuel() + accepted);
         }
@@ -256,7 +269,9 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         if (phase() == Phase.IGNITED) {
             final int countdown = countdown() - 1;
             this.entityData.set(COUNTDOWN, countdown);
-            if (countdown <= 0) {
+            if (countdown <= 0 && !io.github.reiko45.galacticraft.GCConfig.rocketsLaunchFrom(this.level().dimension())) {
+                cancelLaunch();
+            } else if (countdown <= 0) {
                 setPhase(Phase.LAUNCHED);
                 onLaunch();
             }
@@ -266,7 +281,7 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
             if (hasFuel()) {
                 motion = phase() == Phase.LANDING ? landingMotion() : climbMotion();
                 if (this.timeSinceLaunch % CelestialPhysics.fuelInterval(this.level(), burnTicks()) == 0) {
-                    setFuel(fuel() - 1);
+                    setFuel(fuel() - fuelFactor());
                 }
             } else {
                 motion = new Vec3(0.0D, getDeltaMovement().y - Math.abs(Math.sin(this.timeSinceLaunch / 1000.0D)) / 20.0D - 0.04D, 0.0D);
@@ -281,6 +296,14 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         }
         setDeltaMovement(motion);
         move(MoverType.SELF, getDeltaMovement());
+    }
+
+    /** 1.12.2 EntityAutoRocket#cancelLaunch: no launching from this world (disableRocketLaunchDimensions). */
+    private void cancelLaunch() {
+        resetFlight();
+        if (getFirstPassenger() instanceof ServerPlayer player) {
+            player.sendSystemMessage(net.minecraft.network.chat.Component.translatable("gui.galacticraftcore.rocket.warning.no_gyroscope"));
+        }
     }
 
     /** 1.12.2 EntityAutoRocket#onLaunch: the launch pad goes into the rocket, the take-off point is remembered. */
@@ -315,11 +338,14 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
     }
 
     /** 1.12.2 failRocket: explosion 5, 81 damage to the riders. */
-    protected void crash() {
+    public void crash() {
         for (Entity passenger : getPassengers()) {
             passenger.hurt(GCDamageTypes.crash(this.level()), 81.0F);
         }
-        this.level().explode(this, getX(), getY(), getZ(), 5.0F, Level.ExplosionInteraction.TNT);
+        // disableSpaceshipGrief: the riders are still hurt, but nothing is blown up
+        if (!io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.DISABLE_SPACESHIP_GRIEF)) {
+            this.level().explode(this, getX(), getY(), getZ(), 5.0F, Level.ExplosionInteraction.TNT);
+        }
         discard();
     }
 
@@ -481,7 +507,7 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
     public void transmitData(int[] data) {
         data[0] = phase() == Phase.UNIGNITED ? preLaunchWait() : phase() == Phase.IGNITED ? countdown() : 0;
         data[1] = (int) getY();
-        data[3] = fuelCapacity() <= 0 ? 0 : fuel() * 100 / fuelCapacity();
+        data[3] = tankCapacity() <= 0 ? 0 : fuel() * 100 / tankCapacity();
         data[4] = (int) getXRot();
     }
 

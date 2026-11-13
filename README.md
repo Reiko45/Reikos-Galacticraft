@@ -174,7 +174,15 @@ machines, solar panels and oil processing work. See
 * **JEI, EMI and Jade** (all optional): recipe pages for the Compressor, Circuit Fabricator and Refinery in JEI or
   EMI (EMI also fills the Magnetic Crafting Table); Jade shows a machine's energy in gJ, its progress and status, and
   who owns a Launch Controller or Laser Turret.
-* Recipes: 236 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
+* **Settings** (Mods → Galacticraft → Config, or the `galacticraftcore-*.toml` files): 1.12.2's own, with their 1.12.2
+  names in every language. Quick mode (more wire and batteries per recipe, double compressor plates, extra silicon),
+  hard mode (hungrier machines, harder meteors, slower drifting and mining in orbit, growing suffocation damage),
+  suffocation damage and rate, oil amount, each ore and Moon villages on or off, rocket fuel use, worlds rockets can't
+  launch from or reach, rocket explosions, the Moon lander, a landing border, respawning on the world you died on or
+  the Overworld, station permissions, sealer edge checks, water in gratings, Launch Controller chunk loading and Venus
+  lightning; on the client, more stars, rocket particles, the riding camera and where the oxygen gauges go. See
+  [PORTING.md](PORTING.md#settings) for every option.
+* Recipes: 238 crafting recipes converted from 1.12.2 (including the planets module's, and quick mode's two), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
 
@@ -315,6 +323,12 @@ machines, solar panels and oil processing work. See
 | ![A domed house of tin decoration blocks with glowstone torches](docs/screenshots/moon_village_house.png) | ![Two Alien Villagers and a child, and their trading screen](docs/screenshots/alien_villagers_and_trades.png) |
 
 ![An Alien Villager, the Evolved Witch one becomes when struck by lightning, and an Evolved Enderman](docs/screenshots/evolved_witch.png)
+
+| The settings screen | Its server page |
+|---|---|
+| ![The Galacticraft settings screen with its common, client and server pages](docs/screenshots/config_screen.png) | ![The server settings: hard mode, meteors, boss health, stations, rockets and landing border](docs/screenshots/config_server_settings.png) |
+
+![Midnight on the Moon with "more stars" and the oxygen gauges moved to the bottom left](docs/screenshots/moon_more_stars_oxygen_bottom_left.png)
 
 ![A planted team flag waving beside a Tier 3 Rocket with a team-coloured nose cone](docs/screenshots/space_race_flag.png)
 

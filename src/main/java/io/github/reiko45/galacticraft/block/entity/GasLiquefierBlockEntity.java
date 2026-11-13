@@ -108,7 +108,7 @@ public class GasLiquefierBlockEntity extends GasMachineBlockEntity {
 
     @Override
     protected float energyPerTick() {
-        return 60.0F;
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 90.0F : 60.0F;
     }
 
     /**

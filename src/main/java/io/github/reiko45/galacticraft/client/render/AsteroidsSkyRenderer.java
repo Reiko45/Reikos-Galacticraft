@@ -24,7 +24,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.joml.Matrix4f;
 
 /**
- * The asteroid belt's sky (1.12.2 SkyProviderAsteroids): black, with 6,000 small grey stars fixed in place, the sun on
+ * The asteroid belt's sky (1.12.2 SkyProviderAsteroids): black, with 6,000 small grey stars (35,000 with moreStars) fixed in place, the sun on
  * the horizon (the celestial angle never moves from 0.25), smaller than from Earth (17.5 x 1 / 1.375 AU), and the Earth
  * a speck far away.
  */
@@ -35,13 +35,10 @@ public final class AsteroidsSkyRenderer {
     /** 1.12.2 17.5 x WorldProviderSpace#getSolarSize (1 / 1.375). */
     private static final float SUN_SIZE = 17.5F / 1.375F;
 
-    private VertexBuffer stars;
+    private final StarField stars = new StarField(StarField.ASTEROIDS);
 
     /** @return true: the vanilla sky is not drawn */
     public boolean render(ClientLevel level, float partialTick, Matrix4f modelView, Camera camera, Matrix4f projection, Runnable setupFog) {
-        if (this.stars == null) {
-            this.stars = buildStars();
-        }
         final PoseStack pose = new PoseStack();
         pose.mulPose(modelView);
         RenderSystem.depthMask(false);
@@ -51,8 +48,9 @@ public final class AsteroidsSkyRenderer {
         RenderSystem.setShaderColor(0.7F, 0.7F, 0.7F, 0.7F);
         RenderSystem.disableCull();
         FogRenderer.setupNoFog();
-        this.stars.bind();
-        this.stars.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
+        final VertexBuffer starBuffer = this.stars.get();
+        starBuffer.bind();
+        starBuffer.drawWithShader(pose.last().pose(), projection, GameRenderer.getPositionShader());
         VertexBuffer.unbind();
         setupFog.run();
         RenderSystem.enableCull();
@@ -108,50 +106,4 @@ public final class AsteroidsSkyRenderer {
         return true;
     }
 
-    /** 1.12.2 SkyProviderAsteroids#renderStars: smaller stars than the Moon's, 80 blocks out. */
-    private static VertexBuffer buildStars() {
-        final Random random = new Random(10842L);
-        final BufferBuilder builder = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION);
-        for (int i = 0; i < STAR_COUNT; ++i) {
-            double x = random.nextFloat() * 2.0F - 1.0F;
-            double y = random.nextFloat() * 2.0F - 1.0F;
-            double z = random.nextFloat() * 2.0F - 1.0F;
-            final double size = 0.08F + random.nextFloat() * 0.07F;
-            double length = x * x + y * y + z * z;
-            if (length < 1.0D && length > 0.01D) {
-                length = 1.0D / Math.sqrt(length);
-                x *= length;
-                y *= length;
-                z *= length;
-                final double px = x * 80.0D;
-                final double py = y * 80.0D;
-                final double pz = z * 80.0D;
-                final double yaw = Math.atan2(x, z);
-                final double sinYaw = Math.sin(yaw);
-                final double cosYaw = Math.cos(yaw);
-                final double pitch = Math.atan2(Math.sqrt(x * x + z * z), y);
-                final double sinPitch = Math.sin(pitch);
-                final double cosPitch = Math.cos(pitch);
-                final double spin = random.nextDouble() * Math.PI * 2.0D;
-                final double sinSpin = Math.sin(spin);
-                final double cosSpin = Math.cos(spin);
-                for (int corner = 0; corner < 4; ++corner) {
-                    final double a = ((corner & 2) - 1) * size;
-                    final double b = ((corner + 1 & 2) - 1) * size;
-                    final double c = a * cosSpin - b * sinSpin;
-                    final double d = b * cosSpin + a * sinSpin;
-                    final double e = c * sinPitch;
-                    final double f = -c * cosPitch;
-                    final double dx = f * sinYaw - d * cosYaw;
-                    final double dz = d * sinYaw + f * cosYaw;
-                    builder.addVertex((float) (px + dx), (float) (py + e), (float) (pz + dz));
-                }
-            }
-        }
-        final VertexBuffer buffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        buffer.bind();
-        buffer.upload(builder.buildOrThrow());
-        VertexBuffer.unbind();
-        return buffer;
-    }
 }

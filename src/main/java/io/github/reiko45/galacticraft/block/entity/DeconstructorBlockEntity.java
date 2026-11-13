@@ -89,7 +89,7 @@ public class DeconstructorBlockEntity extends ProcessingMachineBlockEntity {
 
     @Override
     protected float energyPerTick() {
-        return 75.0F;
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 90.0F : 75.0F;
     }
 
     @Override

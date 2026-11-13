@@ -7,6 +7,7 @@ package io.github.reiko45.galacticraft.world;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import io.github.reiko45.galacticraft.GCConfig;
 import io.github.reiko45.galacticraft.GalacticraftCore;
 import io.github.reiko45.galacticraft.block.BrightAirBlock;
 import io.github.reiko45.galacticraft.registry.GCBlocks;
@@ -142,10 +143,19 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
         add(core, new Special(GCBlocks.ASTEROID_ROCK_2.get().defaultBlockState(), 5, .3));
         add(core, new Special(GCBlocks.ASTEROID_ROCK_1.get().defaultBlockState(), 7, .3));
         add(core, new Special(GCBlocks.ASTEROID_ROCK_0.get().defaultBlockState(), 11, .25));
-        add(core, new Special(GCBlocks.ASTEROID_ALUMINUM_ORE.get().defaultBlockState(), 5, .2));
-        add(core, new Special(GCBlocks.ILMENITE_ORE.get().defaultBlockState(), 4, .15));
-        add(core, new Special(GCBlocks.ASTEROID_IRON_ORE.get().defaultBlockState(), 3, .2));
-        add(core, new Special(GCBlocks.SILICON_ORE.get().defaultBlockState(), 2, .15));
+        // the ore toggles leave their ore out of the cores altogether, as 1.12.2 did
+        if (!GCConfig.common(GCConfig.DISABLE_ALUMINUM_ASTEROIDS)) {
+            add(core, new Special(GCBlocks.ASTEROID_ALUMINUM_ORE.get().defaultBlockState(), 5, .2));
+        }
+        if (!GCConfig.common(GCConfig.DISABLE_ILMENITE_ASTEROIDS)) {
+            add(core, new Special(GCBlocks.ILMENITE_ORE.get().defaultBlockState(), 4, .15));
+        }
+        if (!GCConfig.common(GCConfig.DISABLE_IRON_ASTEROIDS)) {
+            add(core, new Special(GCBlocks.ASTEROID_IRON_ORE.get().defaultBlockState(), 3, .2));
+        }
+        if (GCConfig.common(GCConfig.ENABLE_SILICON_ORE_GEN)) {
+            add(core, new Special(GCBlocks.SILICON_ORE.get().defaultBlockState(), 2, .15));
+        }
         add(core, new Special(GCBlocks.METEORIC_IRON_BLOCK.get().defaultBlockState(), 2, .13));
         add(core, new Special(Blocks.DIAMOND_ORE.defaultBlockState(), 1, .1));
         final List<Special> shell = new ArrayList<>();
@@ -508,12 +518,22 @@ public final class AsteroidsChunkGenerator extends ChunkGenerator {
                     final int px = x + rand.nextInt(16);
                     final int pz = z + rand.nextInt(16);
                     BlockState state = GCBlocks.ASTEROID_ROCK_1.get().defaultBlockState();
+                    // a toggled-off ore leaves no block at all there (1.12.2 "continue")
                     if (rand.nextInt(ILMENITE_CHANCE) == 0) {
                         state = GCBlocks.ILMENITE_ORE.get().defaultBlockState();
+                        if (GCConfig.common(GCConfig.DISABLE_ILMENITE_ASTEROIDS)) {
+                            continue;
+                        }
                     } else if (rand.nextInt(IRON_CHANCE) == 0) {
                         state = GCBlocks.ASTEROID_IRON_ORE.get().defaultBlockState();
+                        if (GCConfig.common(GCConfig.DISABLE_IRON_ASTEROIDS)) {
+                            continue;
+                        }
                     } else if (rand.nextInt(ALUMINUM_CHANCE) == 0) {
                         state = GCBlocks.ASTEROID_ALUMINUM_ORE.get().defaultBlockState();
+                        if (GCConfig.common(GCConfig.DISABLE_ALUMINUM_ASTEROIDS)) {
+                            continue;
+                        }
                     }
                     level.setBlock(pos.set(px, y, pz), state, 2);
                 }

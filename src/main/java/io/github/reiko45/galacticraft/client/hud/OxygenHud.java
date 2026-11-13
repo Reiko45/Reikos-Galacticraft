@@ -29,7 +29,10 @@ public final class OxygenHud {
                 && !minecraft.player.isCreative() && !minecraft.player.isSpectator() && !minecraft.options.hideGui;
     }
 
-    /** 1.12.2 renderOxygenTankIndicator with the default right/top placement. */
+    /**
+     * 1.12.2 renderOxygenTankIndicator: in the top right corner, or on the left and at the bottom with the client's
+     * oxygenIndicatorLeft and oxygenIndicatorBottom.
+     */
     public static void renderTanks(GuiGraphics graphics, DeltaTracker delta) {
         final Minecraft minecraft = Minecraft.getInstance();
         if (!applies(minecraft) || minecraft.getDebugOverlay().showDebugScreen()
@@ -37,14 +40,17 @@ public final class OxygenHud {
             return;
         }
         final int width = graphics.guiWidth();
-        final int left = width - 49;
-        final int right = width - 29;
-        final int top = 10;
+        final boolean onLeft = io.github.reiko45.galacticraft.GCConfig.client(io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_LEFT);
+        final boolean atBottom = io.github.reiko45.galacticraft.GCConfig.client(io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_BOTTOM);
+        final int thermometer = onLeft ? 10 : width - 59;
+        final int left = thermometer + 10;
+        final int right = thermometer + 30;
+        final int top = atBottom ? graphics.guiHeight() - 57 : 10;
         // 1.12.2 passes 90 - air (the empty part, in half pixels), or 90 when the tank is empty
         drawTank(graphics, left, top, ClientPayloads.air1() <= 0 ? 90 : 90 - ClientPayloads.air1());
         drawTank(graphics, right, top, ClientPayloads.air2() <= 0 ? 90 : 90 - ClientPayloads.air2());
         final int thermal = ClientPayloads.thermalLevel();
-        drawThermal(minecraft, graphics, width - 59, top, thermal + 22, Math.abs(thermal) >= 10 && !ClientPayloads.thermalNormalising());
+        drawThermal(minecraft, graphics, thermometer, top, thermal + 22, Math.abs(thermal) >= 10 && !ClientPayloads.thermalNormalising());
     }
 
     /**

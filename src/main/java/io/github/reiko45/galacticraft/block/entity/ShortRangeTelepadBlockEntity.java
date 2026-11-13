@@ -44,6 +44,11 @@ public class ShortRangeTelepadBlockEntity extends MachineBlockEntity {
     public static final float ENERGY_USE_ON_TELEPORT = 2500.0F;
     /** 1.12.2 storage.setMaxExtract(50) (115 in hard mode): used each tick while enabled. */
     public static final float ENERGY_USE = 50.0F;
+
+    /** 1.12.2: 115 gJ/t in hard mode. */
+    public static float energyUse() {
+        return io.github.reiko45.galacticraft.GCConfig.hardMode() ? 115.0F : ENERGY_USE;
+    }
     public static final int MAX_ADDRESS = 999_999;
 
     private int address = -1;
@@ -82,8 +87,8 @@ public class ShortRangeTelepadBlockEntity extends MachineBlockEntity {
         if (this.energy.getStoredGJ() < this.energy.getCapacityGJ()) {
             dischargeBattery(0);
         }
-        if (this.energy.getStoredGJ() > ENERGY_USE && !this.disabled) {
-            this.energy.consume(ENERGY_USE);
+        if (this.energy.getStoredGJ() > energyUse() && !this.disabled) {
+            this.energy.consume(energyUse());
         } else if (this.ticks % 10 == 0 && this.energy.getStoredGJ() > 0.0F) {
             this.energy.consume(Math.min(5.0F, this.energy.getStoredGJ()));
         }

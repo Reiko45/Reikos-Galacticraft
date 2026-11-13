@@ -73,7 +73,8 @@ public class CompressingCategory implements IRecipeCategory<RecipeHolder<Compres
             }
         }
         builder.addSlot(RecipeIngredientRole.OUTPUT, 120, 21)
-                .addItemStack(recipe.getResultItem(Minecraft.getInstance().level.registryAccess()));
+                .addItemStack(io.github.reiko45.galacticraft.machine.CompressorGrid.quickMode(
+                        recipe.getResultItem(Minecraft.getInstance().level.registryAccess()), io.github.reiko45.galacticraft.GCConfig.quickMode()));
     }
 
     @Override

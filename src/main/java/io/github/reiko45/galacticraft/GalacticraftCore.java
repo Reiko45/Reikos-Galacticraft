@@ -45,6 +45,9 @@ public final class GalacticraftCore {
         GCFluids.FLUID_TYPES.register(modBus);
         GCFluids.FLUIDS.register(modBus);
         GCFeatures.FEATURES.register(modBus);
+        io.github.reiko45.galacticraft.world.ConfigChecks.CONDITIONS.register(modBus);
+        io.github.reiko45.galacticraft.world.ConfigChecks.PLACEMENT_MODIFIERS.register(modBus);
+        io.github.reiko45.galacticraft.world.ConfigChecks.LOOT_CONDITIONS.register(modBus);
         GCChunkGenerators.BIOME_SOURCES.register(modBus);
         GCArmorMaterials.ARMOR_MATERIALS.register(modBus);
         GCCreativeTabs.TABS.register(modBus);
@@ -62,6 +65,7 @@ public final class GalacticraftCore {
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity::onLevelTick);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.world.station.Freefall::onBreakSpeed);
         modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) -> event.enqueueWork(() ->
                 // 1.12.2 GCFluids: dispensers throw meteor chunks
                 net.minecraft.world.level.block.DispenserBlock.registerProjectileBehavior(io.github.reiko45.galacticraft.registry.GCItems.METEOR_CHUNK.get())));
@@ -70,6 +74,7 @@ public final class GalacticraftCore {
                 event.register(io.github.reiko45.galacticraft.entity.AstroMinerEntity.TICKETS));
         container.registerConfig(ModConfig.Type.CLIENT, GCConfig.CLIENT_SPEC);
         container.registerConfig(ModConfig.Type.SERVER, GCConfig.SERVER_SPEC);
+        container.registerConfig(ModConfig.Type.COMMON, GCConfig.COMMON_SPEC);
     }
 
     public static ResourceLocation id(String path) {

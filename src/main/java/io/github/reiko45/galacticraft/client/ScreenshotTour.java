@@ -1785,8 +1785,62 @@ public final class ScreenshotTour {
         addBaseBlockSteps();
         addLaserTurretSteps();
         addPolishSteps();
-        this.lastGroup = this.extras.size();
         addEvolvedWitchSteps();
+        this.lastGroup = this.extras.size();
+        addConfigSteps();
+    }
+
+    /**
+     * Phase 9 part 3: the settings screen from the mod list and its server page, then the Moon at midnight with the
+     * default "more stars" and the oxygen gauges moved to the bottom left.
+     */
+    private void addConfigSteps() {
+        this.extras.add((minecraft, srv) -> net.neoforged.fml.ModList.get().getModContainerById(GalacticraftCore.MOD_ID).ifPresent(
+                container -> minecraft.setScreen(new net.neoforged.neoforge.client.gui.ConfigurationScreen(container, null))));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "config_screen"));
+        this.extras.add((minecraft, srv) -> {
+            for (net.neoforged.fml.config.ModConfig config : net.neoforged.fml.config.ModConfigs.getConfigSet(net.neoforged.fml.config.ModConfig.Type.SERVER)) {
+                if (config.getModId().equals(GalacticraftCore.MOD_ID)) {
+                    minecraft.setScreen(new net.neoforged.neoforge.client.gui.ConfigurationScreen.ConfigurationSectionScreen(minecraft.screen,
+                            net.neoforged.fml.config.ModConfig.Type.SERVER, config, Component.translatable("neoforge.configuration.uitext.type.server")));
+                }
+            }
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "config_server_settings"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_LEFT.set(true);
+            io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_BOTTOM.set(true);
+            srv.execute(() -> {
+                final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+                if (moon != null) {
+                    srv.overworld().setDayTime(18000L);
+                    final ServerPlayer p = tourPlayer(srv);
+                    p.setGameMode(GameType.SURVIVAL);
+                    p.teleportTo(moon, 2.5D, surface(moon, 2, 20), 20.5D, 10.0F, -55.0F);
+                }
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // the sky's stars are rebuilt for the setting, the chunks arrive
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "moon_more_stars_oxygen_bottom_left"));
+        this.extras.add((minecraft, srv) -> {
+            io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_LEFT.set(false);
+            io.github.reiko45.galacticraft.GCConfig.OXYGEN_INDICATOR_BOTTOM.set(false);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.setGameMode(GameType.CREATIVE);
+                p.getAbilities().flying = true;
+                p.onUpdateAbilities();
+                srv.overworld().setDayTime(6000L);
+            });
+        });
     }
 
     @org.jetbrains.annotations.Nullable

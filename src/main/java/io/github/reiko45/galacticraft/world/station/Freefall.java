@@ -26,8 +26,24 @@ public final class Freefall {
     private static final double THRUST = 1.0D / 200.0D;
     private static final double LIFT = 0.0032D;
     private static final double SPEED_LIMIT = 0.7D;
+    /** 1.12.2 hard mode: a third of the thrust, less lift, but a higher top speed. */
+    private static final double HARD_THRUST = 1.0D / 600.0D;
+    private static final double HARD_LIFT = 0.002D;
+    private static final double HARD_SPEED_LIMIT = 0.9D;
 
     private Freefall() {
+    }
+
+    /**
+     * 1.12.2 EventHandlerGC#blockBreakSpeed: in orbit, a player off the floor digs five times as fast (making up for
+     * the vanilla off-the-ground slowdown), except in hard mode.
+     */
+    public static void onBreakSpeed(net.neoforged.neoforge.event.entity.player.PlayerEvent.BreakSpeed event) {
+        final Player player = event.getEntity();
+        if (!player.onGround() && player.level().dimension().equals(GCDimensions.ORBIT) && !io.github.reiko45.galacticraft.GCConfig.hardMode()
+                && event.getOriginalSpeed() < 5.0F) {
+            event.setNewSpeed(event.getOriginalSpeed() * 5.0F);
+        }
     }
 
     /** 1.12.2 FreefallHandler#testFreefall(EntityPlayerSP, boolean). */
@@ -79,21 +95,25 @@ public final class Freefall {
      * momentum kept, gentle thrust, speed limit.
      */
     public static void travel(Player player, boolean jumping) {
+        final boolean hard = io.github.reiko45.galacticraft.GCConfig.hardMode();
+        final double thrust = hard ? HARD_THRUST : THRUST;
+        final double lift = hard ? HARD_LIFT : LIFT;
+        final double limit = hard ? HARD_SPEED_LIMIT : SPEED_LIMIT;
         final Vec3 motion = player.getDeltaMovement();
         double x = motion.x;
         double y = motion.y;
         double z = motion.z;
         if (player.zza != 0.0F) {
-            x -= player.zza * Mth.sin(player.getYRot() * Mth.DEG_TO_RAD) * THRUST;
-            z += player.zza * Mth.cos(player.getYRot() * Mth.DEG_TO_RAD) * THRUST;
+            x -= player.zza * Mth.sin(player.getYRot() * Mth.DEG_TO_RAD) * thrust;
+            z += player.zza * Mth.cos(player.getYRot() * Mth.DEG_TO_RAD) * thrust;
         }
         if (player.isShiftKeyDown()) {
-            y -= LIFT;
+            y -= lift;
         }
         if (jumping) {
-            y += LIFT;
+            y += lift;
         }
-        player.setDeltaMovement(Mth.clamp(x, -SPEED_LIMIT, SPEED_LIMIT), Mth.clamp(y, -SPEED_LIMIT, SPEED_LIMIT), Mth.clamp(z, -SPEED_LIMIT, SPEED_LIMIT));
+        player.setDeltaMovement(Mth.clamp(x, -limit, limit), Mth.clamp(y, -limit, limit), Mth.clamp(z, -limit, limit));
         player.move(MoverType.SELF, player.getDeltaMovement());
         player.resetFallDistance();
     }

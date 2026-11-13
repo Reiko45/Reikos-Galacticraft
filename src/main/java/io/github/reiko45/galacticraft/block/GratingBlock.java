@@ -24,7 +24,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 /**
  * Grating (1.12.2 BlockGrating): a 2-pixel metal floor grid at the top of its block that air passes straight through
- * and water can flow under (1.12.2 also let lava and other mods' liquids in; here it holds water only).
+ * and water can flow under (1.12.2 also let lava and other mods' liquids in; here it holds water only). With
+ * allowLiquidGratings off it keeps water out, like 1.12.2's iron-material grating.
  */
 public class GratingBlock extends Block implements SimpleWaterloggedBlock, PartialSealable {
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
@@ -42,7 +43,18 @@ public class GratingBlock extends Block implements SimpleWaterloggedBlock, Parti
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        return defaultBlockState().setValue(WATERLOGGED, context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+        return defaultBlockState().setValue(WATERLOGGED, liquidsAllowed()
+                && context.getLevel().getFluidState(context.getClickedPos()).getType() == Fluids.WATER);
+    }
+
+    private static boolean liquidsAllowed() {
+        return io.github.reiko45.galacticraft.GCConfig.server(io.github.reiko45.galacticraft.GCConfig.ALLOW_LIQUID_GRATINGS);
+    }
+
+    @Override
+    public boolean canPlaceLiquid(@javax.annotation.Nullable net.minecraft.world.entity.player.Player player, BlockGetter level, BlockPos pos,
+                                  BlockState state, net.minecraft.world.level.material.Fluid fluid) {
+        return liquidsAllowed() && SimpleWaterloggedBlock.super.canPlaceLiquid(player, level, pos, state, fluid);
     }
 
     @Override

@@ -47,14 +47,14 @@ public class MeteorChunkEntity extends AbstractArrow {
 
     public MeteorChunkEntity(EntityType<? extends MeteorChunkEntity> type, Level level) {
         super(type, level);
-        setBaseDamage(1.6D);
+        setBaseDamage(io.github.reiko45.galacticraft.GCConfig.hardMode() ? 3.2D : 1.6D);
         setSoundEvent(SoundEvents.EMPTY);
     }
 
     /** Thrown by {@code thrower} (1.12.2: from the eyes, 0.16 to the side and 0.1 down). */
     public MeteorChunkEntity(Level level, LivingEntity thrower, boolean hot) {
         super(GCEntities.METEOR_CHUNK.get(), thrower, level, new ItemStack(GCItems.METEOR_CHUNK.get()), null);
-        setBaseDamage(1.6D);
+        setBaseDamage(io.github.reiko45.galacticraft.GCConfig.hardMode() ? 3.2D : 1.6D);
         setSoundEvent(SoundEvents.EMPTY);
         moveTo(thrower.getX() - Mth.cos(thrower.getYRot() * Mth.DEG_TO_RAD) * 0.16F, thrower.getEyeY() - 0.1D,
                 thrower.getZ() - Mth.sin(thrower.getYRot() * Mth.DEG_TO_RAD) * 0.16F, thrower.getYRot(), thrower.getXRot());
@@ -65,7 +65,7 @@ public class MeteorChunkEntity extends AbstractArrow {
     /** From a dispenser. */
     public MeteorChunkEntity(Level level, double x, double y, double z, boolean hot) {
         super(GCEntities.METEOR_CHUNK.get(), x, y, z, level, new ItemStack(GCItems.METEOR_CHUNK.get()), null);
-        setBaseDamage(1.6D);
+        setBaseDamage(io.github.reiko45.galacticraft.GCConfig.hardMode() ? 3.2D : 1.6D);
         setSoundEvent(SoundEvents.EMPTY);
         setHot(hot);
     }
