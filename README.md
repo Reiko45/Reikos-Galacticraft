@@ -134,7 +134,8 @@ machines, solar panels and oil processing work. See
 * **BuildCraft Reborn** (optional, [BuildCraft Reborn](https://github.com/Reiko45/BuildCraft-Reborn) 2.1+): engines and
   kinesis pipes power Galacticraft machines and wires, which power BuildCraft's machines in turn, at 1 MJ = 16 gJ;
   each mod's wrench works on the other's blocks; Galacticraft fuel burns in the combustion engine and oil and fuel go
-  both ways. Energy can be shown in MJ.
+  both ways. Energy can be shown in MJ. The six sealable BuildCraft pipes (stone and cobblestone transport and fluid
+  pipes, stone and golden kinesis pipes) run a working BuildCraft pipe through a tin block that keeps the air in.
 * **Machines**: Compressor (burns fuel), Electric Compressor, Advanced Compressor, Electric Furnace, Electric Arc
   Furnace, Circuit Fabricator. Their GUIs use the original 1.12.2 artwork, and hoppers/pipes work per side.
 * **Oil**: crude oil pockets underground in the Overworld, oil and fuel liquids and buckets, Oil/Fuel Canisters,

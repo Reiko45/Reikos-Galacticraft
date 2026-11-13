@@ -60,6 +60,20 @@ public final class BuildCraftTestSupport {
         return receiver == null ? -1.0D : receiver.getPowerRequested() / (double) MjAPI.MJ;
     }
 
+    /** Puts down a BuildCraft pipe as its item would: BuildCraft's pipe block, whose setPlacedBy gives its tile the pipe. */
+    public static void placePipe(net.minecraft.gametest.framework.GameTestHelper helper, BlockPos pos, String pipeItem) {
+        final Block holder = block("pipe_holder");
+        helper.setBlock(pos, holder);
+        final BlockPos abs = helper.absolutePos(pos);
+        holder.setPlacedBy(helper.getLevel(), abs, helper.getLevel().getBlockState(abs), null, new ItemStack(item(pipeItem)));
+    }
+
+    /** Feeds MJ into a BuildCraft block on one face (a wooden kinesis pipe takes it from an engine there); returns what it took. */
+    public static long giveMj(Level level, BlockPos pos, Direction side, long microMj) {
+        final IMjReceiver receiver = level.getCapability(MjAPI.CAP_RECEIVER, pos, side);
+        return receiver == null || !receiver.canReceive() ? 0L : microMj - receiver.receivePower(microMj, false);
+    }
+
     /** BuildCraft's own wrench test (EntityUtil#isWrench). */
     public static boolean isWrenchToBuildCraft(ItemStack stack) {
         try {

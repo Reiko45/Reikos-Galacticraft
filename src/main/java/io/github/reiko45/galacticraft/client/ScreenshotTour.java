@@ -1792,8 +1792,59 @@ public final class ScreenshotTour {
         addWorkbenchPageSteps();
         addPlayerDetailSteps();
         addOverworldPictureSteps();
-        this.lastGroup = this.extras.size();
         addExhaustSteps();
+        this.lastGroup = this.extras.size();
+        addSealableBuildCraftPipeSteps();
+    }
+
+    /**
+     * The sealable BuildCraft pipes (1.12.2 BlockEnclosed's BuildCraft types) in a tin wall: stone and cobblestone
+     * transport pipes, stone and cobblestone fluid pipes, stone and golden kinesis pipes, each joined from the front by
+     * BuildCraft Reborn's own pipe of its kind (when BuildCraft Reborn is installed: -PbuildcraftJar).
+     */
+    private void addSealableBuildCraftPipeSteps() {
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                final ServerLevel level = srv.overworld();
+                level.setDayTime(6000L);
+                final BlockPos corner = new BlockPos(960, 0, 300);
+                final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(-10, -1, -3), o.offset(10, 8, 10))) {
+                    level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                            net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                }
+                for (int dx = -7; dx <= 7; dx++) {
+                    for (int dy = 0; dy <= 3; dy++) {
+                        level.setBlockAndUpdate(o.offset(dx, dy, 0), GCBlocks.TIN_DECORATION_BLOCK_2.get().defaultBlockState());
+                    }
+                }
+                final net.minecraft.world.level.block.Block holder = io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.pipeHolderBlock();
+                for (int i = 0; i < GCBlocks.SEALABLE_BUILDCRAFT_PIPES.size(); i++) {
+                    final io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock sealable = GCBlocks.SEALABLE_BUILDCRAFT_PIPES.get(i).get();
+                    final BlockPos at = o.offset(-5 + 2 * i, 1, 0);
+                    level.setBlockAndUpdate(at, sealable.defaultBlockState());
+                    sealable.setPlacedBy(level, at, level.getBlockState(at), null, new net.minecraft.world.item.ItemStack(sealable));
+                    if (holder != null) {
+                        for (int dz = 1; dz <= 2; dz++) {
+                            final BlockPos front = at.offset(0, 0, dz);
+                            level.setBlockAndUpdate(front, holder.defaultBlockState());
+                            holder.setPlacedBy(level, front, level.getBlockState(front), null, sealable.pipeStack());
+                        }
+                    }
+                }
+                p.teleportTo(level, o.getX() + 0.5D, o.getY() + 0.6D, o.getZ() + 6.5D, 180.0F, 8.0F);
+            });
+        });
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            }); // the pipes settle their connections
+        }
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "sealable_buildcraft_pipes"));
     }
 
     /**

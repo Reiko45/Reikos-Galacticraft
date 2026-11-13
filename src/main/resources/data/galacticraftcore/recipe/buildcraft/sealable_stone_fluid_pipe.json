@@ -1,0 +1,25 @@
+{
+  "neoforge:conditions": [
+    {
+      "type": "neoforge:mod_loaded",
+      "modid": "buildcraftreborn"
+    }
+  ],
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_decoration_block_2"
+    },
+    "Y": {
+      "item": "buildcraftreborn:pipe_stone_fluid"
+    }
+  },
+  "pattern": [
+    "XYX"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:sealable_stone_fluid_pipe"
+  }
+}

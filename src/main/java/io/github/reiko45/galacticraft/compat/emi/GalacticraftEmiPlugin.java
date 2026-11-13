@@ -54,6 +54,8 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
 
     @Override
     public void register(EmiRegistry registry) {
+        registry.removeEmiStacks(stack -> stack.getItemStack().getItem() != net.minecraft.world.item.Items.AIR
+                && io.github.reiko45.galacticraft.registry.GCCreativeTabs.hiddenWithoutItsMod(stack.getItemStack().getItem()));
         registry.addCategory(COMPRESSING);
         registry.addCategory(CIRCUIT_FABRICATING);
         registry.addCategory(REFINING);

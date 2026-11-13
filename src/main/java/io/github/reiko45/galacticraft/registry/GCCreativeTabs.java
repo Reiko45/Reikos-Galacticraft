@@ -22,6 +22,7 @@ public final class GCCreativeTabs {
             .displayItems((params, output) -> GCItems.ITEMS.getEntries().stream()
                     .map(holder -> holder.get())
                     .filter(item -> item instanceof BlockItem && item != GCBlocks.UNLIT_TORCH_ITEM.get()) // 1.12.2 hid space torches
+                    .filter(item -> !hiddenWithoutItsMod(item))
                     .forEach(item -> {
                         output.accept(item);
                         if (item == GCBlocks.EMERGENCY_POST_ITEM.get()) {
@@ -72,5 +73,11 @@ public final class GCCreativeTabs {
             .build());
 
     private GCCreativeTabs() {
+    }
+
+    /** 1.12.2 BlockEnclosed#getSubBlocks: the sealable BuildCraft pipes are only listed with BuildCraft installed (also in JEI and EMI). */
+    public static boolean hiddenWithoutItsMod(net.minecraft.world.item.Item item) {
+        return item instanceof BlockItem block && block.getBlock() instanceof io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock
+                && !io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.loaded();
     }
 }

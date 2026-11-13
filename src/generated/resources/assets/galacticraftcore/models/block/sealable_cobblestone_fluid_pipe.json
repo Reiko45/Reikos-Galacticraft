@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "galacticraftcore:block/sealable_cobblestone_fluid_pipe"
+  }
+}

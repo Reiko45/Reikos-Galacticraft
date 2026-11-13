@@ -1,8 +1,9 @@
 # BuildCraft Reborn API (compile only)
 
-The few interfaces of [BuildCraft Reborn](https://github.com/Reiko45/BuildCraft-Reborn)'s MJ power API that
-Galacticraft's BuildCraft support is compiled against: `IMjConnector`, `IMjReceiver`, `IMjPassiveProvider` and
-`IMjReadable` as they are, and the part of `MjAPI` with the MJ unit and the block capabilities. They are never packaged
+The few types of [BuildCraft Reborn](https://github.com/Reiko45/BuildCraft-Reborn)'s API that Galacticraft's
+BuildCraft support is compiled against: from the MJ power API, `IMjConnector`, `IMjReceiver`, `IMjPassiveProvider` and
+`IMjReadable` as they are, and the part of `MjAPI` with the MJ unit and the block capabilities; from the pipe API, the
+part of `PipeApi` with its pipe capability, and `IPipe` as a bare type (nothing of it is called). They are never packaged
 into Galacticraft's jar: with BuildCraft Reborn installed its own classes are used, and without it the classes that use
 them are never loaded.
 

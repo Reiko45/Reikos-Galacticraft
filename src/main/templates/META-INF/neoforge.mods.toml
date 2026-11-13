@@ -50,8 +50,8 @@ versionRange = "[15,)"
 ordering = "NONE"
 side = "BOTH"
 
-# BuildCraft Reborn: MJ power both ways, wrenches both ways, Galacticraft fuel in its combustion engine. Loaded after it
-# so that Galacticraft's fuel values in its fuels data map win over its own c:fuel entry.
+# BuildCraft Reborn: MJ power both ways, wrenches both ways, Galacticraft fuel in its combustion engine, its pipes in
+# sealable blocks. Loaded after it so that Galacticraft's fuel values in its fuels data map win over its own c:fuel entry.
 [[dependencies.${mod_id}]]
 modId = "buildcraftreborn"
 type = "optional"

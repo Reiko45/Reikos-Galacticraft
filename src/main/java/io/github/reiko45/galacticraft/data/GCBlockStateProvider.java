@@ -443,6 +443,9 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 GCBlocks.SEALABLE_FLUID_PIPE)) {
             simpleBlockWithItem(sealable.get(), cubeAll(sealable.get()));
         }
+        for (DeferredBlock<? extends Block> sealable : GCBlocks.SEALABLE_BUILDCRAFT_PIPES) {
+            simpleBlockWithItem(sealable.get(), cubeAll(sealable.get()));
+        }
         final ModelFile grating = models().getExistingFile(modLoc("block/grating"));
         simpleBlockWithItem(GCBlocks.GRATING.get(), grating);
         // Lighting panels: the dark decoration block with the lit panel (tinted) on the facing side, turned per wrench step

@@ -531,7 +531,11 @@ Optional: everything below only switches on with [BuildCraft Reborn](https://git
 - [x] Galacticraft fuel burns in the combustion engine at 1.12.2's 5 MJ a tick for 9,000 ticks a bucket (1.12.2
       BuildcraftFuelRegistry.fuel.addFuel), from a `buildcraftreborn:fuels` data map entry; oil and fuel go both ways
       through `c:oil` and `c:fuel`
-- [ ] Enclosed BuildCraft pipes (1.12.2 BlockEnclosed held a BuildCraft pipe in a sealable tin block)
+- [x] Sealable BuildCraft pipes (1.12.2 BlockEnclosed's BuildCraft types): stone and cobblestone transport pipes,
+      stone and cobblestone fluid pipes, stone and golden kinesis pipes, each a working BuildCraft pipe in a tin block
+      that keeps the air in. Made as in 1.12.2, the pipe between two Tin Decoration Blocks (1.12.2 left the kinesis two
+      without a recipe only because BuildCraft 8 had no kinesis pipes yet); they break into themselves and drop what the
+      pipe carried, and are only listed (creative tab, JEI, EMI) with BuildCraft Reborn installed
 
 ## Settings
 
@@ -926,6 +930,13 @@ What they do, where 1.12.2 needed more than a number:
   pipes get exactly what a machine can take that tick (1.12.2 told BuildCraft 30 times that, because BuildCraft 7 sent
   only a trickle). Use BuildCraft Reborn 2.1.1 or later for the GameTests: 2.1.0 sent its `volume_boxes` payload to
   every player joining a level, and the GameTests' mock players have no channel for it.
+* The sealable BuildCraft pipes hold BuildCraft Reborn's own pipe holder block entity, as 1.12.2's held BuildCraft's
+  pipe tile, so they connect to whatever the bare pipe would. They join that block entity type during NeoForge's
+  BlockEntityTypeAddBlocksEvent, before capabilities are given out, through a mixin accessor: the event itself only
+  takes blocks of BuildCraft's pipe block class, and nothing of the pipe holder or its renderer looks at its block. The
+  pipe is given, ticked, told of neighbour changes and removed by calling BuildCraft's pipe block through Minecraft's
+  own Block methods, so no BuildCraft class is named. One put down by a command or a structure gets its pipe on the
+  next tick.
 * `/gckeeploaded` is not ported: it kept a world loaded with nobody in it, and 1.21 never unloads a world. `/gcinv`
   takes player names or selectors (1.12.2: names only), keeps the whole 11-slot Galacticraft inventory (1.12.2 saved 6
   slots), and its saves now survive a restart (1.12.2's loader looked for the wrong kind of tag and never read them

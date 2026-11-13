@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "galacticraftcore:block/sealable_stone_kinesis_pipe"
+  }
+}

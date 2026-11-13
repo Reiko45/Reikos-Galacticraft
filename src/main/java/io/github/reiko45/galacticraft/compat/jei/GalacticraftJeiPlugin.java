@@ -39,6 +39,12 @@ public class GalacticraftJeiPlugin implements IModPlugin {
     @Override
     public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
         runtime = jeiRuntime;
+        final List<net.minecraft.world.item.ItemStack> hidden = io.github.reiko45.galacticraft.registry.GCItems.ITEMS.getEntries().stream()
+                .map(holder -> holder.get()).filter(io.github.reiko45.galacticraft.registry.GCCreativeTabs::hiddenWithoutItsMod)
+                .map(net.minecraft.world.item.ItemStack::new).toList();
+        if (!hidden.isEmpty()) {
+            jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(mezz.jei.api.constants.VanillaTypes.ITEM_STACK, hidden);
+        }
     }
 
     @Override

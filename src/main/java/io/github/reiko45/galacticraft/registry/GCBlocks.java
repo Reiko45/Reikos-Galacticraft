@@ -360,6 +360,22 @@ public final class GCBlocks {
             "sealable_heavy_aluminum_wire", () -> new io.github.reiko45.galacticraft.block.EnclosedWireBlock(enclosed(), true));
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedPipeBlock> SEALABLE_FLUID_PIPE = withItem("sealable_fluid_pipe",
             () -> new io.github.reiko45.galacticraft.block.EnclosedPipeBlock(enclosed()));
+    /** 1.12.2 BlockEnclosed's BuildCraft types: a BuildCraft Reborn pipe in a tin block (working with BuildCraft Reborn). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_STONE_TRANSPORT_PIPE =
+            sealableBuildCraftPipe("sealable_stone_transport_pipe", "pipe_stone_item");
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_COBBLESTONE_TRANSPORT_PIPE =
+            sealableBuildCraftPipe("sealable_cobblestone_transport_pipe", "pipe_cobble_item");
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_STONE_FLUID_PIPE =
+            sealableBuildCraftPipe("sealable_stone_fluid_pipe", "pipe_stone_fluid");
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_COBBLESTONE_FLUID_PIPE =
+            sealableBuildCraftPipe("sealable_cobblestone_fluid_pipe", "pipe_cobble_fluid");
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_STONE_KINESIS_PIPE =
+            sealableBuildCraftPipe("sealable_stone_kinesis_pipe", "pipe_stone_power");
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> SEALABLE_GOLDEN_KINESIS_PIPE =
+            sealableBuildCraftPipe("sealable_golden_kinesis_pipe", "pipe_gold_power");
+    public static final java.util.List<DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock>> SEALABLE_BUILDCRAFT_PIPES = java.util.List.of(
+            SEALABLE_STONE_TRANSPORT_PIPE, SEALABLE_COBBLESTONE_TRANSPORT_PIPE, SEALABLE_STONE_FLUID_PIPE, SEALABLE_COBBLESTONE_FLUID_PIPE,
+            SEALABLE_STONE_KINESIS_PIPE, SEALABLE_GOLDEN_KINESIS_PIPE);
     /** 1.12.2 BlockGrating: hardness 0.5, resistance 15 (3 against blasts), metal sounds. */
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.GratingBlock> GRATING = withItem("grating",
             () -> new io.github.reiko45.galacticraft.block.GratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.5F, 3.0F)
@@ -590,6 +606,11 @@ public final class GCBlocks {
 
     private static BlockBehaviour.Properties enclosed() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.4F, 0.6F).sound(SoundType.STONE);
+    }
+
+    private static DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock> sealableBuildCraftPipe(String name, String pipe) {
+        return withItem(name, () -> new io.github.reiko45.galacticraft.block.EnclosedBuildCraftPipeBlock(
+                net.minecraft.resources.ResourceLocation.fromNamespaceAndPath("buildcraftreborn", pipe), enclosed()));
     }
 
     private static <B extends Block> DeferredBlock<B> withItem(String name, Supplier<B> factory) {

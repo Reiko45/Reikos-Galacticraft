@@ -91,6 +91,7 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
                 GCBlocks.CONCEALED_REDSTONE.get(), GCBlocks.CONCEALED_REPEATER.get(), GCBlocks.CONCEALED_DETECTOR.get(), GCBlocks.SEALABLE_ALUMINUM_WIRE.get(),
                 GCBlocks.SEALABLE_HEAVY_ALUMINUM_WIRE.get(), GCBlocks.SEALABLE_FLUID_PIPE.get(), GCBlocks.GRATING.get(), GCBlocks.LIGHTING_PANEL_SQUARE.get(),
                 GCBlocks.LIGHTING_PANEL_SPOTS.get(), GCBlocks.LIGHTING_PANEL_LINEAR.get(), GCBlocks.LIGHTING_PANEL_SF.get(), GCBlocks.LIGHTING_PANEL_SFDIAG.get());
+        GCBlocks.SEALABLE_BUILDCRAFT_PIPES.forEach(block -> tag(BlockTags.MINEABLE_WITH_PICKAXE).add(block.get()));
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_2.get(), GCBlocks.RED_SLIMELING_EGG.get(),
                 GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());
         tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.RED_SLIMELING_EGG.get(), GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());

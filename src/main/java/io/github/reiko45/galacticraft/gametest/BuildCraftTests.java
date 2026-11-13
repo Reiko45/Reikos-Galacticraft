@@ -169,4 +169,124 @@ public final class BuildCraftTests {
         helper.assertTrue(loader != null, "a loader");
         helper.succeed();
     }
+
+    /** A sealable BuildCraft pipe put down as a player would: the block, then its setPlacedBy (which gives it the pipe). */
+    private static void placeSealable(GameTestHelper helper, BlockPos pos, net.minecraft.world.level.block.Block block) {
+        helper.setBlock(pos, block);
+        final BlockPos abs = helper.absolutePos(pos);
+        block.setPlacedBy(helper.getLevel(), abs, helper.getLevel().getBlockState(abs), null, new ItemStack(block));
+    }
+
+    /**
+     * 1.12.2 BlockEnclosed's BuildCraft transport pipes: the stone pipe inside works with BuildCraft's own pipes beside
+     * it, whether placed by a player or by a command (then it gets its pipe on the next tick): a hopper above the first
+     * fills a chest at the far end.
+     */
+    @GameTest(template = AIR, timeoutTicks = 300)
+    public static void sealedTransportPipesCarryItems(GameTestHelper helper) {
+        if (skip(helper)) {
+            return;
+        }
+        final BlockPos first = new BlockPos(1, 1, 1);
+        placeSealable(helper, first, GCBlocks.SEALABLE_STONE_TRANSPORT_PIPE.get());
+        helper.assertTrue(helper.getBlockEntity(first) != null
+                && helper.getBlockEntity(first).getType() == BuildCraftCompat.pipeHolderType(), "BuildCraft's pipe holder inside");
+        helper.assertTrue(BuildCraftCompat.hasPipe(helper.getLevel(), helper.absolutePos(first)), "placed with its pipe");
+        BuildCraftTestSupport.placePipe(helper, new BlockPos(2, 1, 1), "pipe_stone_item");
+        final BlockPos second = new BlockPos(3, 1, 1);
+        helper.setBlock(second, GCBlocks.SEALABLE_STONE_TRANSPORT_PIPE.get());
+        helper.assertFalse(BuildCraftCompat.hasPipe(helper.getLevel(), helper.absolutePos(second)), "no pipe yet when set by command");
+        final BlockPos chest = new BlockPos(4, 1, 1);
+        helper.setBlock(chest, Blocks.CHEST);
+        final BlockPos hopperPos = new BlockPos(1, 2, 1);
+        helper.setBlock(hopperPos, Blocks.HOPPER); // pointing down into the first sealed pipe
+        helper.runAfterDelay(3, () -> {
+            helper.assertTrue(BuildCraftCompat.hasPipe(helper.getLevel(), helper.absolutePos(second)), "the commanded one got its pipe");
+            final net.minecraft.world.level.block.entity.HopperBlockEntity hopper = helper.getBlockEntity(hopperPos);
+            hopper.setItem(0, new ItemStack(net.minecraft.world.item.Items.COBBLESTONE, 8));
+            helper.succeedWhen(() -> {
+                final net.minecraft.world.level.block.entity.ChestBlockEntity box = helper.getBlockEntity(chest);
+                helper.assertValueEqual(box.countItem(net.minecraft.world.item.Items.COBBLESTONE), 8, "cobblestone in the chest");
+            });
+        });
+    }
+
+    /**
+     * 1.12.2 BlockEnclosed's BuildCraft fluid pipes: oil pumped into a sealed stone fluid pipe (from the side a tank is on,
+     * so the pipe is connected there) comes out into a Galacticraft Fluid Tank on the other side.
+     */
+    @GameTest(template = AIR, timeoutTicks = 300)
+    public static void sealedFluidPipesCarryFluids(GameTestHelper helper) {
+        if (skip(helper)) {
+            return;
+        }
+        helper.setBlock(new BlockPos(0, 1, 1), GCBlocks.FLUID_TANK.get());
+        final BlockPos pipe = new BlockPos(1, 1, 1);
+        placeSealable(helper, pipe, GCBlocks.SEALABLE_STONE_FLUID_PIPE.get());
+        final BlockPos tankPos = new BlockPos(2, 1, 1);
+        helper.setBlock(tankPos, GCBlocks.FLUID_TANK.get());
+        final int[] given = {0};
+        helper.onEachTick(() -> {
+            final IFluidHandler in = helper.getLevel().getCapability(Capabilities.FluidHandler.BLOCK, helper.absolutePos(pipe), Direction.WEST);
+            if (in != null && given[0] < 1000) {
+                given[0] += in.fill(new FluidStack(GCFluids.OIL.get(), Math.min(100, 1000 - given[0])), IFluidHandler.FluidAction.EXECUTE);
+            }
+        });
+        helper.succeedWhen(() -> {
+            final io.github.reiko45.galacticraft.block.entity.FluidTankBlockEntity tank = helper.getBlockEntity(tankPos);
+            helper.assertTrue(given[0] > 0, "the sealed pipe took no oil");
+            helper.assertTrue(tank.tank().getFluidAmount() >= 500 && tank.tank().getFluid().getFluid() == GCFluids.OIL.get(),
+                    "the tank has " + tank.tank().getFluidAmount() + " mB");
+        });
+    }
+
+    /**
+     * 1.12.2 BlockEnclosed's BuildCraft kinesis pipes: MJ from a wooden kinesis pipe through a sealed stone and a sealed
+     * golden kinesis pipe into an Energy Storage Module's input.
+     */
+    @GameTest(template = AIR, timeoutTicks = 200)
+    public static void sealedKinesisPipesCarryMj(GameTestHelper helper) {
+        if (skip(helper)) {
+            return;
+        }
+        final BlockPos wood = new BlockPos(1, 1, 1);
+        BuildCraftTestSupport.placePipe(helper, wood, "pipe_wood_power");
+        placeSealable(helper, new BlockPos(2, 1, 1), GCBlocks.SEALABLE_STONE_KINESIS_PIPE.get());
+        placeSealable(helper, new BlockPos(3, 1, 1), GCBlocks.SEALABLE_GOLDEN_KINESIS_PIPE.get());
+        final EnergyStorageBlockEntity module = module(helper, new BlockPos(4, 1, 1));
+        final long[] given = {0L};
+        helper.onEachTick(() -> given[0] += BuildCraftTestSupport.giveMj(helper.getLevel(), helper.absolutePos(wood), Direction.WEST,
+                buildcraftreborn.api.mj.MjAPI.MJ));
+        helper.succeedWhen(() -> {
+            helper.assertTrue(given[0] > 0L, "the wooden kinesis pipe took no power");
+            helper.assertTrue(module.energy().getStoredGJ() > 0.0F, "the module stored " + module.energy().getStoredGJ());
+        });
+    }
+
+    /**
+     * 1.12.2 BlockEnclosed: the sealable pipes keep the air in, and break into themselves (not the BuildCraft pipe
+     * inside); without BuildCraft Reborn they are plain tin blocks, kept out of the creative tab and recipe viewers.
+     */
+    @GameTest(template = AIR)
+    public static void sealedBuildCraftPipesSealAndDropThemselves(GameTestHelper helper) {
+        final net.minecraft.world.level.block.Block block = GCBlocks.SEALABLE_GOLDEN_KINESIS_PIPE.get();
+        final BlockPos pos = new BlockPos(1, 1, 1);
+        helper.setBlock(pos, block);
+        helper.assertTrue(((io.github.reiko45.galacticraft.oxygen.PartialSealable) block).isSealed(helper.getLevel(), helper.absolutePos(pos),
+                helper.getBlockState(pos), Direction.UP), "sealed");
+        helper.assertValueEqual(io.github.reiko45.galacticraft.registry.GCCreativeTabs.hiddenWithoutItsMod(block.asItem()),
+                !BuildCraftCompat.loaded(), "hidden only without BuildCraft Reborn");
+        if (!BuildCraftCompat.loaded()) {
+            helper.assertTrue(helper.getLevel().getBlockEntity(helper.absolutePos(pos)) == null, "no block entity without BuildCraft Reborn");
+            helper.succeed();
+            return;
+        }
+        helper.runAfterDelay(2, () -> {
+            helper.assertTrue(BuildCraftCompat.hasPipe(helper.getLevel(), helper.absolutePos(pos)), "a pipe inside");
+            helper.getLevel().destroyBlock(helper.absolutePos(pos), true);
+            helper.assertItemEntityPresent(block.asItem(), pos, 2.0D);
+            helper.assertItemEntityNotPresent(BuildCraftTestSupport.item("pipe_gold_power"), pos, 2.0D);
+            helper.succeed();
+        });
+    }
 }
