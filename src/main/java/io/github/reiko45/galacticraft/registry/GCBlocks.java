@@ -306,6 +306,70 @@ public final class GCBlocks {
     public static final DeferredBlock<BreathableAirBlock> BREATHABLE_AIR = BLOCKS.register("breathable_air", () -> new BreathableAirBlock(
             BlockBehaviour.Properties.of().replaceable().noCollission().noLootTable().air().strength(0.0F, 1000.0F)
                     .pushReaction(PushReaction.DESTROY)));
+    /** 1.12.2 BlockBrightBreathableAir: breathable air an Arc Lamp lights up. */
+    public static final DeferredBlock<BreathableAirBlock> BRIGHT_BREATHABLE_AIR = BLOCKS.register("bright_breathable_air", () -> new BreathableAirBlock(
+            BlockBehaviour.Properties.of().replaceable().noCollission().noLootTable().air().strength(0.0F, 1000.0F).lightLevel(state -> 15)
+                    .pushReaction(PushReaction.DESTROY)));
+
+    // --- Space base blocks (phase 7g) ---
+    /** 1.12.2 BlockSpaceGlass: hardness 0.3 (strong 4), resistance 3 (tin frames 4; strong 35). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_VANILLA = spaceGlass("space_glass_vanilla",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.VANILLA, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.PLAIN, 0.3F, 3.0F);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_CLEAR = spaceGlass("space_glass_clear",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.CLEAR, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.PLAIN, 0.3F, 3.0F);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_STRONG = spaceGlass("space_glass_strong",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.STRONG, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.PLAIN, 4.0F, 35.0F);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_VANILLA_TIN = spaceGlass("space_glass_vanilla_tin",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.VANILLA, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.TIN_DECO, 0.3F, 4.0F);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_CLEAR_TIN = spaceGlass("space_glass_clear_tin",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.CLEAR, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.TIN_DECO, 0.3F, 4.0F);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> SPACE_GLASS_STRONG_TIN = spaceGlass("space_glass_strong_tin",
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType.STRONG, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.TIN_DECO, 4.0F, 35.0F);
+    /** 1.12.2 BlockAirLockFrame: Material.ROCK, hardness 1, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.airlock.AirLockFrameBlock> AIR_LOCK_FRAME = withItem("air_lock_frame",
+            () -> new io.github.reiko45.galacticraft.block.airlock.AirLockFrameBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
+                    .strength(1.0F).sound(SoundType.METAL)));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlock> AIR_LOCK_CONTROLLER = withItem("air_lock_controller",
+            () -> new io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY)
+                    .strength(1.0F).sound(SoundType.METAL)));
+    /** 1.12.2 BlockAirLockWall: hardness 1000, no drops. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.airlock.AirLockSealBlock> AIR_LOCK_SEAL = BLOCKS.register("air_lock_seal",
+            () -> new io.github.reiko45.galacticraft.block.airlock.AirLockSealBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                    .strength(1000.0F).sound(SoundType.METAL).noOcclusion().noLootTable().pushReaction(PushReaction.BLOCK)));
+    /** 1.12.2 BlockBrightLamp: hardness 0.1, light 0.9 (13). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.ArcLampBlock> ARC_LAMP = withItem("arc_lamp",
+            () -> new io.github.reiko45.galacticraft.block.ArcLampBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.1F)
+                    .sound(SoundType.METAL).lightLevel(state -> 13).noOcclusion()));
+    /** 1.12.2 BlockConcealedRedstone / Repeater / Detector: Material.IRON, hardness 1, resistance 15 (3 against blasts). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.concealed.ConcealedRedstoneBlock> CONCEALED_REDSTONE = withItem("concealed_redstone",
+            () -> new io.github.reiko45.galacticraft.block.concealed.ConcealedRedstoneBlock(concealed()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.concealed.ConcealedRepeaterBlock> CONCEALED_REPEATER = withItem("concealed_repeater",
+            () -> new io.github.reiko45.galacticraft.block.concealed.ConcealedRepeaterBlock(concealed()));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock> CONCEALED_DETECTOR = withItem("concealed_detector",
+            () -> new io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock(concealed().noLootTable()));
+    /** 1.12.2 BlockEnclosed: Material.CLAY, hardness 0.4, stone sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedWireBlock> SEALABLE_ALUMINUM_WIRE = withItem("sealable_aluminum_wire",
+            () -> new io.github.reiko45.galacticraft.block.EnclosedWireBlock(enclosed(), false));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedWireBlock> SEALABLE_HEAVY_ALUMINUM_WIRE = withItem(
+            "sealable_heavy_aluminum_wire", () -> new io.github.reiko45.galacticraft.block.EnclosedWireBlock(enclosed(), true));
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.EnclosedPipeBlock> SEALABLE_FLUID_PIPE = withItem("sealable_fluid_pipe",
+            () -> new io.github.reiko45.galacticraft.block.EnclosedPipeBlock(enclosed()));
+    /** 1.12.2 BlockGrating: hardness 0.5, resistance 15 (3 against blasts), metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.GratingBlock> GRATING = withItem("grating",
+            () -> new io.github.reiko45.galacticraft.block.GratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.5F, 3.0F)
+                    .sound(SoundType.METAL).noOcclusion()));
+    /** 1.12.2 BlockPanelLighting: Material.IRON, hardness 1, metal sounds. */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> LIGHTING_PANEL_SQUARE = lightingPanel("lighting_panel_square",
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType.SQUARE);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> LIGHTING_PANEL_SPOTS = lightingPanel("lighting_panel_spots",
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType.SPOTS);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> LIGHTING_PANEL_LINEAR = lightingPanel("lighting_panel_linear",
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType.LINEAR);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> LIGHTING_PANEL_SF = lightingPanel("lighting_panel_sf",
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType.SF);
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> LIGHTING_PANEL_SFDIAG = lightingPanel("lighting_panel_sfdiag",
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType.SFDIAG);
+
     /** 1.12.2 BlockUnlitTorch (unlit_torch / unlit_torch_lit as one block with LIT). */
     public static final DeferredBlock<SpaceTorchBlock> UNLIT_TORCH = BLOCKS.register("unlit_torch",
             () -> new SpaceTorchBlock(spaceTorch()));
@@ -455,6 +519,28 @@ public final class GCBlocks {
 
     private static BlockBehaviour.Properties walkway() {
         return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F).requiresCorrectToolForDrops().sound(SoundType.METAL).noOcclusion();
+    }
+
+    private static DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> spaceGlass(String name,
+            io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassType type, io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame frame,
+            float hardness, float resistance) {
+        return withItem(name, () -> new io.github.reiko45.galacticraft.block.SpaceGlassBlock(BlockBehaviour.Properties.of().mapColor(MapColor.NONE)
+                .strength(hardness, resistance).sound(SoundType.GLASS).noOcclusion().dynamicShape().isValidSpawn((s, l, p, e) -> false)
+                .isRedstoneConductor((s, l, p) -> false).isSuffocating((s, l, p) -> false).isViewBlocking((s, l, p) -> false), type, frame));
+    }
+
+    private static DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> lightingPanel(String name,
+            io.github.reiko45.galacticraft.block.LightingPanelBlock.PanelType type) {
+        return withItem(name, () -> new io.github.reiko45.galacticraft.block.LightingPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
+                .strength(1.0F).sound(SoundType.METAL), type));
+    }
+
+    private static BlockBehaviour.Properties concealed() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(1.0F, 3.0F).sound(SoundType.METAL);
+    }
+
+    private static BlockBehaviour.Properties enclosed() {
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(0.4F, 0.6F).sound(SoundType.STONE);
     }
 
     private static <B extends Block> DeferredBlock<B> withItem(String name, Supplier<B> factory) {

@@ -49,6 +49,9 @@ public final class OxygenUtil {
         if (state.isAir() || state.getBlock() instanceof LeavesBlock || state.is(GCModTags.AIR_PERMEABLE)) {
             return true;
         }
+        if (state.getBlock() instanceof PartialSealable partial) {
+            return !partial.isSealed(level, pos, state, travel);
+        }
         if (isSealingFullBlock(level, pos, state)) {
             return false;
         }
@@ -67,6 +70,9 @@ public final class OxygenUtil {
 
     /** 1.12.2 OxygenUtil#canBlockPassAirOnSide: can air leave this (non-air) block through {@code side}? */
     private static boolean canPassAirOut(Level level, BlockState state, BlockPos pos, Direction side) {
+        if (state.getBlock() instanceof PartialSealable partial) {
+            return !partial.isSealed(level, pos, state, side);
+        }
         if (state.getBlock() instanceof SlabBlock && state.hasProperty(SlabBlock.TYPE)) {
             final SlabType type = state.getValue(SlabBlock.TYPE);
             return !(side == Direction.DOWN && type == SlabType.BOTTOM || side == Direction.UP && type == SlabType.TOP);

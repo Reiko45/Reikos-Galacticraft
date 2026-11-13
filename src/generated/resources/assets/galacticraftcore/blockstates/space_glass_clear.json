@@ -1,0 +1,1300 @@
+{
+  "variants": {
+    "modeltype=corner,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/corner"
+    },
+    "modeltype=corner,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 90
+    },
+    "modeltype=corner,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=corner,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=corner,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=corner,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 270
+    },
+    "modeltype=corner,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 180
+    },
+    "modeltype=corner,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=corner,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=corner,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=corner,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=corner,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=corner,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=corner,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "y": 270
+    },
+    "modeltype=corner,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "y": 180
+    },
+    "modeltype=corner,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/corner",
+      "y": 90
+    },
+    "modeltype=corner_s,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/corner_s"
+    },
+    "modeltype=corner_s,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 90
+    },
+    "modeltype=corner_s,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=corner_s,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=corner_s,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=corner_s,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 270
+    },
+    "modeltype=corner_s,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 180
+    },
+    "modeltype=corner_s,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=corner_s,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=corner_s,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=corner_s,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=corner_s,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=corner_s,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=corner_s,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "y": 270
+    },
+    "modeltype=corner_s,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "y": 180
+    },
+    "modeltype=corner_s,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s",
+      "y": 90
+    },
+    "modeltype=corner_s2,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2"
+    },
+    "modeltype=corner_s2,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 90
+    },
+    "modeltype=corner_s2,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=corner_s2,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=corner_s2,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=corner_s2,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 270
+    },
+    "modeltype=corner_s2,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 180
+    },
+    "modeltype=corner_s2,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=corner_s2,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=corner_s2,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=corner_s2,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=corner_s2,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=corner_s2,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=corner_s2,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "y": 270
+    },
+    "modeltype=corner_s2,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "y": 180
+    },
+    "modeltype=corner_s2,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/corner_s2",
+      "y": 90
+    },
+    "modeltype=joint,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joint"
+    },
+    "modeltype=joint,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 90
+    },
+    "modeltype=joint,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joint,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joint,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joint,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 270
+    },
+    "modeltype=joint,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 180
+    },
+    "modeltype=joint,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joint,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joint,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joint,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joint,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joint,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joint,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "y": 270
+    },
+    "modeltype=joint,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "y": 180
+    },
+    "modeltype=joint,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joint",
+      "y": 90
+    },
+    "modeltype=joint_s,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joint_s"
+    },
+    "modeltype=joint_s,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 90
+    },
+    "modeltype=joint_s,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joint_s,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joint_s,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joint_s,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 270
+    },
+    "modeltype=joint_s,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 180
+    },
+    "modeltype=joint_s,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joint_s,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joint_s,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joint_s,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joint_s,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joint_s,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joint_s,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "y": 270
+    },
+    "modeltype=joint_s,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "y": 180
+    },
+    "modeltype=joint_s,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s",
+      "y": 90
+    },
+    "modeltype=joint_s2,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2"
+    },
+    "modeltype=joint_s2,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 90
+    },
+    "modeltype=joint_s2,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joint_s2,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joint_s2,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joint_s2,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 270
+    },
+    "modeltype=joint_s2,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 180
+    },
+    "modeltype=joint_s2,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joint_s2,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joint_s2,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joint_s2,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joint_s2,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joint_s2,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joint_s2,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "y": 270
+    },
+    "modeltype=joint_s2,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "y": 180
+    },
+    "modeltype=joint_s2,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joint_s2",
+      "y": 90
+    },
+    "modeltype=joinx,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joinx"
+    },
+    "modeltype=joinx,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 90
+    },
+    "modeltype=joinx,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joinx,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joinx,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joinx,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 270
+    },
+    "modeltype=joinx,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 180
+    },
+    "modeltype=joinx,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joinx,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joinx,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joinx,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joinx,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joinx,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joinx,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "y": 270
+    },
+    "modeltype=joinx,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "y": 180
+    },
+    "modeltype=joinx,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx",
+      "y": 90
+    },
+    "modeltype=joinx_s,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s"
+    },
+    "modeltype=joinx_s,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 90
+    },
+    "modeltype=joinx_s,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joinx_s,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joinx_s,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joinx_s,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 270
+    },
+    "modeltype=joinx_s,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 180
+    },
+    "modeltype=joinx_s,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joinx_s,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joinx_s,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joinx_s,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joinx_s,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joinx_s,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joinx_s,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "y": 270
+    },
+    "modeltype=joinx_s,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "y": 180
+    },
+    "modeltype=joinx_s,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s",
+      "y": 90
+    },
+    "modeltype=joinx_s2,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2"
+    },
+    "modeltype=joinx_s2,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 90
+    },
+    "modeltype=joinx_s2,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=joinx_s2,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=joinx_s2,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=joinx_s2,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 270
+    },
+    "modeltype=joinx_s2,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 180
+    },
+    "modeltype=joinx_s2,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=joinx_s2,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=joinx_s2,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=joinx_s2,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=joinx_s2,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=joinx_s2,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=joinx_s2,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "y": 270
+    },
+    "modeltype=joinx_s2,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "y": 180
+    },
+    "modeltype=joinx_s2,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/joinx_s2",
+      "y": 90
+    },
+    "modeltype=standard,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standard"
+    },
+    "modeltype=standard,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 90
+    },
+    "modeltype=standard,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standard,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standard,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standard,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 270
+    },
+    "modeltype=standard,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 180
+    },
+    "modeltype=standard,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standard,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standard,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standard,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standard,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standard,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standard,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "y": 270
+    },
+    "modeltype=standard,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "y": 180
+    },
+    "modeltype=standard,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standard",
+      "y": 90
+    },
+    "modeltype=standards1,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards1"
+    },
+    "modeltype=standards1,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 90
+    },
+    "modeltype=standards1,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards1,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards1,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards1,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 270
+    },
+    "modeltype=standards1,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 180
+    },
+    "modeltype=standards1,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards1,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards1,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards1,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards1,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards1,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards1,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "y": 270
+    },
+    "modeltype=standards1,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "y": 180
+    },
+    "modeltype=standards1,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1",
+      "y": 90
+    },
+    "modeltype=standards1b,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards1b"
+    },
+    "modeltype=standards1b,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 90
+    },
+    "modeltype=standards1b,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards1b,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards1b,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards1b,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 270
+    },
+    "modeltype=standards1b,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 180
+    },
+    "modeltype=standards1b,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards1b,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards1b,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards1b,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards1b,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards1b,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards1b,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "y": 270
+    },
+    "modeltype=standards1b,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "y": 180
+    },
+    "modeltype=standards1b,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1b",
+      "y": 90
+    },
+    "modeltype=standards1bb,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb"
+    },
+    "modeltype=standards1bb,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 90
+    },
+    "modeltype=standards1bb,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards1bb,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards1bb,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards1bb,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 270
+    },
+    "modeltype=standards1bb,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 180
+    },
+    "modeltype=standards1bb,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards1bb,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards1bb,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards1bb,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards1bb,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards1bb,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards1bb,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "y": 270
+    },
+    "modeltype=standards1bb,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "y": 180
+    },
+    "modeltype=standards1bb,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards1bb",
+      "y": 90
+    },
+    "modeltype=standards2,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards2"
+    },
+    "modeltype=standards2,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 90
+    },
+    "modeltype=standards2,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards2,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards2,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards2,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 270
+    },
+    "modeltype=standards2,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 180
+    },
+    "modeltype=standards2,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards2,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards2,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards2,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards2,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards2,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards2,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "y": 270
+    },
+    "modeltype=standards2,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "y": 180
+    },
+    "modeltype=standards2,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2",
+      "y": 90
+    },
+    "modeltype=standards2a,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards2a"
+    },
+    "modeltype=standards2a,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 90
+    },
+    "modeltype=standards2a,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards2a,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards2a,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards2a,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 270
+    },
+    "modeltype=standards2a,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 180
+    },
+    "modeltype=standards2a,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards2a,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards2a,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards2a,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards2a,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards2a,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards2a,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "y": 270
+    },
+    "modeltype=standards2a,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "y": 180
+    },
+    "modeltype=standards2a,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2a",
+      "y": 90
+    },
+    "modeltype=standards2b,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards2b"
+    },
+    "modeltype=standards2b,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 90
+    },
+    "modeltype=standards2b,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards2b,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards2b,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards2b,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 270
+    },
+    "modeltype=standards2b,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 180
+    },
+    "modeltype=standards2b,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards2b,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards2b,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards2b,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards2b,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards2b,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards2b,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "y": 270
+    },
+    "modeltype=standards2b,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "y": 180
+    },
+    "modeltype=standards2b,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards2b",
+      "y": 90
+    },
+    "modeltype=standards3,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards3"
+    },
+    "modeltype=standards3,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 90
+    },
+    "modeltype=standards3,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards3,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards3,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards3,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 270
+    },
+    "modeltype=standards3,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 180
+    },
+    "modeltype=standards3,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards3,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards3,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards3,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards3,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards3,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards3,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "y": 270
+    },
+    "modeltype=standards3,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "y": 180
+    },
+    "modeltype=standards3,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards3",
+      "y": 90
+    },
+    "modeltype=standards4,rot=0": {
+      "model": "galacticraftcore:space_glass_clear/standards4"
+    },
+    "modeltype=standards4,rot=d": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 90
+    },
+    "modeltype=standards4,rot=dy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 270,
+      "y": 270
+    },
+    "modeltype=standards4,rot=dyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 90,
+      "y": 180
+    },
+    "modeltype=standards4,rot=dyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 270,
+      "y": 90
+    },
+    "modeltype=standards4,rot=u": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 270
+    },
+    "modeltype=standards4,rot=uu": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 180
+    },
+    "modeltype=standards4,rot=uuy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 180,
+      "y": 270
+    },
+    "modeltype=standards4,rot=uuyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 180,
+      "y": 180
+    },
+    "modeltype=standards4,rot=uuyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 180,
+      "y": 90
+    },
+    "modeltype=standards4,rot=uy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 90,
+      "y": 270
+    },
+    "modeltype=standards4,rot=uyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 270,
+      "y": 180
+    },
+    "modeltype=standards4,rot=uyyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "x": 90,
+      "y": 90
+    },
+    "modeltype=standards4,rot=y": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "y": 270
+    },
+    "modeltype=standards4,rot=yy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "y": 180
+    },
+    "modeltype=standards4,rot=yyy": {
+      "model": "galacticraftcore:space_glass_clear/standards4",
+      "y": 90
+    }
+  }
+}

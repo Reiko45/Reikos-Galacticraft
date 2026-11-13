@@ -551,7 +551,30 @@
     "block/solar_array_controller_side": "planets:blocks/solar_controller_side",
     "block/solar_array_controller_output": "planets:blocks/solar_controller_output",
     "gui/geothermal": "planets:gui/geothermal",
-    "gui/solar_array_controller": "planets:gui/solar_array_controller"
+    "gui/solar_array_controller": "planets:gui/solar_array_controller",
+    "block/space_glass_vanilla": "blocks/space_glass_vanilla",
+    "block/space_glass_clear": "blocks/space_glass_clear",
+    "block/space_glass_strong": "blocks/space_glass_strong",
+    "block/space_glass_frame_white": "blocks/space_glass_frame_white",
+    "block/space_glass_frame_tindeco": "blocks/space_glass_frame_tindeco",
+    "block/space_glass_vanilla_inventory": "blocks/space_glass_vanilla_inventory",
+    "block/space_glass_clear_inventory": "blocks/space_glass_clear_inventory",
+    "block/space_glass_strong_inventory": "blocks/space_glass_inventory",
+    "block/air_lock_frame": "blocks/air_lock_frame",
+    "block/air_lock_controller": "blocks/air_lock_controller",
+    "block/air_lock_seal": "blocks/air_lock_seal",
+    "block/arc_lamp_off": "blocks/arc_lamp_off",
+    "block/arc_lamp_on": "blocks/arc_lamp_on",
+    "block/sealable_aluminum_wire": "blocks/enclosed_aluminum_wire",
+    "block/sealable_heavy_aluminum_wire": "blocks/enclosed_heavy_aluminum_wire",
+    "block/sealable_fluid_pipe": "blocks/enclosed_fluid_pipe",
+    "block/lighting_panel_off": "blocks/panel_light_off",
+    "block/lighting_panel_square": "blocks/panel_light_square",
+    "block/lighting_panel_spots": "blocks/panel_light_spots",
+    "block/lighting_panel_linear": "blocks/panel_light_linear",
+    "block/lighting_panel_sf": "blocks/panel_light_sf",
+    "block/lighting_panel_sfdiag": "blocks/panel_light_sfdiag",
+    "gui/air_lock_controller": "gui/air_lock_controller"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -568,7 +591,9 @@
     "ambience/singledrip6": "ambience/singledrip6",
     "ambience/singledrip7": "ambience/singledrip7",
     "ambience/singledrip8": "ambience/singledrip8",
-    "entity/astrominer": "entity/astrominer"
+    "entity/astrominer": "entity/astrominer",
+    "player/openairlock": "player/openairlock",
+    "player/closeairlock": "player/closeairlock"
   },
   "models": {
     "block/fallen_meteor": "block/fallen_meteor_model",
@@ -638,7 +663,113 @@
     },
     "block/solar_array_controller": {
       "from": "planets:block/solar_array_controller"
-    }
+    },
+    "block/glass/base_ne_s1": {
+      "from": "block/glass/base_ne_s1"
+    },
+    "block/glass/base_ne_s2": {
+      "from": "block/glass/base_ne_s2"
+    },
+    "block/glass/base_ns_s1": {
+      "from": "block/glass/base_ns_s1"
+    },
+    "block/glass/base_ns_s1b": {
+      "from": "block/glass/base_ns_s1b"
+    },
+    "block/glass/base_ns_s1bb": {
+      "from": "block/glass/base_ns_s1bb"
+    },
+    "block/glass/base_ns_s2": {
+      "from": "block/glass/base_ns_s2"
+    },
+    "block/glass/base_ns_s2a": {
+      "from": "block/glass/base_ns_s2a"
+    },
+    "block/glass/base_ns_s2b": {
+      "from": "block/glass/base_ns_s2b"
+    },
+    "block/glass/base_ns_s3": {
+      "from": "block/glass/base_ns_s3"
+    },
+    "block/glass/base_ns_s4": {
+      "from": "block/glass/base_ns_s4"
+    },
+    "block/glass/base_nse_s1": {
+      "from": "block/glass/base_nse_s1"
+    },
+    "block/glass/base_nse_s2": {
+      "from": "block/glass/base_nse_s2"
+    },
+    "block/glass/base_nsew_s1": {
+      "from": "block/glass/base_nsew_s1"
+    },
+    "block/glass/base_nsew_s2": {
+      "from": "block/glass/base_nsew_s2"
+    },
+    "block/glass/glass_ne": {
+      "from": "block/glass/glass_ne"
+    },
+    "block/glass/glass_ne_s1": {
+      "from": "block/glass/glass_ne_s1"
+    },
+    "block/glass/glass_ne_s2": {
+      "from": "block/glass/glass_ne_s2"
+    },
+    "block/glass/glass_ns": {
+      "from": "block/glass/glass_ns"
+    },
+    "block/glass/glass_ns_s1": {
+      "from": "block/glass/glass_ns_s1"
+    },
+    "block/glass/glass_ns_s1b": {
+      "from": "block/glass/glass_ns_s1b"
+    },
+    "block/glass/glass_ns_s1bb": {
+      "from": "block/glass/glass_ns_s1bb"
+    },
+    "block/glass/glass_ns_s2": {
+      "from": "block/glass/glass_ns_s2"
+    },
+    "block/glass/glass_ns_s2a": {
+      "from": "block/glass/glass_ns_s2a"
+    },
+    "block/glass/glass_ns_s2b": {
+      "from": "block/glass/glass_ns_s2b"
+    },
+    "block/glass/glass_ns_s3": {
+      "from": "block/glass/glass_ns_s3"
+    },
+    "block/glass/glass_ns_s4": {
+      "from": "block/glass/glass_ns_s4"
+    },
+    "block/glass/glass_nse": {
+      "from": "block/glass/glass_nse"
+    },
+    "block/glass/glass_nse_s1": {
+      "from": "block/glass/glass_nse_s1"
+    },
+    "block/glass/glass_nse_s2": {
+      "from": "block/glass/glass_nse_s2"
+    },
+    "block/glass/glass_nsew": {
+      "from": "block/glass/glass_nsew"
+    },
+    "block/glass/glass_nsew_s1": {
+      "from": "block/glass/glass_nsew_s1"
+    },
+    "block/glass/glass_nsew_s2": {
+      "from": "block/glass/glass_nsew_s2"
+    },
+    "block/glass/spaceglass_ns_inventory": {
+      "from": "block/glass/spaceglass_ns_inventory"
+    },
+    "block/grating": {
+      "from": "block/grating",
+      "render_type": "minecraft:cutout"
+    },
+    "block/arc_lamp_base": "block/arclamp_base_model",
+    "block/arc_lamp_base_side": "block/arclamp_base_side_model",
+    "block/arc_lamp_on": "block/arclamp_on_model"
   },
   "lang": {
     "itemGroup.galacticraftcore.blocks": "item_group.galacticraft_blocks",
@@ -1345,7 +1476,47 @@
     "block.galacticraftcore.solar_array_controller.desc": "planets:tile.solar_array_controller.description",
     "gui.galacticraftcore.connected_solar_controller": "planets:gui.message.connected_solar_controller.name",
     "gui.galacticraftcore.status.invalid_spout_1": "planets:gui.status.invalid_spout_1.name",
-    "gui.galacticraftcore.status.invalid_spout_2": "planets:gui.status.invalid_spout_2.name"
+    "gui.galacticraftcore.status.invalid_spout_2": "planets:gui.status.invalid_spout_2.name",
+    "block.galacticraftcore.space_glass_vanilla": "tile.space_glass_vanilla.name",
+    "block.galacticraftcore.space_glass_clear": "tile.space_glass_clear.name",
+    "block.galacticraftcore.space_glass_strong": "tile.space_glass_strong.name",
+    "block.galacticraftcore.space_glass_vanilla_tin": "tile.space_glass_vanilla.name",
+    "block.galacticraftcore.space_glass_clear_tin": "tile.space_glass_clear.name",
+    "block.galacticraftcore.space_glass_strong_tin": "tile.space_glass_strong.name",
+    "block.galacticraftcore.space_glass.desc": "tile.space_glass.description",
+    "block.galacticraftcore.space_glass.clear.desc": "tile.space_glass.clear.description",
+    "block.galacticraftcore.space_glass.strong.desc": "tile.space_glass.strong.description",
+    "block.galacticraftcore.air_lock_frame": "tile.air_lock_frame.name",
+    "block.galacticraftcore.air_lock_controller": "tile.air_lock_controller.name",
+    "block.galacticraftcore.air_lock_seal": "tile.air_lock_seal.name",
+    "block.galacticraftcore.air_lock_frame.desc": "tile.air_lock_frame.description",
+    "block.galacticraftcore.arc_lamp": "tile.arclamp.name",
+    "block.galacticraftcore.arc_lamp.desc": "tile.arclamp.description",
+    "block.galacticraftcore.concealed_redstone": "tile.concealed_redstone.name",
+    "block.galacticraftcore.concealed_repeater": "tile.concealed_repeater.name",
+    "block.galacticraftcore.concealed_detector": "tile.concealed_detector.name",
+    "block.galacticraftcore.sealable_aluminum_wire": "tile.enclosed.aluminum_wire.name",
+    "block.galacticraftcore.sealable_heavy_aluminum_wire": "tile.enclosed.heavy_aluminum_wire.name",
+    "block.galacticraftcore.sealable_fluid_pipe": "tile.enclosed.fluid_pipe.name",
+    "block.galacticraftcore.enclosed.desc": "tile.enclosed.description",
+    "block.galacticraftcore.grating": "tile.grating.name",
+    "block.galacticraftcore.lighting_panel_square": "tile.panel_lighting_0.name",
+    "block.galacticraftcore.lighting_panel_spots": "tile.panel_lighting_1.name",
+    "block.galacticraftcore.lighting_panel_linear": "tile.panel_lighting_2.name",
+    "block.galacticraftcore.lighting_panel_sf": "tile.panel_lighting_3.name",
+    "block.galacticraftcore.lighting_panel_sfdiag": "tile.panel_lighting_4.name",
+    "gui.galacticraftcore.checkbox.redstone_signal": "gui.checkbox.redstone_signal.name",
+    "gui.galacticraftcore.checkbox.player_within": "gui.checkbox.player_within.name",
+    "gui.galacticraftcore.checkbox.player_name": "gui.checkbox.player_name.name",
+    "gui.galacticraftcore.checkbox.invert": "gui.checkbox.invert.name",
+    "gui.galacticraftcore.checkbox.horizontal": "gui.checkbox.horizontal.name",
+    "gui.galacticraftcore.dropbox.player_distance.0": "gui.dropbox.player_distance.name.0",
+    "gui.galacticraftcore.dropbox.player_distance.1": "gui.dropbox.player_distance.name.1",
+    "gui.galacticraftcore.dropbox.player_distance.2": "gui.dropbox.player_distance.name.2",
+    "gui.galacticraftcore.dropbox.player_distance.3": "gui.dropbox.player_distance.name.3",
+    "gui.galacticraftcore.title.air_lock": "gui.title.air_lock.name",
+    "gui.galacticraftcore.status.air_lock_closed": "gui.status.air_lock_closed.name",
+    "gui.galacticraftcore.status.air_lock_open": "gui.status.air_lock_open.name"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1395,7 +1566,11 @@
     "item.galacticraftcore.tier_3_dungeon_key.desc": "Opens a Tier 3 Treasure Chest",
     "item.galacticraftcore.juicer_spawn_egg": "Juicer Spawn Egg",
     "item.galacticraftcore.spider_queen_spawn_egg": "Spider Queen Spawn Egg",
-    "block.galacticraftcore.venus_boss_spawner": "Venus Boss Spawner"
+    "block.galacticraftcore.venus_boss_spawner": "Venus Boss Spawner",
+    "block.galacticraftcore.bright_breathable_air": "Bright Breathable Air",
+    "block.galacticraftcore.lighting_panel.desc": "Lighting panel for use in space! The wrench turns it.",
+    "subtitles.galacticraftcore.block.air_lock.seal": "Air lock shuts",
+    "subtitles.galacticraftcore.block.air_lock.unseal": "Air lock opens"
   },
   "recipes": {
     "skip_conditions": [
@@ -1718,7 +1893,27 @@
       "galacticraftplanets:solar_array_module": "galacticraftcore:solar_array_module",
       "galacticraftplanets:solar_array_controller": "galacticraftcore:solar_array_controller",
       "minecraft:wool:4": "minecraft:yellow_wool",
-      "galacticraftcore:unlit_torch": "galacticraftcore:unlit_torch"
+      "galacticraftcore:unlit_torch": "galacticraftcore:unlit_torch",
+      "galacticraftcore:space_glass_vanilla:0": "galacticraftcore:space_glass_vanilla",
+      "galacticraftcore:space_glass_vanilla:1": "galacticraftcore:space_glass_vanilla_tin",
+      "galacticraftcore:space_glass_clear:0": "galacticraftcore:space_glass_clear",
+      "galacticraftcore:space_glass_clear:1": "galacticraftcore:space_glass_clear_tin",
+      "galacticraftcore:space_glass_strong:0": "galacticraftcore:space_glass_strong",
+      "galacticraftcore:space_glass_strong:1": "galacticraftcore:space_glass_strong_tin",
+      "galacticraftcore:air_lock_frame:0": "galacticraftcore:air_lock_frame",
+      "galacticraftcore:air_lock_frame:1": "galacticraftcore:air_lock_controller",
+      "galacticraftcore:arclamp": "galacticraftcore:arc_lamp",
+      "galacticraftcore:concealed_redstone": "galacticraftcore:concealed_redstone",
+      "galacticraftcore:concealed_repeater": "galacticraftcore:concealed_repeater",
+      "galacticraftcore:enclosed:1": "galacticraftcore:sealable_fluid_pipe",
+      "galacticraftcore:enclosed:14": "galacticraftcore:sealable_aluminum_wire",
+      "galacticraftcore:enclosed:15": "galacticraftcore:sealable_heavy_aluminum_wire",
+      "galacticraftcore:grating": "galacticraftcore:grating",
+      "galacticraftcore:panel_lighting:0": "galacticraftcore:lighting_panel_square",
+      "galacticraftcore:panel_lighting:1": "galacticraftcore:lighting_panel_spots",
+      "galacticraftcore:panel_lighting:2": "galacticraftcore:lighting_panel_linear",
+      "galacticraftcore:panel_lighting:3": "galacticraftcore:lighting_panel_sf",
+      "galacticraftcore:panel_lighting:4": "galacticraftcore:lighting_panel_sfdiag"
     },
     "result_items": {
       "minecraft:dye:2": "minecraft:green_dye"
@@ -1894,6 +2089,10 @@
     "item/astro_miner": "planets:astro_miner_inv",
     "block/minerbase": "planets:minerbase0",
     "entity/venus_entry_pod": "planets:pod_flame",
-    "entity/web_cocoon": "planets:web"
+    "entity/web_cocoon": "planets:web",
+    "entity/arclamp_metal": {
+      "from": "arclamp_metal",
+      "default_map": "galacticraftcore:misc/underoil"
+    }
   }
 }

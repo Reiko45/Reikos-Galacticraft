@@ -42,7 +42,8 @@ public final class GCBlockEntities {
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<WireBlockEntity>> WIRE = BLOCK_ENTITIES.register("wire",
             () -> BlockEntityType.Builder.of(WireBlockEntity::new, GCBlocks.ALUMINUM_WIRE.get(), GCBlocks.HEAVY_ALUMINUM_WIRE.get(),
-                    GCBlocks.ALUMINUM_WIRE_SWITCH.get(), GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get(), GCBlocks.WALKWAY_WIRE.get()).build(null));
+                    GCBlocks.ALUMINUM_WIRE_SWITCH.get(), GCBlocks.HEAVY_ALUMINUM_WIRE_SWITCH.get(), GCBlocks.WALKWAY_WIRE.get(),
+                    GCBlocks.SEALABLE_ALUMINUM_WIRE.get(), GCBlocks.SEALABLE_HEAVY_ALUMINUM_WIRE.get()).build(null));
 
     public static final Supplier<BlockEntityType<CoalGeneratorBlockEntity>> COAL_GENERATOR = machine("coal_generator",
             CoalGeneratorBlockEntity::new, GCBlocks.COAL_GENERATOR);
@@ -88,7 +89,8 @@ public final class GCBlockEntities {
             () -> BlockEntityType.Builder.of(FluidTankBlockEntity::new, GCBlocks.FLUID_TANK.get()).build(null));
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<FluidPipeBlockEntity>> FLUID_PIPE = BLOCK_ENTITIES.register("fluid_pipe",
-            () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new, GCBlocks.FLUID_PIPE.get(), GCBlocks.WALKWAY_PIPE.get()).build(null));
+            () -> BlockEntityType.Builder.of(FluidPipeBlockEntity::new, GCBlocks.FLUID_PIPE.get(), GCBlocks.WALKWAY_PIPE.get(),
+                    GCBlocks.SEALABLE_FLUID_PIPE.get()).build(null));
 
     public static final Supplier<BlockEntityType<OxygenCollectorBlockEntity>> OXYGEN_COLLECTOR = machine("oxygen_collector",
             OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR);
@@ -133,6 +135,18 @@ public final class GCBlockEntities {
             "geothermal_generator", io.github.reiko45.galacticraft.block.entity.GeothermalGeneratorBlockEntity::new, GCBlocks.GEOTHERMAL_GENERATOR);
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity>> SOLAR_ARRAY_CONTROLLER = machine(
             "solar_array_controller", io.github.reiko45.galacticraft.block.entity.SolarArrayControllerBlockEntity::new, GCBlocks.SOLAR_ARRAY_CONTROLLER);
+
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlockEntity>> AIR_LOCK_CONTROLLER = BLOCK_ENTITIES.register(
+            "air_lock_controller", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.airlock.AirLockControllerBlockEntity::new,
+                    GCBlocks.AIR_LOCK_CONTROLLER.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.ArcLampBlockEntity>> ARC_LAMP = BLOCK_ENTITIES.register(
+            "arc_lamp", () -> BlockEntityType.Builder.of(io.github.reiko45.galacticraft.block.entity.ArcLampBlockEntity::new, GCBlocks.ARC_LAMP.get()).build(null));
+    @SuppressWarnings("DataFlowIssue")
+    public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.Detector>> CONCEALED_DETECTOR =
+            BLOCK_ENTITIES.register("concealed_detector", () -> BlockEntityType.Builder.of(
+                    io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.Detector::new, GCBlocks.CONCEALED_DETECTOR.get()).build(null));
 
     @SuppressWarnings("DataFlowIssue")
     public static final Supplier<BlockEntityType<io.github.reiko45.galacticraft.block.entity.SlimelingEggBlockEntity>> SLIMELING_EGG = BLOCK_ENTITIES.register("slimeling_egg",

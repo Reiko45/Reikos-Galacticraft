@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_decoration_block_2"
+    },
+    "Y": {
+      "item": "minecraft:repeater"
+    }
+  },
+  "pattern": [
+    "   ",
+    "XYX",
+    "   "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:concealed_repeater"
+  }
+}

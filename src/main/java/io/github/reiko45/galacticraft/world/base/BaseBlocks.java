@@ -15,9 +15,8 @@ import net.minecraft.world.level.block.state.properties.Half;
 import net.minecraft.world.level.block.state.properties.SlabType;
 
 /**
- * The blocks an abandoned base is built from. 1.12.2 also used Galacticraft blocks this port doesn't have yet; until it
- * does, those are stood in for by the block each one looks like (the concealed redstone, repeater and detector were
- * disguised as a Tin Decoration Block or Moon Rock in 1.12.2 too, so only their circuits are missing).
+ * The blocks an abandoned base is built from. A few Galacticraft blocks 1.12.2 used are not ported yet (phase 7g part
+ * 2); until they are, the block each one looks like stands in for it.
  */
 final class BaseBlocks {
     private BaseBlocks() {
@@ -84,40 +83,55 @@ final class BaseBlocks {
         return GCBlocks.DESH_BLOCK.get().defaultBlockState();
     }
 
-    // ---------------------------------------------------------------- stand-ins for blocks not ported yet
+    // ---------------------------------------------------------------- phase 7g blocks
 
-    /** 1.12.2 airLockFrame (frame, meta 0, and controller, meta 1): dark frames, like the Dark Decoration Block. */
+    /** 1.12.2 airLockFrame meta 0 (frame) and meta 1 (controller). */
     static BlockState airLockFrame() {
-        return dark();
+        return GCBlocks.AIR_LOCK_FRAME.get().defaultBlockState();
     }
 
     static BlockState airLockController() {
-        return dark();
+        return GCBlocks.AIR_LOCK_CONTROLLER.get().defaultBlockState();
     }
 
-    /** 1.12.2 spaceGlassTinClear / TinVanilla / TinStrong: plain glass. */
-    static BlockState spaceGlass() {
-        return Blocks.GLASS.defaultBlockState();
+    /** 1.12.2 spaceGlassTinVanilla (avian bases), spaceGlassTinStrong (tunnelers) or spaceGlassTinClear (humanoids). */
+    static BlockState spaceGlass(BaseConfiguration.BaseType type) {
+        return switch (type) {
+            case AVIAN -> GCBlocks.SPACE_GLASS_VANILLA_TIN.get().defaultBlockState();
+            case TUNNELER -> GCBlocks.SPACE_GLASS_STRONG_TIN.get().defaultBlockState();
+            default -> GCBlocks.SPACE_GLASS_CLEAR_TIN.get().defaultBlockState();
+        };
     }
 
-    /** 1.12.2 concealedRedstone and concealedRepeater_Powered: drawn as deco_block_1. */
+    /** 1.12.2 concealedRedstone (meta = power). */
+    static BlockState concealedRedstone(int power) {
+        return GCBlocks.CONCEALED_REDSTONE.get().defaultBlockState().setValue(io.github.reiko45.galacticraft.block.concealed.ConcealedRedstoneBlock.POWER, power);
+    }
+
     static BlockState concealedRedstone() {
-        return plain();
+        return concealedRedstone(0);
     }
 
-    static BlockState concealedRepeater() {
-        return plain();
+    /** 1.12.2 concealedRepeater_Powered meta 0 (facing south) along z, meta 2 (north) along x. */
+    static BlockState concealedRepeater(boolean alongZ) {
+        return GCBlocks.CONCEALED_REPEATER.get().defaultBlockState().setValue(net.minecraft.world.level.block.RepeaterBlock.FACING,
+                alongZ ? Direction.SOUTH : Direction.NORTH).setValue(net.minecraft.world.level.block.RepeaterBlock.POWERED, true);
     }
 
-    /** 1.12.2 concealedDetector: drawn as deco_block_1 (variant 0, humanoid bases) or moon stone (variant 1). */
-    static BlockState concealedDetector(boolean humanoid) {
-        return humanoid ? plain() : GCBlocks.MOON_ROCK.get().defaultBlockState();
+    /** 1.12.2 concealedDetector meta 8 + facing (+ 4 off humanoid bases): already "detecting", disguised to match. */
+    static BlockState concealedDetector(boolean humanoid, int facing) {
+        return GCBlocks.CONCEALED_DETECTOR.get().defaultBlockState()
+                .setValue(io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.FACING, facing & 3)
+                .setValue(io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.VARIANT, humanoid ? 0 : 1)
+                .setValue(io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.DETECTED, true);
     }
 
-    /** 1.12.2 brightLamp (Arc Lamp). */
-    static BlockState arcLamp() {
-        return Blocks.SEA_LANTERN.defaultBlockState();
+    /** 1.12.2 brightLamp meta (the mounting side, as a 3D direction index). */
+    static BlockState arcLamp(int meta) {
+        return GCBlocks.ARC_LAMP.get().defaultBlockState().setValue(io.github.reiko45.galacticraft.block.ArcLampBlock.FACING, Direction.from3DDataValue(meta));
     }
+
+    // ---------------------------------------------------------------- stand-ins for blocks not ported yet
 
     /** 1.12.2 crafting (Magnetic Crafting Table). */
     static BlockState magneticTable() {
@@ -134,8 +148,8 @@ final class BaseBlocks {
         return dark();
     }
 
-    /** 1.12.2 sealableBlock meta 14 (Sealable Heavy Aluminium Wire): the wire itself. */
+    /** 1.12.2 sealableBlock meta 15 (Sealable Heavy Aluminium Wire). */
     static BlockState enclosedHeavyWire() {
-        return GCBlocks.HEAVY_ALUMINUM_WIRE.get().defaultBlockState();
+        return GCBlocks.SEALABLE_HEAVY_ALUMINUM_WIRE.get().defaultBlockState();
     }
 }

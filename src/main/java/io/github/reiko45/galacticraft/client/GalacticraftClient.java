@@ -150,6 +150,7 @@ public final class GalacticraftClient {
 
     private static void registerRenderers(EntityRenderersEvent.RegisterRenderers event) {
         event.registerBlockEntityRenderer(GCBlockEntities.BASIC_SOLAR_PANEL.get(), SolarPanelRenderer::new);
+        event.registerBlockEntityRenderer(GCBlockEntities.ARC_LAMP.get(), io.github.reiko45.galacticraft.client.render.ArcLampRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.ADVANCED_SOLAR_PANEL.get(), SolarPanelRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.FLUID_TANK.get(), FluidTankRenderer::new);
         event.registerBlockEntityRenderer(GCBlockEntities.BEAM_REFLECTOR.get(), io.github.reiko45.galacticraft.client.render.BeamRenderers.Reflector::new);
@@ -203,6 +204,13 @@ public final class GalacticraftClient {
     /** 1.12.2 ClientProxyCore block colours: the Fallen Meteor glows orange while hot. */
     private static void registerBlockColors(RegisterColorHandlersEvent.Block event) {
         event.register((state, level, pos, tintIndex) -> FallenMeteorBlock.tint(level, pos), GCBlocks.FALLEN_METEOR.get());
+        // 1.12.2 BlockSpaceGlass#color: the frame's tint (frames are tintindex 0)
+        event.register((state, level, pos, tintIndex) -> state.getBlock() instanceof io.github.reiko45.galacticraft.block.SpaceGlassBlock glass
+                ? glass.frame().color() : 0xFFFFFF, GCBlocks.SPACE_GLASS_VANILLA.get(), GCBlocks.SPACE_GLASS_CLEAR.get(), GCBlocks.SPACE_GLASS_STRONG.get(),
+                GCBlocks.SPACE_GLASS_VANILLA_TIN.get(), GCBlocks.SPACE_GLASS_CLEAR_TIN.get(), GCBlocks.SPACE_GLASS_STRONG_TIN.get());
+        // 1.12.2 BlockPanelLighting.color: the lit panel's warm white
+        event.register((state, level, pos, tintIndex) -> 0xF0F0E0, GCBlocks.LIGHTING_PANEL_SQUARE.get(), GCBlocks.LIGHTING_PANEL_SPOTS.get(),
+                GCBlocks.LIGHTING_PANEL_LINEAR.get(), GCBlocks.LIGHTING_PANEL_SF.get(), GCBlocks.LIGHTING_PANEL_SFDIAG.get());
     }
 
     private static void registerGuiLayers(RegisterGuiLayersEvent event) {
@@ -213,6 +221,7 @@ public final class GalacticraftClient {
 
     private static void registerAdditionalModels(ModelEvent.RegisterAdditional event) {
         event.register(FluidPipeRenderer.PULL_MODEL);
+        event.register(io.github.reiko45.galacticraft.client.render.ArcLampRenderer.LAMP);
         io.github.reiko45.galacticraft.client.render.entity.BuggyRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.Tier2RocketRenderer.registerModels(event);
         io.github.reiko45.galacticraft.client.render.entity.CargoRocketRenderer.registerModels(event);

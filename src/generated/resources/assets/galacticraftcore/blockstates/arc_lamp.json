@@ -1,0 +1,26 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "galacticraftcore:block/arc_lamp_base"
+    },
+    "facing=east": {
+      "model": "galacticraftcore:block/arc_lamp_base_side",
+      "y": 180
+    },
+    "facing=north": {
+      "model": "galacticraftcore:block/arc_lamp_base_side",
+      "y": 90
+    },
+    "facing=south": {
+      "model": "galacticraftcore:block/arc_lamp_base_side",
+      "y": 270
+    },
+    "facing=up": {
+      "model": "galacticraftcore:block/arc_lamp_base",
+      "x": 180
+    },
+    "facing=west": {
+      "model": "galacticraftcore:block/arc_lamp_base_side"
+    }
+  }
+}

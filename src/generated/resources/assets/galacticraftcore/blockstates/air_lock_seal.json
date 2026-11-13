@@ -1,0 +1,14 @@
+{
+  "variants": {
+    "connection=flat": {
+      "model": "galacticraftcore:block/air_lock_seal_flat"
+    },
+    "connection=x": {
+      "model": "galacticraftcore:block/air_lock_seal"
+    },
+    "connection=z": {
+      "model": "galacticraftcore:block/air_lock_seal",
+      "y": 90
+    }
+  }
+}

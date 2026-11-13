@@ -74,5 +74,23 @@
         "stream": false
       }
     ]
+  },
+  "block.air_lock.seal": {
+    "subtitle": "subtitles.galacticraftcore.block.air_lock.seal",
+    "sounds": [
+      {
+        "name": "galacticraftcore:player/openairlock",
+        "stream": false
+      }
+    ]
+  },
+  "block.air_lock.unseal": {
+    "subtitle": "subtitles.galacticraftcore.block.air_lock.unseal",
+    "sounds": [
+      {
+        "name": "galacticraftcore:player/closeairlock",
+        "stream": false
+      }
+    ]
   }
 }

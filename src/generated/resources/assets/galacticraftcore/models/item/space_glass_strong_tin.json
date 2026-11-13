@@ -1,0 +1,7 @@
+{
+  "parent": "galacticraftcore:block/glass/spaceglass_ns_inventory",
+  "render_type": "minecraft:translucent",
+  "textures": {
+    "0": "galacticraftcore:block/space_glass_strong_inventory"
+  }
+}

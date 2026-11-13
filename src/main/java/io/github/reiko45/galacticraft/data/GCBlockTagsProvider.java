@@ -86,6 +86,10 @@ public class GCBlockTagsProvider extends BlockTagsProvider {
         tag(GCTags.block("storage_blocks/desh")).add(GCBlocks.DESH_BLOCK.get());
         // 1.12.2 setHarvestLevel(MarsBlocks.rock, "pickaxe", 3): slimeling eggs need a diamond-strength pickaxe to collect
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_3.get());
+        tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.AIR_LOCK_FRAME.get(), GCBlocks.AIR_LOCK_CONTROLLER.get(), GCBlocks.ARC_LAMP.get(),
+                GCBlocks.CONCEALED_REDSTONE.get(), GCBlocks.CONCEALED_REPEATER.get(), GCBlocks.CONCEALED_DETECTOR.get(), GCBlocks.SEALABLE_ALUMINUM_WIRE.get(),
+                GCBlocks.SEALABLE_HEAVY_ALUMINUM_WIRE.get(), GCBlocks.SEALABLE_FLUID_PIPE.get(), GCBlocks.GRATING.get(), GCBlocks.LIGHTING_PANEL_SQUARE.get(),
+                GCBlocks.LIGHTING_PANEL_SPOTS.get(), GCBlocks.LIGHTING_PANEL_LINEAR.get(), GCBlocks.LIGHTING_PANEL_SF.get(), GCBlocks.LIGHTING_PANEL_SFDIAG.get());
         tag(BlockTags.MINEABLE_WITH_PICKAXE).add(GCBlocks.TREASURE_CHEST_TIER_2.get(), GCBlocks.RED_SLIMELING_EGG.get(),
                 GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());
         tag(BlockTags.NEEDS_DIAMOND_TOOL).add(GCBlocks.RED_SLIMELING_EGG.get(), GCBlocks.BLUE_SLIMELING_EGG.get(), GCBlocks.YELLOW_SLIMELING_EGG.get());

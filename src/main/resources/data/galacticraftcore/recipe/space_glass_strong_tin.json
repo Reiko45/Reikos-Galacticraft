@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:space_glass_strong"
+    },
+    "Y": {
+      "item": "galacticraftcore:tin_decoration_block_2"
+    }
+  },
+  "pattern": [
+    "YXY",
+    "XXX",
+    "YXY"
+  ],
+  "result": {
+    "count": 5,
+    "id": "galacticraftcore:space_glass_strong_tin"
+  }
+}

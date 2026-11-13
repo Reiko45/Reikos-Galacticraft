@@ -156,6 +156,20 @@ public final class SealFinder {
 
     /** 1.12.2 canBlockPassAirCheck: can air move into this non-air block, and which of its sides are closed? */
     private Node enter(BlockState state, BlockPos pos, int side, Direction travel) {
+        if (state.getBlock() instanceof PartialSealable partial) {
+            if (partial.isSealed(this.level, pos, state, travel)) {
+                return null; // may still be reachable from another side
+            }
+            // the faces it seals aren't passed through on the way out
+            int done = 0;
+            for (Direction face : Direction.values()) {
+                if (face != travel && partial.isSealed(this.level, pos, state, face)) {
+                    done |= 1 << face.getOpposite().get3DDataValue();
+                }
+            }
+            this.checked.add(pos.asLong());
+            return new Node(pos, done);
+        }
         if (state.getBlock() instanceof LeavesBlock || state.is(GCModTags.AIR_PERMEABLE)) {
             this.checked.add(pos.asLong());
             return new Node(pos, 0);

@@ -33,6 +33,13 @@ public class WrenchItem extends Item {
             }
             return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
         }
+        if (state.getBlock() instanceof io.github.reiko45.galacticraft.block.Wrenchable wrenchable) {
+            if (!context.getLevel().isClientSide && wrenchable.onWrench(context.getLevel(), context.getClickedPos(), state, context.getPlayer())
+                    && context.getPlayer() != null) {
+                context.getItemInHand().hurtAndBreak(1, context.getPlayer(), LivingEntity.getSlotForHand(context.getHand()));
+            }
+            return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
+        }
         if (state.getBlock() instanceof MachineBlock machine) {
             if (context.isSecondaryUseActive()) {
                 if (!context.getLevel().isClientSide && !machine.cycleSides(context.getLevel(), context.getClickedPos(), state)) {

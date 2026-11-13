@@ -188,12 +188,12 @@ public class BaseDeck extends BasePiece {
                                 final int endW = directionNS ? endX : endZ;
                                 if (type == BaseConfiguration.BaseType.AVIAN) {
                                     if (y == 2 && w == startW + 2) {
-                                        windowOrWall = BaseBlocks.spaceGlass();
+                                        windowOrWall = BaseBlocks.spaceGlass(type);
                                     }
                                 } else {
                                     final int edge = type == BaseConfiguration.BaseType.TUNNELER ? 1 : 0;
                                     if ((y == 2 || y == 3) && w > startW + edge && w < endW - edge) {
-                                        windowOrWall = BaseBlocks.spaceGlass();
+                                        windowOrWall = BaseBlocks.spaceGlass(type);
                                     }
                                 }
                                 place(level, windowOrWall, x, y, z, box);
@@ -310,12 +310,18 @@ public class BaseDeck extends BasePiece {
                 }
                 for (int y = 1; y < 5; y++) {
                     for (int x = 2; x < endX - 1; x++) {
-                        place(level, BaseBlocks.spaceGlass(), x, y, endZ, box);
+                        place(level, BaseBlocks.spaceGlass(type), x, y, endZ, box);
                     }
                 }
                 // Two concealed detectors, each with a lever beside it (1.12.2 concealedDetector meta 8 + facing,
                 // + 4 off humanoid bases; lever meta 4 or 3: on a wall, facing north or south)
-                final BlockState detector = BaseBlocks.concealedDetector(type == BaseConfiguration.BaseType.HUMANOID);
+                final int facing = switch (this.direction) {
+                    case SOUTH -> 2;
+                    case EAST -> 1;
+                    case WEST -> 3;
+                    default -> 0;
+                };
+                final BlockState detector = BaseBlocks.concealedDetector(type == BaseConfiguration.BaseType.HUMANOID, facing);
                 place(level, detector, endX / 2 - 2, this.sizeY - 1, endZ, box);
                 place(level, detector, endX / 2 + 2, this.sizeY - 1, endZ, box);
                 final BlockState lever = Blocks.LEVER.defaultBlockState().setValue(LeverBlock.FACE, AttachFace.WALL)
@@ -323,8 +329,8 @@ public class BaseDeck extends BasePiece {
                 place(level, lever, endX / 2 - 2, this.sizeY - 1, endZ - 1, box);
                 place(level, lever, endX / 2 + 2, this.sizeY - 1, endZ - 1, box);
                 // Two (concealed) redstone blocks
-                place(level, BaseBlocks.concealedRedstone(), endX / 2 - 2, this.sizeY, endZ, box);
-                place(level, BaseBlocks.concealedRedstone(), endX / 2 + 2, this.sizeY, endZ, box);
+                place(level, BaseBlocks.concealedRedstone(15), endX / 2 - 2, this.sizeY, endZ, box);
+                place(level, BaseBlocks.concealedRedstone(15), endX / 2 + 2, this.sizeY, endZ, box);
                 // Create an access hole between the floors
                 place(level, blockAir, 2, 0, 1, box);
                 place(level, blockAir, 3, 0, 1, box);

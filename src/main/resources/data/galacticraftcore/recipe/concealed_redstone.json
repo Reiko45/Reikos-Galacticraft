@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "galacticraftcore:tin_decoration_block_2"
+    },
+    "Y": {
+      "tag": "c:dusts/redstone"
+    }
+  },
+  "pattern": [
+    " X ",
+    "XYX",
+    " X "
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraftcore:concealed_redstone"
+  }
+}

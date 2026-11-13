@@ -1,0 +1,26 @@
+{
+  "children": {
+    "frame": {
+      "parent": "galacticraftcore:block/glass/base_ns_s4",
+      "render_type": "minecraft:solid",
+      "textures": {
+        "1": "galacticraftcore:block/space_glass_frame_tindeco"
+      }
+    },
+    "glass": {
+      "parent": "galacticraftcore:block/glass/glass_ns_s4",
+      "render_type": "minecraft:translucent",
+      "textures": {
+        "0": "galacticraftcore:block/space_glass_strong"
+      }
+    }
+  },
+  "item_render_order": [
+    "glass",
+    "frame"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "galacticraftcore:block/space_glass_strong"
+  }
+}

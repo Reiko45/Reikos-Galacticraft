@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "X": {
+      "item": "minecraft:glass"
+    },
+    "Y": {
+      "tag": "c:ingots/aluminum"
+    }
+  },
+  "pattern": [
+    "YXY",
+    "XXX",
+    "YXY"
+  ],
+  "result": {
+    "count": 5,
+    "id": "galacticraftcore:space_glass_clear"
+  }
+}

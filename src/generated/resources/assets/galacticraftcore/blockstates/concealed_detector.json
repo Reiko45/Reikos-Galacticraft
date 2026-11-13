@@ -1,0 +1,52 @@
+{
+  "variants": {
+    "det=false,facing=0,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=false,facing=0,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=false,facing=1,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=false,facing=1,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=false,facing=2,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=false,facing=2,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=false,facing=3,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=false,facing=3,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=true,facing=0,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=true,facing=0,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=true,facing=1,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=true,facing=1,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=true,facing=2,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=true,facing=2,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    },
+    "det=true,facing=3,var=0": {
+      "model": "galacticraftcore:block/tin_decoration_block_2"
+    },
+    "det=true,facing=3,var=1": {
+      "model": "galacticraftcore:block/moon_rock"
+    }
+  }
+}

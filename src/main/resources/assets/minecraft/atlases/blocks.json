@@ -68,6 +68,10 @@
     {
       "type": "single",
       "resource": "galacticraftcore:model/minerbase"
+    },
+    {
+      "type": "single",
+      "resource": "galacticraftcore:misc/underoil"
     }
   ]
 }

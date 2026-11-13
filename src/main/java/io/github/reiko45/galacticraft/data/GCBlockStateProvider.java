@@ -337,6 +337,128 @@ public class GCBlockStateProvider extends BlockStateProvider {
         simpleBlockItem(GCBlocks.CRASHED_PROBE.get(), probe);
         liquid(GCFluids.SULPHURIC_ACID_BLOCK.get(), "sulphuric_acid");
         venusMachines();
+        spaceBase();
+    }
+
+    /**
+     * Phase 7g. Space Glass: for each of its 18 shapes a composite of the 1.12.2 pane model (translucent) and frame model
+     * (solid, tinted), turned by the vanilla rotation matching each 1.12.2 transform; air locks, the arc lamp, concealed
+     * blocks, sealable wires and pipe, grating and lighting panels.
+     */
+    private void spaceBase() {
+        for (DeferredBlock<io.github.reiko45.galacticraft.block.SpaceGlassBlock> glass : java.util.List.of(GCBlocks.SPACE_GLASS_VANILLA, GCBlocks.SPACE_GLASS_CLEAR,
+                GCBlocks.SPACE_GLASS_STRONG, GCBlocks.SPACE_GLASS_VANILLA_TIN, GCBlocks.SPACE_GLASS_CLEAR_TIN, GCBlocks.SPACE_GLASS_STRONG_TIN)) {
+            final io.github.reiko45.galacticraft.block.SpaceGlassBlock block = glass.get();
+            final String name = glass.getId().getPath();
+            final String type = block.type().name().toLowerCase(java.util.Locale.ROOT);
+            final ResourceLocation pane = tex("space_glass_" + type);
+            final ResourceLocation frame = tex(block.frame() == io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassFrame.PLAIN
+                    ? "space_glass_frame_white" : "space_glass_frame_tindeco");
+            final Map<io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassModel, ModelFile> models = new EnumMap<>(
+                    io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassModel.class);
+            for (io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassModel shape : io.github.reiko45.galacticraft.block.SpaceGlassBlock.GlassModel.values()) {
+                final var builder = models().getBuilder(name + "/" + shape.getSerializedName())
+                        .customLoader(net.neoforged.neoforge.client.model.generators.loaders.CompositeModelBuilder::begin)
+                        .child("glass", models().nested().parent(models().getExistingFile(modLoc("block/glass/" + shape.glassModel())))
+                                .texture("0", pane).renderType("translucent"));
+                if (shape.frameModel() != null) {
+                    builder.child("frame", models().nested().parent(models().getExistingFile(modLoc("block/glass/" + shape.frameModel())))
+                            .texture("1", frame).renderType("solid"));
+                }
+                models.put(shape, builder.end().texture("particle", pane));
+            }
+            getVariantBuilder(block).forAllStates(state -> {
+                final var rot = state.getValue(io.github.reiko45.galacticraft.block.SpaceGlassBlock.ROTATION);
+                return ConfiguredModel.builder().modelFile(models.get(state.getValue(io.github.reiko45.galacticraft.block.SpaceGlassBlock.MODEL)))
+                        .rotationX(rot.x()).rotationY(rot.y()).build();
+            });
+            itemModels().withExistingParent(name, modLoc("block/glass/spaceglass_ns_inventory"))
+                    .texture("0", tex("space_glass_" + type + "_inventory")).renderType("translucent");
+        }
+        // Air locks
+        simpleBlockWithItem(GCBlocks.AIR_LOCK_FRAME.get(), cubeAll(GCBlocks.AIR_LOCK_FRAME.get()));
+        final ModelFile controller = models().cube("air_lock_controller", tex("air_lock_frame"), tex("air_lock_frame"), tex("air_lock_controller"),
+                tex("air_lock_controller"), tex("air_lock_controller"), tex("air_lock_controller")).texture("particle", tex("air_lock_frame"));
+        simpleBlockWithItem(GCBlocks.AIR_LOCK_CONTROLLER.get(), controller);
+        final ResourceLocation seal = tex("air_lock_seal");
+        final ModelFile sealX = models().getBuilder("air_lock_seal").texture("all", seal).texture("particle", seal)
+                .element().from(4, 0, 0).to(12, 16, 16).allFaces((dir, face) -> face.texture("#all")).end();
+        final ModelFile sealFlat = models().getBuilder("air_lock_seal_flat").texture("all", seal).texture("particle", seal)
+                .element().from(0, 4, 0).to(16, 12, 16).allFaces((dir, face) -> face.texture("#all")).end();
+        getVariantBuilder(GCBlocks.AIR_LOCK_SEAL.get()).forAllStates(state -> switch (state.getValue(io.github.reiko45.galacticraft.block.airlock.AirLockSealBlock.CONNECTION)) {
+            case X -> ConfiguredModel.builder().modelFile(sealX).build();
+            case Z -> ConfiguredModel.builder().modelFile(sealX).rotationY(90).build();
+            case FLAT -> ConfiguredModel.builder().modelFile(sealFlat).build();
+        });
+        // Arc lamp: the plate (1.12.2 arclamp_base_model / _side_model); the lamp head is drawn by its renderer
+        final ModelFile plate = models().getExistingFile(modLoc("block/arc_lamp_base"));
+        final ModelFile plateSide = models().getExistingFile(modLoc("block/arc_lamp_base_side"));
+        getVariantBuilder(GCBlocks.ARC_LAMP.get()).forAllStates(state -> switch (state.getValue(io.github.reiko45.galacticraft.block.ArcLampBlock.FACING)) {
+            case DOWN -> ConfiguredModel.builder().modelFile(plate).build();
+            case UP -> ConfiguredModel.builder().modelFile(plate).rotationX(180).build();
+            case WEST -> ConfiguredModel.builder().modelFile(plateSide).build();
+            case NORTH -> ConfiguredModel.builder().modelFile(plateSide).rotationY(90).build();
+            case EAST -> ConfiguredModel.builder().modelFile(plateSide).rotationY(180).build();
+            case SOUTH -> ConfiguredModel.builder().modelFile(plateSide).rotationY(270).build();
+        });
+        itemModels().withExistingParent("arc_lamp", modLoc("block/arc_lamp_on")).transforms()
+                .transform(ItemDisplayContext.GUI).rotation(30, 135, 0).scale(0.625F).end().end();
+        // Concealed blocks look like the plain tin decoration block (the detector of avian bases like moon rock)
+        final ModelFile tin = models().getExistingFile(modLoc("block/tin_decoration_block_2"));
+        simpleBlockWithItem(GCBlocks.CONCEALED_REDSTONE.get(), tin);
+        simpleBlockWithItem(GCBlocks.CONCEALED_REPEATER.get(), tin);
+        final ModelFile moonRock = models().getExistingFile(modLoc("block/moon_rock"));
+        getVariantBuilder(GCBlocks.CONCEALED_DETECTOR.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(state.getValue(io.github.reiko45.galacticraft.block.concealed.ConcealedDetectorBlock.VARIANT) == 0 ? tin : moonRock).build());
+        simpleBlockItem(GCBlocks.CONCEALED_DETECTOR.get(), tin);
+        // Sealable wires and pipe
+        for (DeferredBlock<? extends Block> sealable : java.util.List.of(GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.SEALABLE_HEAVY_ALUMINUM_WIRE,
+                GCBlocks.SEALABLE_FLUID_PIPE)) {
+            simpleBlockWithItem(sealable.get(), cubeAll(sealable.get()));
+        }
+        final ModelFile grating = models().getExistingFile(modLoc("block/grating"));
+        simpleBlockWithItem(GCBlocks.GRATING.get(), grating);
+        // Lighting panels: the dark decoration block with the lit panel (tinted) on the facing side, turned per wrench step
+        for (DeferredBlock<io.github.reiko45.galacticraft.block.LightingPanelBlock> panel : java.util.List.of(GCBlocks.LIGHTING_PANEL_SQUARE,
+                GCBlocks.LIGHTING_PANEL_SPOTS, GCBlocks.LIGHTING_PANEL_LINEAR, GCBlocks.LIGHTING_PANEL_SF, GCBlocks.LIGHTING_PANEL_SFDIAG)) {
+            final String name = panel.getId().getPath();
+            final ResourceLocation lights = tex(name);
+            final ResourceLocation casing = tex("dark_decoration_block");
+            final ModelFile[] turned = new ModelFile[4];
+            for (int r = 0; r < panel.get().type().rotations(); r++) {
+                final int rotation = r;
+                turned[r] = models().getBuilder(name + (r == 0 ? "" : "_" + r)).parent(models().getExistingFile(mcLoc("block/block")))
+                        .texture("casing", casing).texture("lights", lights).texture("particle", casing)
+                        .element().from(0, 0, 0).to(16, 16, 16).allFaces((dir, face) -> {
+                            if (dir == Direction.NORTH) {
+                                face.texture("#lights").cullface(dir).tintindex(0).rotation(switch (rotation) {
+                                    case 1 -> net.neoforged.neoforge.client.model.generators.ModelBuilder.FaceRotation.CLOCKWISE_90;
+                                    case 2 -> net.neoforged.neoforge.client.model.generators.ModelBuilder.FaceRotation.UPSIDE_DOWN;
+                                    case 3 -> net.neoforged.neoforge.client.model.generators.ModelBuilder.FaceRotation.COUNTERCLOCKWISE_90;
+                                    default -> net.neoforged.neoforge.client.model.generators.ModelBuilder.FaceRotation.ZERO;
+                                });
+                            } else {
+                                face.texture("#casing").cullface(dir);
+                            }
+                        }).end();
+            }
+            getVariantBuilder(panel.get()).forAllStates(state -> {
+                final ModelFile model = turned[Math.min(state.getValue(io.github.reiko45.galacticraft.block.LightingPanelBlock.ROTATION),
+                        panel.get().type().rotations() - 1)];
+                final var builder = ConfiguredModel.builder().modelFile(model);
+                return switch (state.getValue(io.github.reiko45.galacticraft.block.LightingPanelBlock.FACING)) {
+                    case NORTH -> builder.build();
+                    case EAST -> builder.rotationY(90).build();
+                    case SOUTH -> builder.rotationY(180).build();
+                    case WEST -> builder.rotationY(270).build();
+                    case UP -> builder.rotationX(270).build();
+                    case DOWN -> builder.rotationX(90).build();
+                };
+            });
+            itemModels().withExistingParent(name, modLoc("block/" + name));
+        }
+        simpleBlock(GCBlocks.BRIGHT_BREATHABLE_AIR.get(), models().getBuilder("bright_breathable_air").texture("particle", tex("fluids/oxygen_gas")));
+        models().getBuilder("entity/arclamp_metal").customLoader(ObjModelBuilder::begin).modelLocation(modLoc("models/entity/arclamp_metal.obj")).flipV(true).end();
     }
 
     /**

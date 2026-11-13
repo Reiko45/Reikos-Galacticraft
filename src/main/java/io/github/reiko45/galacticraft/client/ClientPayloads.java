@@ -86,4 +86,8 @@ public final class ClientPayloads {
         thermalLevel = 0;
         thermalNormalising = true;
     }
+
+    public static void openAirLock(io.github.reiko45.galacticraft.network.AirLockNetwork.OpenAirLock payload) {
+        net.minecraft.client.Minecraft.getInstance().setScreen(new io.github.reiko45.galacticraft.client.screen.AirLockControllerScreen(payload.pos(), payload.settings()));
+    }
 }

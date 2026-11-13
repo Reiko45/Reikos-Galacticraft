@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "W": {
+      "tag": "c:plates/meteoric_iron"
+    },
+    "Y": {
+      "tag": "c:plates/steel"
+    },
+    "Z": {
+      "item": "galacticraftcore:basic_wafer"
+    }
+  },
+  "pattern": [
+    "YYY",
+    "WZW",
+    "YYY"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraftcore:air_lock_controller"
+  }
+}

@@ -425,9 +425,15 @@ public class BaseRoom extends BasePiece {
                 } else if ((y == 4 || y == 5) && (z == zLight || z == zLight - 1)) {
                     // Lighting
                     if (x == maxX) {
-                        state = BaseBlocks.concealedDetector(humanoid);
+                        state = BaseBlocks.concealedDetector(humanoid, facing);
                     } else if (x == maxX - 1) {
-                        state = BaseBlocks.arcLamp();
+                        // 1.12.2 brightLamp meta facingLamp: mounted on the wall it lights the room from
+                        state = BaseBlocks.arcLamp(switch (this.direction) {
+                            case WEST -> 3;
+                            case NORTH -> 5;
+                            case SOUTH -> 4;
+                            default -> 2;
+                        });
                     }
                 }
             }

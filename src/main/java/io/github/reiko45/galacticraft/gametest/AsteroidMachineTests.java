@@ -374,6 +374,8 @@ public final class AsteroidMachineTests {
         int workbenches = 0;
         int chambers = 0;
         int centres = 0;
+        int glass = 0;
+        int standIns = 0;
         for (BlockEntity entity : blockEntities(level, everywhere)) {
             final BlockState state = entity.getBlockState();
             if (entity instanceof CargoMachineBlockEntity loader && loader.loads()) {
@@ -408,8 +410,14 @@ public final class AsteroidMachineTests {
                         && level.getBlockState(pos.above(2)).getValue(CryogenicChamberPartBlock.TOP), "a whole chamber at " + pos);
             } else if (state.is(GCBlocks.LANDING_PAD.get()) && state.getValue(LandingPadBlock.PAD) == LandingPadBlock.Pad.CENTRE) {
                 centres++;
+            } else if (state.getBlock() instanceof io.github.reiko45.galacticraft.block.SpaceGlassBlock) {
+                glass++;
+            } else if (state.is(net.minecraft.world.level.block.Blocks.SEA_LANTERN) || state.is(net.minecraft.world.level.block.Blocks.GLASS)) {
+                standIns++;
             }
         }
+        helper.assertTrue(glass >= 1, "space glass windows");
+        helper.assertValueEqual(standIns, 0, "no stand-ins left for space glass and arc lamps");
         helper.assertTrue(loaders >= 1, "a store with its Cargo Loader");
         helper.assertTrue(centres >= 1, "beside a joined launch pad");
         helper.assertTrue(tanks >= 2, "medical tanks: " + tanks);

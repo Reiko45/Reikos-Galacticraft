@@ -64,18 +64,21 @@ public class BaseHangar extends BasePiece {
         final BlockState blockRedstone = BaseBlocks.concealedRedstone();
         final BlockState wallBlock = this.configuration.wallBlock();
         final Block blockStair = BaseBlocks.tinStairs();
-        final BlockState arcLamp = BaseBlocks.arcLamp();
+        int lampmeta2 = 5;
         int stairmeta = 1;
         int stairmetaB = 2;
         if (this.direction == Direction.SOUTH) {
             stairmeta ^= 1;
             stairmetaB ^= 1;
+            lampmeta2 ^= 1;
         } else if (this.direction == Direction.EAST) {
             stairmeta ^= 2;
             stairmetaB ^= 3;
+            lampmeta2 = 3;
         } else if (this.direction == Direction.WEST) {
             stairmeta ^= 3;
             stairmetaB ^= 2;
+            lampmeta2 = 2;
         }
 
         final int maxX = HANGARWIDTH;
@@ -218,8 +221,8 @@ public class BaseHangar extends BasePiece {
         place(level, moonWall, 0, 1, HANGARLENGTH - 5, box);
         place(level, moonWall, maxX, 1, HANGARLENGTH - 5, box);
 
-        place(level, arcLamp, 12, maxY, HANGARLENGTH - 3, box);
-        place(level, arcLamp, 14, maxY, HANGARLENGTH - 3, box);
+        place(level, BaseBlocks.arcLamp(lampmeta2 ^ 1), 12, maxY, HANGARLENGTH - 3, box);
+        place(level, BaseBlocks.arcLamp(lampmeta2), 14, maxY, HANGARLENGTH - 3, box);
 
         // SECOND SECTION
         for (int zz = HANGARLENGTH - 5; zz > midPoint; zz--) {
@@ -256,16 +259,16 @@ public class BaseHangar extends BasePiece {
                 place(level, blockGrid, 17, maxY, zz, box);
                 if (zz == HANGARLENGTH - 12) {
                     // 1.12.2 concealedRepeater_Powered
-                    place(level, BaseBlocks.concealedRepeater(), 11, maxY, zz, box);
-                    place(level, BaseBlocks.concealedRepeater(), 15, maxY, zz, box);
+                    place(level, BaseBlocks.concealedRepeater(this.direction.getAxis() == Direction.Axis.Z), 11, maxY, zz, box);
+                    place(level, BaseBlocks.concealedRepeater(this.direction.getAxis() == Direction.Axis.Z), 15, maxY, zz, box);
                 } else {
                     place(level, blockRedstone, 11, maxY, zz, box);
                     place(level, blockRedstone, 15, maxY, zz, box);
                 }
             }
             if ((zz - midPoint - 1) % 6 == 0) {
-                place(level, arcLamp, 10, maxY, zz, box);
-                place(level, arcLamp, 16, maxY, zz, box);
+                place(level, BaseBlocks.arcLamp(lampmeta2), 10, maxY, zz, box);
+                place(level, BaseBlocks.arcLamp(lampmeta2 ^ 1), 16, maxY, zz, box);
             }
 
             // Walls

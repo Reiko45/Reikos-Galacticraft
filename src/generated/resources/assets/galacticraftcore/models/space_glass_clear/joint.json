@@ -1,0 +1,18 @@
+{
+  "children": {
+    "glass": {
+      "parent": "galacticraftcore:block/glass/glass_nse",
+      "render_type": "minecraft:translucent",
+      "textures": {
+        "0": "galacticraftcore:block/space_glass_clear"
+      }
+    }
+  },
+  "item_render_order": [
+    "glass"
+  ],
+  "loader": "neoforge:composite",
+  "textures": {
+    "particle": "galacticraftcore:block/space_glass_clear"
+  }
+}

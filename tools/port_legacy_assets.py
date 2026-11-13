@@ -144,6 +144,16 @@ def port_models(mapping, legacy_assets, out_assets):
         old_mtl, new_mtl = os.path.basename(path) + ".mtl", os.path.basename(new) + ".mtl"
         with open(src + ".obj", encoding="utf-8") as f:
             obj = f.read().replace("mtllib " + old_mtl, "mtllib " + new_mtl)
+        if not os.path.isfile(src + ".mtl"):
+            # 1.12.2 drew some OBJs with no materials at all, under whatever texture was bound: give them one
+            if not default_map:
+                raise SystemExit(f"obj {old} has no .mtl: give it a default_map")
+            obj = f"mtllib {new_mtl}\nusemtl default\n" + obj
+            with open(dst + ".obj", "w", encoding="utf-8", newline="\n") as f:
+                f.write(obj)
+            with open(dst + ".mtl", "w", encoding="utf-8", newline="\n") as f:
+                f.write(f"newmtl default\nmap_Kd {default_map}\n")
+            continue
         with open(dst + ".obj", "w", encoding="utf-8", newline="\n") as f:
             f.write(obj)
         lines = []

@@ -22,6 +22,9 @@ public final class GCSounds {
     public static final Supplier<SoundEvent> SLIME_DEATH = sound("entity.slime_death");
     /** The Astro Miner's engine (1.12.2 astroMiner). */
     public static final Supplier<SoundEvent> ASTRO_MINER = sound("entity.astro_miner");
+    /** An air lock shutting and opening (1.12.2 openAirLock: seals going in; closeAirLock: seals coming out). */
+    public static final Supplier<SoundEvent> OPEN_AIR_LOCK = sound("block.air_lock.seal");
+    public static final Supplier<SoundEvent> CLOSE_AIR_LOCK = sound("block.air_lock.unseal");
 
     private static Supplier<SoundEvent> sound(String name) {
         return SOUNDS.register(name, () -> SoundEvent.createVariableRangeEvent(GalacticraftCore.id(name)));
