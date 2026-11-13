@@ -470,7 +470,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] Evolved Witch (EntityEvolvedWitch): what an Alien Villager becomes when struck by lightning, in an oxygen mask with
       tanks (1.12.2 ModelEvolvedWitch), breathing anywhere, a witch's drops plus rare Galacticraft gear; spawn egg
 - [x] The rest of 1.12.2's commands: `/gckit`, `/gcinv save|restore|drop|clear`, `/dimensiontp`,
-      `/gcastrominer show|reset|set<n>`, `/gcenergyunits gJ|FE`, `/gchelp` (`/gckeeploaded` has nothing to do in 1.21)
+      `/gcastrominer show|reset|set<n>`, `/gcenergyunits gJ|FE|MJ` (MJ with BuildCraft Reborn), `/gchelp`
+      (`/gckeeploaded` has nothing to do in 1.21)
 - [x] The 1.12.2 settings (see Settings below): quick and hard mode, suffocation, oil and ore generation, moon
       villages, rocket fuel, launch worlds, rocket explosions, landers, landing borders, respawning, station permissions,
       sealer edge checks, liquids in gratings, Launch Controller chunk loading, Venus lightning, and the client's stars,
@@ -923,14 +924,14 @@ What they do, where 1.12.2 needed more than a number:
 * BuildCraft Reborn is compiled against through a copy of the five MJ API types it uses (`src/buildcraftApi`, MIT,
   never packaged); `-PbuildcraftJar=<jar>` loads BuildCraft Reborn in the dev runs and GameTests. Engines and kinesis
   pipes get exactly what a machine can take that tick (1.12.2 told BuildCraft 30 times that, because BuildCraft 7 sent
-  only a trickle). BuildCraft Reborn 2.1.0 sends its `volume_boxes` payload to every player joining a level without
-  checking the player can take it, so with it loaded the GameTests that use mock players fail on that error.
+  only a trickle). Use BuildCraft Reborn 2.1.1 or later for the GameTests: 2.1.0 sent its `volume_boxes` payload to
+  every player joining a level, and the GameTests' mock players have no channel for it.
 * `/gckeeploaded` is not ported: it kept a world loaded with nobody in it, and 1.21 never unloads a world. `/gcinv`
   takes player names or selectors (1.12.2: names only), keeps the whole 11-slot Galacticraft inventory (1.12.2 saved 6
   slots), and its saves now survive a restart (1.12.2's loader looked for the wrong kind of tag and never read them
-  back). `/gcenergyunits` offers gJ and FE (RF is taken as FE); 1.12.2's MJ, EU and J belonged to mods that aren't
-  here. `/gchelp` links 1.12.2's wiki address. `/dimensiontp` sends a player into space as if from the world spawn
-  in an empty Tier 1 Rocket with 1,000 fuel, every world open, as in 1.12.2.
+  back). `/gcenergyunits` offers gJ and FE (RF is taken as FE), and MJ with BuildCraft Reborn; 1.12.2's EU and J
+  belonged to mods that aren't here. `/gchelp` links 1.12.2's wiki address. `/dimensiontp` sends a player into space
+  as if from the world spawn in an empty Tier 1 Rocket with 1,000 fuel, every world open, as in 1.12.2.
 
 ## Workflow for porting more content
 
