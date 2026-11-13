@@ -7,6 +7,7 @@ import io.github.reiko45.galacticraft.block.EnergyStorageBlock;
 import io.github.reiko45.galacticraft.block.FluidPipeBlock;
 import io.github.reiko45.galacticraft.block.FluidTankBlock;
 import io.github.reiko45.galacticraft.block.OxygenStorageModuleBlock;
+import io.github.reiko45.galacticraft.block.SidedMachineBlock;
 import io.github.reiko45.galacticraft.block.SpaceTorchBlock;
 import io.github.reiko45.galacticraft.block.MachineBlock;
 import io.github.reiko45.galacticraft.machine.InputSide;
@@ -179,8 +180,7 @@ public class GCBlockStateProvider extends BlockStateProvider {
                 .modelFile(state.getValue(LandingPadBlock.PAD) == LandingPadBlock.Pad.SINGLE ? buggyPad : fullBuggyPad).build());
         itemModels().withExistingParent("buggy_fueling_pad", modLoc("block/buggy_fueling_pad"));
         buggy();
-        // 1.12.2 fuel_loader_model: loader panels front and back, power in on the left (east), fuel in on the right (west)
-        machine(GCBlocks.FUEL_LOADER.get(), "", "machine_fuelloader", "machine_input", "machine_fuelloader", "machine_fuel_input");
+        fuelLoader();
         // 1.12.2 cargo_loader_model / cargo_unloader_model: power in on the left (east), items in / out on the right
         machine(GCBlocks.CARGO_LOADER.get(), "", "machine_cargoloader", "machine_input", "machine_cargoloader", "machine_item_input");
         machine(GCBlocks.CARGO_UNLOADER.get(), "", "machine_cargounloader", "machine_input", "machine_cargounloader", "machine_item_output");
@@ -941,6 +941,35 @@ public class GCBlockStateProvider extends BlockStateProvider {
         final String name = BuiltInRegistries.BLOCK.getKey(block).getPath();
         horizontalBlock(block, models().cube(name, down, up, north, south, east, west).texture("particle", down));
         itemModels().withExistingParent(name, modLoc("block/" + name));
+    }
+
+    /**
+     * 1.12.2 fuel_loader blockstate: the machine_tiered_* model for each IMachineSides layout, loader panel on the front
+     * and the rear, machine_input on the power face, machine_oil_input on the fuel face, machine_side on a free side. The
+     * item keeps 1.12.2's fuel_loader_model (fuel in drawn with machine_fuel_input).
+     */
+    private void fuelLoader() {
+        final ResourceLocation casing = tex("machine");
+        final ResourceLocation panel = tex("machine_fuelloader");
+        final Map<StorageSides, ModelFile> models = new EnumMap<>(StorageSides.class);
+        for (StorageSides sides : StorageSides.values()) {
+            final String name = sides == StorageSides.LEFT_RIGHT ? "fuel_loader" : "fuel_loader_" + sides.getSerializedName();
+            models.put(sides, models().cube(name, casing, casing, panel, fuelLoaderFace(sides, RelativeSide.BACK, panel),
+                    fuelLoaderFace(sides, RelativeSide.LEFT, tex("machine_side")), fuelLoaderFace(sides, RelativeSide.RIGHT, tex("machine_side")))
+                    .texture("particle", casing));
+        }
+        getVariantBuilder(GCBlocks.FUEL_LOADER.get()).forAllStates(state -> ConfiguredModel.builder()
+                .modelFile(models.get(state.getValue(SidedMachineBlock.SIDES))).rotationY(facingRotation(state)).build());
+        models().cube("fuel_loader_model", casing, casing, panel, panel, tex("machine_input"), tex("machine_fuel_input"))
+                .texture("particle", casing);
+        itemModels().withExistingParent("fuel_loader", modLoc("block/fuel_loader_model"));
+    }
+
+    private ResourceLocation fuelLoaderFace(StorageSides sides, RelativeSide face, ResourceLocation unused) {
+        if (sides.input() == face) {
+            return tex("machine_input");
+        }
+        return sides.output() == face ? tex("machine_oil_input") : unused;
     }
 
     private ResourceLocation oxygenFace(StorageSides sides, RelativeSide face, ResourceLocation unused) {

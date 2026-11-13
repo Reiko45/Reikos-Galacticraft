@@ -1,6 +1,7 @@
 package io.github.reiko45.galacticraft.block.entity;
 
 import io.github.reiko45.galacticraft.block.LandingPadBlock;
+import io.github.reiko45.galacticraft.block.SidedMachineBlock;
 import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.fluid.GCFluidTags;
 import io.github.reiko45.galacticraft.item.ElectricItem;
@@ -227,7 +228,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     @Override
     protected EnergyAccess energyAccess(RelativeSide side) {
-        return side == RelativeSide.LEFT ? EnergyAccess.INPUT : EnergyAccess.NONE;
+        return side == SidedMachineBlock.sides(getBlockState()).input() ? EnergyAccess.INPUT : EnergyAccess.NONE;
     }
 
     @Override
@@ -246,10 +247,10 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         return slot == 1 && !isFuelSource(this.inventory.getStackInSlot(1));
     }
 
-    /** Fuel goes in through the right face (1.12.2 default PIPE_IN), never out. */
+    /** Fuel goes in through the PIPE_IN face (right of the front unless sneak + wrench moved it), never out. */
     @Nullable
     public IFluidHandler fluidHandler(@Nullable Direction side) {
-        if (side != null && RelativeSide.of(facing(), side) != RelativeSide.RIGHT) {
+        if (side != null && RelativeSide.of(facing(), side) != SidedMachineBlock.sides(getBlockState()).output()) {
             return null;
         }
         return new IFluidHandler() {

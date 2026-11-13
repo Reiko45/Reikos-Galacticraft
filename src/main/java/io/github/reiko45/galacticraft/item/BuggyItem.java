@@ -22,7 +22,7 @@ import net.minecraft.world.phys.HitResult;
  * Moon Buggy (1.12.2 ItemBuggy). Used on a block (or liquid surface) within 5 blocks it sets a buggy down on top. The
  * storage component replaces the 1.12.2 buggy types 0-3 (0, 18, 36 or 54 storage slots); fuel stays with the item.
  */
-public class BuggyItem extends Item {
+public class BuggyItem extends Item implements HoldableItem {
     public BuggyItem(Properties properties) {
         super(properties.stacksTo(1).rarity(Rarity.UNCOMMON));
     }

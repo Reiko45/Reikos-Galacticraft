@@ -1,6 +1,6 @@
 package io.github.reiko45.galacticraft.block.entity;
 
-import io.github.reiko45.galacticraft.block.OxygenStorageModuleBlock;
+import io.github.reiko45.galacticraft.block.SidedMachineBlock;
 import io.github.reiko45.galacticraft.machine.MachineStatus;
 import io.github.reiko45.galacticraft.machine.RelativeSide;
 import io.github.reiko45.galacticraft.machine.StorageSides;
@@ -25,7 +25,7 @@ public class OxygenStorageModuleBlockEntity extends OxygenMachineBlockEntity {
 
     private StorageSides sides() {
         final BlockState state = getBlockState();
-        return state.hasProperty(OxygenStorageModuleBlock.SIDES) ? state.getValue(OxygenStorageModuleBlock.SIDES) : StorageSides.LEFT_RIGHT;
+        return SidedMachineBlock.sides(state);
     }
 
     @Override

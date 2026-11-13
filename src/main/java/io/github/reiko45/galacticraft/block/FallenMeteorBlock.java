@@ -3,21 +3,28 @@ package io.github.reiko45.galacticraft.block;
 import com.mojang.serialization.MapCodec;
 import io.github.reiko45.galacticraft.block.entity.FallenMeteorBlockEntity;
 import io.github.reiko45.galacticraft.registry.GCBlockEntities;
+import io.github.reiko45.galacticraft.registry.GCTiers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.BlockTags;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Tier;
+import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.RenderShape;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityTicker;
@@ -26,6 +33,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.neoforged.neoforge.common.ItemAbilities;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -69,6 +77,52 @@ public class FallenMeteorBlock extends BaseEntityBlock {
     @Override
     public <T extends BlockEntity> BlockEntityTicker<T> getTicker(Level level, BlockState state, BlockEntityType<T> type) {
         return level.isClientSide ? null : createTickerHelper(type, GCBlockEntities.FALLEN_METEOR.get(), FallenMeteorBlockEntity::serverTick);
+    }
+
+    /**
+     * 1.12.2 getPlayerRelativeBlockHardness: the meteor always mines at the 1/30 rate of a block the player can harvest
+     * (vanilla slows to 1/100 when they cannot, as with an iron pickaxe or a bare hand), and a pickaxe past diamond is
+     * faster still: its harvest level minus two times, so twice as fast with a titanium or netherite pickaxe. 1.12.2
+     * pickaxes also dug any rock at their full speed whatever their tier, where 1.21's tool rules leave a pickaxe below
+     * diamond at hand speed here, so a pickaxe's speed is taken on plain stone.
+     */
+    @Override
+    protected float getDestroyProgress(BlockState state, Player player, BlockGetter level, BlockPos pos) {
+        final float hardness = state.getDestroySpeed(level, pos);
+        if (hardness < 0.0F) {
+            return 0.0F;
+        }
+        final int pickaxe = pickaxeLevel(player.getMainHandItem());
+        final float speed = player.getDigSpeed(pickaxe >= 0 ? Blocks.STONE.defaultBlockState() : state, pos);
+        return Math.max(1, pickaxe - 2) * speed / hardness / 30.0F;
+    }
+
+    /**
+     * The 1.12.2 pickaxe harvest level of a tool, -1 if it is not a pickaxe. Galacticraft's tiers keep their 1.12.2
+     * levels (heavy duty, desh and volcanic 3, titanium 4); other tiers are ranked by the blocks they cannot harvest.
+     */
+    public static int pickaxeLevel(ItemStack stack) {
+        if (!stack.canPerformAction(ItemAbilities.PICKAXE_DIG) || !(stack.getItem() instanceof TieredItem tiered)) {
+            return -1;
+        }
+        final Tier tier = tiered.getTier();
+        if (tier == GCTiers.TITANIUM) {
+            return 4;
+        }
+        if (tier == GCTiers.HEAVY_DUTY || tier == GCTiers.DESH || tier == GCTiers.VOLCANIC) {
+            return 3;
+        }
+        final TagKey<Block> incorrect = tier.getIncorrectBlocksForDrops();
+        if (incorrect.equals(BlockTags.INCORRECT_FOR_NETHERITE_TOOL)) {
+            return 4;
+        }
+        if (incorrect.equals(BlockTags.INCORRECT_FOR_DIAMOND_TOOL)) {
+            return 3;
+        }
+        if (incorrect.equals(BlockTags.INCORRECT_FOR_IRON_TOOL)) {
+            return 2;
+        }
+        return incorrect.equals(BlockTags.INCORRECT_FOR_STONE_TOOL) ? 1 : 0;
     }
 
     @Override

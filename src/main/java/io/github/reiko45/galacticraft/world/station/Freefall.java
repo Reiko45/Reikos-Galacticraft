@@ -7,6 +7,9 @@ package io.github.reiko45.galacticraft.world.station;
 
 import io.github.reiko45.galacticraft.network.GCNetwork;
 import io.github.reiko45.galacticraft.world.GCDimensions;
+import java.util.Collections;
+import java.util.Map;
+import java.util.WeakHashMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.MoverType;
@@ -90,9 +93,17 @@ public final class Freefall {
         return true;
     }
 
+    /** Each floating player's motion when their last freefall tick ended, to spot impulses from elsewhere. */
+    private static final Map<Player, LastMotion> LAST = Collections.synchronizedMap(new WeakHashMap<>());
+
+    private record LastMotion(Vec3 motion, int tick) {
+    }
+
     /**
      * Movement for one tick in freefall, instead of the vanilla walk/fall (1.12.2 FreefallHandler#freefallMotion):
-     * momentum kept, gentle thrust, speed limit.
+     * momentum kept, gentle thrust, speed limit. An upward kick since the last floating tick with no sideways change is
+     * taken, as in 1.12.2, for another mod's jetpack: most of it is turned into a push the way the player faces (more
+     * of it when looking level) and jump adds no lift that tick.
      */
     public static void travel(Player player, boolean jumping) {
         final boolean hard = io.github.reiko45.galacticraft.GCConfig.hardMode();
@@ -103,19 +114,43 @@ public final class Freefall {
         double x = motion.x;
         double y = motion.y;
         double z = motion.z;
+        boolean jetpack = false;
+        double boost = 0.0D;
+        final LastMotion last = LAST.get(player);
+        if (last != null && last.tick() == player.tickCount - 1) {
+            final double dX = x - last.motion().x;
+            final double dY = y - last.motion().y;
+            final double dZ = z - last.motion().z;
+            if (dY > 0.01D) {
+                // 1.12.2 compares the signed sideways changes, so only a gain over 0.01 in +X or +Z rules a jetpack out
+                if (dX < 0.01D && dZ < 0.01D) {
+                    final float pitch = player.getXRot() * Mth.DEG_TO_RAD;
+                    boost = dY * Mth.cos(pitch) * 0.1D;
+                    y -= dY * (1.0F + Mth.sin(pitch) / 5.0F);
+                    jetpack = true;
+                } else {
+                    y -= dY / 2.0D;
+                }
+            }
+        }
         if (player.zza != 0.0F) {
             x -= player.zza * Mth.sin(player.getYRot() * Mth.DEG_TO_RAD) * thrust;
             z += player.zza * Mth.cos(player.getYRot() * Mth.DEG_TO_RAD) * thrust;
         }
+        if (boost != 0.0D) {
+            x -= boost * Mth.sin(player.getYRot() * Mth.DEG_TO_RAD);
+            z += boost * Mth.cos(player.getYRot() * Mth.DEG_TO_RAD);
+        }
         if (player.isShiftKeyDown()) {
             y -= lift;
         }
-        if (jumping) {
+        if (jumping && !jetpack) {
             y += lift;
         }
         player.setDeltaMovement(Mth.clamp(x, -limit, limit), Mth.clamp(y, -limit, limit), Mth.clamp(z, -limit, limit));
         player.move(MoverType.SELF, player.getDeltaMovement());
         player.resetFallDistance();
+        LAST.put(player, new LastMotion(player.getDeltaMovement(), player.tickCount));
     }
 
     /**

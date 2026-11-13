@@ -21,7 +21,7 @@ import net.minecraft.world.item.context.UseOnContext;
  * station, not on a base that has one already, and not more than {@code maximumAstroMiners} at once (creative players
  * excepted).
  */
-public class AstroMinerItem extends Item {
+public class AstroMinerItem extends Item implements HoldableItem {
     public AstroMinerItem(Properties properties) {
         super(properties.stacksTo(1));
     }

@@ -119,6 +119,8 @@ public final class GalacticraftClient {
         NeoForge.EVENT_BUS.addListener(InventoryTabs::onScreenInit);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::pre);
         NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.CryogenicChamberRender::post);
+        NeoForge.EVENT_BUS.addListener(net.neoforged.bus.api.EventPriority.LOWEST, io.github.reiko45.galacticraft.client.render.PlayerPoses::pre);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.render.PlayerPoses::post);
         NeoForge.EVENT_BUS.addListener((ClientPlayerNetworkEvent.LoggingOut event) -> ClientPayloads.reset());
         io.github.reiko45.galacticraft.client.race.SpaceRaceClient.register();
         ScreenshotTour.registerIfEnabled();

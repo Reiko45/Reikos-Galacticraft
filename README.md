@@ -130,7 +130,7 @@ machines, solar panels and oil processing work. See
   Storage Module and Cluster, Aluminum Wire and Heavy Aluminum Wire networks and their redstone switches, Battery
   and Standard Wrench. Tier-2 power (a Cluster over heavy wire) makes the Arc Furnace, Electric/Advanced
   Compressor, Circuit Fabricator and Refinery faster, as in 1.12.2. Sneak-use the wrench on a machine to move its
-  energy port.
+  energy port (on a Fuel Loader, its power and fuel inputs).
 * **Machines**: Compressor (burns fuel), Electric Compressor, Advanced Compressor, Electric Furnace, Electric Arc
   Furnace, Circuit Fabricator. Their GUIs use the original 1.12.2 artwork, and hoppers/pipes work per side.
 * **Oil**: crude oil pockets underground in the Overworld, oil and fuel liquids and buckets, Oil/Fuel Canisters,
@@ -158,7 +158,8 @@ machines, solar panels and oil processing work. See
 * **Space stations**: on the galaxy map, select Earth and build a station for 32 tin, 16 aluminum, an advanced
   wafer and 24 iron (free in Creative). It circles Earth on the screen; launch there and you step out in its room while
   your cargo drifts down into its bay in a Para-chest. Earth orbit has the Earth below you, almost no gravity (touch
-  nothing and you drift: Forward pushes you on, Jump and Sneak move you up and down), no air, doubled solar power and a
+  nothing and you drift: Forward pushes you on, Jump and Sneak move you up and down, and another mod's jetpack pushes
+  you the way you look), no air, doubled solar power and a
   zero-g bonus in the Circuit Fabricator. Rockets launched there need only half the fuel. Fall below y 30 and you land
   back on Earth. Rename your station on the screen; `/ssinvite`, `/ssuninvite` and `/ssnewowner` control who may come,
   and `/gchouston` takes you home from anywhere in space. Spin Thrusters fixed to the station make it spin.
@@ -347,6 +348,14 @@ machines, solar panels and oil processing work. See
 | Tooltips | Holding Shift |
 |---|---|
 | ![Power required and "Press Left Shift for more info" under machines; the Infinite Battery and Dungeon Locator](docs/screenshots/shift_descriptions.png) | ![The Circuit Fabricator's, Oxygen Sealer's and Fuel Loader's descriptions](docs/screenshots/shift_descriptions_held.png) |
+
+| Fuel Loader faces, front and right | Back and left |
+|---|---|
+| ![Six Fuel Loaders, each with its power and fuel inputs on a different pair of faces](docs/screenshots/fuel_loader_sides_front.png) | ![The same six from behind: power inputs and fuel inputs on the backs and left sides](docs/screenshots/fuel_loader_sides_back.png) |
+
+| Carrying a rocket | Carrying a flag | Under a parachute |
+|---|---|---|
+| ![A player crouching with a Tier 1 Rocket held overhead](docs/screenshots/carry_rocket.png) | ![A player standing with both arms up, holding a flag](docs/screenshots/carry_flag.png) | ![A player hanging from an open parachute, both arms up to its strings](docs/screenshots/parachute_arms.png) |
 
 | The settings screen | Its server page |
 |---|---|

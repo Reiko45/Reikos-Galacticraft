@@ -7,6 +7,6 @@
     "particle": "galacticraftcore:block/machine",
     "south": "galacticraftcore:block/machine_fuelloader",
     "up": "galacticraftcore:block/machine",
-    "west": "galacticraftcore:block/machine_fuel_input"
+    "west": "galacticraftcore:block/machine_oil_input"
   }
 }

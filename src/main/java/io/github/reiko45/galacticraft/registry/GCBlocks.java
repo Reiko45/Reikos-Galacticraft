@@ -391,8 +391,9 @@ public final class GCBlocks {
     public static final DeferredBlock<io.github.reiko45.galacticraft.block.BuggyFuelingPadBlock> BUGGY_FUELING_PAD = withItem("buggy_fueling_pad",
             () -> new io.github.reiko45.galacticraft.block.BuggyFuelingPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)
                     .strength(1.0F, 10.0F).sound(SoundType.METAL).noOcclusion()));
-    public static final DeferredBlock<MachineBlock> FUEL_LOADER = withItem("fuel_loader",
-            () -> new MachineBlock(machine(), FuelLoaderBlockEntity::new));
+    /** 1.12.2 BlockFuelLoader: power in and fuel in on configurable faces (IMachineSides). */
+    public static final DeferredBlock<io.github.reiko45.galacticraft.block.SidedMachineBlock> FUEL_LOADER = withItem("fuel_loader",
+            () -> new io.github.reiko45.galacticraft.block.SidedMachineBlock(machine(), FuelLoaderBlockEntity::new));
     /** 1.12.2 BlockCargoLoader (cargo_loader / cargo_unloader). */
     public static final DeferredBlock<MachineBlock> CARGO_LOADER = withItem("cargo_loader",
             () -> new MachineBlock(machine(), io.github.reiko45.galacticraft.block.entity.CargoLoaderBlockEntity::new));

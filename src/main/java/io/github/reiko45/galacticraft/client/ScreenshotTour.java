@@ -1789,9 +1789,101 @@ public final class ScreenshotTour {
         addConfigSteps();
         addGalaxyMapSteps();
         addShiftDescriptionSteps();
-        this.lastGroup = this.extras.size();
         addWorkbenchPageSteps();
+        this.lastGroup = this.extras.size();
+        addPlayerDetailSteps();
     }
+
+    /**
+     * Phase 10 part 3: Fuel Loaders in the six power / fuel face layouts (sneak + wrench), from the front-right and the
+     * back-left; then, from the front, a player carrying a rocket (crouched, arms up), carrying a flag (standing) and under
+     * an open parachute.
+     */
+    private void addPlayerDetailSteps() {
+        final int x0 = 120;
+        final int z0 = 40;
+        final int[] floor = new int[1];
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerLevel moon = srv.getLevel(GCDimensions.MOON);
+                if (moon == null) {
+                    return;
+                }
+                final int y = surface(moon, x0 + 5, z0);
+                floor[0] = y;
+                for (int x = x0 - 6; x <= x0 + 16; x++) {
+                    for (int z = z0 - 8; z <= z0 + 8; z++) {
+                        moon.setBlockAndUpdate(new BlockPos(x, y - 1, z), GCBlocks.MOON_ROCK.get().defaultBlockState());
+                        for (int dy = 0; dy < 6; dy++) {
+                            moon.setBlockAndUpdate(new BlockPos(x, y + dy, z), net.minecraft.world.level.block.Blocks.AIR.defaultBlockState());
+                        }
+                    }
+                }
+                io.github.reiko45.galacticraft.machine.StorageSides sides = io.github.reiko45.galacticraft.machine.StorageSides.LEFT_RIGHT;
+                for (int i = 0; i < 6; i++) {
+                    moon.setBlockAndUpdate(new BlockPos(x0 + i * 2, y, z0), GCBlocks.FUEL_LOADER.get().defaultBlockState()
+                            .setValue(MachineBlock.FACING, Direction.SOUTH).setValue(io.github.reiko45.galacticraft.block.SidedMachineBlock.SIDES, sides));
+                    sides = sides.next();
+                }
+                final ServerPlayer p = tourPlayer(srv);
+                srv.overworld().setDayTime(6000L);
+                p.getInventory().setItem(0, ItemStack.EMPTY);
+                p.teleportTo(moon, x0 + 13.5D, y, z0 + 4.5D, 115.0F, 18.0F);
+            });
+        });
+        this.extras.add((minecraft, srv) -> {
+        }); // chunks arrive
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "fuel_loader_sides_front"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.teleportTo(p.serverLevel(), x0 - 3.5D, floor[0], z0 - 3.5D, -66.0F, 18.0F);
+        }));
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "fuel_loader_sides_back"));
+        // Carrying a rocket, then a flag, on the platform in front of the loaders, seen from the front
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.getAbilities().flying = false;
+            p.onUpdateAbilities();
+            p.getInventory().selected = 0;
+            p.connection.send(new net.minecraft.network.protocol.game.ClientboundSetCarriedItemPacket(0));
+            p.getInventory().setItem(0, Tier1RocketItem.create(0, 0));
+            p.teleportTo(p.serverLevel(), x0 + 5.5D, floor[0], z0 + 4.5D, 160.0F, 0.0F);
+        }));
+        this.extras.add((minecraft, srv) -> minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT));
+        this.extras.add(ScreenshotTour::tidy); // the rocket's advancement
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "carry_rocket"));
+        this.extras.add((minecraft, srv) -> srv.execute(() -> tourPlayer(srv).getInventory().setItem(0, new ItemStack(GCItems.FLAG.get()))));
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "carry_flag"));
+        // Under an open parachute, high over the Moon platform
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.getInventory().setItem(0, ItemStack.EMPTY);
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.setGear(GearSlot.PARACHUTE, new ItemStack(GCItems.PARACHUTES.get(13).get()));
+            data.usingParachute = true;
+            data.markGearChanged();
+            p.teleportTo(p.serverLevel(), x0 + 5.5D, floor[0] + 60.0D, z0 + 4.5D, 160.0F, 0.0F);
+        }));
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "parachute_arms"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                final GCPlayerData data = GCPlayerData.get(tourPlayer(srv));
+                data.usingParachute = false;
+                data.markGearChanged();
+            });
+        });
+    }
+    /** No advancement toasts or chat lines over the next shot. */
+    private static void tidy(Minecraft minecraft, MinecraftServer server) {
+        minecraft.getToasts().clear();
+        minecraft.gui.getChat().clearMessages(false);
+    }
+
 
     /**
      * Phase 10 part 2: the NASA Workbench pages (Tier 1 Rocket, Astro Miner) and the Gas Liquefier page in JEI, and the

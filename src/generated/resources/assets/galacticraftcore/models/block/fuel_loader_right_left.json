@@ -1,0 +1,12 @@
+{
+  "parent": "minecraft:block/cube",
+  "textures": {
+    "down": "galacticraftcore:block/machine",
+    "east": "galacticraftcore:block/machine_oil_input",
+    "north": "galacticraftcore:block/machine_fuelloader",
+    "particle": "galacticraftcore:block/machine",
+    "south": "galacticraftcore:block/machine_fuelloader",
+    "up": "galacticraftcore:block/machine",
+    "west": "galacticraftcore:block/machine_input"
+  }
+}

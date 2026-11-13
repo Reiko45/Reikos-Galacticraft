@@ -26,7 +26,7 @@ import net.minecraft.world.phys.HitResult;
  * Flag (1.12.2 ItemFlag): hold right-click to raise it, and let go once it is up (about 1.3 seconds) while looking at a
  * block to plant it there, flying your Space Race team's flag. Only one flag fits on a block.
  */
-public class FlagItem extends Item {
+public class FlagItem extends Item implements HoldableItem {
     public FlagItem(Properties properties) {
         super(properties.stacksTo(1));
     }
@@ -77,5 +77,11 @@ public class FlagItem extends Item {
             stack.shrink(1);
         }
         return true;
+    }
+
+    /** 1.12.2 ItemFlag#shouldCrouch: the flag is carried standing. */
+    @Override
+    public boolean crouches(Player player) {
+        return false;
     }
 }

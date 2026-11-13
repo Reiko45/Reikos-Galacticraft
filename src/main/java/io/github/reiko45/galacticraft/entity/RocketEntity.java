@@ -182,6 +182,15 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         return phase().ordinal() >= Phase.LAUNCHED.ordinal();
     }
 
+    /**
+     * 1.12.2 ModelBipedGC: a player within 14 blocks (distance squared under 200) of a crewed rocket they are not in
+     * waves at it once it has launched or its countdown is under 390 (it starts at 400).
+     */
+    public boolean wavedAtBy(Player onlooker) {
+        return distanceToSqr(onlooker) < 200.0D && !getPassengers().isEmpty() && !hasPassenger(onlooker)
+                && (launched() || phase() == Phase.IGNITED && countdown() < 390);
+    }
+
     // ------------------------------------------------------------------ flight
 
     /** 1.12.2 getPreLaunchWait: the countdown once ignited. */

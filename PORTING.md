@@ -494,7 +494,16 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       Cargo Rocket, Astro Miner) drawn on a crop of its own GUI, every part slot showing what it takes, one recipe for
       each number of chests; the slot layouts are the menus' own. Also 1.12.2's Oxygen Compressor, Gas Liquefier and
       Methane Synthesizer pages
-- [ ] Zero-g jetpack boost, Fuel Loader side configuration, the Fallen Meteor's pickaxe bonus, grapple arm poses
+- [x] Zero-g jetpack boost (1.12.2 FreefallHandler): an upward kick while drifting with no sideways change, as another
+      mod's jetpack gives, becomes a push the way the player faces (all of it when looking level, more of it taken
+      out looking down), and jump adds no lift that tick; a kick with a sideways change is halved
+- [x] Fuel Loader faces (1.12.2 IMachineSides): sneak + wrench steps its power and fuel inputs round the six left /
+      back / right layouts, each with its 1.12.2 model
+- [x] The Fallen Meteor's 1.12.2 mining rate: the harvestable 1/30 for anyone, a pickaxe at its full speed whatever its
+      tier, twice that past diamond (titanium, netherite)
+- [x] Player poses (1.12.2 ModelBipedGC, IHoldableItem): rockets, the Moon Buggy and the Astro Miner carried overhead in
+      a crouch, the flag overhead standing; both arms up under an open parachute; slow swinging limbs while floating in
+      a Galacticraft world; onlookers wave at a crewed rocket that is launching
 - [ ] The live Overworld pictures (Display Screen map, the Moon sky's Earth) and 1.12.2's own flame and smoke particles
 
 ## Settings
@@ -612,8 +621,10 @@ What they do, where 1.12.2 needed more than a number:
   creative "pre-fuelled" rocket is a rocket item with a full `rocket_fuel` component.
 * The Para-chest's colour is a block state (16 colours) instead of tile-entity data, so its model needs no tile renderer.
 * Rocket and lander exhaust uses vanilla flame and smoke particles instead of 1.12.2's custom flame particles.
-* The Fuel Loader takes power on its left face and fuel on its right; the sneak + wrench side configuration of 1.12.2
-  is not ported for it yet. Fuel Loaders take any fluid in the `c:fuel` tag.
+* The Fuel Loader takes power on its left face and fuel on its right until sneak + wrench moves them, as in 1.12.2; the
+  layout is a block state (`sides`, shared with the storage modules). A placed loader draws its fuel face with
+  `machine_oil_input` and a free side with `machine_side`, as 1.12.2's blockstate did; the item keeps 1.12.2's item
+  model (`machine_fuel_input`). Fuel Loaders take any fluid in the `c:fuel` tag.
 * The Buggy Fueling Pad is its own block (`buggy_fueling_pad`, 1.12.2 `landing_pad:1`); launch pads and fueling pads
   next to each other never join into one pad.
 * The Moon Buggy is steered with the normal movement keys (1.12.2 had separate key bindings defaulting to the same
@@ -635,7 +646,9 @@ What they do, where 1.12.2 needed more than a number:
 * The spin maths (mass centre, moment of inertia) is done relative to the arrival block in doubles: 1.12.2's float
   sums of absolute coordinates fail at the distances stations sit at here. In freefall, the reach towards the wall a
   player faces now points the way they look (1.12.2's east/west reach pointed backwards).
-* Zero-g "jetpack" boosting (1.12.2 turned a jump while drifting into a push along the look direction) is not ported.
+* Zero-g jetpack boosting compares the player's motion with where their last floating tick left it (1.12.2: with
+  where it stood before vanilla moved them that tick, as vanilla movement still ran there); the sums are 1.12.2's,
+  including its signed check that only a gain in +X or +Z counts as a sideways change.
 * `/gchouston` asks for confirmation for 250 ticks after the first use, like 1.12.2, and clears the rocket cargo kept
   in transit.
 * Dungeons need "Generate Structures" like any structure; `/place structure galacticraftcore:moon_dungeon` (or
@@ -648,7 +661,10 @@ What they do, where 1.12.2 needed more than a number:
   Earth icon.
 * Meteors leave a smoke trail of vanilla large smoke particles (1.12.2 had its own "distance smoke"); meteors spawn
   within the simulation distance rather than the view distance so that they actually move.
-* The Fallen Meteor's mining speed bonus for better pickaxes (1.12.2 divided by 30 instead of 100) is not ported.
+* The Fallen Meteor takes a pickaxe's speed on plain stone, since 1.21's tool rules would leave a pickaxe below diamond
+  at hand speed on a block that needs diamond; 1.12.2's pickaxes dug any rock at full speed. Galacticraft's pickaxes
+  keep their 1.12.2 harvest levels for the bonus (heavy duty, desh and volcanic 3, titanium 4); other tiers count by
+  the blocks they cannot harvest (netherite 4). An iron pickaxe still gets no meteoric iron from it.
 * Mars blocks have their own ids (`mars_fine_regolith`, `desh_ore`, ...) under the `galacticraftcore` namespace instead of
   the planets mod's `galacticraftplanets:mars` metadata block; recipes from the planets JSON files are converted too.
 * Mars Fine Regolith and Mars Regolith keep 1.12.2's Material.ROCK: they need a shovel to drop, and sound like stone.
@@ -752,11 +768,16 @@ What they do, where 1.12.2 needed more than a number:
   again for each flag it saw); there is no client-side flag cache file.
 * The flag in the manager and join screens is drawn flat, cell by cell (1.12.2 drew the 3D pole and flag model in the
   GUI). The flag's cloth ripples on render time rather than whole ticks.
-* Holding a flag doesn't raise both arms (1.12.2 IHoldableItem) and the first-person view doesn't tip it forward while
-  charging (ItemModelFlag); the hand transforms approximate 1.12.2's.
+* The first-person view doesn't tip the flag forward while charging (ItemModelFlag); the hand transforms approximate
+  1.12.2's.
+* Carrying a rocket, the Moon Buggy or the Astro Miner only draws the player crouching (1.12.2's isSneaking override
+  while rendering): they move and their eyes sit as when standing. Not on the ground, in orbit or in a rocket or lander
+  they are drawn standing. The poses are applied after vanilla's, through a mixin into HumanoidModel#setupAnim (1.12.2
+  patched ModelBiped#setRotationAngles); `HoldableItem` is the port of the IHoldableItem interface.
 
 * Walkway Pipes can't be dyed or switched to pull mode (1.12.2 had no way to reach them either). Space Wart follows
-  vanilla nether wart's rules (it needs soul sand). The grapple's arm poses (1.12.2 IHoldableItem) are not ported.
+  vanilla nether wart's rules (it needs soul sand). The grapple is drawn like a bow, as 1.12.2's (EnumAction.BOW); it
+  never was an IHoldableItem.
 * Small asteroids drift past the player they spawned for (1.12.2 looked for a closer player, but always found the same
   one).
 * A Beam Receiver also takes from other mods' machines that only give power (1.12.2 attached only to ones that could

@@ -21,7 +21,7 @@ import net.minecraft.world.phys.AABB;
  * centre. The storage component replaces the 1.12.2 rocket types 0-3 (0, 18, 36 or 54 cargo slots); the creative-only
  * pre-fuelled rocket is a plain rocket with a full tank.
  */
-public class RocketItem extends Item {
+public class RocketItem extends Item implements HoldableItem {
     /** Makes the rocket entity for this item. */
     @FunctionalInterface
     public interface Factory {
