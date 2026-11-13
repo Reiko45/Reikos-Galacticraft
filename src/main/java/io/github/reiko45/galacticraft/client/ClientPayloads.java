@@ -35,7 +35,7 @@ public final class ClientPayloads {
 
     public static void openCelestialSelection(GCNetwork.OpenCelestialSelection payload) {
         final net.minecraft.client.Minecraft minecraft = net.minecraft.client.Minecraft.getInstance();
-        if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen screen) {
+        if (minecraft.screen instanceof io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen screen && !screen.mapMode()) {
             screen.update(payload);
         } else {
             minecraft.setScreen(new io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen(payload));

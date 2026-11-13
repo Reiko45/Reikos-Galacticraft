@@ -30,6 +30,8 @@ public final class GCConfig {
     public static final ModConfigSpec.BooleanValue DISABLE_VEHICLE_CAMERA_CHANGES;
     public static final ModConfigSpec.BooleanValue OXYGEN_INDICATOR_LEFT;
     public static final ModConfigSpec.BooleanValue OXYGEN_INDICATOR_BOTTOM;
+    public static final ModConfigSpec.DoubleValue MAP_SCROLL_SENSITIVITY;
+    public static final ModConfigSpec.BooleanValue INVERT_MAP_SCROLL;
 
     // ------------------------------------------------------------------ common
     public static final ModConfigSpec COMMON_SPEC;
@@ -116,6 +118,14 @@ public final class GCConfig {
                 .comment("If true, this will move the Oxygen Indicator to the bottom. You can combine this with oxygenIndicatorLeft")
                 .translation("config.galacticraftcore.oxygen_indicator_bottom")
                 .define("oxygenIndicatorBottom", false);
+        MAP_SCROLL_SENSITIVITY = client
+                .comment("Increase to make the mouse drag scroll more sensitive, decrease to lower sensitivity.")
+                .translation("config.galacticraftcore.map_scroll_sensitivity")
+                .defineInRange("mapScrollSensitivity", 1.0D, 0.1D, 10.0D);
+        INVERT_MAP_SCROLL = client
+                .comment("Set to true to invert the mouse scroll feature on the galaxy map.")
+                .translation("config.galacticraftcore.invert_map_scroll")
+                .define("invertMapScroll", false);
         CLIENT_SPEC = client.build();
 
         final ModConfigSpec.Builder common = new ModConfigSpec.Builder();

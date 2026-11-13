@@ -162,8 +162,8 @@ translation won't work: almost every vanilla and Forge API it touched changed be
       (1.12.2 TeleportTypeOverworld/TeleportTypeMoon)
 - [x] Space Lander (1.12.2 ModelLander, steering, braking, crash, entry HUD), Para-chest entity and block (16 parachute
       colours), parachute deployment (slow fall + canopy on the player)
-- [ ] Deferred: the full galaxy map (zoom, catalogue panels, space stations). (The Moon Buggy, its fueling pad and
-      the schematic pages came in Phase 5b.)
+- [x] The full galaxy map came in phase 9 part 4. (The Moon Buggy, its fueling pad and the schematic pages came in
+      Phase 5b.)
 
 ### Phase 5a – The Moon as a place ✅
 - [x] Moon caves (1.12.2 MapGenCavesMoon worm carver, through moon blocks only)
@@ -429,7 +429,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       modules joined side by side to its left, right and back, and makes 6.3 gJ/t for each one within 16 blocks that sees
       the sun, up to 1,000 gJ/t, more on space stations and high up on Venus; GUI with Enable / Disable
 
-### Phase 7g – Core blocks still missing, and the Laser Turret
+### Phase 7g – Core blocks still missing, and the Laser Turret ✅
 - [x] Space Glass (clear, vanilla, strong; plain or tin frame): 1.12.2's connected models and shapes, sealing on its
       glass sides only (a `PartialSealable` block, which the seal finder and oxygen checks now ask)
 - [x] Air Lock Frame, Controller and Seal: 1.12.2's frame protocol (a closed ring up to 24 blocks round, upright or
@@ -456,7 +456,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       priorities, line of sight; its GUI, list and priority screens; the turning turret, charge orb and beam. As in
       1.12.2 it has no recipe (creative menu only)
 
-### Phase 8 – Polish
+### Phase 8 – Polish ✅
 - [x] The 28 advancements (`galacticraftcore:galacticraft/...`, same tree, icons and criteria) with 1.12.2's three
       Galacticraft criteria: launch a rocket, find the Moon's Skeleton Boss, build a space station
 - [x] Sounds: the rocket engine from ignition to the edge of space, a parachute opening, the Electric and Advanced
@@ -466,7 +466,7 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 - [x] The manual: nothing to port. 1.12.2 never loaded `manuals/gettingstarted.xml`, a placeholder whose pages hold
       another mod's tool text
 
-### Phase 9 – The rest
+### Phase 9 – The rest ✅
 - [x] Evolved Witch (EntityEvolvedWitch): what an Alien Villager becomes when struck by lightning, in an oxygen mask with
       tanks (1.12.2 ModelEvolvedWitch), breathing anywhere, a witch's drops plus rare Galacticraft gear; spawn egg
 - [x] The rest of 1.12.2's commands: `/gckit`, `/gcinv save|restore|drop|clear`, `/dimensiontp`,
@@ -475,7 +475,12 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       villages, rocket fuel, launch worlds, rocket explosions, landers, landing borders, respawning, station permissions,
       sealer edge checks, liquids in gratings, Launch Controller chunk loading, Venus lightning, and the client's stars,
       rocket particles, vehicle camera and oxygen gauge placement; a settings screen in the mod list
-- [ ] The full galaxy map (zoom, catalogue panels, space stations, the Space Race panel)
+- [x] The full galaxy map (GuiCelestialSelection): the Sol system on a tilted grid with its orbits and the asteroid
+      belt, Mercury, Jupiter, Saturn, Uranus and Neptune as places that can't be reached yet; zoom with the wheel, pan by
+      dragging or with the movement keys; click (or pick from the sliding catalogue) to select, again to zoom in on a
+      planet's moons and stations; the tier box, LAUNCH, BACK, the station list with its owner and RENAME dialog, and the
+      station materials panel with CREATE. The Galaxy Map key (M) opens it as a map only, with EXIT. (Galacticraft
+      Legacy's map has no Space Race panel.)
 
 ## Settings
 
@@ -484,7 +489,7 @@ translations (25 languages).
 
 | File | Read | Settings |
 |---|---|---|
-| `config/galacticraftcore-client.toml` | any time | `energyDisplayUnit`, `moreStars`, `disableSpaceshipParticles`, `disableVehicleCameraChanges`, `oxygenIndicatorLeft`, `oxygenIndicatorBottom` |
+| `config/galacticraftcore-client.toml` | any time | `energyDisplayUnit`, `moreStars`, `disableSpaceshipParticles`, `disableVehicleCameraChanges`, `oxygenIndicatorLeft`, `oxygenIndicatorBottom`, `mapScrollSensitivity`, `invertMapScroll` |
 | `config/galacticraftcore-common.toml` | at start-up | `quickMode`; `oilGenFactor`; the ore switches (`enableTinOreGen`, `enableAluminumOreGen`, `enableSiliconOreGen`, `disable<Ore>Moon`, `disable<Ore>Mars`, `disable<Ore>Asteroids`, `disable<Ore>Venus`); `disableMoonVillageGen` |
 | `serverconfig/galacticraftcore-server.toml` (per world, sent to players) | any time | `hardMode`, `meteorSpawnMod`, `meteorBlockDamage`, `dungeonBossHealthMod`, `spaceStationEnergyScalar`, `disableSpaceStationCreation`, `enableSpaceRaceManagerPopup`, `disableSmallAsteroids`, `maximumAstroMiners`, `disableRocketLaunchDimensions`, `disableRocketsToOverworld`, `otherPlanetWorldBorders`, `forceOverworldRespawn`, `disableLander`, `disableSpaceshipGrief`, `spaceStationsRequirePermission`, `suffocationDamage`, `suffocationCooldown`, `enableSealerEdgeChecks`, `rocketFuelFactor`, `allowLiquidGratings`, `launchControllerChunkLoad`, `disableAmbientLightning` |
 
@@ -533,7 +538,7 @@ What they do, where 1.12.2 needed more than a number:
 * `alternateCanisterRecipe`: the canister recipe has no conflict to avoid here. `overrideCapes`: no donor capes.
   `disableUpdateCheck`, `enableDebug`: there is no update check, and logging is set in the log configuration.
 * `launchControllerAllDims`: cargo rockets fly to a controller on any loaded world.
-* `mapScrollInvert`, `mapScrollSensitivity`, `disableRocketIconRotation`: belong to the full galaxy map (phase 9 part 4).
+* `disableRocketIconRotation`: the rocket items' slow spin in inventories, which the port's rocket icons don't do.
 
 ## Intentional differences from 1.12.2 (so far)
 
@@ -575,8 +580,13 @@ What they do, where 1.12.2 needed more than a number:
   in hard mode the damage grows by one each time, as in 1.12.2.
 * Machines report "running" when they used power for work that tick (1.12.2 looked at the progress counter, which
   made the Refinery's status flicker).
-* The destination screen is a simplified galaxy map: the Sun, Earth, the Moon and Mars on their orbits with the 1.12.2 icons,
-  frame and LAUNCH button. Zooming, the planet catalogue panels and the space station list come with later phases.
+* The galaxy map draws its grid, orbits and belt as thin quads (core OpenGL has no wide lines): one pixel for the grid
+  and three for the orbits, as 1.12.2's line widths. 1.12.2 timed its animations by adding each rendered frame's
+  partial tick, so they ran faster at higher frame rates; here they run on real time at the 60 fps rate (1.5 of its
+  units a game tick), and the panning that 1.12.2 applied to every frame until the next tick is applied once, three
+  times over. Stations are listed one per station (1.12.2 keyed them by owner, one each); Escape cancels a rename
+  instead of unselecting the station under the dialog; LAUNCH closes the map at once (1.12.2 showed its "teleporting"
+  screen; if the trip doesn't go through, the server opens the map again).
 * The NASA Workbench recipes (Tier 1 Rocket, Moon Buggy) are hard-coded as in 1.12.2 (`RecipeManagerGC`), so they are
   not JSON recipes and don't show in JEI yet. Page ids are names (`rocket_t1`, `moon_buggy`, ...) instead of the
   configurable 1.12.2 numbers, and pages are opened by the server (1.12.2 let the client ask for any page id). A

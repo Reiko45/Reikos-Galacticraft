@@ -86,6 +86,8 @@ public final class GalacticraftClient {
         modBus.addListener(GalacticraftClient::addPlayerLayers);
         modBus.addListener(VehicleControls::registerKeys);
         modBus.addListener((net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event) -> event.register(SensorGlasses.TOGGLE));
+        modBus.addListener((net.neoforged.neoforge.client.event.RegisterKeyMappingsEvent event) -> event.register(
+                io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen.MAP_KEY));
         modBus.addListener(GalacticraftClient::registerBlockColors);
         modBus.addListener((net.neoforged.neoforge.client.event.RegisterParticleProvidersEvent event) -> {
             event.registerSpriteSet(io.github.reiko45.galacticraft.registry.GCParticles.BACTERIAL_DRIP.get(),
@@ -103,6 +105,7 @@ public final class GalacticraftClient {
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
         NeoForge.EVENT_BUS.addListener(VehicleCamera::onClientTick);
+        NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.client.screen.CelestialSelectionScreen::onClientTick);
         NeoForge.EVENT_BUS.addListener(VehicleCamera::onCameraDistance);
         NeoForge.EVENT_BUS.addListener(SpaceMusic::onSelectMusic);
         NeoForge.EVENT_BUS.addListener(SensorGlasses::onClientTick);

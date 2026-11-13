@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: all 8 roadmap phases ported, phase 9 (the remaining gaps) under way (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: every roadmap phase ported, phase 9's gap-filling included (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -146,11 +146,16 @@ machines, solar panels and oil processing work. See
   four fins and an engine; each wooden chest added gives it 18 cargo slots. Nine Rocket Launch Pads in a square make a
   launch pad; a Fuel Loader next to it pumps fuel into the rocket. Sit in the rocket, press Jump to start the 20-second
   countdown (the first press warns you if you have no parachute) and F to open its cargo and fuel. The rocket climbs
-  to the edge of space and the destination screen opens: pick the Moon, the Overworld or (from a Tier 2 Rocket) Mars.
+  to the edge of space and the galaxy map opens: pick the Moon, the Overworld or (from a Tier 2 Rocket) Mars.
 * **Travel**: on the Moon you arrive at y 900 in a Space Lander holding your cargo, launch pads and rocket; steer it with
   the movement keys, Jump to brake and Sneak to dive, and land gently or it explodes. Back on Earth you arrive at y 250
   and fall slowly under your parachute, and a Para-chest with the cargo, the rocket and the leftover fuel lands nearby.
-* **Space stations**: on the destination screen, select Earth and build a station for 32 tin, 16 aluminum, an advanced
+* **Galaxy map**: 1.12.2's map of the Sol system on a tilted blue grid, every planet on its orbit (Mercury, Jupiter,
+  Saturn, Uranus and Neptune shown but out of reach) and the asteroid belt as a red band. Scroll to zoom, drag or use
+  the movement keys to pan; click a body or its line in the sliding catalogue to select it (with its tier, in green
+  when your rocket can get there) and again to zoom in on its moons and space stations; Back or Escape returns. The
+  Galaxy Map key (M) opens it any time as a map only.
+* **Space stations**: on the galaxy map, select Earth and build a station for 32 tin, 16 aluminum, an advanced
   wafer and 24 iron (free in Creative). It circles Earth on the screen; launch there and you step out in its room while
   your cargo drifts down into its bay in a Para-chest. Earth orbit has the Earth below you, almost no gravity (touch
   nothing and you drift: Forward pushes you on, Jump and Sneak move you up and down), no air, doubled solar power and a
@@ -180,7 +185,8 @@ machines, solar panels and oil processing work. See
   suffocation damage and rate, oil amount, each ore and Moon villages on or off, rocket fuel use, worlds rockets can't
   launch from or reach, rocket explosions, the Moon lander, a landing border, respawning on the world you died on or
   the Overworld, station permissions, sealer edge checks, water in gratings, Launch Controller chunk loading and Venus
-  lightning; on the client, more stars, rocket particles, the riding camera and where the oxygen gauges go. See
+  lightning; on the client, more stars, rocket particles, the riding camera, where the oxygen gauges go and how the
+  galaxy map scrolls. See
   [PORTING.md](PORTING.md#settings) for every option.
 * Recipes: 238 crafting recipes converted from 1.12.2 (including the planets module's, and quick mode's two), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
@@ -216,7 +222,7 @@ machines, solar panels and oil processing work. See
 
 | Lift-off | Choosing a destination |
 |---|---|
-| ![A Tier 1 Rocket lifting off](docs/screenshots/rocket_launch.png) | ![The destination screen with the Moon selected](docs/screenshots/celestial_selection.png) |
+| ![A Tier 1 Rocket lifting off](docs/screenshots/rocket_launch.png) | ![The galaxy map zoomed in on the Moon](docs/screenshots/celestial_selection.png) |
 
 ![The Moon sky at noon and at midnight](docs/screenshots/moon_sky.png)
 
@@ -244,7 +250,7 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![Driving a Moon Buggy](docs/screenshots/moon_buggy_driving.png) | ![Treasure chest, Add New Schematic and Moon Buggy pages](docs/screenshots/schematic_guis.png) |
 
-![Building a space station on the destination screen, and the station circling Earth](docs/screenshots/station_selection.png)
+![Building a space station on the galaxy map, and the station list zoomed in on Earth](docs/screenshots/station_selection.png)
 
 | Inside the starter station | Spin Thrusters on its wall |
 |---|---|
@@ -262,7 +268,7 @@ machines, solar panels and oil processing work. See
 
 | Choosing Mars | Landing balloons |
 |---|---|
-| ![The destination screen with Mars selected](docs/screenshots/celestial_mars.png) | ![Landing balloons coming down under a parachute and bouncing on Mars](docs/screenshots/landing_balloons.png) |
+| ![The galaxy map with Mars selected](docs/screenshots/celestial_mars.png) | ![Landing balloons coming down under a parachute and bouncing on Mars](docs/screenshots/landing_balloons.png) |
 
 ![The Tier 2 Rocket workbench page, and a player in desh armour](docs/screenshots/tier_2_bench_and_desh.png)
 
@@ -300,7 +306,7 @@ machines, solar panels and oil processing work. See
 
 | Choosing the asteroids | The Tier 3 page and the thermometer |
 |---|---|
-| ![The destination screen with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
+| ![The galaxy map with the asteroid belt selected](docs/screenshots/celestial_asteroids.png) | ![The Tier 3 Rocket's NASA Workbench page, and the HUD thermometer warning of the cold](docs/screenshots/tier_3_bench_and_thermal_hud.png) |
 
 ![An Entry Pod settled on an asteroid, lit by its Bright Air](docs/screenshots/entry_pod_landed.png)
 
@@ -323,6 +329,12 @@ machines, solar panels and oil processing work. See
 | ![A domed house of tin decoration blocks with glowstone torches](docs/screenshots/moon_village_house.png) | ![Two Alien Villagers and a child, and their trading screen](docs/screenshots/alien_villagers_and_trades.png) |
 
 ![An Alien Villager, the Evolved Witch one becomes when struck by lightning, and an Evolved Enderman](docs/screenshots/evolved_witch.png)
+
+![The galaxy map: the Sol system on its tilted grid, the catalogue of planets on the left](docs/screenshots/galaxy_map.png)
+
+| Zoomed in on Earth | The Galaxy Map key's map |
+|---|---|
+| ![Earth zoomed in, with the Moon and a space station on their orbits](docs/screenshots/galaxy_map_earth.png) | ![The map opened with the Galaxy Map key, Jupiter selected and out of reach](docs/screenshots/galaxy_map_key.png) |
 
 | The settings screen | Its server page |
 |---|---|

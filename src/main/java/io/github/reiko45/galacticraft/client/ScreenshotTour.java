@@ -1786,8 +1786,100 @@ public final class ScreenshotTour {
         addLaserTurretSteps();
         addPolishSteps();
         addEvolvedWitchSteps();
-        this.lastGroup = this.extras.size();
         addConfigSteps();
+        this.lastGroup = this.extras.size();
+        addGalaxyMapSteps();
+    }
+
+    /**
+     * Phase 9 part 4: the galaxy map from a Tier 3 Rocket in space: the Sol system, the Moon, Mars, the asteroid belt and
+     * Venus selected, Earth with the station materials, then zoomed in on Earth with its new station, the station list;
+     * then the Galaxy Map key's map, Jupiter selected.
+     */
+    private void addGalaxyMapSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            final GCPlayerData data = GCPlayerData.get(p);
+            data.rocketTier = 3;
+            data.rocketStorage = 0;
+            data.rocketFuel = 0;
+            data.inSpace = true;
+            data.spacePos = p.position();
+            data.launchedFromX = p.getX();
+            data.launchedFromZ = p.getZ();
+            GCNetwork.sendToPlayer(p, SpaceTravel.selectionPayload(p));
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "galaxy_map"));
+        final Object[][] selections = {{GCDimensions.MOON, "celestial_selection"}, {GCDimensions.MARS, "celestial_mars"},
+                {GCDimensions.ASTEROIDS, "celestial_asteroids"}, {GCDimensions.VENUS, "celestial_venus"},
+                {net.minecraft.world.level.Level.OVERWORLD, "celestial_station_create"}};
+        for (Object[] selection : selections) {
+            @SuppressWarnings("unchecked")
+            final net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level> dimension =
+                    (net.minecraft.resources.ResourceKey<net.minecraft.world.level.Level>) selection[0];
+            this.extras.add((minecraft, srv) -> {
+                if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                    screen.select(dimension);
+                }
+            });
+            this.extras.add((minecraft, srv) -> shoot(minecraft, (String) selection[1]));
+        }
+        this.extras.add((minecraft, srv) -> srv.execute(() -> SpaceTravel.createStation(tourPlayer(srv))));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                screen.zoomIn(net.minecraft.world.level.Level.OVERWORLD);
+            }
+        });
+        this.extras.add((minecraft, srv) -> minecraft.getToasts().clear()); // "Space Station" reached
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "galaxy_map_earth"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                screen.select(GCDimensions.ORBIT);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "celestial_station"));
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                GCPlayerData.get(p).inSpace = false;
+                p.setNoGravity(false);
+            });
+        });
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(new CelestialSelectionScreen()));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                screen.select(CelestialSelectionScreen.JUPITER);
+            }
+        });
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "galaxy_map_key"));
+        // Real clicks: the catalogue's Overworld line twice (select, then zoom in), then Escape (on the map key's map it
+        // closes at once, as 1.12.2 did)
+        for (int i = 0; i < 2; i++) {
+            this.extras.add((minecraft, srv) -> {
+                if (minecraft.screen instanceof CelestialSelectionScreen screen) {
+                    final int lhs = screen.width / 65 + screen.width / 65 / 4;
+                    screen.mouseClicked(lhs + 40, lhs + 50 + 2 * 14 + 6, 0);
+                    screen.mouseReleased(lhs + 40, lhs + 50 + 2 * 14 + 6, 0);
+                }
+            });
+        }
+        this.extras.add((minecraft, srv) -> {
+        }); // the zoom takes about two seconds
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "galaxy_map_key_earth"));
+        this.extras.add((minecraft, srv) -> {
+            if (minecraft.screen != null) {
+                minecraft.screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE, 0, 0);
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: galaxy map after one Escape: {}", minecraft.screen);
+            if (minecraft.screen != null) {
+                minecraft.screen.keyPressed(org.lwjgl.glfw.GLFW.GLFW_KEY_ESCAPE, 0, 0);
+            }
+            GalacticraftCore.LOGGER.info("Screenshot tour: galaxy map after two: {}", minecraft.screen);
+        });
     }
 
     /**

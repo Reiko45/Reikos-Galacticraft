@@ -623,7 +623,13 @@
     "gui/laser_turret": "planets:gui/laser_turret",
     "gui/laser_turret_edit": "planets:gui/laser_turret_edit",
     "gui/galacticraft_background": "gui/galacticraft_background",
-    "model/evolved_witch": "model/evolved_witch"
+    "model/evolved_witch": "model/evolved_witch",
+    "gui/celestialselection1": "gui/celestialselection1",
+    "gui/celestialbodies/mercury": "gui/celestialbodies/mercury",
+    "gui/celestialbodies/jupiter": "gui/celestialbodies/jupiter",
+    "gui/celestialbodies/saturn": "gui/celestialbodies/saturn",
+    "gui/celestialbodies/uranus": "gui/celestialbodies/uranus",
+    "gui/celestialbodies/neptune": "gui/celestialbodies/neptune"
   },
   "sounds": {
     "entity/bosslaugh": "entity/bosslaugh",
@@ -1805,7 +1811,26 @@
     "config.galacticraftcore.suffocation_cooldown": "gc.configgui.suffocation_cooldown",
     "config.galacticraftcore.suffocation_damage": "gc.configgui.suffocation_damage",
     "galacticraftcore.configuration.title": "gc.configgui.title",
-    "gui.galacticraftcore.rocket.warning.no_gyroscope": "gui.rocket.warning.nogyroscope"
+    "gui.galacticraftcore.rocket.warning.no_gyroscope": "gui.rocket.warning.nogyroscope",
+    "gui.galacticraftcore.message.apply": "gui.message.apply.name",
+    "gui.galacticraftcore.message.assign_name": "gui.message.assign_name.name",
+    "gui.galacticraftcore.message.back": "gui.message.back.name",
+    "gui.galacticraftcore.message.cancel": "gui.message.cancel.name",
+    "gui.galacticraftcore.message.exit": "gui.message.exit.name",
+    "gui.galacticraftcore.message.click_again.0": "gui.message.click_again.0.name",
+    "gui.galacticraftcore.message.click_again.1": "gui.message.click_again.1.name",
+    "gui.galacticraftcore.message.click_again.2": "gui.message.click_again.2.name",
+    "gui.galacticraftcore.message.click_again.3": "gui.message.click_again.3.name",
+    "planet.galacticraftcore.mercury": "planet.mercury",
+    "planet.galacticraftcore.jupiter": "planet.jupiter",
+    "planet.galacticraftcore.saturn": "planet.saturn",
+    "planet.galacticraftcore.uranus": "planet.uranus",
+    "planet.galacticraftcore.neptune": "planet.neptune",
+    "solarsystem.galacticraftcore.sol": "solarsystem.sol",
+    "galaxy.galacticraftcore.milky_way": "galaxy.milky_way",
+    "key.galacticraftcore.galaxy_map": "keybind.map.name",
+    "config.galacticraftcore.map_scroll_sensitivity": "gc.configgui.map_scroll_sensitivity",
+    "config.galacticraftcore.invert_map_scroll": "gc.configgui.map_scroll_invert"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
