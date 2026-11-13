@@ -64,6 +64,8 @@ public final class GalacticraftCore {
         GCRecipes.TYPES.register(modBus);
         GCRecipes.SERIALIZERS.register(modBus);
         modBus.addListener(GCCapabilities::register);
+        io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.init(modBus);
+        net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.item.WrenchItem::onRightClickBlock);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.block.entity.ChromaticApplicatorBlockEntity::onLevelTick);
         net.neoforged.neoforge.common.NeoForge.EVENT_BUS.addListener(io.github.reiko45.galacticraft.world.station.Freefall::onBreakSpeed);
         modBus.addListener((net.neoforged.fml.event.lifecycle.FMLCommonSetupEvent event) -> event.enqueueWork(() ->

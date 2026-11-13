@@ -1990,7 +1990,9 @@
     "commands.galacticraftcore.gcastrominer.usage": "Usage: /gcastrominer [show|reset|set<number>] [player]",
     "config.galacticraftcore.energy_display_unit": "Energy Display Unit",
     "config.galacticraftcore.difficulty": "Difficulty",
-    "config.galacticraftcore.worldgen": "World Generation"
+    "config.galacticraftcore.worldgen": "World Generation",
+    "config.galacticraftcore.disable_buildcraft_input": "Disable INPUT of BuildCraft energy",
+    "config.galacticraftcore.disable_buildcraft_output": "Disable OUTPUT of BuildCraft energy"
   },
   "recipes": {
     "skip_conditions": [

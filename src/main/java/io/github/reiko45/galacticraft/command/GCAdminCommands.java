@@ -43,7 +43,8 @@ import net.neoforged.neoforge.items.ItemStackHandler;
  *     give it back (for map makers), drop it or clear it</li>
  *     <li>{@code /dimensiontp [player]} (operators): straight into space, every world open, as if from a Tier 1 Rocket</li>
  *     <li>{@code /gcastrominer show|reset|set<number> [player]} (operators): a player's count of Astro Miners out</li>
- *     <li>{@code /gcenergyunits gJ|FE}: the energy unit your client shows (1.12.2 also offered RF, MJ, EU and J)</li>
+ *     <li>{@code /gcenergyunits gJ|FE|MJ}: the energy unit your client shows (MJ with BuildCraft Reborn installed, as 1.12.2
+ *     offered it with BuildCraft; 1.12.2 also offered EU and J)</li>
  *     <li>{@code /gchelp}: where to find help</li>
  * </ul>
  * 1.12.2's {@code /gckeeploaded} kept a world loaded when nobody was in it; 1.21 never unloads a world, so it has no
@@ -79,10 +80,12 @@ public final class GCAdminCommands {
                                 .executes(context -> astroMiners(context, EntityArgument.getPlayer(context, "player"))))));
         dispatcher.register(Commands.literal("gcenergyunits")
                 .executes(context -> {
-                    throw fail(Component.translatable("commands.galacticraftcore.gcenergyunits.no_units", "/gcenergyunits [gJ|FE]"));
+                    throw fail(Component.translatable("commands.galacticraftcore.gcenergyunits.no_units", usage()));
                 })
                 .then(Commands.argument("units", StringArgumentType.word())
-                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(new String[]{"gJ", "FE"}, builder))
+                        .suggests((context, builder) -> SharedSuggestionProvider.suggest(
+                                io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.loaded() ? new String[]{"gJ", "FE", "MJ"} : new String[]{"gJ", "FE"},
+                                builder))
                         .executes(GCAdminCommands::energyUnits)));
         dispatcher.register(Commands.literal("gchelp").executes(GCAdminCommands::help));
     }
@@ -177,17 +180,23 @@ public final class GCAdminCommands {
         final ServerPlayer player = context.getSource().getPlayerOrException();
         final GCConfig.EnergyUnit unit = units(StringArgumentType.getString(context, "units"));
         if (unit == null) {
-            throw fail(Component.translatable("commands.galacticraftcore.gcenergyunits.invalid_units", "/gcenergyunits [gJ|FE]"));
+            throw fail(Component.translatable("commands.galacticraftcore.gcenergyunits.invalid_units", usage()));
         }
         GCNetwork.sendToPlayer(player, new GCNetwork.EnergyUnits(unit.ordinal()));
         return 1;
     }
 
+    private static String usage() {
+        return io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.loaded() ? "/gcenergyunits [gJ|FE|MJ]" : "/gcenergyunits [gJ|FE]";
+    }
+
+    /** gJ, FE (or RF), and MJ only with BuildCraft Reborn installed (1.12.2: only with BuildCraft). */
     @Nullable
     public static GCConfig.EnergyUnit units(String name) {
         return switch (name.toLowerCase(Locale.ROOT)) {
             case "gj" -> GCConfig.EnergyUnit.GJ;
             case "fe", "rf" -> GCConfig.EnergyUnit.FE;
+            case "mj" -> io.github.reiko45.galacticraft.compat.buildcraft.BuildCraftCompat.loaded() ? GCConfig.EnergyUnit.MJ : null;
             default -> null;
         };
     }

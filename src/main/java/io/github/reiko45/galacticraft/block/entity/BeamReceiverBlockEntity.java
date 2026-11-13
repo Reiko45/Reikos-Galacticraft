@@ -19,8 +19,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -134,8 +132,8 @@ public class BeamReceiverBlockEntity extends BeamOutputBlockEntity {
         if (gc != null) {
             return new Attached(gc, false);
         }
-        final IEnergyStorage fe = level.getCapability(Capabilities.EnergyStorage.BLOCK, pos, side);
-        return fe == null ? null : new Attached(GCEnergy.fromFE(fe), true);
+        final IGCEnergyHandler foreign = io.github.reiko45.galacticraft.energy.ForeignEnergy.find(level, pos, side);
+        return foreign == null ? null : new Attached(foreign, true);
     }
 
     /**

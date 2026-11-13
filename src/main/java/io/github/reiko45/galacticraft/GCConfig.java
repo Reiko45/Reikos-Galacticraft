@@ -19,7 +19,9 @@ import net.neoforged.neoforge.common.ModConfigSpec;
 public final class GCConfig {
     public enum EnergyUnit {
         GJ,
-        FE
+        FE,
+        /** BuildCraft's Minecraft Joules (1.12.2 offered them with BuildCraft installed): 1 MJ = 16 gJ = 10 FE. */
+        MJ
     }
 
     // ------------------------------------------------------------------ client
@@ -75,6 +77,8 @@ public final class GCConfig {
     public static final ModConfigSpec.BooleanValue DISABLE_ROCKETS_TO_OVERWORLD;
     public static final ModConfigSpec.IntValue OTHER_PLANET_WORLD_BORDERS;
     public static final ModConfigSpec.BooleanValue FORCE_OVERWORLD_RESPAWN;
+    public static final ModConfigSpec.BooleanValue DISABLE_BUILDCRAFT_INPUT;
+    public static final ModConfigSpec.BooleanValue DISABLE_BUILDCRAFT_OUTPUT;
     public static final ModConfigSpec.BooleanValue DISABLE_LANDER;
     public static final ModConfigSpec.BooleanValue DISABLE_SPACESHIP_GRIEF;
     public static final ModConfigSpec.BooleanValue SPACE_STATIONS_REQUIRE_PERMISSION;
@@ -95,7 +99,7 @@ public final class GCConfig {
     static {
         final ModConfigSpec.Builder client = new ModConfigSpec.Builder();
         ENERGY_DISPLAY_UNIT = client
-                .comment("Unit used to display energy in GUIs and tooltips. 1 FE = 1.6 gJ.")
+                .comment("Unit used to display energy in GUIs and tooltips. 1 FE = 1.6 gJ; 1 MJ (BuildCraft) = 16 gJ.")
                 .translation("config.galacticraftcore.energy_display_unit")
                 .defineEnum("energyDisplayUnit", EnergyUnit.GJ);
         MORE_STARS = client
@@ -223,6 +227,16 @@ public final class GCConfig {
                         + " set this to true, and you will respawn back on the Overworld.")
                 .translation("config.galacticraftcore.force_overworld_respawn")
                 .define("forceOverworldRespawn", false);
+        DISABLE_BUILDCRAFT_INPUT = server
+                .comment("With BuildCraft Reborn installed: stop Galacticraft machines and wires taking MJ from BuildCraft's engines and"
+                        + " kinesis pipes.")
+                .translation("config.galacticraftcore.disable_buildcraft_input")
+                .define("disableBuildCraftInput", false);
+        DISABLE_BUILDCRAFT_OUTPUT = server
+                .comment("With BuildCraft Reborn installed: stop Galacticraft machines and wires giving MJ to BuildCraft's machines and"
+                        + " kinesis pipes.")
+                .translation("config.galacticraftcore.disable_buildcraft_output")
+                .define("disableBuildCraftOutput", false);
         DISABLE_LANDER = server
                 .comment("If this is true, the player will parachute onto the Moon instead - use only in debug situations.")
                 .translation("config.galacticraftcore.disable_lander")

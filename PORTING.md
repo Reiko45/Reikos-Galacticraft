@@ -33,7 +33,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | `GameRegistry.register` / `RegistryEvent` | `DeferredRegister` (`GCBlocks`, `GCItems`, ...) | done |
 | `setHarvestLevel(tool, level)` | `mineable/*` and `needs_*_tool` block tags (datagen) | done |
 | OreDictionary | `c:` convention tags (`compressedSteel` → `c:plates/steel`) | done |
-| JSON recipes with `forge:ore_dict`/metadata | Converted by `tools/port_legacy_assets.py` | 60 of 166 converted; the rest need unported items |
+| JSON recipes with `forge:ore_dict`/metadata | Converted by `tools/port_legacy_assets.py` | all 238 converted (the alternate canister and Actually Additions recipes, and copper blocks, are skipped) |
 | Code-registered smelting (`RecipeManagerGC`) | Datagen (`GCRecipeProvider`) | done |
 | Machine recipes (compressor, circuit fabricator, refinery...) | Custom `RecipeType` + `RecipeSerializer`, JSON recipes (`galacticraftcore:compressing_shaped/_shapeless`, `circuit_fabricating`) | compressor + fabricator done |
 | `EnumHelper.addToolMaterial/ArmorMaterial` | `SimpleTier`; `ArmorMaterial` registry entry | done |
@@ -516,6 +516,22 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       pushed harder coming in to land), building up through the countdown; the flames set living things alight for 3
       seconds, the crew aside; and the cold mist off a working Gas Liquefier (ParticleSmokeSmall)
 
+### BuildCraft Reborn (1.12.2's BuildCraft compatibility)
+Optional: everything below only switches on with [BuildCraft Reborn](https://github.com/Reiko45/BuildCraft-Reborn)
+2.1 or later installed.
+- [x] MJ power both ways at 1.12.2's 16 gJ to the MJ (BuildCraft Reborn's 10 FE to the MJ agrees with Galacticraft's
+      1.6 gJ to the FE): machine inputs and aluminium wires take MJ from engines and kinesis pipes (1.12.2
+      TileBaseUniversalElectrical and TileEntityAluminumWire were IMjReceivers), machine outputs connect, machines and
+      wires give power to BuildCraft's receivers (MJ tried before FE, as 1.12.2 did), and machines show their stored
+      power to BuildCraft's readers; the server settings `disableBuildCraftInput` and `disableBuildCraftOutput`
+- [x] MJ as an energy display unit (`energyDisplayUnit`, and `/gcenergyunits MJ` with BuildCraft installed)
+- [x] Wrenches both ways: the Standard Wrench is in `c:tools/wrench` (1.12.2 ItemUniversalWrench was BuildCraft's
+      IToolWrench), and any wrench in that tag turns Galacticraft machines and sets their faces (1.12.2 BlockAdvanced)
+- [x] Galacticraft fuel burns in the combustion engine at 1.12.2's 5 MJ a tick for 9,000 ticks a bucket (1.12.2
+      BuildcraftFuelRegistry.fuel.addFuel), from a `buildcraftreborn:fuels` data map entry; oil and fuel go both ways
+      through `c:oil` and `c:fuel`
+- [ ] Enclosed BuildCraft pipes (1.12.2 BlockEnclosed held a BuildCraft pipe in a sealable tin block)
+
 ## Settings
 
 Three files, all editable from the mod list's settings screen; their names come from 1.12.2's own `gc.configgui`
@@ -708,7 +724,7 @@ What they do, where 1.12.2 needed more than a number:
   it can still be beaten with its own TNT. /kill also works on it (1.12.2: onKillCommand).
 * The TNT projectile is drawn centred on itself (1.12.2 copied the primed-TNT renderer's offsets without its rotation
   and drew the block one block off).
-* The Tier 2 dungeon loot leaves out Carbon Fragments until the Asteroids port; the enchanted books use 1.21's
+* In the dungeon loot the enchanted books use 1.21's
   "on random loot" enchantments (1.12.2: treasure enchantments allowed).
 * 1.12.2 left the Mars dungeon bricks' "sludgeDrip" particle as a TODO and played their drip sound (and the sludge's
   lava bubbling) for a null player on the client, which plays nothing. Here the bricks drip water drips from ceilings
@@ -904,6 +920,11 @@ What they do, where 1.12.2 needed more than a number:
 * Jade and EMI support is new (1.12.2 had JEI only). The `c:` and Galacticraft item and fluid tags have English names
   for them.
 
+* BuildCraft Reborn is compiled against through a copy of the five MJ API types it uses (`src/buildcraftApi`, MIT,
+  never packaged); `-PbuildcraftJar=<jar>` loads BuildCraft Reborn in the dev runs and GameTests. Engines and kinesis
+  pipes get exactly what a machine can take that tick (1.12.2 told BuildCraft 30 times that, because BuildCraft 7 sent
+  only a trickle). BuildCraft Reborn 2.1.0 sends its `volume_boxes` payload to every player joining a level without
+  checking the player can take it, so with it loaded the GameTests that use mock players fail on that error.
 * `/gckeeploaded` is not ported: it kept a world loaded with nobody in it, and 1.21 never unloads a world. `/gcinv`
   takes player names or selectors (1.12.2: names only), keeps the whole 11-slot Galacticraft inventory (1.12.2 saved 6
   slots), and its saves now survive a restart (1.12.2's loader looked for the wrong kind of tag and never read them

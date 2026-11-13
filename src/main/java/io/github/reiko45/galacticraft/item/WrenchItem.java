@@ -20,6 +20,15 @@ public class WrenchItem extends Item {
 
     @Override
     public InteractionResult useOn(UseOnContext context) {
+        return wrench(context);
+    }
+
+    /**
+     * What a wrench does to a Galacticraft block. Any wrench in the common {@code c:tools/wrench} tag does it too (1.12.2
+     * BlockAdvanced took BuildCraft's and IndustrialCraft's wrenches), so BuildCraft Reborn's wrench turns Galacticraft
+     * machines; the Standard Wrench is in that tag, so other mods take it as a wrench.
+     */
+    public static InteractionResult wrench(UseOnContext context) {
         final BlockState state = context.getLevel().getBlockState(context.getClickedPos());
         if (state.getBlock() instanceof FluidPipeBlock pipe && !context.isSecondaryUseActive()) {
             if (!context.getLevel().isClientSide) {
@@ -56,5 +65,25 @@ public class WrenchItem extends Item {
             return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
         }
         return InteractionResult.PASS;
+    }
+
+    /** A Galacticraft block a wrench does something to. */
+    public static boolean wrenchable(BlockState state) {
+        return state.getBlock() instanceof FluidPipeBlock || state.getBlock() instanceof io.github.reiko45.galacticraft.block.SpinThrusterBlock
+                || state.getBlock() instanceof io.github.reiko45.galacticraft.block.Wrenchable || state.getBlock() instanceof MachineBlock;
+    }
+
+    /** Another mod's wrench (in c:tools/wrench) used on a Galacticraft block works as the Standard Wrench does. */
+    public static void onRightClickBlock(net.neoforged.neoforge.event.entity.player.PlayerInteractEvent.RightClickBlock event) {
+        final net.minecraft.world.item.ItemStack stack = event.getItemStack();
+        if (stack.getItem() instanceof WrenchItem || !stack.is(net.neoforged.neoforge.common.Tags.Items.TOOLS_WRENCH)
+                || !wrenchable(event.getLevel().getBlockState(event.getPos()))) {
+            return;
+        }
+        final InteractionResult result = wrench(new UseOnContext(event.getEntity(), event.getHand(), event.getHitVec()));
+        if (result != InteractionResult.PASS) {
+            event.setCanceled(true);
+            event.setCancellationResult(result);
+        }
     }
 }

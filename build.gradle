@@ -117,6 +117,14 @@ sourceSets.main.resources {
     exclude '.cache'
 }
 
+// BuildCraft Reborn's MJ API, compiled against but never packaged (see src/buildcraftApi/README.md)
+sourceSets {
+    buildcraftApi {
+        java.srcDir 'src/buildcraftApi/java'
+    }
+}
+neoForge.addModdingDependenciesTo(sourceSets.buildcraftApi)
+
 configurations {
     runtimeClasspath.extendsFrom localRuntime
 }
@@ -135,6 +143,11 @@ dependencies {
     }
     if (project.hasProperty('withJade')) {
         localRuntime "maven.modrinth:jade:${jade_version}"
+    }
+    compileOnly sourceSets.buildcraftApi.output
+    // -PbuildcraftJar=<path to a BuildCraft Reborn jar>: run the client, server, GameTests and tour with BuildCraft Reborn
+    if (project.hasProperty('buildcraftJar')) {
+        localRuntime files(project.property('buildcraftJar'))
     }
 }
 

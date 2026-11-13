@@ -22,8 +22,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import net.neoforged.neoforge.items.IItemHandler;
 import net.neoforged.neoforge.items.ItemStackHandler;
 import org.jetbrains.annotations.Nullable;
@@ -196,8 +194,7 @@ public abstract class MachineBlockEntity extends BlockEntity implements MenuProv
             }
             IGCEnergyHandler receiver = this.level.getCapability(GCEnergy.BLOCK, target, side.getOpposite());
             if (receiver == null) {
-                final IEnergyStorage foreign = this.level.getCapability(Capabilities.EnergyStorage.BLOCK, target, side.getOpposite());
-                receiver = foreign != null ? GCEnergy.fromFE(foreign) : null;
+                receiver = io.github.reiko45.galacticraft.energy.ForeignEnergy.find(this.level, target, side.getOpposite());
             }
             if (receiver == null || !receiver.canReceive()) {
                 continue;

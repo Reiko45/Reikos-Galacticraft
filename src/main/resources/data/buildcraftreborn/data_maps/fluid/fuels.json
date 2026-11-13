@@ -1,0 +1,8 @@
+{
+  "values": {
+    "galacticraftcore:fuel": {
+      "burn_time": 9000,
+      "power_per_tick": 5.0
+    }
+  }
+}

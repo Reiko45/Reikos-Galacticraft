@@ -31,6 +31,8 @@ public class GCItemTagsProvider extends ItemTagsProvider {
         for (String ore : new String[]{"tin", "aluminum", "silicon", "sapphire", "cheese", "desh", "ilmenite"}) {
             copy(GCTags.block("ores/" + ore), GCTags.item("ores/" + ore));
         }
+        // 1.12.2 ItemUniversalWrench was BuildCraft's IToolWrench: other mods (BuildCraft Reborn among them) take it as a wrench
+        tag(Tags.Items.TOOLS_WRENCH).add(GCItems.STANDARD_WRENCH.get());
         copy(Tags.Blocks.ORES_COPPER, Tags.Items.ORES_COPPER);
         copy(Tags.Blocks.ORES_IRON, Tags.Items.ORES_IRON);
         copy(Tags.Blocks.ORES, Tags.Items.ORES);

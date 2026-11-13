@@ -22,7 +22,7 @@ import net.minecraft.world.level.storage.loot.providers.number.UniformGenerator;
 /**
  * 1.12.2 loot_tables/dungeon_tier_1.json and dungeon_tier_2.json: the Moon and Mars dungeon chests and treasure chests
  * (5-8 and 6-9 rolls). Metadata items are now separate items; the "oil_canister_partial" at damage 1001 was an empty
- * Oil Canister. Tier 2's Carbon Fragments (weight 10) come with the Asteroids and are left out until then.
+ * Oil Canister.
  */
 public class GCChestLootProvider implements LootTableSubProvider {
     private final HolderLookup.Provider registries;
@@ -56,6 +56,7 @@ public class GCChestLootProvider implements LootTableSubProvider {
                 .add(item(Items.BOOK, 8).apply(EnchantRandomlyFunction.randomApplicableEnchantment(this.registries)))));
         // "treasure: true" books are now the on_random_loot options, the default of enchantWithLevels
         output.accept(DungeonConfig.MARS.loot(), LootTable.lootTable().withPool(LootPool.lootPool().setRolls(UniformGenerator.between(6.0F, 9.0F))
+                .add(item(GCItems.CARBON_FRAGMENTS.get(), 10, 2, 7))
                 .add(item(GCItems.DEHYDRATED_APPLE.get(), 6, 1, 2))
                 .add(item(GCItems.DEHYDRATED_CARROT.get(), 6, 1, 2))
                 .add(item(GCItems.DEHYDRATED_MELON.get(), 6, 1, 2))

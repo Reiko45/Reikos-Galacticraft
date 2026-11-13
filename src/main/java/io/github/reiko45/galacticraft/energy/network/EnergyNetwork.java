@@ -7,12 +7,11 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.function.Supplier;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.neoforged.neoforge.capabilities.BlockCapabilityCache;
-import net.neoforged.neoforge.capabilities.Capabilities;
-import net.neoforged.neoforge.energy.IEnergyStorage;
 import org.jetbrains.annotations.Nullable;
 
 /**
@@ -34,15 +33,26 @@ public final class EnergyNetwork {
     private int rotation;
 
     private record Endpoint(BlockPos pos, BlockCapabilityCache<IGCEnergyHandler, Direction> gc,
-                            BlockCapabilityCache<IEnergyStorage, Direction> fe) {
+                            List<Supplier<@Nullable IGCEnergyHandler>> foreign) {
         @Nullable
         IGCEnergyHandler handler() {
             final IGCEnergyHandler native_ = this.gc.getCapability();
             if (native_ != null) {
                 return native_;
             }
-            final IEnergyStorage foreign = this.fe.getCapability();
-            return foreign != null ? GCEnergy.fromFE(foreign) : null;
+            IGCEnergyHandler inert = null;
+            for (Supplier<@Nullable IGCEnergyHandler> system : this.foreign) {
+                final IGCEnergyHandler handler = system.get();
+                if (handler != null) {
+                    if (handler.canReceive() || handler.canExtract()) {
+                        return handler;
+                    }
+                    if (inert == null) {
+                        inert = handler;
+                    }
+                }
+            }
+            return inert;
         }
     }
 
@@ -62,7 +72,7 @@ public final class EnergyNetwork {
                     final Direction face = dir.getOpposite();
                     this.endpoints.add(new Endpoint(neighbor,
                             BlockCapabilityCache.create(GCEnergy.BLOCK, level, neighbor, face, () -> this.valid, () -> { }),
-                            BlockCapabilityCache.create(Capabilities.EnergyStorage.BLOCK, level, neighbor, face, () -> this.valid, () -> { })));
+                            io.github.reiko45.galacticraft.energy.ForeignEnergy.caches(level, neighbor, face, () -> this.valid)));
                 }
             }
         }
@@ -83,6 +93,44 @@ public final class EnergyNetwork {
 
     void invalidate() {
         this.valid = false;
+    }
+
+    /**
+     * What the network's receivers could take now, for power arriving from outside on a wire (1.12.2 TileEntityAluminumWire
+     * as a BuildCraft IMjReceiver).
+     */
+    public float demand() {
+        float total = 0.0F;
+        final Set<BlockPos> seen = new HashSet<>();
+        for (Endpoint endpoint : this.endpoints) {
+            final IGCEnergyHandler handler = endpoint.handler();
+            if (handler != null && handler.canReceive() && seen.add(endpoint.pos())) {
+                total += handler.receiveGJ(LARGE, true);
+            }
+        }
+        return total;
+    }
+
+    /** Power arriving from outside on a wire, shared out to the receivers in turn. @return gJ they took */
+    public float deliver(float amount, boolean simulate) {
+        float left = amount;
+        final Set<BlockPos> seen = new HashSet<>();
+        final int count = this.endpoints.size();
+        for (int a = 0; a < count && left > 0.0F; a++) {
+            final Endpoint endpoint = this.endpoints.get(Math.floorMod(a + this.rotation, count));
+            final IGCEnergyHandler handler = endpoint.handler();
+            if (handler == null || !handler.canReceive() || !seen.add(endpoint.pos())) {
+                continue;
+            }
+            final float accepted = handler.receiveGJ(left, simulate);
+            if (accepted > 0.0F) {
+                left -= accepted;
+                if (!simulate) {
+                    handler.setPoweredTier(1);
+                }
+            }
+        }
+        return amount - left;
     }
 
     /** @return total gJ moved this tick */

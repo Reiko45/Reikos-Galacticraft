@@ -362,6 +362,8 @@
   "config.galacticraftcore.disable_aluminum_asteroids": "Disable Aluminum Ore Gen (Asteroids)",
   "config.galacticraftcore.disable_aluminum_venus": "Disable Aluminum Ore Gen (Venus)",
   "config.galacticraftcore.disable_ambient_lightning": "Disable Lightning (Venus)",
+  "config.galacticraftcore.disable_buildcraft_input": "Disable INPUT of BuildCraft energy",
+  "config.galacticraftcore.disable_buildcraft_output": "Disable OUTPUT of BuildCraft energy",
   "config.galacticraftcore.disable_cheese_moon": "Disable Moon Cheese Gen",
   "config.galacticraftcore.disable_copper_mars": "Disable Copper Ore Gen (Mars)",
   "config.galacticraftcore.disable_copper_moon": "Disable Moon Copper Gen",

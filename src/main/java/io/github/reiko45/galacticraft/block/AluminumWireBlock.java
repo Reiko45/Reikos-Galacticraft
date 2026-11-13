@@ -20,7 +20,6 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.neoforged.neoforge.capabilities.Capabilities;
 
 /**
  * Aluminum Wire and Heavy Aluminum Wire. Connects to other wires and to any block exposing Galacticraft
@@ -125,7 +124,7 @@ public class AluminumWireBlock extends Block implements EntityBlock {
         if (level instanceof Level real) {
             final Direction face = direction.getOpposite();
             return real.getCapability(GCEnergy.BLOCK, neighbor, face) != null
-                    || real.getCapability(Capabilities.EnergyStorage.BLOCK, neighbor, face) != null;
+                    || io.github.reiko45.galacticraft.energy.ForeignEnergy.find(real, neighbor, face) != null;
         }
         return false;
     }

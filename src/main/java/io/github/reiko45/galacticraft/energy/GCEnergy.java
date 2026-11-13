@@ -10,6 +10,8 @@ import org.jetbrains.annotations.Nullable;
 public final class GCEnergy {
     /** 1.12.2 EnergyConfigHandler.RF_RATIO: 1 RF (= 1 FE) is worth 1.6 gJ. */
     public static final float GJ_PER_FE = 1.6F;
+    /** 1.12.2 EnergyConfigHandler.BC3_RATIO: 1 BuildCraft MJ is worth 16 gJ (BuildCraft Reborn takes 10 FE to the MJ, so the two agree). */
+    public static final float GJ_PER_MJ = 16.0F;
 
     public static final BlockCapability<IGCEnergyHandler, @Nullable Direction> BLOCK =
             BlockCapability.createSided(GalacticraftCore.id("energy"), IGCEnergyHandler.class);

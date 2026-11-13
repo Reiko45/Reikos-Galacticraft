@@ -131,6 +131,10 @@ machines, solar panels and oil processing work. See
   and Standard Wrench. Tier-2 power (a Cluster over heavy wire) makes the Arc Furnace, Electric/Advanced
   Compressor, Circuit Fabricator and Refinery faster, as in 1.12.2. Sneak-use the wrench on a machine to move its
   energy port (on a Fuel Loader, its power and fuel inputs).
+* **BuildCraft Reborn** (optional, [BuildCraft Reborn](https://github.com/Reiko45/BuildCraft-Reborn) 2.1+): engines and
+  kinesis pipes power Galacticraft machines and wires, which power BuildCraft's machines in turn, at 1 MJ = 16 gJ;
+  each mod's wrench works on the other's blocks; Galacticraft fuel burns in the combustion engine and oil and fuel go
+  both ways. Energy can be shown in MJ.
 * **Machines**: Compressor (burns fuel), Electric Compressor, Advanced Compressor, Electric Furnace, Electric Arc
   Furnace, Circuit Fabricator. Their GUIs use the original 1.12.2 artwork, and hoppers/pipes work per side.
 * **Oil**: crude oil pockets underground in the Overworld, oil and fuel liquids and buckets, Oil/Fuel Canisters,
@@ -502,6 +506,7 @@ Requires JDK 21.
 ./gradlew runClient           # dev client
 ./gradlew runData             # regenerate src/generated/resources (models, loot, tags, worldgen, ...)
 ./gradlew runGameTestServer   # in-game tests (gametest/*Tests), exits non-zero on failure
+./gradlew runGameTestServer -PbuildcraftJar=<path to buildcraftreborn jar>   # the same with BuildCraft Reborn loaded
 python3 tools/check_assets.py # static check of models/textures/translations
 ```
 
