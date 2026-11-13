@@ -1752,7 +1752,14 @@
     "emi.category.galacticraftcore.compressing": "tile.machine.3.name",
     "emi.category.galacticraftcore.circuit_fabricating": "tile.machine2.5.name",
     "emi.category.galacticraftcore.refining": "tile.refinery.name",
-    "entity.galacticraftcore.evolved_witch": "entity.evolved_witch.name"
+    "entity.galacticraftcore.evolved_witch": "entity.evolved_witch.name",
+    "command.galacticraftcore.gcastrominer.count": "command.gcastrominer.count",
+    "commands.galacticraftcore.emergencykit": "commands.emergencykit",
+    "commands.galacticraftcore.dimensionteleport": "commands.dimensionteleport",
+    "commands.galacticraftcore.gcenergyunits.invalid_units": "commands.gcenergyunits.invalid_units",
+    "commands.galacticraftcore.gcenergyunits.no_units": "commands.gcenergyunits.no_units",
+    "gui.galacticraftcore.message.help1": "gui.message.help1",
+    "gui.galacticraftcore.message.clicklink": "gui.message.clicklink"
   },
   "lang_extra_en_us": {
     "block.galacticraftcore.breathable_air": "Breathable Air",
@@ -1860,7 +1867,15 @@
     "tag.item.galacticraftcore.thermal_padding.chestplate": "Thermal Padding Chestplate",
     "tag.item.galacticraftcore.thermal_padding.helmet": "Thermal Padding Helmet",
     "tag.item.galacticraftcore.thermal_padding.leggings": "Thermal Padding Leggings",
-    "item.galacticraftcore.evolved_witch_spawn_egg": "Evolved Witch Spawn Egg"
+    "item.galacticraftcore.evolved_witch_spawn_egg": "Evolved Witch Spawn Egg",
+    "commands.galacticraftcore.gcinv.save": "Saved and cleared the Galacticraft inventory of %s",
+    "commands.galacticraftcore.gcinv.restore": "Restored the Galacticraft inventory of %s (or will, at their next login)",
+    "commands.galacticraftcore.gcinv.drop": "Dropped the Galacticraft inventory of %s",
+    "commands.galacticraftcore.gcinv.clear": "Cleared the Galacticraft inventory of %s",
+    "commands.galacticraftcore.gcinv.not_found": "Player %s not found",
+    "commands.galacticraftcore.gcinv.nothing_saved": "%s has no saved Galacticraft inventory",
+    "commands.galacticraftcore.gcinv.usage": "Usage: /gcinv [save|restore|drop|clear] <player>",
+    "commands.galacticraftcore.gcastrominer.usage": "Usage: /gcastrominer [show|reset|set<number>] [player]"
   },
   "recipes": {
     "skip_conditions": [

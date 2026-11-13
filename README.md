@@ -157,6 +157,9 @@ machines, solar panels and oil processing work. See
   zero-g bonus in the Circuit Fabricator. Rockets launched there need only half the fuel. Fall below y 30 and you land
   back on Earth. Rename your station on the screen; `/ssinvite`, `/ssuninvite` and `/ssnewowner` control who may come,
   and `/gchouston` takes you home from anywhere in space. Spin Thrusters fixed to the station make it spin.
+* **Commands**: besides those, operators have `/gckit` (an Emergency Kit), `/gcinv save|restore|drop|clear` (put a
+  player's Galacticraft inventory away and give it back, for map makers), `/dimensiontp` (straight into space with every
+  world open) and `/gcastrominer show|reset|set<n>`; anyone can use `/gcenergyunits gJ|FE` and `/gchelp`.
 * **Space Race**: the "Space Race Manager" box in the pause menu's corner makes you a team. Name it, pick a team
   colour and draw its 48x32 flag (brush, eraser, rectangle selection, colour picker and grid); invite players within
   25 blocks, who join with `/joinrace`, and remove members. A schematic one member unlocks is unlocked for the whole

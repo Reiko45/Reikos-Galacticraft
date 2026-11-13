@@ -89,6 +89,32 @@ public final class SpaceTravel {
         openSelection(player);
     }
 
+    private static int selectionTier(GCPlayerData data) {
+        return data.selectionTier > 0 ? data.selectionTier : data.rocketTier;
+    }
+
+    /**
+     * 1.12.2 CommandPlanetTeleport (/dimensiontp): into space with an empty Tier 1 Rocket and 1,000 fuel, as if launched
+     * from the world spawn, every world open on the destination screen.
+     */
+    public static void sendToSpace(ServerPlayer player) {
+        final GCPlayerData data = GCPlayerData.get(player);
+        final BlockPos spawn = player.server.overworld().getSharedSpawnPos();
+        player.stopRiding();
+        data.rocketCargo = NonNullList.withSize(2, ItemStack.EMPTY);
+        data.rocketStorage = 0;
+        data.rocketTier = 1;
+        data.rocketFuel = 1000;
+        data.launchpadCount = 0;
+        data.launchedFromX = spawn.getX();
+        data.launchedFromZ = spawn.getZ();
+        data.selectionTier = Integer.MAX_VALUE;
+        data.inSpace = true;
+        data.spacePos = player.position();
+        player.setNoGravity(true);
+        openSelection(player);
+    }
+
     private static void openSelection(ServerPlayer player) {
         GCNetwork.sendToPlayer(player, selectionPayload(player));
     }
@@ -100,7 +126,7 @@ public final class SpaceTravel {
         for (SpaceStations.Station station : stations.visitableBy(player)) {
             visible.add(new GCNetwork.StationInfo(station.id(), station.name(), station.ownerName(), station.isOwner(player)));
         }
-        return new GCNetwork.OpenCelestialSelection(GCPlayerData.get(player).rocketTier, visible, canCreateStation(player, stations));
+        return new GCNetwork.OpenCelestialSelection(selectionTier(GCPlayerData.get(player)), visible, canCreateStation(player, stations));
     }
 
     /** 1.12.2 GuiCelestialSelection#canCreateSpaceStation: one per player, from a rocket, unless the server forbids it. */
@@ -146,7 +172,7 @@ public final class SpaceTravel {
         final GCPlayerData data = GCPlayerData.get(player);
         final Destination destination = destination(dimension);
         final ServerLevel target = player.server.getLevel(dimension);
-        if (!data.inSpace || destination == null || destination.tier() > data.rocketTier || target == null) {
+        if (!data.inSpace || destination == null || destination.tier() > selectionTier(data) || target == null) {
             return;
         }
         final SpaceStations.Station station = dimension.equals(GCDimensions.ORBIT) ? SpaceStations.get(player.server).byId(stationId) : null;
@@ -154,6 +180,7 @@ public final class SpaceTravel {
             return;
         }
         data.inSpace = false;
+        data.selectionTier = 0;
         player.setNoGravity(false);
         // 1.12.2: the two extra cargo slots carry the launch pads and the (empty) rocket
         final NonNullList<ItemStack> cargo = data.rocketCargo.isEmpty() ? NonNullList.withSize(2, ItemStack.EMPTY) : data.rocketCargo;

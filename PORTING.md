@@ -54,7 +54,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | Forge `Configuration` .cfg + config GUI | `ModConfigSpec` (COMMON/SERVER/CLIENT; SERVER configs sync automatically) | client config started |
 | TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer` with `LayerDefinition`s converted from the 1.12.2 `ModelRenderer` code (`tools/convert_java_model.py`), NeoForge OBJ loader (`neoforge:obj`), `BlockEntityWithoutLevelRenderer` for item models | solar panel, fluid tank/pipe, rocket, lander, para-chest, NASA Workbench done |
 | Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions`; oxygen is a block-less `GasFluid` | oil, fuel, oxygen done |
-| Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
+| Commands (12) | Brigadier via `RegisterCommandsEvent` (`GCCommands`, `GCAdminCommands`) | 11 done; `/gckeeploaded` not needed |
 | Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen, `GCAdvancementProvider`) + `TRIGGER_TYPE` registry (`GCTriggers`, vanilla `PlayerTrigger`) | done |
 | JEI 4.x plugin | JEI 19.x (1.21.1), optional (`compat/jei`) | Compressor, Circuit Fabricator, Refinery done |
 | gJ energy with RF/IC2/BC/Mekanism conversion | Float gJ internally (`GCEnergyStorage`, `galacticraftcore:energy` capability) + FE (`IEnergyStorage`) on every machine at 1 FE = 1.6 gJ | done |
@@ -469,7 +469,8 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
 ### Phase 9 – The rest
 - [x] Evolved Witch (EntityEvolvedWitch): what an Alien Villager becomes when struck by lightning, in an oxygen mask with
       tanks (1.12.2 ModelEvolvedWitch), breathing anywhere, a witch's drops plus rare Galacticraft gear; spawn egg
-- [ ] The commands not ported yet: `/gckit`, `/gcinv`, `/gckeepdim`, `/planettp`, `/gcenergyunits`, `/gcastrominer`, `/gchelp`
+- [x] The rest of 1.12.2's commands: `/gckit`, `/gcinv save|restore|drop|clear`, `/dimensiontp`,
+      `/gcastrominer show|reset|set<n>`, `/gcenergyunits gJ|FE`, `/gchelp` (`/gckeeploaded` has nothing to do in 1.21)
 - [ ] The 1.12.2 config options (game modes, suffocation, oil and ore generation, rocket fuel, ...)
 - [ ] The full galaxy map (zoom, catalogue panels, space stations, the Space Race panel)
 
@@ -774,6 +775,13 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   at damage 0).
 * Jade and EMI support is new (1.12.2 had JEI only). The `c:` and Galacticraft item and fluid tags have English names
   for them.
+
+* `/gckeeploaded` is not ported: it kept a world loaded with nobody in it, and 1.21 never unloads a world. `/gcinv`
+  takes player names or selectors (1.12.2: names only), keeps the whole 11-slot Galacticraft inventory (1.12.2 saved 6
+  slots), and its saves now survive a restart (1.12.2's loader looked for the wrong kind of tag and never read them
+  back). `/gcenergyunits` offers gJ and FE (RF is taken as FE); 1.12.2's MJ, EU and J belonged to mods that aren't
+  here. `/gchelp` links 1.12.2's wiki address. `/dimensiontp` sends a player into space as if from the world spawn
+  in an empty Tier 1 Rocket with 1,000 fuel, every world open, as in 1.12.2.
 
 ## Workflow for porting more content
 

@@ -54,6 +54,8 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public int rocketStorage;
     /** The tier of the rocket being travelled in (1.12.2 GCPlayerStats rocketItem): picks destinations and the rocket item. */
     public int rocketTier = 1;
+    /** The tier the destination screen allows, if not the rocket's (/dimensiontp opens every world); 0 when unused. */
+    public int selectionTier;
     public int launchpadCount;
     public double launchedFromX;
     public double launchedFromZ;
@@ -277,6 +279,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         travel.putInt("Fuel", this.rocketFuel);
         travel.putInt("Storage", this.rocketStorage);
         travel.putInt("Tier", this.rocketTier);
+        travel.putInt("SelectionTier", this.selectionTier);
         travel.putInt("Launchpads", this.launchpadCount);
         travel.putDouble("FromX", this.launchedFromX);
         travel.putDouble("FromZ", this.launchedFromZ);
@@ -334,6 +337,7 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
         this.rocketFuel = travel.getInt("Fuel");
         this.rocketStorage = travel.getInt("Storage");
         this.rocketTier = Math.max(1, travel.getInt("Tier"));
+        this.selectionTier = travel.getInt("SelectionTier");
         this.launchpadCount = travel.getInt("Launchpads");
         this.launchedFromX = travel.getDouble("FromX");
         this.launchedFromZ = travel.getDouble("FromZ");

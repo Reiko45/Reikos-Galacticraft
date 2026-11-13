@@ -64,6 +64,17 @@ public final class GCNetwork {
      * The player's tank levels scaled to 0..90 for the HUD, whether their oxygen setup works, and their thermal level
      * (-22 to 22) and whether their padding is bringing it back (1.12.2 S_UPDATE_THERMAL_LEVEL).
      */
+    /** 1.12.2 C_UPDATE_ENERGYUNITS (/gcenergyunits): the energy unit this client shows, a GCConfig.EnergyUnit ordinal. */
+    public record EnergyUnits(int unit) implements CustomPacketPayload {
+        public static final Type<EnergyUnits> TYPE = new Type<>(GalacticraftCore.id("energy_units"));
+        public static final StreamCodec<ByteBuf, EnergyUnits> STREAM_CODEC = StreamCodec.composite(ByteBufCodecs.VAR_INT, EnergyUnits::unit, EnergyUnits::new);
+
+        @Override
+        public Type<EnergyUnits> type() {
+            return TYPE;
+        }
+    }
+
     public record OxygenState(int air1, int air2, boolean valid, int thermalLevel, boolean thermalNormalising) implements CustomPacketPayload {
         public static final Type<OxygenState> TYPE = new Type<>(GalacticraftCore.id("oxygen_state"));
         public static final StreamCodec<ByteBuf, OxygenState> STREAM_CODEC = StreamCodec.composite(
@@ -317,6 +328,13 @@ public final class GCNetwork {
         }));
         registrar.playToClient(StationSpinSync.TYPE, StationSpinSync.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.world.station.StationSpin.Client.update(payload)));
+        registrar.playToClient(EnergyUnits.TYPE, EnergyUnits.STREAM_CODEC, (payload, context) -> context.enqueueWork(() -> {
+            final io.github.reiko45.galacticraft.GCConfig.EnergyUnit[] units = io.github.reiko45.galacticraft.GCConfig.EnergyUnit.values();
+            if (payload.unit() >= 0 && payload.unit() < units.length) {
+                io.github.reiko45.galacticraft.GCConfig.ENERGY_DISPLAY_UNIT.set(units[payload.unit()]);
+                io.github.reiko45.galacticraft.GCConfig.CLIENT_SPEC.save();
+            }
+        }));
         registrar.playToClient(OxygenState.TYPE, OxygenState.STREAM_CODEC,
                 (payload, context) -> context.enqueueWork(() -> io.github.reiko45.galacticraft.client.ClientPayloads.oxygenState(payload)));
         registrar.playToClient(FootprintAdded.TYPE, FootprintAdded.STREAM_CODEC,
