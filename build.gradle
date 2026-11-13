@@ -22,6 +22,20 @@ repositories {
             includeGroup 'net.mezzdev.config'
         }
     }
+    // EMI (optional recipe viewer integration)
+    maven {
+        url = 'https://maven.terraformersmc.com/releases'
+        content {
+            includeGroup 'dev.emi'
+        }
+    }
+    // Jade (optional block tooltips)
+    maven {
+        url = 'https://api.modrinth.com/maven'
+        content {
+            includeGroup 'maven.modrinth'
+        }
+    }
 }
 
 base {
@@ -112,6 +126,16 @@ dependencies {
     compileOnly "mezz.jei:jei-${minecraft_version}-common-api:${jei_version}"
     compileOnly "mezz.jei:jei-${minecraft_version}-neoforge-api:${jei_version}"
     localRuntime "mezz.jei:jei-${minecraft_version}-neoforge:${jei_version}"
+    // EMI and Jade are optional too. Run them in dev with -PwithEmi / -PwithJade (EMI and JEI side by side work, but
+    // crowd the screen, so the screenshot tour leaves them out).
+    compileOnly "dev.emi:emi-neoforge:${emi_version}:api"
+    compileOnly "maven.modrinth:jade:${jade_version}"
+    if (project.hasProperty('withEmi')) {
+        localRuntime "dev.emi:emi-neoforge:${emi_version}"
+    }
+    if (project.hasProperty('withJade')) {
+        localRuntime "maven.modrinth:jade:${jade_version}"
+    }
 }
 
 // Expands ${...} placeholders in src/main/templates (neoforge.mods.toml) from gradle.properties.

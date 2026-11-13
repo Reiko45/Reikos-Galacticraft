@@ -222,6 +222,7 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
             this.entityData.set(ROLL, this.entityData.get(ROLL) - 1);
         }
         if (this.level().isClientSide) {
+            io.github.reiko45.galacticraft.client.sound.RocketSound.ensure(this);
             if (phase() == Phase.IGNITED || launched() && hasFuel()) {
                 spawnFlames();
             }
@@ -243,6 +244,12 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         }
         if (launched()) {
             this.timeSinceLaunch++;
+            // 1.12.2 EntitySpaceshipBase: whoever rides a launched rocket has launched one
+            for (net.minecraft.world.entity.Entity passenger : getPassengers()) {
+                if (passenger instanceof net.minecraft.server.level.ServerPlayer player) {
+                    io.github.reiko45.galacticraft.registry.GCTriggers.LAUNCH_ROCKET.get().trigger(player);
+                }
+            }
         } else {
             this.timeSinceLaunch = 0;
         }

@@ -1,0 +1,91 @@
+{
+  "parent": "galacticraftcore:galacticraft/fill_tank",
+  "criteria": {
+    "heavy_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 2700
+            },
+            "items": "galacticraftcore:heavy_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "medium_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 1800
+            },
+            "items": "galacticraftcore:medium_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "oxygen_gear": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:oxygen_gear"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "oxygen_mask": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:oxygen_mask"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "small_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 900
+            },
+            "items": "galacticraftcore:light_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.all_oxygen_gear.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:oxygen_mask"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.all_oxygen_gear.title"
+    }
+  },
+  "requirements": [
+    [
+      "small_tank",
+      "medium_tank",
+      "heavy_tank"
+    ],
+    [
+      "oxygen_mask"
+    ],
+    [
+      "oxygen_gear"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

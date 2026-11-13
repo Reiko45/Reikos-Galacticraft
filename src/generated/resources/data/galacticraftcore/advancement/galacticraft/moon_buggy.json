@@ -1,0 +1,34 @@
+{
+  "parent": "galacticraftcore:galacticraft/moon_buggy_schematic",
+  "criteria": {
+    "got_buggy": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:buggy"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.moon_buggy.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:buggy"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.moon_buggy.title"
+    }
+  },
+  "requirements": [
+    [
+      "got_buggy"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

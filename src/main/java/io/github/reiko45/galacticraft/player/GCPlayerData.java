@@ -62,6 +62,8 @@ public class GCPlayerData implements INBTSerializable<CompoundTag> {
     public net.minecraft.world.phys.Vec3 spacePos = net.minecraft.world.phys.Vec3.ZERO;
     public int launchAttempts;
     public boolean usingParachute;
+    /** Whether the parachute was open last tick (not saved: 1.12.2 lastUsingParachute). */
+    public boolean lastUsingParachute;
     public int chestSpawnCooldown;
     /** The Space Race team this player was last invited to (1.12.2 spaceRaceInviteTeamID; not saved). */
     public int spaceRaceInvite;

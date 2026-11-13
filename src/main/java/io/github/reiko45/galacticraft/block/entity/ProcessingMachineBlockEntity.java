@@ -41,6 +41,11 @@ public abstract class ProcessingMachineBlockEntity extends MachineBlockEntity {
     /** Ticks for one operation; may depend on {@link #poweredTier()}. */
     public abstract int processTime();
 
+    /** Ticks into the current job (for Jade). */
+    public int progress() {
+        return this.progress;
+    }
+
     /** Inventory slot holding a battery, or -1. */
     protected abstract int batterySlot();
 

@@ -1,0 +1,30 @@
+{
+  "criteria": {
+    "tick": {
+      "trigger": "minecraft:tick"
+    }
+  },
+  "display": {
+    "announce_to_chat": false,
+    "background": "galacticraftcore:textures/gui/galacticraft_background.png",
+    "description": {
+      "translate": "advancements.galacticraftcore.root.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:tier_1_rocket"
+    },
+    "show_toast": false,
+    "title": {
+      "bold": true,
+      "color": "gray",
+      "translate": "advancements.galacticraftcore.root.title"
+    }
+  },
+  "requirements": [
+    [
+      "tick"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

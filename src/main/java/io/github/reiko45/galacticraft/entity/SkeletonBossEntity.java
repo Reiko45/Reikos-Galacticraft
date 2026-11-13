@@ -169,6 +169,12 @@ public class SkeletonBossEntity extends DungeonBossEntity implements RangedAttac
     @Override
     public void aiStep() {
         if (!level().isClientSide) {
+            // 1.12.2 onLivingUpdate: every player within 20 blocks has found the boss
+            for (net.minecraft.world.entity.player.Player player : level().players()) {
+                if (player instanceof net.minecraft.server.level.ServerPlayer serverPlayer && !player.isSpectator() && player.distanceToSqr(this) < 20.0D * 20.0D) {
+                    io.github.reiko45.galacticraft.registry.GCTriggers.FIND_MOON_BOSS.get().trigger(serverPlayer);
+                }
+            }
             if (this.throwTimer > 0) {
                 this.throwTimer--;
             }

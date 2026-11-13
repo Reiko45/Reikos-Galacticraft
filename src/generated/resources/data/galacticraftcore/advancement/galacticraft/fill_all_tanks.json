@@ -1,0 +1,72 @@
+{
+  "parent": "galacticraftcore:galacticraft/fill_tank",
+  "criteria": {
+    "heavy_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 2700
+            },
+            "items": "galacticraftcore:heavy_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "medium_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 1800
+            },
+            "items": "galacticraftcore:medium_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "small_tank": {
+      "conditions": {
+        "items": [
+          {
+            "components": {
+              "galacticraftcore:oxygen": 900
+            },
+            "items": "galacticraftcore:light_oxygen_tank"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.fill_all_tanks.description"
+    },
+    "frame": "goal",
+    "icon": {
+      "components": {
+        "galacticraftcore:oxygen": 2700
+      },
+      "count": 1,
+      "id": "galacticraftcore:heavy_oxygen_tank"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.fill_all_tanks.title"
+    }
+  },
+  "requirements": [
+    [
+      "small_tank"
+    ],
+    [
+      "medium_tank"
+    ],
+    [
+      "heavy_tank"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

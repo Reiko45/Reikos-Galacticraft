@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/basic_wafer",
+  "criteria": {
+    "compressor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:compressor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.compressor.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:compressor"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.compressor.title"
+    }
+  },
+  "requirements": [
+    [
+      "compressor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/basic_wafer",
+  "criteria": {
+    "basic_solar": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:basic_solar_panel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.solar.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:basic_solar_panel"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.solar.title"
+    }
+  },
+  "requirements": [
+    [
+      "basic_solar"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

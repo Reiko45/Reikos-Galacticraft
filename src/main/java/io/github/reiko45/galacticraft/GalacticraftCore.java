@@ -39,6 +39,7 @@ public final class GalacticraftCore {
     public GalacticraftCore(IEventBus modBus, ModContainer container) {
         // GCBlocks first: it also registers the block items into GCItems.ITEMS.
         GCBlocks.BLOCKS.register(modBus);
+        io.github.reiko45.galacticraft.registry.GCTriggers.TRIGGERS.register(modBus);
         GCItems.ITEMS.register(modBus);
         // GCFluids also adds the oil/fuel liquid blocks and buckets to GCBlocks.BLOCKS and GCItems.ITEMS.
         GCFluids.FLUID_TYPES.register(modBus);

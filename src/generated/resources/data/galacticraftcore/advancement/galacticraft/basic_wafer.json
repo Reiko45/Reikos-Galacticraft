@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/circuit_fabricator",
+  "criteria": {
+    "basic_wafer": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:basic_wafer"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.basic_wafer.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:basic_wafer"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.basic_wafer.title"
+    }
+  },
+  "requirements": [
+    [
+      "basic_wafer"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

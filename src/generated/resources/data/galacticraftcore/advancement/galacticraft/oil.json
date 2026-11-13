@@ -1,0 +1,29 @@
+{
+  "parent": "galacticraftcore:galacticraft/compressor",
+  "criteria": {
+    "in_oil": {
+      "conditions": {
+        "block": "galacticraftcore:oil"
+      },
+      "trigger": "minecraft:enter_block"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.oil.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:oil_bucket"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.oil.title"
+    }
+  },
+  "requirements": [
+    [
+      "in_oil"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/rocket_workbench",
+  "criteria": {
+    "rocket_crafted": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:tier_1_rocket"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.rocket_t1.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:tier_1_rocket"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.rocket_t1.title"
+    }
+  },
+  "requirements": [
+    [
+      "rocket_crafted"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

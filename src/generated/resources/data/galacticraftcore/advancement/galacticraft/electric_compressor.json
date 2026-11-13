@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/compressor",
+  "criteria": {
+    "electric_compressor": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:electric_compressor"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.electric_compressor.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:electric_compressor"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.electric_compressor.title"
+    }
+  },
+  "requirements": [
+    [
+      "electric_compressor"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

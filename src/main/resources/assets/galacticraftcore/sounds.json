@@ -110,5 +110,31 @@
     "sounds": [
       "galacticraftcore:block/laser_shoot"
     ]
+  },
+  "block.advanced_compressor": {
+    "subtitle": "subtitles.galacticraftcore.block.advanced_compressor",
+    "sounds": [
+      "galacticraftcore:block/advanced_compressor"
+    ]
+  },
+  "item.parachute.open": {
+    "subtitle": "subtitles.galacticraftcore.item.parachute.open",
+    "sounds": [
+      "galacticraftcore:item/parachute"
+    ]
+  },
+  "entity.rocket.engine": {
+    "subtitle": "subtitles.galacticraftcore.entity.rocket.engine",
+    "sounds": [
+      "galacticraftcore:entity/rocket"
+    ]
+  },
+  "music.space": {
+    "sounds": [
+      {
+        "name": "galacticraftcore:music/scary_ambience",
+        "stream": true
+      }
+    ]
   }
 }

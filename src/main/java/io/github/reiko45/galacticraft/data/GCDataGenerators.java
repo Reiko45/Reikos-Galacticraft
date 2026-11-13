@@ -47,5 +47,6 @@ public final class GCDataGenerators {
         generator.addProvider(event.includeServer(), new GCFluidTagsProvider(output, fullLookup, existingFiles));
         generator.addProvider(event.includeServer(), new GCDamageTypeTagsProvider(output, fullLookup, existingFiles));
         generator.addProvider(event.includeServer(), new GCEntityTypeTagsProvider(output, fullLookup, existingFiles));
+        generator.addProvider(event.includeServer(), new GCAdvancementProvider(output, fullLookup, existingFiles));
     }
 }

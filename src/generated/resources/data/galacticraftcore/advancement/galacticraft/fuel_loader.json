@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/rocket_t1",
+  "criteria": {
+    "fuel_loader": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:fuel_loader"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.fuel_loader.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:fuel_loader"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.fuel_loader.title"
+    }
+  },
+  "requirements": [
+    [
+      "fuel_loader"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

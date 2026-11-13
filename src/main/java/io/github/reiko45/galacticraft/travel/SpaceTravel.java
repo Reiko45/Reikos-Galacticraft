@@ -117,6 +117,7 @@ public final class SpaceTravel {
             return;
         }
         final SpaceStations.Station station = stations.create(orbit, player);
+        io.github.reiko45.galacticraft.registry.GCTriggers.CREATE_SPACE_STATION.get().trigger(player);
         io.github.reiko45.galacticraft.GalacticraftCore.LOGGER.info("{} built space station {} at {}", player.getGameProfile().getName(), station.id(), station.base());
         openSelection(player);
     }
@@ -232,6 +233,12 @@ public final class SpaceTravel {
                 openSelection(player);
             }
         }
+        if (data.usingParachute && !data.lastUsingParachute) {
+            // 1.12.2 PlayerClient: the parachute's flap, heard by the one falling
+            player.playNotifySound(io.github.reiko45.galacticraft.registry.GCSounds.PARACHUTE.get(), net.minecraft.sounds.SoundSource.PLAYERS,
+                    0.95F + player.getRandom().nextFloat() * 0.1F, 1.0F);
+        }
+        data.lastUsingParachute = data.usingParachute;
         if (data.usingParachute) {
             player.resetFallDistance();
             if (player.onGround() || player.isInWater()) {

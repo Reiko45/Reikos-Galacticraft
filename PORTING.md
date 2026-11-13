@@ -55,7 +55,7 @@ translation won't work: almost every vanilla and Forge API it touched changed be
 | TESRs (18), entity renderers (~33), Forge OBJ loader | `BlockEntityRenderer`, `EntityRenderer` with `LayerDefinition`s converted from the 1.12.2 `ModelRenderer` code (`tools/convert_java_model.py`), NeoForge OBJ loader (`neoforge:obj`), `BlockEntityWithoutLevelRenderer` for item models | solar panel, fluid tank/pipe, rocket, lander, para-chest, NASA Workbench done |
 | Forge fluids (oil, fuel, oxygen, ...) | `FluidType` + `BaseFlowingFluid`, `FluidStack`, `IFluidHandler`, `IClientFluidTypeExtensions`; oxygen is a block-less `GasFluid` | oil, fuel, oxygen done |
 | Commands (12) | Brigadier via `RegisterCommandsEvent` | as needed |
-| Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen) + `CriterionTrigger` registry | Phase 8 |
+| Advancements (28) + `GCTriggers` | 1.21 advancement JSON (datagen, `GCAdvancementProvider`) + `TRIGGER_TYPE` registry (`GCTriggers`, vanilla `PlayerTrigger`) | done |
 | JEI 4.x plugin | JEI 19.x (1.21.1), optional (`compat/jei`) | Compressor, Circuit Fabricator, Refinery done |
 | gJ energy with RF/IC2/BC/Mekanism conversion | Float gJ internally (`GCEnergyStorage`, `galacticraftcore:energy` capability) + FE (`IEnergyStorage`) on every machine at 1 FE = 1.6 gJ | done |
 | `EnergyNetwork` / `NetworkFinder`, conductor tiers | `EnergyNetworkManager`: flood-filled wire networks, rebuilt on change, ticked per level; tier = min(source, weakest wire) | done |
@@ -456,7 +456,14 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
       1.12.2 it has no recipe (creative menu only)
 
 ### Phase 8 – Polish
-- [ ] Advancements, sounds/music (check the provenance of the `*_jc.ogg` tracks first), manual, Jade/EMI integration
+- [x] The 28 advancements (`galacticraftcore:galacticraft/...`, same tree, icons and criteria) with 1.12.2's three
+      Galacticraft criteria: launch a rocket, find the Moon's Skeleton Boss, build a space station
+- [x] Sounds: the rocket engine from ignition to the edge of space, a parachute opening, the Electric and Advanced
+      Compressors' clank; the space music in every Galacticraft world (see below for the `*_jc.ogg` tracks)
+- [x] Optional Jade (energy in gJ, progress, status, owner) and EMI (Compressor, Circuit Fabricator and Refinery pages,
+      workstations, Magnetic Crafting Table filling) plugins, beside the JEI one
+- [x] The manual: nothing to port. 1.12.2 never loaded `manuals/gettingstarted.xml`, a placeholder whose pages hold
+      another mod's tool text
 
 ## Intentional differences from 1.12.2 (so far)
 
@@ -741,6 +748,23 @@ through the porter's `planets:` prefix (`assets/galacticraftplanets`).
   item.
 * Paint colours are kept for each player, as in 1.12.2: everyone near an applicator sees the glass in its colours, and
   keeps them after walking off. Glass in a tin frame keeps its frame's colour, as in 1.12.2.
+
+
+* The 1.12.2 music tracks ending in `_jc` (Mars, Mimas, Orbit, Space Race; by Jackson Cordes, as far as secondary
+  sources say) are not shipped: their licence can't be confirmed from the MIT-licensed Galacticraft Legacy repository,
+  which has no record of how they came in. The space music event (`galacticraftcore:music.space`) ships with the one
+  other track, `scary_ambience`; a resource pack can add the others (see the README). The music plays in every
+  Galacticraft world every 10 to 20 minutes and stops other music on arrival, as 1.12.2's MusicTickerGC did.
+* The rocket's engine is heard within 96 blocks of it, and everywhere only by its rider (1.12.2: at full volume
+  wherever it was). The parachute is heard by its wearer only, as in 1.12.2. The Electric and Advanced Compressors'
+  pitches are 1.12.2's after the sound engine's limits (it asked for -9.5 and 9.5); the Advanced Compressor uses
+  1.12.2's `player/unlockchest` sound, which 1.12.2's treasure chests had stopped using.
+* Advancements are laid out by 1.21 itself. "Worse than a wither" (the Moon dungeon) is given to every player who
+  comes within 20 blocks of a Skeleton Boss (1.12.2 then checked whether the first entity loaded in the world was a
+  nearby boss, so it seldom was). "Full" oxygen tanks are tanks holding their whole capacity (1.12.2: the tank items
+  at damage 0).
+* Jade and EMI support is new (1.12.2 had JEI only). The `c:` and Galacticraft item and fluid tags have English names
+  for them.
 
 ## Workflow for porting more content
 

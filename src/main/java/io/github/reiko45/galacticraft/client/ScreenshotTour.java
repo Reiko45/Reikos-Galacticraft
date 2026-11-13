@@ -1782,9 +1782,10 @@ public final class ScreenshotTour {
         addVenusSteps();
         addSpaceBaseSteps();
         addBaseUtilitySteps();
-        this.lastGroup = this.extras.size();
         addBaseBlockSteps();
         addLaserTurretSteps();
+        this.lastGroup = this.extras.size();
+        addPolishSteps();
     }
 
     @org.jetbrains.annotations.Nullable
@@ -2906,6 +2907,69 @@ public final class ScreenshotTour {
             minecraft.setScreen(null);
             srv.execute(() -> tourPlayer(srv).closeContainer());
         });
+    }
+
+    /**
+     * Phase 8: the Galacticraft advancement tab with the first steps taken; then, if Jade and EMI are installed
+     * (-PwithJade -PwithEmi), Jade on a working Electric Compressor and EMI's Compressor and Refinery pages.
+     */
+    private void addPolishSteps() {
+        this.extras.add((minecraft, srv) -> srv.execute(() -> {
+            final ServerPlayer p = tourPlayer(srv);
+            p.closeContainer();
+            for (String name : new String[] {"root", "coal_generator", "circuit_fabricator", "basic_wafer", "compressor", "basic_solar",
+                    "oxygen_collector", "oxygen_compressor", "fill_tank", "rocket_workbench", "rocket_t1", "fuel_loader", "launch_rocket", "moon"}) {
+                final net.minecraft.advancements.AdvancementHolder holder = srv.getAdvancements().get(GalacticraftCore.id("galacticraft/" + name));
+                if (holder != null) {
+                    for (String criterion : holder.value().criteria().keySet()) {
+                        p.getAdvancements().award(holder, criterion);
+                    }
+                }
+            }
+        }));
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add((minecraft, srv) -> {
+            final net.minecraft.client.multiplayer.ClientAdvancements advancements = minecraft.player.connection.getAdvancements();
+            final net.minecraft.advancements.AdvancementHolder root = advancements.get(GalacticraftCore.id("galacticraft/root"));
+            minecraft.setScreen(new net.minecraft.client.gui.screens.advancements.AdvancementsScreen(advancements));
+            if (root != null) {
+                advancements.setSelectedTab(root, true);
+            }
+            minecraft.getToasts().clear();
+        });
+        this.extras.add((minecraft, srv) -> minecraft.getToasts().clear());
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "advancements"));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
+        if (ModList.get().isLoaded("jade")) {
+            this.extras.add((minecraft, srv) -> srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                final ServerLevel level = srv.overworld();
+                final BlockPos corner = p.blockPosition().offset(-300, 0, 600);
+                final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+                for (BlockPos pos : BlockPos.betweenClosed(o.offset(-4, -1, -4), o.offset(4, 5, 6))) {
+                    level.setBlock(pos, pos.getY() < o.getY() ? Blocks.SMOOTH_STONE.defaultBlockState() : Blocks.AIR.defaultBlockState(),
+                            net.minecraft.world.level.block.Block.UPDATE_CLIENTS);
+                }
+                level.setBlockAndUpdate(o, GCBlocks.ELECTRIC_COMPRESSOR.get().defaultBlockState().setValue(MachineBlock.FACING, Direction.SOUTH));
+                if (level.getBlockEntity(o) instanceof io.github.reiko45.galacticraft.block.entity.MachineBlockEntity machine) {
+                    machine.energy().setStored(machine.energy().getCapacityGJ() * 0.7F);
+                    // two iron ingots make compressed iron: it gets to work at once
+                    machine.inventory().setStackInSlot(3, new ItemStack(net.minecraft.world.item.Items.IRON_INGOT, 32));
+                    machine.inventory().setStackInSlot(4, new ItemStack(net.minecraft.world.item.Items.IRON_INGOT, 32));
+                }
+                lookFrom(p, level, net.minecraft.world.phys.Vec3.atCenterOf(o.offset(0, 1, 3)), net.minecraft.world.phys.Vec3.atCenterOf(o));
+            }));
+            this.extras.add((minecraft, srv) -> minecraft.gui.getChat().clearMessages(false)); // the advancements' chat lines
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "jade_machine"));
+        }
+        if (ModList.get().isLoaded("emi")) {
+            this.extras.add((minecraft, srv) -> io.github.reiko45.galacticraft.compat.emi.EmiTour.showCompressing());
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "emi_compressing"));
+            this.extras.add((minecraft, srv) -> io.github.reiko45.galacticraft.compat.emi.EmiTour.showRefining());
+            this.extras.add((minecraft, srv) -> shoot(minecraft, "emi_refining"));
+            this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
+        }
     }
 
     /** Teleport the tour player to {@code from}, looking at {@code to}. */

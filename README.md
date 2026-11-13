@@ -4,7 +4,7 @@ An **unofficial** port of [Galacticraft Legacy](https://github.com/TeamGalacticr
 (the Minecraft 1.12.2 space mod by Team Galacticraft) to **Minecraft 1.21.1 / NeoForge 21.1**.
 It is not affiliated with or endorsed by Team Galacticraft.
 
-**Status: Phase 7g of 8 (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
+**Status: all 8 phases ported (alpha).** Build a Tier 1 Rocket, fuel it and fly to the Moon: you arrive in a Space Lander
 and need oxygen gear, sealed rooms or oxygen bubbles to survive there. Evolved mobs roam the Moon, and its dungeons hide
 the Skeleton Boss and a treasure chest with the Moon Buggy and Tier 2 Rocket schematics. A Tier 2 Rocket takes you on to
 Mars, where you bounce down in landing balloons onto red plains with huge glowing caverns and desh to mine, hatch a pet
@@ -162,7 +162,14 @@ machines, solar panels and oil processing work. See
   team, even those offline. Craft a Flag from steel poles and canvas, hold right-click for a second and let go to plant
   it: it flies your team's flag and waves in the wind (gently on Mars, not at all on the Moon). The Tier 3 Rocket's nose
   cone wears your team colour. As in 1.12.2, the server and global stats buttons say "Coming Soon".
-* **JEI** (optional): recipe categories for the Compressor, Circuit Fabricator and Refinery.
+* **Advancements**: 1.12.2's Galacticraft tab, 28 of them, from a Coal Generator through wafers, solar panels,
+  oil, oxygen gear and rockets to the Moon, its dungeon boss and the Moon Buggy, and building a space station.
+* **Sounds and music**: rockets roar from ignition to the edge of space, parachutes flap open, compressors clank, and
+  the space music plays in Galacticraft's worlds. Only one of 1.12.2's five tracks ships with the mod (see
+  [Music](#music)).
+* **JEI, EMI and Jade** (all optional): recipe pages for the Compressor, Circuit Fabricator and Refinery in JEI or
+  EMI (EMI also fills the Magnetic Crafting Table); Jade shows a machine's energy in gJ, its progress and status, and
+  who owns a Launch Controller or Laser Turret.
 * Recipes: 236 crafting recipes converted from 1.12.2 (including the planets module's), compressor and circuit fabricator recipes, smelting,
   blasting and stonecutting. Also loot tables, `c:` tags, and translations for all 25 languages that 1.12.2
   shipped.
@@ -375,6 +382,35 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![The whitelist: players and entity types](docs/screenshots/laser_turret_list.png) | ![The priority spinners: closest, lowest health, highest health](docs/screenshots/laser_turret_priority.png) |
 
+![The Galacticraft advancement tab](docs/screenshots/advancements.png)
+
+![Jade on a working Electric Compressor: status, energy in gJ and progress](docs/screenshots/jade_machine.png)
+
+| EMI: the Compressor | EMI: the Refinery |
+|---|---|
+| ![The Compressor's recipes in EMI](docs/screenshots/emi_compressing.png) | ![The Refinery's recipes in EMI](docs/screenshots/emi_refining.png) |
+
+### Music
+
+1.12.2 played five tracks in its worlds. Four of them (`mars_jc`, `mimas_jc`, `orbit_jc`, `spacerace_jc`) are not
+included, because their licence can't be confirmed (see [PORTING.md](PORTING.md)); `scary_ambience` is. If you have
+the right to use the others, a resource pack can add them to the space music, with the `.ogg` files in
+`assets/galacticraftcore/sounds/music/` and this `assets/galacticraftcore/sounds.json`:
+
+```json
+{
+  "music.space": {
+    "replace": false,
+    "sounds": [
+      {"name": "galacticraftcore:music/mars_jc", "stream": true},
+      {"name": "galacticraftcore:music/mimas_jc", "stream": true},
+      {"name": "galacticraftcore:music/orbit_jc", "stream": true},
+      {"name": "galacticraftcore:music/spacerace_jc", "stream": true}
+    ]
+  }
+}
+```
+
 ### Visiting the Moon, Mars, the asteroids and Venus
 
 Fly there in a rocket, or use a command (cheats on). Put on an Oxygen Mask, Oxygen Gear and a filled tank first
@@ -406,7 +442,9 @@ categories, shows the oxygen gear on the player, goes to the Moon for the oxygen
 a cave, the evolved mobs, a dungeon (placed where the structure set puts the first one, since the tour world has
 structures off), the Skeleton Boss and its treasure, the Moon Buggy and the NASA Workbench pages, then flies a rocket
 to the Moon. It saves screenshots to `run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
-`-PtourLastOnly=true` runs only the newest group of steps (now the Space Race), which is quicker while working on it.
+`-PtourLastOnly=true` runs only the newest group of steps (now the advancements, Jade and EMI), which is quicker while
+working on it. EMI and Jade are left out of dev runs unless asked for: add `-PwithEmi` and/or `-PwithJade` to any
+`run*` task.
 
 ## Porting tools
 
@@ -431,7 +469,7 @@ python3 tools/port_legacy_assets.py --legacy ../Galacticraft-Legacy
 | `src/main/java/.../network` | Packets |
 | `src/main/java/.../race`, `client/race` | Space Race teams, their packets, and the manager, designer and join screens |
 | `src/main/java/.../block/entity`, `menu`, `client/screen`, `client/render` | Machines, their menus, GUIs and block entity renderers |
-| `src/main/java/.../compat/jei` | Optional JEI plugin |
+| `src/main/java/.../compat/jei`, `emi`, `jade` | Optional JEI, EMI and Jade plugins |
 | `src/main/java/.../recipe` | Compressing and circuit fabricating recipe types |
 | `src/main/java/.../event` | Gravity and fall-damage handling |
 | `src/main/java/.../data` | Datagen providers |
@@ -444,7 +482,8 @@ python3 tools/port_legacy_assets.py --legacy ../Galacticraft-Legacy
 * This port: MIT, see [LICENSE](LICENSE).
 * Galacticraft Legacy, from which code, textures, translations and recipes are derived: MIT, © Team Galacticraft,
   see [LICENSE-GALACTICRAFT-LEGACY](LICENSE-GALACTICRAFT-LEGACY). Both license files are bundled in the jar.
-* Galacticraft was created by micdoodle8 and radfast with many contributors.
+* Galacticraft was created by micdoodle8 and radfast with many contributors. Its sounds and the `scary_ambience` track
+  come from the Legacy repository too; the four `*_jc` music tracks are left out (see [Music](#music)).
 
 Only the MIT-licensed Legacy repository is used as a source. The original `micdoodle8/Galacticraft` repository
 is under a different license that forbids ports (see PORTING.md).

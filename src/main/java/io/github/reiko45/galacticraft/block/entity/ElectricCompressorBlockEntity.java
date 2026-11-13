@@ -78,8 +78,14 @@ public class ElectricCompressorBlockEntity extends ProcessingMachineBlockEntity 
             }
         }
         if (this.level != null) {
-            this.level.playSound(null, this.worldPosition, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.3F,
-                    this.level.random.nextFloat() * 0.1F + 0.9F);
+            // 1.12.2: a high clink from the advanced one, a low anvil thud from the electric one (their pitches, 9.5 and
+            // -9.5, were cut to the sound engine's 2.0 and 0.5)
+            if (this.advanced) {
+                this.level.playSound(null, this.worldPosition, io.github.reiko45.galacticraft.registry.GCSounds.ADVANCED_COMPRESSOR.get(),
+                        SoundSource.BLOCKS, 0.23F, 2.0F);
+            } else {
+                this.level.playSound(null, this.worldPosition, SoundEvents.ANVIL_LAND, SoundSource.BLOCKS, 0.12F, 0.5F);
+            }
         }
     }
 

@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/create_space_station",
+  "criteria": {
+    "spin_thruster": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:spin_thruster"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.spin_thruster.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:spin_thruster"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.spin_thruster.title"
+    }
+  },
+  "requirements": [
+    [
+      "spin_thruster"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

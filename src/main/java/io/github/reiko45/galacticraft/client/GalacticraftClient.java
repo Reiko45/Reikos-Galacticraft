@@ -99,6 +99,7 @@ public final class GalacticraftClient {
                     sprites -> new io.github.reiko45.galacticraft.client.particle.TeleportParticle.Provider(sprites, true));
         });
         NeoForge.EVENT_BUS.addListener(VehicleControls::onClientTick);
+        NeoForge.EVENT_BUS.addListener(SpaceMusic::onSelectMusic);
         NeoForge.EVENT_BUS.addListener(SensorGlasses::onClientTick);
         NeoForge.EVENT_BUS.addListener(PlatformLift::onPlayerTick);
         NeoForge.EVENT_BUS.addListener(GalacticraftClient::orbitTick);

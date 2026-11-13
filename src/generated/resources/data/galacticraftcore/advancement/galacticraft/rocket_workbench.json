@@ -1,0 +1,33 @@
+{
+  "parent": "galacticraftcore:galacticraft/compressor",
+  "criteria": {
+    "rocket_workbench": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraftcore:nasa_workbench"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancements.galacticraftcore.rocket_workbench.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraftcore:nasa_workbench"
+    },
+    "title": {
+      "translate": "advancements.galacticraftcore.rocket_workbench.title"
+    }
+  },
+  "requirements": [
+    [
+      "rocket_workbench"
+    ]
+  ],
+  "sends_telemetry_event": true
+}
