@@ -229,6 +229,57 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
         return new Vec3(0.0D, -1.0D, 0.0D);
     }
 
+    // Client: glide to each position the server sends, as boats do, instead of jumping to it. A rocket only moves on
+    // the server; jumping a block or more each tick left it jerking about against its rider's smoothly moving camera.
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYRot = yRot;
+        this.lerpXRot = xRot;
+        this.lerpSteps = steps;
+    }
+
+    @Override
+    public double lerpTargetX() {
+        return this.lerpSteps > 0 ? this.lerpX : getX();
+    }
+
+    @Override
+    public double lerpTargetY() {
+        return this.lerpSteps > 0 ? this.lerpY : getY();
+    }
+
+    @Override
+    public double lerpTargetZ() {
+        return this.lerpSteps > 0 ? this.lerpZ : getZ();
+    }
+
+    @Override
+    public float lerpTargetYRot() {
+        return this.lerpSteps > 0 ? (float) this.lerpYRot : getYRot();
+    }
+
+    @Override
+    public float lerpTargetXRot() {
+        return this.lerpSteps > 0 ? (float) this.lerpXRot : getXRot();
+    }
+
+    private void tickLerp() {
+        if (this.lerpSteps > 0) {
+            lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.lerpYRot, this.lerpXRot);
+            this.lerpSteps--;
+        }
+    }
+
     /** In the landing phase: touched down on the pad (and handled it), so the tick stops here. */
     protected boolean tryLand() {
         return false;
@@ -244,6 +295,7 @@ public abstract class RocketEntity extends Entity implements Refuelable, CargoCa
             this.entityData.set(ROLL, this.entityData.get(ROLL) - 1);
         }
         if (this.level().isClientSide) {
+            tickLerp();
             io.github.reiko45.galacticraft.client.sound.RocketSound.ensure(this);
             if (RocketEffects.showsExhaust(this)) {
                 spawnFlames();

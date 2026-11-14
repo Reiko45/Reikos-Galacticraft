@@ -58,6 +58,122 @@ public final class DungeonTests {
         helper.succeed();
     }
 
+    /**
+     * 1.12.2 RoomSpawner: a spawner set into the floor of a dark dungeon room, as the dungeons place them, spawns its
+     * evolved mob while a player is near.
+     */
+    @GameTest(template = AIR, timeoutTicks = 400)
+    public static void dungeonSpawnersSpawnTheirMobs(GameTestHelper helper) {
+        for (BlockPos pos : BlockPos.betweenClosed(2, 1, 2, 10, 7, 10)) {
+            if (pos.getX() == 2 || pos.getX() == 10 || pos.getY() == 1 || pos.getY() == 7 || pos.getZ() == 2 || pos.getZ() == 10) {
+                helper.setBlock(pos, net.minecraft.world.level.block.Blocks.STONE);
+            }
+        }
+        final BlockPos spawnerPos = new BlockPos(6, 1, 6);
+        helper.setBlock(spawnerPos, net.minecraft.world.level.block.Blocks.SPAWNER);
+        final net.minecraft.world.level.block.entity.SpawnerBlockEntity spawner = helper.getBlockEntity(spawnerPos);
+        spawner.setEntityId(GCEntities.EVOLVED_ZOMBIE.get(), helper.getLevel().getRandom());
+        final ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        final net.minecraft.world.phys.Vec3 inside = helper.absoluteVec(new net.minecraft.world.phys.Vec3(4.5D, 2.0D, 4.5D));
+        player.teleportTo(inside.x, inside.y, inside.z);
+        helper.onEachTick(() -> {
+            if (player.isAlive() && player.distanceToSqr(inside) > 4.0D) {
+                player.teleportTo(inside.x, inside.y, inside.z);
+            }
+        });
+        helper.succeedWhen(() -> {
+            helper.assertEntityPresent(GCEntities.EVOLVED_ZOMBIE.get());
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        });
+    }
+
+    /**
+     * The Moon's spawner room as the dungeon builds it: its spawners hold evolved mobs and spawn them for a player inside,
+     * in the dim light of the dungeon's unlit torches (1.12.2's light rule for spawners, see SpawnerLightEvents).
+     */
+    @GameTest(template = AIR, timeoutTicks = 400)
+    public static void moonSpawnerRoomSpawnsMobs(GameTestHelper helper) {
+        spawnerRoom(helper, DungeonConfig.MOON);
+    }
+
+    /** Venus's spawner room (1.12.2 RoomSpawnerVenus) likewise. */
+    @GameTest(template = AIR, timeoutTicks = 400)
+    public static void venusSpawnerRoomSpawnsMobs(GameTestHelper helper) {
+        spawnerRoom(helper, DungeonConfig.VENUS);
+    }
+
+    private static void spawnerRoom(GameTestHelper helper, DungeonConfig config) {
+        final BlockPos origin = helper.absolutePos(new BlockPos(1, 1, 1));
+        final int size = 9;
+        final BoundingBox box = new BoundingBox(origin.getX(), origin.getY(), origin.getZ(), origin.getX() + size, origin.getY() + config.hallHeight(),
+                origin.getZ() + size);
+        final DungeonPiece room = new DungeonPiece(config, new Dungeon.Node(DungeonPiece.Kind.SPAWNER, box, net.minecraft.core.Direction.NORTH, size,
+                config.hallHeight(), size), 0, null);
+        room.postProcess(helper.getLevel(), helper.getLevel().structureManager(), helper.getLevel().getChunkSource().getGenerator(),
+                RandomSource.create(3L), box.inflatedBy(1), helper.getLevel().getChunkAt(origin).getPos(), origin);
+        // Underground: rock under the floor (the spawners let light through) and the doorway leading on into the dark,
+        // not out into this test's daylight
+        for (int x = 0; x <= size; x++) {
+            for (int z = 0; z <= size; z++) {
+                helper.getLevel().setBlockAndUpdate(origin.offset(x, -1, z), net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+            }
+        }
+        for (int x = 0; x <= size; x++) {
+            for (int y = 0; y <= config.hallHeight(); y++) {
+                final BlockPos door = origin.offset(x, y, size);
+                if (helper.getLevel().getBlockState(door).isAir()) {
+                    helper.getLevel().setBlockAndUpdate(door, net.minecraft.world.level.block.Blocks.STONE.defaultBlockState());
+                }
+            }
+        }
+        // The glow of the corridors' unlit torches (light 3, as in 1.12.2) over every spot the spawners use: light blocks,
+        // as here in the Overworld a space torch would turn back into a burning torch
+        final net.minecraft.world.level.block.state.BlockState unlit = net.minecraft.world.level.block.Blocks.LIGHT.defaultBlockState()
+                .setValue(net.minecraft.world.level.block.LightBlock.LEVEL, 3);
+        for (int x = 2; x < size; x += 3) {
+            for (int z = 2; z < size; z += 3) {
+                helper.getLevel().setBlockAndUpdate(origin.offset(x, 1, z), unlit);
+            }
+        }
+        final net.minecraft.world.level.block.entity.SpawnerBlockEntity spawner =
+                (net.minecraft.world.level.block.entity.SpawnerBlockEntity) helper.getLevel().getBlockEntity(origin.offset(1, 0, 1));
+        helper.assertTrue(spawner != null, config + ": a spawner in the corner of the floor");
+        final net.minecraft.world.entity.Entity shown = spawner.getSpawner().getOrCreateDisplayEntity(helper.getLevel(), origin.offset(1, 0, 1));
+        helper.assertTrue(shown != null && shown.getType().is(io.github.reiko45.galacticraft.registry.GCModTags.BREATHES_IN_SPACE),
+                config + ": it holds an evolved mob, not " + (shown == null ? "nothing" : shown.getType()));
+        final ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        final net.minecraft.world.phys.Vec3 inside = net.minecraft.world.phys.Vec3.atBottomCenterOf(origin.offset(size / 2, 1, size / 2));
+        player.teleportTo(inside.x, inside.y, inside.z);
+        helper.onEachTick(() -> {
+            if (player.isAlive() && player.distanceToSqr(inside) > 4.0D) {
+                player.teleportTo(inside.x, inside.y, inside.z);
+            }
+        });
+        // once the light has settled in the closed room
+        final boolean[] lightChecked = {false};
+        helper.runAfterDelay(20, () -> {
+            final BlockPos lit = origin.offset(2, 1, 3);
+            helper.assertTrue(helper.getLevel().getBrightness(net.minecraft.world.level.LightLayer.BLOCK, lit) > 0, "torchlight in the room");
+            helper.assertValueEqual(helper.getLevel().getBrightness(net.minecraft.world.level.LightLayer.SKY, lit), 0, "no daylight in the room");
+            helper.assertFalse(net.minecraft.world.entity.monster.Monster.checkMonsterSpawnRules(GCEntities.EVOLVED_ZOMBIE.get(), helper.getLevel(),
+                    net.minecraft.world.entity.MobSpawnType.SPAWNER, lit, RandomSource.create(5L)), "1.21's own rule allows no torchlight");
+            int allowed = 0;
+            for (int i = 0; i < 200; i++) {
+                allowed += net.minecraft.world.entity.SpawnPlacements.checkSpawnRules(GCEntities.EVOLVED_ZOMBIE.get(), helper.getLevel(),
+                        net.minecraft.world.entity.MobSpawnType.SPAWNER, lit, RandomSource.create(i)) ? 1 : 0;
+            }
+            helper.assertTrue(allowed > 50 && allowed < 200, "1.12.2's rule lets a spawner work in light 2 most of the time: " + allowed + "/200");
+            lightChecked[0] = true;
+        });
+        final AABB roomBounds = AABB.of(box);
+        helper.succeedWhen(() -> {
+            helper.assertTrue(lightChecked[0], "light not checked yet");
+            helper.assertTrue(!helper.getLevel().getEntitiesOfClass(net.minecraft.world.entity.monster.Monster.class, roomBounds).isEmpty(),
+                    config + ": nothing spawned in the room yet");
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        });
+    }
+
     private static void check(GameTestHelper helper, EntityType<? extends Mob> type, float health) {
         final LivingEntity mob = helper.spawn(type, 6, 2, 6);
         helper.assertTrue(mob.getMaxHealth() == health, type.getDescriptionId() + " max health " + mob.getMaxHealth() + ", expected " + health);

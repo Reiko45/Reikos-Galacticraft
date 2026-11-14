@@ -116,6 +116,7 @@ public class LanderEntity extends Entity {
         super.tick();
         this.ticks++;
         if (this.level().isClientSide) {
+            tickLerp();
             if (this.ticks > 40 && inAir() && hasThrusters()) {
                 RocketEffects.spawnLanderFlames(this);
             }
@@ -129,6 +130,57 @@ public class LanderEntity extends Entity {
         }
         fillCanister();
         fly();
+    }
+
+    // Client: glide to each position the server sends, as boats do, instead of jumping to it. A lander only moves on
+    // the server; jumping to each new position left it jerking about against its rider's smoothly moving camera.
+    private int lerpSteps;
+    private double lerpX;
+    private double lerpY;
+    private double lerpZ;
+    private double lerpYRot;
+    private double lerpXRot;
+
+    @Override
+    public void lerpTo(double x, double y, double z, float yRot, float xRot, int steps) {
+        this.lerpX = x;
+        this.lerpY = y;
+        this.lerpZ = z;
+        this.lerpYRot = yRot;
+        this.lerpXRot = xRot;
+        this.lerpSteps = steps;
+    }
+
+    @Override
+    public double lerpTargetX() {
+        return this.lerpSteps > 0 ? this.lerpX : getX();
+    }
+
+    @Override
+    public double lerpTargetY() {
+        return this.lerpSteps > 0 ? this.lerpY : getY();
+    }
+
+    @Override
+    public double lerpTargetZ() {
+        return this.lerpSteps > 0 ? this.lerpZ : getZ();
+    }
+
+    @Override
+    public float lerpTargetYRot() {
+        return this.lerpSteps > 0 ? (float) this.lerpYRot : getYRot();
+    }
+
+    @Override
+    public float lerpTargetXRot() {
+        return this.lerpSteps > 0 ? (float) this.lerpXRot : getXRot();
+    }
+
+    private void tickLerp() {
+        if (this.lerpSteps > 0) {
+            lerpPositionAndRotationStep(this.lerpSteps, this.lerpX, this.lerpY, this.lerpZ, this.lerpYRot, this.lerpXRot);
+            this.lerpSteps--;
+        }
     }
 
     /** One server tick of flight (1.12.2 EntityLander#tickInAir and getMotionVec). */

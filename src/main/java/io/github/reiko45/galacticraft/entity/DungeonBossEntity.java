@@ -59,13 +59,45 @@ public abstract class DungeonBossEntity extends Monster {
         return this.spawnerPos != null && level().getBlockEntity(this.spawnerPos) instanceof DungeonSpawnerBlockEntity spawner ? spawner : null;
     }
 
+    /** Players this close see the boss's health bar. */
+    public static final double BAR_RANGE = 64.0D;
+
     @Override
     public void aiStep() {
         if (!level().isClientSide) {
             checkRoom();
             this.bossEvent.setProgress(getHealth() / getMaxHealth());
+            updateBossBar();
         }
         super.aiStep();
+    }
+
+    /**
+     * The bar is shown to the players in this world within 64 blocks, and taken away as soon as one leaves that, or this
+     * world (1.12.2 showed it to every player tracking the boss: at any height above its dungeon, as tracking only
+     * measures across the ground, and it could be left on the screen of a player gone to another world).
+     */
+    private void updateBossBar() {
+        final double range = BAR_RANGE * BAR_RANGE;
+        for (ServerPlayer player : new java.util.ArrayList<>(this.bossEvent.getPlayers())) {
+            if (player.isRemoved() || player.level() != level() || player.distanceToSqr(this) > range) {
+                this.bossEvent.removePlayer(player);
+            }
+        }
+        if (level() instanceof ServerLevel serverLevel) {
+            for (ServerPlayer player : serverLevel.players()) {
+                if (player.distanceToSqr(this) <= range) {
+                    this.bossEvent.addPlayer(player);
+                }
+            }
+        }
+    }
+
+    /** Killed, despawned or unloaded with its chunk: nobody sees its bar any more. */
+    @Override
+    public void onRemovedFromLevel() {
+        super.onRemovedFromLevel();
+        this.bossEvent.removeAllPlayers();
     }
 
     /** 1.12.2 EntityBossBase#onLivingUpdate: everyone left the room, so the boss goes. */
@@ -87,10 +119,9 @@ public abstract class DungeonBossEntity extends Monster {
         this.playersWithinLast = within;
     }
 
-    @Override
-    public void startSeenByPlayer(ServerPlayer player) {
-        super.startSeenByPlayer(player);
-        this.bossEvent.addPlayer(player);
+    /** The players shown this boss's health bar. */
+    public java.util.Collection<ServerPlayer> bossBarViewers() {
+        return this.bossEvent.getPlayers();
     }
 
     @Override

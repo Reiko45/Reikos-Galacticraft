@@ -1793,8 +1793,133 @@ public final class ScreenshotTour {
         addPlayerDetailSteps();
         addOverworldPictureSteps();
         addExhaustSteps();
-        this.lastGroup = this.extras.size();
         addSealableBuildCraftPipeSteps();
+        this.lastGroup = this.extras.size();
+        addItemIconSteps();
+        addRocketRideSteps();
+    }
+
+    /**
+     * Riding a Tier 1 Rocket up from its pad, seen from the vehicle camera: the rocket stays drawn all the way up and
+     * moves smoothly with its rider, and its engine is heard (the tour log says whether the sound is playing at the
+     * listener at full volume).
+     */
+    private void addRocketRideSteps() {
+        final io.github.reiko45.galacticraft.entity.RocketEntity[] ride = {null};
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            srv.execute(() -> {
+                final ServerPlayer p = tourPlayer(srv);
+                p.closeContainer();
+                final ServerLevel level = srv.overworld();
+                level.setDayTime(6000L);
+                final BlockPos corner = new BlockPos(1040, 0, 300);
+                final BlockPos o = corner.atY(surface(level, corner.getX(), corner.getZ()));
+                for (int dx = -1; dx <= 1; dx++) {
+                    for (int dz = -1; dz <= 1; dz++) {
+                        level.setBlockAndUpdate(o.offset(dx, 0, dz), GCBlocks.LANDING_PAD.get().defaultBlockState());
+                    }
+                }
+                final Tier1RocketEntity rocket = Tier1RocketEntity.create(level, o.getX() + 0.5D, o.getY() + 0.4D, o.getZ() + 0.5D, 0,
+                        Tier1RocketEntity.FUEL_CAPACITY);
+                level.addFreshEntity(rocket);
+                p.teleportTo(level, o.getX() + 0.5D, o.getY() + 1.0D, o.getZ() + 0.5D, 200.0F, 20.0F);
+                p.startRiding(rocket, true);
+                rocket.ignite();
+                ride[0] = rocket;
+            });
+        });
+        // the countdown: 400 ticks
+        for (int i = 0; i < 14; i++) {
+            this.extras.add((minecraft, srv) -> {
+            });
+        }
+        this.extras.add((minecraft, srv) -> {
+            final boolean heard = minecraft.player.getVehicle() instanceof io.github.reiko45.galacticraft.entity.RocketEntity rocket
+                    && io.github.reiko45.galacticraft.client.sound.RocketSound.audible(rocket);
+            GalacticraftCore.LOGGER.info("Screenshot tour: rocket engine heard while riding: {}", heard);
+        });
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> {
+            GalacticraftCore.LOGGER.info("Screenshot tour: riding the rocket at y {}", Math.round(minecraft.player.getY()));
+            shoot(minecraft, "rocket_ride_climb");
+        });
+        for (int i = 0; i < 3; i++) {
+            this.extras.add((minecraft, srv) -> {
+            });
+        }
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> {
+            final boolean heard = minecraft.player.getVehicle() instanceof io.github.reiko45.galacticraft.entity.RocketEntity rocket
+                    && io.github.reiko45.galacticraft.client.sound.RocketSound.audible(rocket);
+            GalacticraftCore.LOGGER.info("Screenshot tour: riding the rocket at y {}, engine heard: {}", Math.round(minecraft.player.getY()), heard);
+            shoot(minecraft, "rocket_ride_high");
+        });
+        this.extras.add((minecraft, srv) -> {
+            minecraft.options.setCameraType(CameraType.FIRST_PERSON);
+            srv.execute(() -> {
+                tourPlayer(srv).stopRiding();
+                if (ride[0] != null) {
+                    ride[0].discard();
+                }
+            });
+        });
+    }
+
+    /**
+     * Every item drawn with a 3D model, in the slots of a chest beside ordinary items: rockets of each tier, the cargo
+     * rocket, buggies, the Astro Miner, the grapple, the flag, the beam receiver and reflector, the telepad, the NASA
+     * Workbench, the laser turret and the treasure chests, each inside its slot as in 1.12.2.
+     */
+    private void addItemIconSteps() {
+        this.extras.add((minecraft, srv) -> {
+            minecraft.setScreen(null);
+            final net.minecraft.world.SimpleContainer box = new net.minecraft.world.SimpleContainer(54);
+            final java.util.List<ItemStack> stacks = new java.util.ArrayList<>();
+            for (io.github.reiko45.galacticraft.item.RocketItem rocket : java.util.List.of(GCItems.TIER_1_ROCKET.get(), GCItems.TIER_2_ROCKET.get(),
+                    GCItems.TIER_3_ROCKET.get(), GCItems.CARGO_ROCKET.get())) {
+                stacks.add(rocket.stack(0, 0));
+                stacks.add(rocket.stack(3, 0));
+            }
+            stacks.add(new ItemStack(GCItems.TIN_INGOT.get()));
+            stacks.add(io.github.reiko45.galacticraft.item.BuggyItem.create(0, 0));
+            stacks.add(io.github.reiko45.galacticraft.item.BuggyItem.create(3, 0));
+            stacks.add(new ItemStack(GCItems.ASTRO_MINER.get()));
+            stacks.add(new ItemStack(GCItems.GRAPPLE.get()));
+            stacks.add(new ItemStack(GCItems.FLAG.get()));
+            stacks.add(new ItemStack(GCBlocks.BEAM_RECEIVER.get()));
+            stacks.add(new ItemStack(GCBlocks.BEAM_REFLECTOR.get()));
+            stacks.add(new ItemStack(GCBlocks.SHORT_RANGE_TELEPAD.get()));
+            stacks.add(new ItemStack(GCItems.CANNED_BEEF.get()));
+            stacks.add(new ItemStack(GCBlocks.NASA_WORKBENCH.get()));
+            stacks.add(new ItemStack(GCBlocks.LASER_TURRET.get()));
+            stacks.add(new ItemStack(GCBlocks.ARC_LAMP.get()));
+            stacks.add(new ItemStack(GCBlocks.TREASURE_CHEST_TIER_1.get()));
+            stacks.add(new ItemStack(GCBlocks.TREASURE_CHEST_TIER_2.get()));
+            stacks.add(new ItemStack(GCBlocks.TREASURE_CHEST_TIER_3.get()));
+            stacks.add(new ItemStack(GCItems.OXYGEN_MASK.get()));
+            stacks.add(new ItemStack(GCItems.DESH_INGOT.get()));
+            for (int i = 0; i < stacks.size(); i++) {
+                box.setItem(i, stacks.get(i));
+            }
+            // the rockets again, among ordinary items, as in a creative tab
+            final ItemStack[] row = {new ItemStack(GCItems.CANNED_BEEF.get()), GCItems.TIER_1_ROCKET.get().stack(0, 0), new ItemStack(GCItems.TIN_INGOT.get()),
+                    GCItems.TIER_2_ROCKET.get().stack(0, 0), new ItemStack(GCItems.DESH_INGOT.get()), GCItems.TIER_3_ROCKET.get().stack(0, 0),
+                    new ItemStack(GCItems.OXYGEN_MASK.get()), GCItems.CARGO_ROCKET.get().stack(0, 0), new ItemStack(GCItems.CANNED_BEEF.get())};
+            for (int i = 0; i < row.length; i++) {
+                box.setItem(36 + i, row[i]);
+                box.setItem(45 + i, i % 2 == 0 ? row[i] : new ItemStack(GCItems.TIN_INGOT.get()));
+            }
+            box.setItem(49, ItemStack.EMPTY); // under the pointer, in the middle of the screen: no tooltip over the rest
+            minecraft.setScreen(new net.minecraft.client.gui.screens.inventory.ContainerScreen(
+                    net.minecraft.world.inventory.ChestMenu.sixRows(0, minecraft.player.getInventory(), box), minecraft.player.getInventory(),
+                    net.minecraft.network.chat.Component.literal("3D items")));
+        });
+        this.extras.add((minecraft, srv) -> {
+        });
+        this.extras.add(ScreenshotTour::tidy);
+        this.extras.add((minecraft, srv) -> shoot(minecraft, "item_icons"));
+        this.extras.add((minecraft, srv) -> minecraft.setScreen(null));
     }
 
     /**

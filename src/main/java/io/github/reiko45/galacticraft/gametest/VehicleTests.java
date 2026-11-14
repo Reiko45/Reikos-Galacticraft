@@ -163,4 +163,45 @@ public final class VehicleTests {
         helper.assertTrue(player.getMainHandItem().isEmpty(), "item used up");
         helper.succeed();
     }
+
+    /**
+     * 1.12.2 EntityLander#pressKey: Jump brakes the falling lander to 1 block a tick (0.15 below y 90); let go, gravity
+     * (0.008 a tick each tick) speeds it up again; Sneak dives, to at least 1 block a tick.
+     */
+    @GameTest(template = AIR, timeoutTicks = 200)
+    public static void landerBrakesAndSpeedsUpAgain(GameTestHelper helper) {
+        final net.minecraft.world.phys.Vec3 above = helper.absoluteVec(new net.minecraft.world.phys.Vec3(6.5D, 0.0D, 6.5D));
+        final io.github.reiko45.galacticraft.entity.LanderEntity lander = io.github.reiko45.galacticraft.entity.LanderEntity.create(helper.getLevel(),
+                above.x, 280.0D, above.z, net.minecraft.core.NonNullList.create(), 0);
+        helper.getLevel().addFreshEntity(lander);
+        final net.minecraft.server.level.ServerPlayer player = helper.makeMockServerPlayerInLevel();
+        player.teleportTo(above.x, 282.0D, above.z);
+        player.startRiding(lander, true);
+        lander.setKeys(io.github.reiko45.galacticraft.entity.LanderEntity.KEY_SLOW);
+        final double[] released = {Double.NaN};
+        final int[] at = {0};
+        helper.succeedWhen(() -> {
+            final double speed = lander.getDeltaMovement().y;
+            if (Double.isNaN(released[0])) {
+                // braking: from the 2.5 blocks a tick plunge down to the 1 block a tick it holds above y 90
+                helper.assertTrue(lander.getY() < 270.0D && Math.abs(speed + 1.0D) < 1.0E-6, "braked to 1 block a tick: " + speed);
+                lander.setKeys(0);
+                released[0] = speed;
+                at[0] = lander.tickCount;
+                throw new net.minecraft.gametest.framework.GameTestAssertException("released");
+            }
+            final int ticks = lander.tickCount - at[0];
+            if (ticks < 20) {
+                throw new net.minecraft.gametest.framework.GameTestAssertException("falling freely");
+            }
+            helper.assertTrue(speed < released[0] - 0.008D * (ticks - 2), "speeds up again once let go: " + released[0] + " then " + speed);
+            lander.setKeys(io.github.reiko45.galacticraft.entity.LanderEntity.KEY_FAST);
+            lander.tick();
+            helper.assertTrue(lander.getDeltaMovement().y <= -1.0D && lander.getDeltaMovement().y < speed,
+                    "Sneak dives: " + lander.getDeltaMovement().y);
+            player.stopRiding();
+            lander.discard();
+            helper.getLevel().getServer().getPlayerList().remove(player);
+        });
+    }
 }

@@ -37,13 +37,6 @@
         0
       ]
     },
-    "gui": {
-      "rotation": [
-        20,
-        -45,
-        0
-      ]
-    },
     "thirdperson_lefthand": {
       "scale": [
         0.5,

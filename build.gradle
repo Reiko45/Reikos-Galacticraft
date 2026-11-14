@@ -79,6 +79,11 @@ neoForge {
             // -PtourLastOnly=true: only the newest group of steps (quicker while working on it)
             systemProperty 'galacticraftcore.screenshotTour.lastOnly', project.findProperty('tourLastOnly') ?: 'false'
             programArguments.addAll '--width', '1280', '--height', '720'
+            // -PtourNullAudio=true: OpenAL's silent "null" output, for machines without a sound device (sounds still play,
+            // unheard, so the tour can check them)
+            if (project.findProperty('tourNullAudio') == 'true') {
+                environment.put('ALSOFT_DRIVERS', 'null')
+            }
         }
 
         // Runs every registered GameTest and exits; used in CI. It gets its own directory, and a fresh world each run (see

@@ -379,6 +379,10 @@ machines, solar panels and oil processing work. See
 |---|---|
 | ![A Space Lander falling on its blue-white flame](docs/screenshots/lander_flame.png) | ![Cold mist spilling down the sides of a working Gas Liquefier](docs/screenshots/liquefier_mist.png) |
 
+| Riding a rocket up (the vehicle camera) | 3D items in their slots |
+|---|---|
+| ![A Tier 1 Rocket climbing on its exhaust, seen from behind as its rider sees it](docs/screenshots/rocket_ride_climb.png) | ![Rockets of every tier lying across their slots, buggies, the Astro Miner, grapple, flag, beam receiver and reflector, telepad and treasure chests, each inside its slot](docs/screenshots/item_icons.png) |
+
 ![The six sealable BuildCraft pipes along the top of a tin wall, each joined from above by BuildCraft Reborn's own stone or cobblestone transport, fluid or kinesis pipe](docs/screenshots/sealable_buildcraft_pipes.png)
 
 | The settings screen | Its server page |
@@ -519,9 +523,10 @@ solar panels, an oil processing line and the oxygen machines, opens each GUI, th
 categories, shows the oxygen gear on the player, goes to the Moon for the oxygen HUD, footprints, meteors, the sky,
 a cave, the evolved mobs, a dungeon (placed where the structure set puts the first one, since the tour world has
 structures off), the Skeleton Boss and its treasure, the Moon Buggy and the NASA Workbench pages, then flies a rocket
-to the Moon. It saves screenshots to `run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display.)
-`-PtourLastOnly=true` runs only the newest group of steps (now the advancements, Jade and EMI), which is quicker while
-working on it. EMI and Jade are left out of dev runs unless asked for: add `-PwithEmi` and/or `-PwithJade` to any
+to the Moon. It saves screenshots to `run/screenshots/` and quits. (Run it under `xvfb-run` on a machine without a display,
+and with `-PtourNullAudio=true` on one without a sound device, so that sounds still play, silently, and can be checked.)
+`-PtourLastOnly=true` runs only the newest group of steps (now the 3D items in their slots and a ride up in a rocket),
+which is quicker while working on it. EMI and Jade are left out of dev runs unless asked for: add `-PwithEmi` and/or `-PwithJade` to any
 `run*` task.
 
 ## Porting tools

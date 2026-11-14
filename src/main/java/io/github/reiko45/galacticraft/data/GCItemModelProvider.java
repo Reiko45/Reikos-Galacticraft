@@ -103,7 +103,8 @@ public class GCItemModelProvider extends ItemModelProvider {
         getBuilder(name).customLoader(net.neoforged.neoforge.client.model.generators.loaders.ObjModelBuilder::begin)
                 .modelLocation(modLoc("models/item/grapple.obj")).flipV(true).end()
                 .texture("particle", modLoc("model/grapple")).transforms()
-                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 135, 0).translation(1.0F, 1.0F, 0.0F).scale(0.7F).end()
+                // centred: the OBJ's middle (-0.29, 0, -0.13) brought to the slot's
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 135, 0).translation(-1.29F, 10.44F, -6.89F).scale(0.7F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0.0F, 3.0F, 0.0F).scale(0.35F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 90, 0).translation(1.0F, 1.0F, 0.0F).scale(0.6F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(0, 90, 0).translation(0.0F, 3.0F, 1.0F).scale(0.45F).end()
@@ -148,7 +149,8 @@ public class GCItemModelProvider extends ItemModelProvider {
             }
             loader.end();
             model.texture("particle", modLoc("model/buggy_main")).transforms()
-                    .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 208, 0).translation(0, -1.5F, 0).scale(0.11F).end()
+                    // centred in the slot (the OBJ's middle brought to the slot's)
+                    .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 208, 0).translation(-0.72F, -3.66F, -1.5F).scale(0.11F).end()
                     .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.08F).end()
                     .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).rotation(0, 180, 0).translation(0, -1.5F, 0).scale(0.12F).end()
                     .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2.5F, 0).scale(0.09F).end()
@@ -165,11 +167,11 @@ public class GCItemModelProvider extends ItemModelProvider {
         }
     }
 
-    /** Drawn by RocketItemRenderer with the rocket's entity model. */
+    /** Drawn by RocketItemRenderer with the rocket's entity model (which lays it across the slot itself in the GUI). */
     private void rocket(String name) {
         getBuilder(name).parent(new ModelFile.UncheckedModelFile("builtin/entity")).guiLight(net.minecraft.client.renderer.block.model.BlockModel.GuiLight.FRONT)
                 .transforms()
-                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(20, -45, 0).end()
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.5F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).translation(0, 2, 1).scale(0.5F).end()

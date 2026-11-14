@@ -800,7 +800,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
                     .texture("particle", tex(beam[0][0]));
             if (beam[0][0].equals("beam_reflector")) {
                 item.transforms()
-                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -4, 0).scale(0.45F).end()
+                        // centred in the slot (the OBJ's middle brought to the slot's)
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(-5.09F, -1.23F, -0.71F).scale(0.45F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 0, 0).scale(0.25F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(0, -4, 0).scale(0.45F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 0, 0).scale(0.25F).end()
@@ -810,7 +811,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
                         .end();
             } else {
                 item.transforms()
-                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(4, -2, 0).scale(0.6F).end()
+                        // centred in the slot (the OBJ's middle brought to the slot's)
+                        .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(-4.66F, -0.92F, -2.99F).scale(0.6F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 2, 0).scale(0.4F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(4, -2, 0).scale(0.6F).end()
                         .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 2, 0).scale(0.375F).end()
@@ -835,7 +837,8 @@ public class GCBlockStateProvider extends BlockStateProvider {
         itemModels().getBuilder("short_range_telepad").customLoader(ObjModelBuilder::begin)
                 .modelLocation(modLoc("models/block/telepad_short.obj")).flipV(true).end()
                 .texture("particle", tex("telepad_short")).transforms()
-                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(0, -3, 0).scale(0.2F).end()
+                // centred in the slot (the OBJ's middle brought to the slot's)
+                .transform(net.minecraft.world.item.ItemDisplayContext.GUI).rotation(30, 225, 0).translation(-2.26F, -3.73F, -2.15F).scale(0.2F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.GROUND).translation(0, 1, 0).scale(0.12F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.FIXED).translation(0, -3, 0).scale(0.2F).end()
                 .transform(net.minecraft.world.item.ItemDisplayContext.THIRD_PERSON_RIGHT_HAND).rotation(75, 45, 0).translation(0, 1, 0).scale(0.12F).end()

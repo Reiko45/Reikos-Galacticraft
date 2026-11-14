@@ -537,6 +537,24 @@ Optional: everything below only switches on with [BuildCraft Reborn](https://git
       without a recipe only because BuildCraft 8 had no kinesis pipes yet); they break into themselves and drop what the
       pipe carried, and are only listed (creative tab, JEI, EMI) with BuildCraft Reborn installed
 
+### Playtest fixes (after 0.1.0-alpha)
+Found playing the first jar:
+- [x] Rocket engine heard while riding: the sound stays in the world, kept at the camera while riding (1.21 fixes a
+      sound's attenuation and whether it follows the listener when it starts, so switching to "follow the listener" on
+      boarding left it playing at 0, 0, 0); heard within 96 blocks of a rocket on its pad; started again if the sound
+      engine drops it
+- [x] Rockets and landers fly smoothly and stay drawn: the client glides them to each position the server sends (as
+      boats do) instead of jumping, and draws them in parts of the sky whose blocks aren't ready for drawing yet (1.21
+      skips entities there, so a rocket vanished on the way up below the build height)
+- [x] Dungeon spawners spawn: evolved mobs from spawners use 1.12.2's light rule (up to light 7, less often the
+      brighter), as the dungeons' unlit space torches still give light 3 and 1.21 allows monsters no block light at all
+- [x] Boss bars: shown to players within 64 blocks in the boss's world, and taken away on leaving it, the world, or
+      when the boss goes (1.12.2 showed them to every player tracking the boss, at any height above its dungeon)
+- [x] 3D items fit their slots: rocket items lie across the slot at 45 degrees, sized to it (1.12.2 ItemModelRocket),
+      and the grapple, beam receiver and reflector, telepad and buggy are centred
+- [x] The lander checked against 1.12.2: Jump brakes to 1 block a tick (0.15 below y 90); let go, gravity adds 0.008
+      a tick each tick, so it speeds up only slowly; Sneak dives. The Venus Entry Pod has no controls (it brakes itself)
+
 ## Settings
 
 Three files, all editable from the mod list's settings screen; their names come from 1.12.2's own `gc.configgui`
@@ -930,6 +948,8 @@ What they do, where 1.12.2 needed more than a number:
   pipes get exactly what a machine can take that tick (1.12.2 told BuildCraft 30 times that, because BuildCraft 7 sent
   only a trickle). Use BuildCraft Reborn 2.1.1 or later for the GameTests: 2.1.0 sent its `volume_boxes` payload to
   every player joining a level, and the GameTests' mock players have no channel for it.
+* The screenshot tour can run where there is no sound device: `-PtourNullAudio=true` gives OpenAL its silent "null"
+  output, so sounds still play (unheard) and the tour checks the rocket's engine is playing at the rider.
 * The sealable BuildCraft pipes hold BuildCraft Reborn's own pipe holder block entity, as 1.12.2's held BuildCraft's
   pipe tile, so they connect to whatever the bare pipe would. They join that block entity type during NeoForge's
   BlockEntityTypeAddBlocksEvent, before capabilities are given out, through a mixin accessor: the event itself only

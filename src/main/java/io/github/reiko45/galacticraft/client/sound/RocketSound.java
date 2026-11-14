@@ -6,28 +6,35 @@ package io.github.reiko45.galacticraft.client.sound;
 
 import io.github.reiko45.galacticraft.entity.RocketEntity;
 import io.github.reiko45.galacticraft.registry.GCSounds;
-import java.util.Collections;
-import java.util.Set;
+import java.util.Map;
 import java.util.WeakHashMap;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.phys.Vec3;
 
 /**
  * 1.12.2 SoundUpdaterRocket: the engine's roar, silent until the rocket is ignited, its pitch rising through the
  * countdown, fading out between y 200 and 1000 and stopping above that (unless landing). 1.12.2 played it at full volume
- * wherever the rocket was; here it is heard within 96 blocks of the rocket, and at full volume only while riding it.
+ * wherever the rocket was; here it is heard within 96 blocks of the rocket (sounds.json), and at full volume while
+ * riding it: then it is kept where the camera is.
+ * <p>
+ * Minecraft fixes a sound's attenuation and whether it is placed relative to the listener when it starts playing, so
+ * the sound always stays in world coordinates and only its position moves.
  */
 public class RocketSound extends AbstractTickableSoundInstance {
-    private static final Set<RocketEntity> PLAYING = Collections.newSetFromMap(new WeakHashMap<>());
+    /** Each rocket's sound, while it should be playing. */
+    private static final Map<RocketEntity, RocketSound> PLAYING = new WeakHashMap<>();
     /** 1.12.2 Constants.OVERWORLD_SKYPROVIDER_STARTHEIGHT. */
     private static final double FADE_START = 200.0D;
     private static final double FADE_END = 1000.0D;
 
     private final RocketEntity rocket;
     private boolean ignition;
+    /** Stopped for good (out of the atmosphere): not started again for this rocket. */
+    private boolean finished;
+    private int startedAt;
 
     private RocketSound(RocketEntity rocket) {
         super(GCSounds.ROCKET.get(), SoundSource.NEUTRAL, RandomSource.create());
@@ -36,35 +43,55 @@ public class RocketSound extends AbstractTickableSoundInstance {
         this.pitch = 0.0F;
         this.looping = true;
         this.delay = 0;
+        this.startedAt = rocket.tickCount;
         follow();
     }
 
-    /** Start the sound for a rocket that has none yet (1.12.2 TickHandlerClient, for every noisy entity). */
+    /**
+     * Start the sound for a rocket that has none (1.12.2 TickHandlerClient, for every noisy entity), or start it again if
+     * the sound engine dropped it (a reload, too many sounds at once); at most once a second.
+     */
     public static void ensure(RocketEntity rocket) {
-        if (!PLAYING.contains(rocket)) {
-            PLAYING.add(rocket);
-            Minecraft.getInstance().getSoundManager().play(new RocketSound(rocket));
+        final RocketSound sound = PLAYING.get(rocket);
+        if (sound != null && (sound.finished || Minecraft.getInstance().getSoundManager().isActive(sound)
+                || rocket.tickCount - sound.startedAt < 20)) {
+            return;
         }
+        final RocketSound fresh = new RocketSound(rocket);
+        if (sound != null) {
+            fresh.ignition = sound.ignition;
+            fresh.pitch = sound.pitch;
+        }
+        PLAYING.put(rocket, fresh);
+        Minecraft.getInstance().getSoundManager().play(fresh);
     }
 
-    private void follow() {
-        this.x = this.rocket.getX();
-        this.y = this.rocket.getY();
-        this.z = this.rocket.getZ();
-        final boolean riding = Minecraft.getInstance().player != null && Minecraft.getInstance().player.getVehicle() == this.rocket;
-        this.attenuation = riding ? SoundInstance.Attenuation.NONE : SoundInstance.Attenuation.LINEAR;
-        this.relative = riding;
-        if (riding) {
-            this.x = 0.0D;
-            this.y = 0.0D;
-            this.z = 0.0D;
+    /**
+     * Whether the rocket is being heard at full volume where the camera is (for the screenshot tour's check): playing,
+     * loud, placed in the world (not relative to the listener) and no more than a tick's flight from the camera.
+     */
+    public static boolean audible(RocketEntity rocket) {
+        final RocketSound sound = PLAYING.get(rocket);
+        if (sound == null || sound.finished || sound.volume < 0.5F || sound.isRelative() || !Minecraft.getInstance().getSoundManager().isActive(sound)) {
+            return false;
         }
+        return Minecraft.getInstance().gameRenderer.getMainCamera().getPosition().distanceToSqr(sound.getX(), sound.getY(), sound.getZ()) < 36.0D;
+    }
+
+    /** At the rocket, or at the camera while riding it, so the rider hears it at full volume. */
+    private void follow() {
+        final Minecraft minecraft = Minecraft.getInstance();
+        final Vec3 at = minecraft.player != null && minecraft.player.getVehicle() == this.rocket
+                ? minecraft.gameRenderer.getMainCamera().getPosition() : this.rocket.position();
+        this.x = at.x;
+        this.y = at.y;
+        this.z = at.z;
     }
 
     @Override
     public void tick() {
         if (this.rocket.isRemoved()) {
-            PLAYING.remove(this.rocket);
+            this.finished = true;
             stop();
             return;
         }
@@ -85,7 +112,8 @@ public class RocketSound extends AbstractTickableSoundInstance {
             if (height > FADE_END) {
                 this.volume = 0.0F;
                 if (phase != RocketEntity.Phase.LANDING) {
-                    stop(); // and not started again: it stays in PLAYING until the rocket is gone
+                    this.finished = true;
+                    stop();
                     return;
                 }
             } else if (height > FADE_START) {
