@@ -537,7 +537,7 @@ Optional: everything below only switches on with [BuildCraft Reborn](https://git
       without a recipe only because BuildCraft 8 had no kinesis pipes yet); they break into themselves and drop what the
       pipe carried, and are only listed (creative tab, JEI, EMI) with BuildCraft Reborn installed
 
-### Playtest fixes (after 0.1.0-alpha)
+### Playtest fixes (0.1.1-alpha, after 0.1.0-alpha)
 Found playing the first jar:
 - [x] Rocket engine heard while riding: the sound stays in the world, kept at the camera while riding (1.21 fixes a
       sound's attenuation and whether it follows the listener when it starts, so switching to "follow the listener" on
